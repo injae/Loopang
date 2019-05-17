@@ -11,7 +11,7 @@ class Recording : AppCompatActivity() {
 
         // fragment test
         supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_frame, RecordFragment())
+            .replace(R.id.fragment_frame, SongManageFragment())
             .commit()
     }
 }
