@@ -16,7 +16,7 @@ class Login : AppCompatActivity() {
         setContentView(R.layout.activity_login)
         login_button.clicks()
             .subscribe { startActivity(Intent(this, Recording::class.java)) }.apply { disposables.add(this) }
-        gest_login_button.clicks()
+        guest_login_button.clicks()
             .subscribe { startActivity(Intent(this, Recording::class.java)) }.apply { disposables.add(this) }
 
     }
