@@ -7,4 +7,23 @@
         android:layout_height="match_parent"
         tools:context=".SplashActivity">
 
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" android:gravity="center_horizontal">
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:layout_weight="2">
+        </LinearLayout>
+        <ImageView
+                android:layout_width="161dp"
+                android:layout_height="84dp" app:srcCompat="@color/colorAccent"
+                android:contentDescription="@string/splash_logo_image"/>
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:layout_weight="4">
+        </LinearLayout>
+    </LinearLayout>
 </android.support.constraint.ConstraintLayout>
