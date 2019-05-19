@@ -20,6 +20,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    externalNativeBuild {
+        cmake {
+            path file('src/cpp/CMakeLists.txt')
+        }
+    }
 }
 
 dependencies {
