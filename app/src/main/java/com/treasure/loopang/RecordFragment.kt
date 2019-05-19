@@ -18,7 +18,10 @@ class RecordFragment : Fragment() {
     ): View? {
         val trackListAdapter = TrackListAdapter(trackItemList)
 
-        recording_sound_list.adapter = trackListAdapter
+        /*
+            TODO("recording_sound_list null pointer exception 고쳐야함")
+            recording_sound_list.adapter = trackListAdapter
+        */
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_record, container, false)
