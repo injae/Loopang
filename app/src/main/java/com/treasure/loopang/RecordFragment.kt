@@ -10,20 +10,21 @@ import kotlinx.android.synthetic.main.fragment_record.*
 
 class RecordFragment : Fragment() {
 
-    private val trackItemList = arrayListOf<TrackItem>()
+    private val trackItemList : ArrayList<TrackItem> = arrayListOf<TrackItem>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val trackListAdapter = TrackListAdapter(trackItemList)
-
-        /*
-            TODO("recording_sound_list null pointer exception 고쳐야함")
-            recording_sound_list.adapter = trackListAdapter
-        */
-
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_record, container, false)
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val trackListAdapter = TrackListAdapter(trackItemList)
+        recording_sound_list.adapter = trackListAdapter
+    }
+
 }

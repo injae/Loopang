@@ -24,19 +24,16 @@ class SongManageFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        val view = inflater.inflate(R.layout.fragment_song_manage, container, false)
-
-        val songListAdapter = SongListAdapter(songItemList)
-
-        /*
-        // 테스트용
-        TODO("song_list null pointer exception 고쳐야함")
-        Log.d("song_list",(song_list.id).toString())
-        song_list!!.adapter = songListAdapter
-        */
 
         // Inflate the layout for this fragment
-        return view
+        return inflater.inflate(R.layout.fragment_song_manage, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val songListAdapter = SongListAdapter(songItemList)
+        song_list!!.adapter = songListAdapter
     }
 
 
