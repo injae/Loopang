@@ -11,23 +11,23 @@
             android:textSize="24sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="23sp"
-            android:layout_marginStart="29sp"
+            android:layout_marginTop="23dp"
+            android:layout_marginStart="29dp"
             android:id="@+id/recording_title"/>
     <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="64sp"
-            android:layout_marginBottom="67sp"
-            android:layout_marginLeft="15sp"
-            android:layout_marginRight="15sp"
+            android:layout_marginTop="64dp"
+            android:layout_marginBottom="67dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:layout_centerHorizontal="true"
             android:layout_alignParentTop="@+id/recording_title"
             android:foreground="#5B3F5113">
         <ListView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="21sp"
+                android:layout_marginTop="21dp"
                 android:foreground="#5B3F5113"
                 android:id="@+id/recording_sound_list"/>
     </FrameLayout>

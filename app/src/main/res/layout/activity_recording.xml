@@ -13,8 +13,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" android:id="@+id/fragment_frame"
                 android:layout_alignParentTop="true"
-                android:layout_marginTop="46sp" android:layout_marginBottom="58sp" android:layout_marginLeft="14sp"
-                android:layout_marginRight="14sp" android:foreground="#5B3F51B5">
+                android:layout_marginTop="46dp" android:layout_marginBottom="58dp" android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp" android:foreground="#5B3F51B5">
         </FrameLayout>
         <TextView
                 android:text="@string/app_name"
@@ -22,6 +22,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="17sp"/>
+                android:layout_marginBottom="17dp"/>
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>
