@@ -1,0 +1,16 @@
+cmake_minimum_required(VERSION 3.6)
+project(oboe-lastest-install C CXX)
+
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/cppm_tool.cmake)
+download_package(oboe lastest GIT https://github.com/google/oboe.git
+    L_CONFIGURE "" L_BUILD "" L_INSTALL ""
+    W_CONFIGURE "" W_BUILD "" W_INSTALL ""
+    LOCAL)
+
+# Other Options:
+# - Linux Configures:
+#    L_CONFIGURE {...}, L_BUILD {...}, L_INSTALL {...}
+# - Windows Configures:
+#    W_CONFIGURE {...}, W_BUILD {...}, W_INSTALL {...}
+# - Install Path Options:
+#    LOCAL(default) GLOBAL 

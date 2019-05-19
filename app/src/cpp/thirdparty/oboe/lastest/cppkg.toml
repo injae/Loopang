@@ -1,0 +1,8 @@
+[package]
+name = "oboe"
+version = "lastest"
+description = "Google Android Audio Library"
+global=false
+cmake = {name = "oboe", findlib=""}
+download = {git="https://github.com/google/oboe.git"}
+[dependencies]

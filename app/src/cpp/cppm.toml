@@ -1,0 +1,17 @@
+[package]
+   name = "native-audio-lib"
+   version = "0.0.1"
+   description = ""
+   standard = "14"
+
+[cmake]
+    include = ["cmake/android-ndk-include.cmake"]
+
+[[lib]]
+   name = "native-audio-lib"
+   type = "static"
+   source = ["src/.*"]
+   install = false
+
+[dependencies]
+    oboe = {module="oboe"}
