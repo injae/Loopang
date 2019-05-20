@@ -1,9 +1,11 @@
-package com.treasure.loopang
+package com.treasure.loopang.adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import com.treasure.loopang.R
+import com.treasure.loopang.listitem.SongItem
 
 class SongListAdapter(val songItemList: ArrayList<SongItem>) : BaseAdapter() {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {

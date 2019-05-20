@@ -2,10 +2,11 @@ package com.treasure.loopang
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v4.app.ListFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.treasure.loopang.adapter.TrackListAdapter
+import com.treasure.loopang.listitem.TrackItem
 import kotlinx.android.synthetic.main.fragment_record.*
 
 class RecordFragment : Fragment() {

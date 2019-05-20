@@ -3,12 +3,11 @@ package com.treasure.loopang
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ListView
-import kotlinx.android.synthetic.main.fragment_record.*
+import com.treasure.loopang.adapter.SongListAdapter
+import com.treasure.loopang.listitem.SongItem
 import kotlinx.android.synthetic.main.fragment_song_manage.*
 
 class SongManageFragment : Fragment() {
