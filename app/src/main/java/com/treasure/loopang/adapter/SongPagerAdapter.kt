@@ -17,5 +17,4 @@ class SongPagerAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAda
         }
         return null
     }
-
 }
