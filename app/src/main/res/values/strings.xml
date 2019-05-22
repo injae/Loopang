@@ -10,4 +10,7 @@
     <string name="title_activity_recording">Recording</string>
 
     <string name="music_list">Music List</string>
+
+    <string name="example_track_item">Track Item</string>
+    <string name="example_song_item">Song Item</string>
 </resources>

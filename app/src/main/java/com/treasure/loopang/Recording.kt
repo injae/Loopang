@@ -4,7 +4,6 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.view.ViewPager
 import android.util.Log
-import android.view.View
 import com.treasure.loopang.adapter.SongPagerAdapter
 import kotlinx.android.synthetic.main.activity_recording.*
 
@@ -22,7 +21,7 @@ class Recording : AppCompatActivity() {
             .commit()
         */
 
-        pager.adapter = Recording@pagerAdapter
+        pager.adapter = pagerAdapter
         pager.addOnPageChangeListener(PageChangeListener())
         pager.setOnTouchListener { _, _ -> false}
     }

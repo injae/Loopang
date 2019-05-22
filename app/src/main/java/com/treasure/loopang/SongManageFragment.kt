@@ -15,10 +15,6 @@ class SongManageFragment : Fragment() {
 
     private val songItemList = arrayListOf<SongItem>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -34,6 +30,9 @@ class SongManageFragment : Fragment() {
 
         val songListAdapter = SongListAdapter(songItemList)
         song_list!!.adapter = songListAdapter
+
+        /* 테스트 코드 */
+        for(i in 1..3) songItemList.add(SongItem())
     }
 
     override fun onDestroy() {
