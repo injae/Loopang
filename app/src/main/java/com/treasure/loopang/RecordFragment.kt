@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.*
+import android.widget.AdapterView
 import com.treasure.loopang.adapter.TrackListAdapter
 import com.treasure.loopang.listitem.TrackItem
 import kotlinx.android.synthetic.main.fragment_record.*
@@ -24,6 +25,23 @@ class RecordFragment : Fragment() {
     // 위로 스와이프 시의 처리동작
     private fun processWhenSwipeToUp() {
         Log.d("RecordFragmentTest", "위로 스와이프 하셨습니다.")
+    }
+
+    /*private fun processWhenSwipeToDown() {
+        //Log.d("RecordFragmentTest", "위로 스와이프 하셨습니다.")
+    }
+
+    private fun processWhenSwipeToRight() {
+        //Log.d("RecordFragmentTest", "위로 스와이프 하셨습니다.")
+    }
+
+    private fun processWhenSwipeToLeft() {
+        //Log.d("RecordFragmentTest", "위로 스와이프 하셨습니다.")
+    }*/
+
+    /* 리스트 아이템 클릭 시 처리동작 (onItemClick 함수와 같이 사용) */
+    private fun processWhenItemClicked(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+        Log.d("RecordFragmentTest", "아이템 클릭! postion: $position")
     }
 
     /********************** 프래그먼트 라이프사이클 관련 이벤트 **********************/
@@ -50,7 +68,8 @@ class RecordFragment : Fragment() {
 
         /* 리스트 아이템 클릭 */
         recording_sound_list.setOnItemClickListener { parent, view, position, id ->
-            Log.d("RecordFragment", "item Click!!") }
+            processWhenItemClicked(parent, view, position, id)
+        }
 
         /* 테스트 코드 */
         for(i in 1..3) trackItemList.add(TrackItem())
@@ -67,9 +86,9 @@ class RecordFragment : Fragment() {
         /* 각 이벤트 시 어떤 처리를 할 것인지 결정 */
         private fun onSingleTap() = processWhenSingleTaped()
         private fun onSwipeUp() = processWhenSwipeToUp()
-        private fun onSwipeDown() {}
-        private fun onSwipeLeft() {}
-        private fun onSwipeRight() {}
+        private fun onSwipeDown() {} // = processWhenSwipeToDown
+        private fun onSwipeLeft() {} // = processWhenSwipeToLeft
+        private fun onSwipeRight() {} // = processWhenSwipeToRight
 
         override fun onSingleTapUp(e: MotionEvent?): Boolean {
             onSingleTap()
@@ -150,9 +169,7 @@ class RecordFragment : Fragment() {
                 MotionEvent.ACTION_UP -> {
                     if(isSwiped) {
                         isSwiped = false
-                        return false
                     }
-                    onSingleTap()
                     return false
                 }
                 else -> return false
