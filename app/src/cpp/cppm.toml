@@ -9,7 +9,7 @@
 
 [[lib]]
    name = "native-audio-lib"
-   type = "static"
+   type = "shared"
    source = ["src/.*"]
    install = false
 

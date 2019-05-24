@@ -37,8 +37,9 @@ macro(cppm_compiler_option)
 endmacro()
 
 macro(cppm_setting)
-  include(cppm/setting/1.0.5)
-  _cppm_setting()
+  cmake_parse_arguments(ARG "" "" "" ${ARGN})
+  include(cppm/setting/1.0.7)
+  _cppm_setting(${ARG_UNPARSED_ARGUMENTS})
 endmacro()
 
 function(find_cppkg)

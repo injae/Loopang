@@ -68,7 +68,7 @@ open class AudioManager(val audioSource: Int = MediaRecorder.AudioSource.MIC, va
         }
     }
 
-    private fun readDataToFile() {
+    fun readDataToFile() {
         val data = ByteArray(bufferSize)
         val fis = FileInputStream(filePath)
         val dis = DataInputStream(fis)
