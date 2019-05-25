@@ -7,8 +7,11 @@ import java.io.DataInputStream
 import java.io.FileInputStream
 import java.io.FileOutputStream
 
-open class AudioManager(val audioSource: Int = MediaRecorder.AudioSource.MIC, val sampleRate: Int = 44100,
-                   val channel: Int = AudioFormat.CHANNEL_IN_MONO, val audioFormat: Int = AudioFormat.ENCODING_PCM_16BIT, val bufferSize: Int = 1024) {
+open class AudioManager( val audioSource: Int = MediaRecorder.AudioSource.MIC
+                       , val sampleRate: Int = 44100
+                       , val channel: Int = AudioFormat.CHANNEL_IN_MONO
+                       , val audioFormat: Int = AudioFormat.ENCODING_PCM_16BIT
+                       , val bufferSize: Int = 1024) {
     var isRecording = false
     var recorder: AudioRecord? = null
     var filePath: String = Environment.getExternalStorageDirectory().absolutePath + "/recorded.pcm"
@@ -73,7 +76,6 @@ open class AudioManager(val audioSource: Int = MediaRecorder.AudioSource.MIC, va
         val fis = FileInputStream(filePath)
         val dis = DataInputStream(fis)
         val audioTrack = AudioTrack(AudioManager.STREAM_MUSIC, sampleRate, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT, bufferSize, AudioTrack.MODE_STREAM)
-
         audioTrack.play()
         while(true) {
             val ret = dis.read(data, 0, bufferSize)
