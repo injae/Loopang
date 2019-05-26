@@ -21,7 +21,7 @@ class Recorder( val audioSorce : Int = MediaRecorder.AudioSource.MIC
            val data = ShortArray(bufferSize)
            while(isRecording.get()) {
                audioRecord.read(data,0, bufferSize)
-               data.forEach { audioData.add(it) } // stop되버리면 data가 덜 들어가는 현상 발생
+               data.forEach { audioData.add(it) }
            }
        }.start()
     }
