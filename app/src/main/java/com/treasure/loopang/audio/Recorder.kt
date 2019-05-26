@@ -35,7 +35,7 @@ class Recorder( val audioSorce : Int = MediaRecorder.AudioSource.MIC
     fun writeToPcm16(path: String) {
         val fstream = FileOutputStream(path)
         for(i in 0 until audioData.size/bufferSize) {
-            val shortArray = audioData.subList(i * bufferSize, (i * bufferSize) + bufferSize).toShortArray() // 여기도 문제
+            val shortArray = audioData.subList(i * bufferSize, (i * bufferSize) + bufferSize).toShortArray()
             val byteArray = convertShortArrayToByteArray(shortArray)
             fstream.write(byteArray,0, byteArray.size)
         }
