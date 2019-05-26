@@ -1,21 +1,21 @@
 package com.treasure.loopang.audio
 
 fun convertShortToByte(short: Short): ByteArray {
-    var array = ByteArray(2)
-    var byte = short.toInt()
-    array[0] = (byte and 0xff) as Byte
-    array[1] = ((byte shr 8) and 0xff) as Byte
+    val array = ByteArray(2)
+    val byte = short.toInt()
+    array[0] = (byte and 0xff).toByte()
+    array[1] = ((byte shr 8) and 0xff).toByte()
     return array
 }
 
 fun convertShortArrayToByteArray(array: ShortArray): ByteArray {
-    var byte_array = ByteArray(array.size*2)
+    val byte_array = ByteArray(array.size * 2)
     var index = 0
     array.forEach {
-        var bytes = convertShortToByte(it)
+        val bytes = convertShortToByte(it)
         byte_array[index]  = bytes[0]
-        byte_array[index+1]= bytes[1]
-        index+=2
+        byte_array[index + 1]= bytes[1]
+        index += 2
     }
     return byte_array
 }
