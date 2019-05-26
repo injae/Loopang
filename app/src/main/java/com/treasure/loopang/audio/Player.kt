@@ -6,8 +6,6 @@ import android.media.AudioManager
 import java.io.DataInputStream
 import java.io.FileInputStream
 import java.util.concurrent.atomic.AtomicBoolean
-import kotlin.concurrent.thread
-
 
 class Player( val audioSorce : Int = AudioManager.STREAM_MUSIC
             , val sampleRate : Int = 44100
@@ -18,19 +16,20 @@ class Player( val audioSorce : Int = AudioManager.STREAM_MUSIC
     var isPlaying = AtomicBoolean(false)
     var isLooping = AtomicBoolean(false)
     var audioData: MutableList<Short>? = null
+
     fun start() {
         if(audioData != null && !isPlaying.get()) {
             audioTrack.play()
-            thread{
+            Thread{
                 isPlaying.set(true)
                 do {
                     for (i in 0 until audioData!!.size) {
-                        var array = audioData!!.subList(i,i+bufferSize).toShortArray()
-                        audioTrack.write(array,0,bufferSize);
+                        val array = audioData!!.subList(i,i + bufferSize).toShortArray()
+                        audioTrack.write(array,0, bufferSize)
                     }
-                }while(isLooping.get())
+                } while(isLooping.get())
                 isPlaying.set(false)
-            }
+            }.start()
         }
     }
 
