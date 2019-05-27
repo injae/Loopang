@@ -3,6 +3,7 @@ package com.treasure.loopang.audio
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
+import android.util.Log
 import java.io.FileOutputStream
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -16,20 +17,23 @@ class Recorder( val audioSorce : Int = MediaRecorder.AudioSource.MIC
     var audioData = mutableListOf<Short>()
 
     fun start() {
-       audioRecord.startRecording()
-       Thread{
-           val data = ShortArray(bufferSize)
-           while(isRecording.get()) {
-               audioRecord.read(data,0, bufferSize)
-               data.forEach { audioData.add(it) }
-           }
-       }.start()
+        audioRecord.startRecording()
+        Thread{
+            val data = ShortArray(bufferSize)
+            isRecording.set(true)
+            while(isRecording.get()) {
+                val size = audioRecord.read(data,0, bufferSize)
+                Log.d("AudioTest","record size: ${size}")
+                data.forEach { audioData.add(it) }
+            }
+            isRecording.set(false)
+        }.start()
     }
 
     fun stop() {
         isRecording.set(false)
         audioRecord.stop()
-        audioRecord.release()
+        //audioRecord.release()
     }
 
     fun writeToPcm16(path: String) {
