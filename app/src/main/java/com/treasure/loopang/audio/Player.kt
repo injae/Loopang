@@ -3,6 +3,8 @@ package com.treasure.loopang.audio
 import android.media.AudioFormat
 import android.media.AudioTrack
 import android.media.AudioManager
+import android.provider.Settings
+import android.util.Log
 import java.io.DataInputStream
 import java.io.FileInputStream
 import java.util.concurrent.atomic.AtomicBoolean
@@ -17,15 +19,21 @@ class Player( val audioSorce : Int = AudioManager.STREAM_MUSIC
     var isLooping = AtomicBoolean(false)
     var audioData: MutableList<Short>? = null
 
+
+
     fun start() {
         if(audioData != null && !isPlaying.get()) {
             audioTrack.play()
             Thread{
                 isPlaying.set(true)
                 do {
-                    for (i in 0 until audioData!!.size) {
-                        val array = audioData!!.subList(i,i + bufferSize).toShortArray()
-                        audioTrack.write(array,0, bufferSize)
+                    val subLists = audioData!!.size / bufferSize
+                    var sliceSize = bufferSize
+                    for (i in 0 until subLists) {
+                        if(i == subLists-1) sliceSize = audioData!!.size % bufferSize
+                        val array = audioData!!.subList(i* bufferSize,(i*bufferSize) + sliceSize).toShortArray()
+                        Log.d("AudioTest","${i+sliceSize}")
+                        audioTrack.write(array,0, array.size)
                     }
                 } while(isLooping.get())
                 isPlaying.set(false)
@@ -35,8 +43,9 @@ class Player( val audioSorce : Int = AudioManager.STREAM_MUSIC
 
     fun stop(){
         if(isPlaying.get()) {
-            audioTrack.release()
+            isPlaying.set(false)
             audioTrack.stop()
+            //audioTrack.release()
         }
     }
 
