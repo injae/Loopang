@@ -1,5 +1,10 @@
 package com.treasure.loopang.audio
 
+import android.media.AudioRecord
+import android.media.audiofx.AcousticEchoCanceler
+import android.media.audiofx.AutomaticGainControl
+import android.media.audiofx.NoiseSuppressor
+
 fun convertShortToByte(short: Short): ByteArray {
     val array = ByteArray(2)
     val byte = short.toInt()
@@ -25,4 +30,27 @@ fun convertByteArrayToShortArray(array: ByteArray): ShortArray {
                 .chunked(2)
                 .map { (l, h) -> (l.toInt() + h.toInt().shl(8)).toShort() }
                 .toShortArray()
+}
+
+object Stabilizer {
+    var ns: NoiseSuppressor? = null
+    var aec: AcousticEchoCanceler? = null
+    var agc: AutomaticGainControl? = null
+
+    fun stabilizeAudio(audioRecord: AudioRecord) {
+        if(NoiseSuppressor.isAvailable()) {
+            ns = NoiseSuppressor.create(audioRecord.audioSessionId)
+            ns?.enabled = true
+        }
+
+        if(AcousticEchoCanceler.isAvailable()) {
+            aec = AcousticEchoCanceler.create(audioRecord.audioSessionId)
+            aec?.enabled = true
+        }
+
+        if(AutomaticGainControl.isAvailable()) {
+            agc = AutomaticGainControl.create(audioRecord.audioSessionId)
+            agc?.enabled = true
+        }
+    }
 }
