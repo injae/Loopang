@@ -15,7 +15,7 @@
                 android:layout_height="match_parent" android:id="@+id/fragment_frame"
                 android:layout_alignParentTop="true"
                 android:layout_marginTop="14dp" android:layout_marginBottom="58dp" android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp" android:background="@drawable/view_pager_background">
+                android:layout_marginRight="14dp">
             <android.support.v4.view.ViewPager
                     android:id="@+id/pager"
                     android:layout_height="match_parent"

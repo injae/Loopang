@@ -3,6 +3,7 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
+             android:background="@drawable/view_pager_background"
              tools:context=".SongManageFragment">
 
     <TextView
@@ -13,7 +14,7 @@
             android:textSize="24sp"
             android:layout_alignParentTop="true"
             android:layout_marginTop="17dp"
-            android:layout_marginLeft="23dp"/>
+            android:layout_marginStart="23dp"/>
 
     <EditText
             android:layout_width="match_parent"
@@ -27,7 +28,7 @@
             android:background="@drawable/view_pager_background"
             android:hint="@string/music_list_search_hint"
             android:id="@+id/song_search_bar"
-            />
+            android:importantForAutofill="no" android:inputType="text"/>
 
     <FrameLayout
             android:layout_width="match_parent"
