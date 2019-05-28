@@ -17,6 +17,7 @@ class Recorder( val audioSorce : Int = MediaRecorder.AudioSource.MIC
     var audioData = mutableListOf<Short>()
 
     fun start() {
+        Stabilizer.stabilizeAudio(audioRecord)
         audioRecord.startRecording()
         Thread{
             val data = ShortArray(bufferSize)
