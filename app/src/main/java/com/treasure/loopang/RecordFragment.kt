@@ -1,11 +1,15 @@
 package com.treasure.loopang
 
 import android.os.Bundle
+import android.os.Environment
 import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.*
 import android.widget.AdapterView
+import android.widget.Toast
 import com.treasure.loopang.adapter.TrackListAdapter
+import com.treasure.loopang.audio.Player
+import com.treasure.loopang.audio.Recorder
 import com.treasure.loopang.listitem.TrackItem
 import kotlinx.android.synthetic.main.fragment_record.*
 import kotlin.math.abs
@@ -15,11 +19,31 @@ private const val SWIPE_VELOCITY_THRESHOLD = 100   // 스와이프 진단을 위
 
 class RecordFragment : Fragment() {
     private val trackItemList : ArrayList<TrackItem> = arrayListOf()
-
+    private val recorder = Recorder()
+    private val player = Player()
+    var count : Int = -1
     /******************************* 제스쳐 이벤트 처리 *******************************/
     // 싱글 탭 시의 처리동작
     private fun processWhenSingleTaped() {
-        Log.d("RecordFragmentTest", "한번 탭 하셨습니다.")
+        Toast.makeText(this.context,"tap",Toast.LENGTH_SHORT).show()
+        val path = Environment.getExternalStorageDirectory().absolutePath + "/recorded.pcm"
+        count++
+        when(count){
+            0 -> recorder.start()
+            1 -> {
+                recorder.stop()
+                player.audioData = recorder.audioData
+                Log.d("AudioTest", "audioData size: ${player.audioData!!.size}")
+                player.start()
+            }
+            2 -> {
+                player.stop()
+                recorder.audioData.clear()
+                count = -1
+            }
+        }
+        Log.d("AudioTest", "Count: ${count}")
+        Log.d("RecordFragmentTest", "한번 탭 하셨습니다.${count}")
     }
 
     // 위로 스와이프 시의 처리동작
