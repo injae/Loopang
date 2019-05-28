@@ -7,13 +7,14 @@ import android.widget.BaseAdapter
 import com.treasure.loopang.R
 import com.treasure.loopang.listitem.SongItem
 
-class SongListAdapter(val songItemList: ArrayList<SongItem>) : BaseAdapter() {
+class SongListAdapter(private val songItemList: ArrayList<SongItem>) : BaseAdapter() {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val context = parent?.getContext()
         val view: View = LayoutInflater.from(context).inflate(R.layout.songlist_item, null)
 
         /* songItemList의 Item에서 songlist_item 각 위젯에 매칭 */
         val songItem = songItemList[position]
+        //convertView.song_name
 
         return view
     }

@@ -11,15 +11,14 @@ import com.treasure.loopang.listitem.TrackItem
 class TrackListAdapter (private val trackItemList: ArrayList<TrackItem>) : BaseAdapter() {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        lateinit var holder : Holder
-        lateinit var view : View
+        val holder : Holder
+        val view : View
 
-        val context = parent?.context
         if (convertView == null) {
-            view = LayoutInflater.from(context).inflate(
-                R.layout.tracklist_item, null)
+            view = LayoutInflater.from(parent?.context).inflate(
+                R.layout.tracklist_item, parent, false)
 
-            holder = Holder()
+            holder = Holder(view)
             /* 아이템 생겼을 때 별도 처리*/
             /*예시
             holder.tx1 = convertview.xxxx1 as TextView
@@ -52,5 +51,5 @@ class TrackListAdapter (private val trackItemList: ArrayList<TrackItem>) : BaseA
         return 0
     }
 
-    inner class Holder()
+    inner class Holder(view : View)
 }

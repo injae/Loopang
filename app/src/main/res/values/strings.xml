@@ -3,13 +3,14 @@
     <string name="splash_logo_image">Splash Logo Image</string>
 
     <!-- 로그인 액티비티용 스트링 리소스 -->
-    <string name="guest_login_string">게스트로 로그인</string>
+    <string name="guest_login_string"><u>게스트로 로그인</u></string>
     <string name="login_string">소셜 아이디로 로그인</string>
 
     <!-- 레코딩 액티비티, 프래그먼트 용 스트링 리소스 -->
     <string name="title_activity_recording">Recording</string>
 
     <string name="music_list">Music List</string>
+    <string name="music_list_search_hint">Search…</string>
 
     <string name="example_track_item">Track Item</string>
     <string name="example_song_item">Song Item</string>

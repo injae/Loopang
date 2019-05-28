@@ -14,7 +14,9 @@
         </activity>
         <activity android:name=".Login">
         </activity>
-        <activity android:name=".Recording">
+        <activity
+                android:name=".Recording"
+                android:windowSoftInputMode="adjustNothing">
         </activity>
         <activity android:name=".SplashActivity">
             <intent-filter>

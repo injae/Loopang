@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp">
     <TextView
             android:text="@string/example_song_item"
-            android:layout_width="0dp"
-            android:layout_height="40dp" android:id="@+id/textView" android:layout_weight="1" android:textSize="25sp"/>
-</LinearLayout>
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/song_name" android:textSize="18sp"/>
+    <TextView
+            android:text="2019/03/18"
+            android:textColor="#ffffff"
+            android:layout_below="@+id/song_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/song_date" android:textSize="14sp"/>
+</RelativeLayout>
