@@ -6,14 +6,16 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/view_pager_background"
         tools:context=".RecordFragment">
     <TextView
             android:text="@string/title_activity_recording"
             android:textSize="24sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="23dp"
+            android:layout_marginTop="17dp"
             android:layout_marginStart="29dp"
+            android:textColor="#FFFFFF"
             android:id="@+id/recording_title"/>
     <FrameLayout
             android:layout_width="match_parent"
@@ -24,12 +26,13 @@
             android:layout_marginRight="15dp"
             android:layout_centerHorizontal="true"
             android:layout_alignParentTop="@+id/recording_title"
-            android:foreground="#5B3F5113">
+            android:background="@drawable/view_pager_background">
         <ListView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="21dp"
-                android:foreground="#5B3F5113"
+                android:layout_marginTop="23dp"
+                android:layout_marginBottom="23dp"
+                android:background="@android:color/transparent"
                 android:id="@+id/recording_sound_list"/>
     </FrameLayout>
 </RelativeLayout>

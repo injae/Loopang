@@ -10,7 +10,8 @@
     <RelativeLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@drawable/gradiant_background">
         <ImageView
                 android:contentDescription="logo_image"
                 android:layout_width="match_parent"
@@ -27,6 +28,8 @@
                 android:id="@+id/login_button"
                 android:layout_above="@+id/guest_login_button"
                 android:layout_centerHorizontal="true"
+                android:layout_marginLeft="37dp"
+                android:layout_marginRight="37dp"
                 android:layout_marginBottom="15dp"/>
         <TextView
                 android:text="@string/guest_login_string"

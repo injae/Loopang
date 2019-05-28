@@ -32,6 +32,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    //implementation 'com.afollestad.material-dialogs:core:3.0.0-beta2'
     implementation 'io.reactivex:rxandroid:1.1.0'
     implementation 'com.jakewharton.rxbinding3:rxbinding:3.0.0-alpha2'
     //implementation 'com.chibde:audiovisualizer:2.1.0' // audio visualizer

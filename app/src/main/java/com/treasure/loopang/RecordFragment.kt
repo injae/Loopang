@@ -51,7 +51,8 @@ class RecordFragment : Fragment() {
         Log.d("RecordFragmentTest", "위로 스와이프 하셨습니다.")
     }
 
-    /*private fun processWhenSwipeToDown() {
+    /* 스와이프 처리 함수들
+    private fun processWhenSwipeToDown() {
         //Log.d("RecordFragmentTest", "위로 스와이프 하셨습니다.")
     }
 
@@ -61,11 +62,17 @@ class RecordFragment : Fragment() {
 
     private fun processWhenSwipeToLeft() {
         //Log.d("RecordFragmentTest", "위로 스와이프 하셨습니다.")
-    }*/
+    }
+    */
 
     /* 리스트 아이템 클릭 시 처리동작 (onItemClick 함수와 같이 사용) */
     private fun processWhenItemClicked(parent: AdapterView<*>, view: View, position: Int, id: Long) {
         Log.d("RecordFragmentTest", "아이템 클릭! postion: $position")
+    }
+
+    private fun processWhenItemLongClicked(parent: AdapterView<*>, view: View, position: Int, id: Long) : Boolean {
+        Log.d("RecordFragmentTest", "아이템 롱 클릭! postion: $position")
+        return true
     }
 
     /********************** 프래그먼트 라이프사이클 관련 이벤트 **********************/
@@ -88,12 +95,19 @@ class RecordFragment : Fragment() {
         view.setOnTouchListener{ _, event -> gesture.onTouchEvent(event)}
 
         /* 리스트 아이템을 제외한 리스트뷰 영역을 위한 터치 이벤트 리스너 */
-        recording_sound_list.setOnTouchListener(ListTouchListener())
+        // recording_sound_list.setOnTouchListener(ListTouchListener())
+
+        /* 리스트 아이템 롱클릭*/
+        recording_sound_list.isLongClickable = true
+        recording_sound_list.setOnItemLongClickListener{ parent, view, position, id ->
+            processWhenItemLongClicked(parent, view, position, id)
+        }
 
         /* 리스트 아이템 클릭 */
         recording_sound_list.setOnItemClickListener { parent, view, position, id ->
             processWhenItemClicked(parent, view, position, id)
         }
+
 
         /* 테스트 코드 */
         for(i in 1..3) trackItemList.add(TrackItem())
@@ -102,6 +116,11 @@ class RecordFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         Log.d("RecordFragment", "RecordFragment Destroyed!")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d("RecordFragment", "RecordFragment Paused!")
     }
 
     // 스와이프와 싱글탭 이벤트 리스너 구현을 위한 제스처 디텍터 리스너
@@ -147,13 +166,16 @@ class RecordFragment : Fragment() {
         override fun onLongPress(e: MotionEvent?) {}
     }
 
+/*
 
     inner class ListTouchListener : View.OnTouchListener {
         var x: Float = 0.0f
         var y: Float = 0.0f
         var isSwiped: Boolean = false
 
-        /* 각 이벤트 시 어떤 처리를 할 것인지 결정 */
+
+/* 각 이벤트 시 어떤 처리를 할 것인지 결정 */
+
         private fun onSingleTap() = processWhenSingleTaped()
         private fun onSwipeUp() = processWhenSwipeToUp()
         private fun onSwipeDown() {}
@@ -200,5 +222,6 @@ class RecordFragment : Fragment() {
             }
         }
     }
+*/
 
 }
