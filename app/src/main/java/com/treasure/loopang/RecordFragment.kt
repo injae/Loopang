@@ -10,6 +10,7 @@ import android.widget.Toast
 import com.treasure.loopang.adapter.TrackListAdapter
 import com.treasure.loopang.audio.Player
 import com.treasure.loopang.audio.Recorder
+import com.treasure.loopang.audio.SoundPcm16
 import com.treasure.loopang.listitem.TrackItem
 import kotlinx.android.synthetic.main.fragment_record.*
 import kotlin.math.abs
@@ -19,8 +20,8 @@ private const val SWIPE_VELOCITY_THRESHOLD = 100   // 스와이프 진단을 위
 
 class RecordFragment : Fragment() {
     private val trackItemList : ArrayList<TrackItem> = arrayListOf()
-    private val recorder = Recorder()
-    private val player = Player()
+    private val recorder = Recorder(SoundPcm16())
+    private lateinit var player: Player;
     var count : Int = -1
     /******************************* 제스쳐 이벤트 처리 *******************************/
     // 싱글 탭 시의 처리동작
@@ -28,21 +29,18 @@ class RecordFragment : Fragment() {
         Toast.makeText(this.context,"tap",Toast.LENGTH_SHORT).show()
         val path = Environment.getExternalStorageDirectory().absolutePath + "/recorded.pcm"
         count++
+        Log.d("AudioTest", "Count: ${count}")
         when(count){
             0 -> recorder.start()
             1 -> {
-                recorder.stop()
-                player.audioData = recorder.audioData
-                Log.d("AudioTest", "audioData size: ${player.audioData!!.size}")
+                player = Player(recorder.stop())
                 player.start()
             }
             2 -> {
                 player.stop()
-                recorder.audioData.clear()
                 count = -1
             }
         }
-        Log.d("AudioTest", "Count: ${count}")
         Log.d("RecordFragmentTest", "한번 탭 하셨습니다.${count}")
     }
 

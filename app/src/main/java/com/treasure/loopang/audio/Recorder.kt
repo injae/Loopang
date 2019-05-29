@@ -1,23 +1,18 @@
 package com.treasure.loopang.audio
 
-import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
 import android.util.Log
-import java.io.FileOutputStream
 import java.util.concurrent.atomic.AtomicBoolean
 
-class Recorder( val audioSorce : Int = MediaRecorder.AudioSource.MIC
-              , val sampleRate : Int = 44100
-              , val channel    : Int = AudioFormat.CHANNEL_IN_MONO
-              , val audioFormat: Int = AudioFormat.ENCODING_PCM_16BIT
-              , val bufferSize : Int = AudioRecord.getMinBufferSize(sampleRate,channel,audioFormat)
-              , var audioRecord: AudioRecord = AudioRecord(audioSorce,sampleRate,channel,audioFormat,bufferSize)){
+class Recorder( var sound: Sound
+              , val bufferSize: Int = sound.inputBufferSize
+              , val audioRecord: AudioRecord = AudioRecord( MediaRecorder.AudioSource.MIC, sound.sampleRate
+                                                          , sound.inputChannel ,sound.audioFormat, sound.inputBufferSize)){
     var isRecording = AtomicBoolean(true)
-    var audioData = mutableListOf<Short>()
 
     fun start() {
-        Stabilizer.stabilizeAudio(audioRecord)
+        //Stabilizer.stabilizeAudio(audioRecord)
         audioRecord.startRecording()
         Thread{
             val data = ShortArray(bufferSize)
@@ -25,25 +20,18 @@ class Recorder( val audioSorce : Int = MediaRecorder.AudioSource.MIC
             while(isRecording.get()) {
                 val size = audioRecord.read(data,0, bufferSize)
                 Log.d("AudioTest","record size: ${size}")
-                data.forEach { audioData.add(it) }
+                data.forEach { sound.data.add(it) }
             }
             isRecording.set(false)
         }.start()
     }
 
-    fun stop() {
+    fun stop() : Sound {
         isRecording.set(false)
         audioRecord.stop()
+        var export = sound.clone()
+        sound.data.clear()
+        return export;
         //audioRecord.release()
-    }
-
-    fun writeToPcm16(path: String) {
-        val fstream = FileOutputStream(path)
-        for(i in 0 until audioData.size/bufferSize) {
-            val shortArray = audioData.subList(i * bufferSize, (i * bufferSize) + bufferSize).toShortArray()
-            val byteArray = convertShortArrayToByteArray(shortArray)
-            fstream.write(byteArray,0, byteArray.size)
-        }
-        fstream.close()
     }
 }
