@@ -10,7 +10,7 @@ import android.widget.Toast
 import com.treasure.loopang.adapter.TrackListAdapter
 import com.treasure.loopang.audio.Player
 import com.treasure.loopang.audio.Recorder
-import com.treasure.loopang.audio.SoundPcm16
+import com.treasure.loopang.audio.Sound
 import com.treasure.loopang.listitem.TrackItem
 import kotlinx.android.synthetic.main.fragment_record.*
 import kotlin.math.abs
@@ -20,7 +20,7 @@ private const val SWIPE_VELOCITY_THRESHOLD = 100   // 스와이프 진단을 위
 
 class RecordFragment : Fragment() {
     private val trackItemList : ArrayList<TrackItem> = arrayListOf()
-    private val recorder = Recorder(SoundPcm16())
+    private val recorder = Recorder(Sound())
     private lateinit var player: Player;
     var count : Int = -1
     /******************************* 제스쳐 이벤트 처리 *******************************/
@@ -33,7 +33,11 @@ class RecordFragment : Fragment() {
         when(count){
             0 -> recorder.start()
             1 -> {
-                player = Player(recorder.stop())
+                //var sound = recorder.stop()
+                recorder.stop().save(path)
+                var sound = Sound()
+                sound.load(path)
+                player = Player(sound)
                 player.start()
             }
             2 -> {

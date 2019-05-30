@@ -5,14 +5,14 @@ import android.media.MediaRecorder
 import android.util.Log
 import java.util.concurrent.atomic.AtomicBoolean
 
-class Recorder( var sound: Sound
+class Recorder( val sound: Sound
               , val bufferSize: Int = sound.inputBufferSize
               , val audioRecord: AudioRecord = AudioRecord( MediaRecorder.AudioSource.MIC, sound.sampleRate
                                                           , sound.inputChannel ,sound.audioFormat, sound.inputBufferSize)){
     var isRecording = AtomicBoolean(true)
 
     fun start() {
-        //Stabilizer.stabilizeAudio(audioRecord)
+        Stabilizer.stabilizeAudio(audioRecord)
         audioRecord.startRecording()
         Thread{
             val data = ShortArray(bufferSize)
@@ -29,8 +29,9 @@ class Recorder( var sound: Sound
     fun stop() : Sound {
         isRecording.set(false)
         audioRecord.stop()
-        var export = sound.clone()
-        sound.data.clear()
+        Log.d("AudioTest", "Recorder sound size: ${sound.data.size}")
+        var export = Sound(sound.data, sound.sampleRate, sound.inputChannel, sound.outputChannel, sound.audioFormat, sound.inputBufferSize, sound.outputBufferSize)
+        sound.data = mutableListOf()
         return export;
         //audioRecord.release()
     }

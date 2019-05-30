@@ -13,16 +13,16 @@ class Player( val sound: Sound
     var isLooping = AtomicBoolean(false)
 
     fun start() {
-        if(sound.data != null && !isPlaying.get()) {
+        if(!isPlaying.get()) {
             audioTrack.play()
             Thread{
                 isPlaying.set(true)
                 do {
-                    val subLists = sound.data!!.size / bufferSize
+                    val subLists = sound.data.size / bufferSize
                     var sliceSize = bufferSize
                     for (i in 0 until subLists) {
-                        if(i == subLists-1) sliceSize = sound.data!!.size % bufferSize
-                        val array = sound.data!!.subList(i* bufferSize,(i*bufferSize) + sliceSize).toShortArray()
+                        if(i == subLists-1) sliceSize = sound.data.size % bufferSize
+                        val array = sound.data.subList(i* bufferSize,(i*bufferSize) + sliceSize).toShortArray()
                         Log.d("AudioTest","${i+sliceSize}")
                         audioTrack.write(array,0, array.size)
                     }
