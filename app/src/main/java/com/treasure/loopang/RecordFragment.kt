@@ -33,16 +33,16 @@ class RecordFragment : Fragment() {
         count++
         Log.d("AudioTest", "Count: ${count}")
         when(count){
-            0 -> recorder.start()
-            1 -> {
+            0 -> {
                 var sound= recorder.stop()
                 maxSize = sound.data.size
                 mixer.addSound(sound)
+                mixer.start()
             }
-            2 -> recorder.start(maxSize)
-            3 -> {
+            1 -> recorder.start(maxSize)
+            2 -> {
                 mixer.addSound(recorder.stop())
-                count = -1
+                count = 0
             }
         }
         Log.d("RecordFragmentTest", "한번 탭 하셨습니다.${count}")
@@ -53,10 +53,11 @@ class RecordFragment : Fragment() {
         Log.d("RecordFragmentTest", "위로 스와이프 하셨습니다.")
         count2++
         when(count2){
-            0 -> mixer.start()
-            1 -> {
-                mixer.stop()
-                count2 = -1
+            0 -> recorder.start()
+            1 -> mixer.stop()
+            2 -> {
+                mixer.start()
+                count2 = 0
             }
         }
     }

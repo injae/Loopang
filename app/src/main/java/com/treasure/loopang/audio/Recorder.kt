@@ -20,7 +20,8 @@ class Recorder( val sound: Sound
                 Log.d("AudioTest","record size: ${size}")
                 data.forEach {
                     if(maxSize != null) {
-                        if(maxSize > sound.data.size) sound.data.add(it)
+                        if(maxSize > sound.data.size) { sound.data.add(it) }
+                        else { isRecording.set(false) }
                     }
                     else sound.data.add(it)
                 }
