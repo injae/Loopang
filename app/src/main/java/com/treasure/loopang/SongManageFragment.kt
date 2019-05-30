@@ -2,7 +2,7 @@ package com.treasure.loopang
 
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +12,7 @@ import com.treasure.loopang.listitem.SongItem
 import kotlinx.android.synthetic.main.fragment_song_manage.*
 import java.util.*
 
-class SongManageFragment : Fragment() {
+class SongManageFragment : androidx.fragment.app.Fragment() {
 
     private val songItemList = arrayListOf<SongItem>()
 

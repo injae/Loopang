@@ -2,7 +2,7 @@ package com.treasure.loopang
 
 import android.os.Bundle
 import android.os.Environment
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.util.Log
 import android.view.*
 import android.widget.AdapterView
@@ -17,7 +17,7 @@ import kotlin.math.abs
 private const val SWIPE_THRESHOLD = 100    // 스와이프 진단을 위한 위치차 임계치
 private const val SWIPE_VELOCITY_THRESHOLD = 100   // 스와이프 진단을 위한 속도 임계치
 
-class RecordFragment : Fragment() {
+class RecordFragment : androidx.fragment.app.Fragment() {
     private val trackItemList : ArrayList<TrackItem> = arrayListOf()
     private val recorder = Recorder()
     private val player = Player()
