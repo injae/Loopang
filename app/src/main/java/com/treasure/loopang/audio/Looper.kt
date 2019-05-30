@@ -3,7 +3,9 @@ package com.treasure.loopang.audio
 import android.util.Log
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
+import kotlin.concurrent.schedule
 
 class Looper {
     private val recorder = Recorder(Sound())
@@ -42,7 +44,14 @@ class Looper {
         mixerCount++
         Log.d("AudioTest", "MixerCount: ${mixerCount}")
         when(mixerCount){
-            0 -> recorder.start()
+            0 -> {
+                Timer().schedule(1000) { Log.d("AudioTest", "3") }
+                Timer().schedule(2000) { Log.d("AudioTest", "2") }
+                Timer().schedule(3000) { Log.d("AudioTest", "1") }
+                Timer().schedule(4000) { Log.d("AudioTest", "Recording Start")
+                    recorder.start()
+                }
+            }
             1 -> {
                 runBlocking { recorder.stop();  }
                 mixer.stop()
