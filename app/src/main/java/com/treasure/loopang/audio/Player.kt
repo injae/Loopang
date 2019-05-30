@@ -1,67 +1,59 @@
 package com.treasure.loopang.audio
 
-import android.media.AudioFormat
 import android.media.AudioTrack
 import android.media.AudioManager
-import android.provider.Settings
 import android.util.Log
-import java.io.DataInputStream
-import java.io.FileInputStream
 import java.util.concurrent.atomic.AtomicBoolean
 
-class Player( val audioSorce : Int = AudioManager.STREAM_MUSIC
-            , val sampleRate : Int = 44100
-            , val channel    : Int = AudioFormat.CHANNEL_OUT_MONO
-            , val audioFormat: Int = AudioFormat.ENCODING_PCM_16BIT
-            , val bufferSize : Int = AudioTrack.getMinBufferSize(sampleRate,channel,audioFormat)
-            , val audioTrack : AudioTrack = AudioTrack(audioSorce, sampleRate, channel, audioFormat, bufferSize, AudioTrack.MODE_STREAM)){
+class Player(var sound: Sound, val audio: AudioTrack = sound.makeAudioTrack()){
     var isPlaying = AtomicBoolean(false)
     var isLooping = AtomicBoolean(false)
-    var audioData: MutableList<Short>? = null
-
-
 
     fun start() {
-        if(audioData != null && !isPlaying.get()) {
-            audioTrack.play()
+        if(!isPlaying.get()) {
+            audio.play()
+            val bufferSize = sound.outputBufferSize
             Thread{
                 isPlaying.set(true)
                 do {
-                    val subLists = audioData!!.size / bufferSize
+                    val subLists = sound.data.size / bufferSize
                     var sliceSize = bufferSize
                     for (i in 0 until subLists) {
-                        if(i == subLists-1) sliceSize = audioData!!.size % bufferSize
-                        val array = audioData!!.subList(i* bufferSize,(i*bufferSize) + sliceSize).toShortArray()
+                        if(i == subLists-1) sliceSize = sound.data.size % bufferSize
+                        val array = sound.data.subList(i* bufferSize,(i*bufferSize) + sliceSize).toShortArray()
                         Log.d("AudioTest","${i+sliceSize}")
-                        audioTrack.write(array,0, array.size)
+                        audio.write(array,0, array.size)
                     }
                 } while(isLooping.get())
                 isPlaying.set(false)
             }.start()
         }
     }
+    fun n_start() {
+        if(!isPlaying.get()) {
+            audio.play()
+            val bufferSize = sound.outputBufferSize
+                isPlaying.set(true)
+                    val subLists = sound.data.size / bufferSize
+                    var sliceSize = bufferSize
+                    for (i in 0 until subLists) {
+                        if(!isPlaying.get()) break;
+                        if(i == subLists-1) sliceSize = sound.data.size % bufferSize
+                        val array = sound.data.subList(i* bufferSize,(i*bufferSize) + sliceSize).toShortArray()
+                        Log.d("AudioTest","${i+sliceSize}")
+                        audio.write(array,0, array.size)
+                    }
+                isPlaying.set(false)
+        }
+    }
 
-    fun stop(){
+
+    fun stop() {
         if(isPlaying.get()) {
             isPlaying.set(false)
-            audioTrack.stop()
+            isLooping.set(false)
+            audio.stop()
             //audioTrack.release()
         }
     }
-
-    fun readToPcm16(path: String) {
-        audioData = mutableListOf()
-        val data = ByteArray(bufferSize)
-        val fis = FileInputStream(path)
-        val dis = DataInputStream(fis)
-        while(true) {
-            val ret = dis.read(data, 0, bufferSize)
-            convertByteArrayToShortArray(data)
-                .forEach { audioData?.add(it) }
-            if(ret == -1) break
-        }
-        dis.close()
-        fis.close()
-    }
-
 }
