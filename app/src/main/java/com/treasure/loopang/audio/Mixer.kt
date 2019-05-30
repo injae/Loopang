@@ -12,18 +12,21 @@ class Mixer(val sounds: MutableList<Player> = mutableListOf()) {
     }
 
     fun start() {
+        isPlaying.set(true)
         launch {
             while(isPlaying.get()) {
-                async{ sounds[0].n_start() }.await()
+                var routine = async{ sounds[0].n_start() }
                 sounds.filterIndexed{it, t -> it > 0}.forEach {
                     async { it.n_start() }
                 }
+                routine.await()
             }
         }.start()
     }
 
     fun stop() {
         isPlaying.set(false)
-        sounds.forEach { it.stop() } }
+        sounds.forEach { it.stop() }
+    }
     fun stop(index: Int) { sounds[index].stop() }
 }

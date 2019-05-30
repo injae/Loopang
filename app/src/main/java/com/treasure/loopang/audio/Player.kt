@@ -21,7 +21,7 @@ class Player(var sound: Sound, val audio: AudioTrack = sound.makeAudioTrack()){
                     for (i in 0 until subLists) {
                         if(i == subLists-1) sliceSize = sound.data.size % bufferSize
                         val array = sound.data.subList(i* bufferSize,(i*bufferSize) + sliceSize).toShortArray()
-                        Log.d("AudioTest","${i+sliceSize}")
+                        //Log.d("AudioTest","${i+sliceSize}")
                         audio.write(array,0, array.size)
                     }
                 } while(isLooping.get())
@@ -37,10 +37,10 @@ class Player(var sound: Sound, val audio: AudioTrack = sound.makeAudioTrack()){
                     val subLists = sound.data.size / bufferSize
                     var sliceSize = bufferSize
                     for (i in 0 until subLists) {
-                        if(!isPlaying.get()) break;
+                        if(!isPlaying.get()) return;
                         if(i == subLists-1) sliceSize = sound.data.size % bufferSize
                         val array = sound.data.subList(i* bufferSize,(i*bufferSize) + sliceSize).toShortArray()
-                        Log.d("AudioTest","${i+sliceSize}")
+                        //Log.d("AudioTest","${i+sliceSize}")
                         audio.write(array,0, array.size)
                     }
                 isPlaying.set(false)
