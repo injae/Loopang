@@ -8,6 +8,7 @@ import android.view.*
 import android.widget.AdapterView
 import android.widget.Toast
 import com.treasure.loopang.adapter.TrackListAdapter
+import com.treasure.loopang.audio.Mixer
 import com.treasure.loopang.audio.Player
 import com.treasure.loopang.audio.Recorder
 import com.treasure.loopang.audio.Sound
@@ -21,27 +22,26 @@ private const val SWIPE_VELOCITY_THRESHOLD = 100   // 스와이프 진단을 위
 class RecordFragment : Fragment() {
     private val trackItemList : ArrayList<TrackItem> = arrayListOf()
     private val recorder = Recorder(Sound())
-    private lateinit var player: Player;
-    var count : Int = -1
+    private var mixer = Mixer()
+    var maxSize : Int = 0
+    var count  : Int = -1
+    var count2 : Int = -1
     /******************************* 제스쳐 이벤트 처리 *******************************/
     // 싱글 탭 시의 처리동작
     private fun processWhenSingleTaped() {
         Toast.makeText(this.context,"tap",Toast.LENGTH_SHORT).show()
-        val path = Environment.getExternalStorageDirectory().absolutePath + "/recorded.pcm"
         count++
         Log.d("AudioTest", "Count: ${count}")
         when(count){
             0 -> recorder.start()
             1 -> {
-                //var sound = recorder.stop()
-                recorder.stop().save(path)
-                var sound = Sound()
-                sound.load(path)
-                player = Player(sound)
-                player.start()
+                var sound= recorder.stop()
+                maxSize = sound.data.size
+                mixer.addSound(sound)
             }
-            2 -> {
-                player.stop()
+            2 -> recorder.start(maxSize)
+            3 -> {
+                mixer.addSound(recorder.stop())
                 count = -1
             }
         }
@@ -51,6 +51,14 @@ class RecordFragment : Fragment() {
     // 위로 스와이프 시의 처리동작
     private fun processWhenSwipeToUp() {
         Log.d("RecordFragmentTest", "위로 스와이프 하셨습니다.")
+        count2++
+        when(count2){
+            0 -> mixer.start()
+            1 -> {
+                mixer.stop()
+                count2 = -1
+            }
+        }
     }
 
     /* 스와이프 처리 함수들

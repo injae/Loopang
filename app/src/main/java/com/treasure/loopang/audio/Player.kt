@@ -5,16 +5,14 @@ import android.media.AudioManager
 import android.util.Log
 import java.util.concurrent.atomic.AtomicBoolean
 
-class Player( val sound: Sound
-            , val bufferSize: Int = sound.outputBufferSize
-            , val audioTrack : AudioTrack = AudioTrack( AudioManager.STREAM_MUSIC, sound.sampleRate, sound.outputChannel
-                                                      , sound.audioFormat, sound.outputBufferSize, AudioTrack.MODE_STREAM)){
+class Player(var sound: Sound, val audio: AudioTrack = sound.makeAudioTrack()){
     var isPlaying = AtomicBoolean(false)
     var isLooping = AtomicBoolean(false)
 
     fun start() {
         if(!isPlaying.get()) {
-            audioTrack.play()
+            audio.play()
+            val bufferSize = sound.outputBufferSize
             Thread{
                 isPlaying.set(true)
                 do {
@@ -24,18 +22,37 @@ class Player( val sound: Sound
                         if(i == subLists-1) sliceSize = sound.data.size % bufferSize
                         val array = sound.data.subList(i* bufferSize,(i*bufferSize) + sliceSize).toShortArray()
                         Log.d("AudioTest","${i+sliceSize}")
-                        audioTrack.write(array,0, array.size)
+                        audio.write(array,0, array.size)
                     }
                 } while(isLooping.get())
                 isPlaying.set(false)
             }.start()
         }
     }
+    fun n_start() {
+        if(!isPlaying.get()) {
+            audio.play()
+            val bufferSize = sound.outputBufferSize
+                isPlaying.set(true)
+                    val subLists = sound.data.size / bufferSize
+                    var sliceSize = bufferSize
+                    for (i in 0 until subLists) {
+                        if(!isPlaying.get()) break;
+                        if(i == subLists-1) sliceSize = sound.data.size % bufferSize
+                        val array = sound.data.subList(i* bufferSize,(i*bufferSize) + sliceSize).toShortArray()
+                        Log.d("AudioTest","${i+sliceSize}")
+                        audio.write(array,0, array.size)
+                    }
+                isPlaying.set(false)
+        }
+    }
+
 
     fun stop() {
         if(isPlaying.get()) {
             isPlaying.set(false)
-            audioTrack.stop()
+            isLooping.set(false)
+            audio.stop()
             //audioTrack.release()
         }
     }

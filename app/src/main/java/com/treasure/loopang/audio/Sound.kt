@@ -3,6 +3,8 @@ package com.treasure.loopang.audio
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.AudioTrack
+import android.media.MediaRecorder
+import android.media.AudioManager
 import java.io.DataInputStream
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -15,6 +17,15 @@ class Sound( var data : MutableList<Short> = mutableListOf()
            , val audioFormat  : Int = AudioFormat.ENCODING_PCM_16BIT
            , val inputBufferSize : Int = AudioRecord.getMinBufferSize(sampleRate,inputChannel,audioFormat)
            , val outputBufferSize: Int = AudioTrack.getMinBufferSize(sampleRate,outputChannel,audioFormat)) {
+
+    fun makeAudioRecord() : AudioRecord {
+        return AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, inputChannel, audioFormat, inputBufferSize)
+    }
+
+    fun makeAudioTrack() : AudioTrack {
+        return AudioTrack( AudioManager.STREAM_MUSIC, sampleRate, outputChannel
+                         , audioFormat, outputBufferSize, AudioTrack.MODE_STREAM)
+    }
 
     fun save(path: String) {
         val fstream = FileOutputStream(path)

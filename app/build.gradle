@@ -35,5 +35,7 @@ dependencies {
     //implementation 'com.afollestad.material-dialogs:core:3.0.0-beta2'
     implementation 'io.reactivex:rxandroid:1.1.0'
     implementation 'com.jakewharton.rxbinding3:rxbinding:3.0.0-alpha2'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.30.1-eap13'
     //implementation 'com.chibde:audiovisualizer:2.1.0' // audio visualizer
 }
+
