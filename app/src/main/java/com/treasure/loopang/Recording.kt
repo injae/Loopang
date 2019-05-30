@@ -1,8 +1,8 @@
 package com.treasure.loopang
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.view.ViewPager
+import androidx.viewpager.widget.ViewPager
 import android.util.Log
 import com.treasure.loopang.adapter.SongPagerAdapter
 import kotlinx.android.synthetic.main.activity_recording.*
@@ -26,7 +26,7 @@ class Recording : AppCompatActivity() {
         pager.setOnTouchListener { _, _ -> false}
     }
 
-    inner class PageChangeListener: ViewPager.OnPageChangeListener {
+    inner class PageChangeListener: androidx.viewpager.widget.ViewPager.OnPageChangeListener {
         private var selectedPage: Int = 0
         private var scrollState: Int = 0
         private var prevPage: Int = 0
@@ -39,14 +39,14 @@ class Recording : AppCompatActivity() {
         /* 스크롤 시 드래깅 중인지 알려줌 */
         override fun onPageScrollStateChanged(state: Int) {
             when(state){
-                ViewPager.SCROLL_STATE_SETTLING -> {
+                androidx.viewpager.widget.ViewPager.SCROLL_STATE_SETTLING -> {
                     prevPage = selectedPage
                     Log.d("ViewPagerTest", "SCROLL_STATE_SETTLING")
                 }
-                ViewPager.SCROLL_STATE_DRAGGING -> {
+                androidx.viewpager.widget.ViewPager.SCROLL_STATE_DRAGGING -> {
                     Log.d("ViewPagerTest", "SCROLL_STATE_DRAGGING")
                 }
-                ViewPager.SCROLL_STATE_IDLE -> {
+                androidx.viewpager.widget.ViewPager.SCROLL_STATE_IDLE -> {
                     Log.d("ViewPagerTest", "SCROLL_STATE_IDLE")
                 }
             }
