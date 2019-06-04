@@ -2,13 +2,16 @@ package com.treasure.loopang
 
 import android.os.Bundle
 import android.os.Environment
+import android.os.SystemClock
 import androidx.fragment.app.Fragment
 import android.util.Log
 import android.view.*
 import android.widget.AdapterView
+import android.widget.ListView
 import android.widget.Toast
 import com.treasure.loopang.adapter.TrackListAdapter
 import com.treasure.loopang.audio.*
+import com.treasure.loopang.customview.VisualizerView
 import com.treasure.loopang.listitem.TrackItem
 import kotlinx.android.synthetic.main.fragment_record.*
 import kotlinx.coroutines.launch
@@ -21,48 +24,9 @@ private const val SWIPE_VELOCITY_THRESHOLD = 100   // 스와이프 진단을 위
 
 class RecordFragment : androidx.fragment.app.Fragment() {
     private val trackItemList : ArrayList<TrackItem> = arrayListOf()
+    private val trackListAdapter : TrackListAdapter = TrackListAdapter(trackItemList)
     var looper: Looper = Looper()
 
-    /******************************* 제스쳐 이벤트 처리 *******************************/
-    // 싱글 탭 시의 처리동작
-    private fun processWhenSingleTaped() {
-        Toast.makeText(this.context,"tap",Toast.LENGTH_SHORT).show()
-        looper.recordAction()
-        Log.d("RecordFragmentTest", "한번 탭 하셨습니다.")
-    }
-
-    // 위로 스와이프 시의 처리동작
-    private fun processWhenSwipeToUp() {
-        Toast.makeText(this.context,"swipe",Toast.LENGTH_SHORT).show()
-        Log.d("RecordFragmentTest", "위로 스와이프 하셨습니다.")
-        looper.mixerAction()
-    }
-
-    /* 스와이프 처리 함수들
-    private fun processWhenSwipeToDown() {
-        //Log.d("RecordFragmentTest", "위로 스와이프 하셨습니다.")
-    }
-
-    private fun processWhenSwipeToRight() {
-        //Log.d("RecordFragmentTest", "위로 스와이프 하셨습니다.")
-    }
-
-    private fun processWhenSwipeToLeft() {
-        //Log.d("RecordFragmentTest", "위로 스와이프 하셨습니다.")
-    }
-    */
-
-    /* 리스트 아이템 클릭 시 처리동작 (onItemClick 함수와 같이 사용) */
-    private fun processWhenItemClicked(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-        Log.d("RecordFragmentTest", "아이템 클릭! postion: $position")
-    }
-
-    private fun processWhenItemLongClicked(parent: AdapterView<*>, view: View, position: Int, id: Long) : Boolean {
-        Log.d("RecordFragmentTest", "아이템 롱 클릭! postion: $position")
-        return true
-    }
-
-    /********************** 프래그먼트 라이프사이클 관련 이벤트 **********************/
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -74,30 +38,22 @@ class RecordFragment : androidx.fragment.app.Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val trackListAdapter = TrackListAdapter(trackItemList)
         recording_sound_list.adapter = trackListAdapter
 
         /* 프래그먼트 전체에 해당하는 제스쳐 이벤트 */
         val gesture = GestureDetector(view.context, RecordFragmentGestureListener())
         view.setOnTouchListener{ _, event -> gesture.onTouchEvent(event)}
 
-        /* 리스트 아이템을 제외한 리스트뷰 영역을 위한 터치 이벤트 리스너 */
-        // recording_sound_list.setOnTouchListener(ListTouchListener())
-
-        /* 리스트 아이템 롱클릭*/
+        /* 리스트 아이템 롱클릭 이벤트 설정 */
         recording_sound_list.isLongClickable = true
         recording_sound_list.setOnItemLongClickListener{ parent, view, position, id ->
             processWhenItemLongClicked(parent, view, position, id)
         }
 
-        /* 리스트 아이템 클릭 */
+        /* 리스트 아이템 싱글 클릭 이벤트 설정 */
         recording_sound_list.setOnItemClickListener { parent, view, position, id ->
             processWhenItemClicked(parent, view, position, id)
         }
-
-
-        /* 테스트 코드 */
-        for(i in 1..3) trackItemList.add(TrackItem())
     }
 
     override fun onDestroy() {
@@ -153,62 +109,76 @@ class RecordFragment : androidx.fragment.app.Fragment() {
         override fun onLongPress(e: MotionEvent?) {}
     }
 
-/*
+    /******************************* 제스쳐 이벤트 처리 *******************************/
+    // 싱글 탭 시의 처리동작
+    private fun processWhenSingleTaped() {
+        Toast.makeText(this.context,"tap",Toast.LENGTH_SHORT).show()
+        looper.recordAction()
+        /*val trackItem = TrackItem()
+        trackItem.trackName ="Track"
+        trackItem.visualizerView = VisualizerView(context, null)
+        trackListAdapter.addItem(trackItem)*/
+        Log.d("RecordFragmentTest", "한번 탭 하셨습니다.")
+        SystemClock.sleep(5)
+        if(looper.recorder.isRecording.get()) {
+            val trackItem = TrackItem()
+            trackItem.trackName ="Track"
+            trackItem.visualizerView = VisualizerView(context, null)
+            trackListAdapter.addItem(trackItem)
+            VisualizerUpdater().start()
+        }
+    }
 
-    inner class ListTouchListener : View.OnTouchListener {
-        var x: Float = 0.0f
-        var y: Float = 0.0f
-        var isSwiped: Boolean = false
+    // 위로 스와이프 시의 처리동작
+    private fun processWhenSwipeToUp() {
+        Toast.makeText(this.context,"swipe",Toast.LENGTH_SHORT).show()
+        Log.d("RecordFragmentTest", "위로 스와이프 하셨습니다.")
+        looper.mixerAction()
 
+        if(looper.recorder.isRecording.get()) {
+            val trackItem = TrackItem()
+            trackItem.trackName ="Track"
+            trackItem.visualizerView = VisualizerView(context, null)
+            trackListAdapter.addItem(trackItem)
+            VisualizerUpdater().start()
+        }
+    }
 
-/* 각 이벤트 시 어떤 처리를 할 것인지 결정 */
+    /* 스와이프 처리 함수들
+    private fun processWhenSwipeToDown() {
+        //Log.d("RecordFragmentTest", "위로 스와이프 하셨습니다.")
+    }
 
-        private fun onSingleTap() = processWhenSingleTaped()
-        private fun onSwipeUp() = processWhenSwipeToUp()
-        private fun onSwipeDown() {}
-        private fun onSwipeLeft() {}
-        private fun onSwipeRight() {}
+    private fun processWhenSwipeToRight() {
+        //Log.d("RecordFragmentTest", "위로 스와이프 하셨습니다.")
+    }
 
-        override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-            if (event == null || v == null) return false
+    private fun processWhenSwipeToLeft() {
+        //Log.d("RecordFragmentTest", "위로 스와이프 하셨습니다.")
+    }
+    */
 
-            when(event.action){
-                MotionEvent.ACTION_DOWN -> {
-                    x = event.x
-                    y = event.y
-                    Log.d("ListTouchListener", "$v.id")
-                    return true
+    /* 리스트 아이템 클릭 시 처리동작 (onItemClick 함수와 같이 사용) */
+    private fun processWhenItemClicked(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+        Log.d("RecordFragmentTest", "아이템 클릭! postion: $position")
+    }
+
+    private fun processWhenItemLongClicked(parent: AdapterView<*>, view: View, position: Int, id: Long) : Boolean {
+        Log.d("RecordFragmentTest", "아이템 롱 클릭! postion: $position")
+        return true
+    }
+
+    inner class VisualizerUpdater : Thread() {
+        override fun run() {
+            val visualizerView = trackItemList[0].visualizerView
+            while(looper.recorder.isRecording.get()) {
+                SystemClock.sleep(40)
+                activity?.runOnUiThread {
+                    visualizerView.addAmplitude(looper.recorder.maxAmplitude.get().toFloat())
+                    visualizerView.invalidate()
                 }
-                MotionEvent.ACTION_MOVE -> {
-                    if(isSwiped) return false   //스와이프 이벤트 중복 호출 방지
-
-                    val diffY: Float = event.y - y
-                    val diffX: Float = event.x - x
-                    if (abs(diffX) > SWIPE_THRESHOLD) {
-                        if (diffX > 0) onSwipeRight()
-                        else onSwipeLeft()
-                        isSwiped = true
-                        return true
-                    }
-                    if (abs(diffY) > SWIPE_THRESHOLD) {
-                        if (diffY > 0) onSwipeDown()
-                        else onSwipeUp()
-                        isSwiped = true
-                        return true
-                    }
-                    isSwiped = false
-                    return false
-                }
-                MotionEvent.ACTION_UP -> {
-                    if(isSwiped) {
-                        isSwiped = false
-                    }
-                    return false
-                }
-                else -> return false
+                Log.d("VisualizerUpdater","visualizer update")
             }
         }
     }
-*/
-
 }
