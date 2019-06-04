@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger
 import kotlin.concurrent.schedule
 
 class Looper {
-    private val recorder = Recorder(Sound())
+    val recorder = Recorder(Sound())
     private var mixer = Mixer()
     var maxSize : Int = 0
     var recordCount  : AtomicInteger = AtomicInteger(-1)
@@ -45,12 +45,7 @@ class Looper {
         Log.d("AudioTest", "MixerCount: ${mixerCount}")
         when(mixerCount){
             0 -> {
-                Timer().schedule(1000) { Log.d("AudioTest", "3") }
-                Timer().schedule(2000) { Log.d("AudioTest", "2") }
-                Timer().schedule(3000) { Log.d("AudioTest", "1") }
-                Timer().schedule(4000) { Log.d("AudioTest", "Recording Start")
-                    recorder.start()
-                }
+                recorder.start()
             }
             1 -> {
                 runBlocking { recorder.stop();  }

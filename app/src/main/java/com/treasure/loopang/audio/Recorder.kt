@@ -4,11 +4,13 @@ import android.media.AudioRecord
 import android.util.Log
 import kotlinx.coroutines.*
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 
 class Recorder( val sound: Sound
               , val bufferSize: Int = sound.inputBufferSize
               , val audioRecord: AudioRecord = sound.makeAudioRecord()){
     var isRecording = AtomicBoolean(true)
+    var maxAmplitude = AtomicInteger(0)
     lateinit var routine : Deferred<Unit>;
 
     fun start(maxSize: Int? = null) {
@@ -19,6 +21,12 @@ class Recorder( val sound: Sound
             isRecording.set(true)
             while(isRecording.get()) {
                 val size = audioRecord.read(data,0, bufferSize)
+                val tmpMaxAmplitude = data.fold(0.toShort()) { acc, next ->
+                    if(acc < next)
+                        next
+                    else acc
+                }
+                maxAmplitude.set(tmpMaxAmplitude.toInt())
                 data.forEach {
                     if(maxSize != null) {
                         if(maxSize > sound.data.size) { sound.data.add(it) }
