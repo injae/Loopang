@@ -8,12 +8,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.treasure.loopang.adapter.SongListAdapter
+import com.treasure.loopang.audio.FileManager
 import com.treasure.loopang.listitem.SongItem
 import kotlinx.android.synthetic.main.fragment_song_manage.*
 import java.util.*
 
 class SongManageFragment : androidx.fragment.app.Fragment() {
 
+    private val fileManager: FileManager = FileManager()
     private val songItemList = arrayListOf<SongItem>()
 
     override fun onCreateView(
@@ -32,8 +34,9 @@ class SongManageFragment : androidx.fragment.app.Fragment() {
         val songListAdapter = SongListAdapter(songItemList)
         song_list!!.adapter = songListAdapter
 
-        /* 테스트 코드 */
-        for(i in 1..3) songItemList.add(SongItem())
+        val soundList = fileManager.SoundList()
+        for(sound in  soundList)
+            songItemList.add(SongItem(sound.name, sound.date))
     }
 
     override fun onDestroy() {

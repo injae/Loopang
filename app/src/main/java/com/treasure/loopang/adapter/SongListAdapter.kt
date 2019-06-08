@@ -6,15 +6,26 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import com.treasure.loopang.R
 import com.treasure.loopang.listitem.SongItem
+import kotlinx.android.synthetic.main.songlist_item.view.*
 
 class SongListAdapter(private val songItemList: ArrayList<SongItem>) : BaseAdapter() {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val context = parent?.getContext()
-        val view: View = LayoutInflater.from(context).inflate(R.layout.songlist_item, null)
+        val context = parent?.context
+        val holder: Holder
+        val view: View
+        if(convertView == null){
+            view = LayoutInflater.from(context).inflate(R.layout.songlist_item, null)
+            holder = Holder(view)
 
-        /* songItemList의 Item에서 songlist_item 각 위젯에 매칭 */
+            view.tag = holder
+        } else {
+            view = convertView
+            holder = view.tag as Holder
+        }
+
         val songItem = songItemList[position]
-        //convertView.song_name
+        holder.songName.text = songItem.songName
+        holder.songDate.text = songItem.dateString
 
         return view
     }
@@ -30,6 +41,11 @@ class SongListAdapter(private val songItemList: ArrayList<SongItem>) : BaseAdapt
 
     override fun getCount(): Int {
         return songItemList.size
+    }
+
+    inner class Holder(view: View) {
+        var songName = view.song_name
+        var songDate = view.song_date
     }
 
 }
