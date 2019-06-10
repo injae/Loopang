@@ -58,4 +58,6 @@ class Looper {
         }
     }
 
+    fun checkRecordingState() :Boolean = recorder.isRecording.get()
+
 }

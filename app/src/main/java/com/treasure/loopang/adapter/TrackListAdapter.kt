@@ -23,6 +23,7 @@ class TrackListAdapter (private val trackItemList: ArrayList<TrackItem>) : BaseA
 
             view = LayoutInflater.from(parent?.context).inflate(
                 R.layout.tracklist_item, parent, false)
+
             view.visualizer_frame.addView(visualizerView)
 
             holder = Holder()
@@ -58,6 +59,11 @@ class TrackListAdapter (private val trackItemList: ArrayList<TrackItem>) : BaseA
 
     fun addItem(item: TrackItem) {
         trackItemList.add(0,item)
+        notifyDataSetChanged()
+    }
+
+    fun removeItem(position: Int) {
+        trackItemList.removeAt(position)
         notifyDataSetChanged()
     }
 

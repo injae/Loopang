@@ -9,6 +9,9 @@ import android.view.*
 import android.widget.AdapterView
 import android.widget.ListView
 import android.widget.Toast
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.input.input
+import com.afollestad.materialdialogs.list.listItems
 import com.treasure.loopang.adapter.TrackListAdapter
 import com.treasure.loopang.audio.*
 import com.treasure.loopang.customview.VisualizerView
@@ -113,38 +116,24 @@ class RecordFragment : androidx.fragment.app.Fragment() {
     // 싱글 탭 시의 처리동작
     private fun processWhenSingleTaped() {
         Toast.makeText(this.context,"tap",Toast.LENGTH_SHORT).show()
+
         looper.recordAction()
-        /*val trackItem = TrackItem()
-        trackItem.trackName ="Track"
-        trackItem.visualizerView = VisualizerView(context, null)
-        trackListAdapter.addItem(trackItem)*/
-        Log.d("RecordFragmentTest", "한번 탭 하셨습니다.")
-        SystemClock.sleep(5)
-        if(looper.recorder.isRecording.get()) {
-            val trackItem = TrackItem()
-            trackItem.trackName ="Track"
-            trackItem.visualizerView = VisualizerView(context, null)
-            trackListAdapter.addItem(trackItem)
-            VisualizerUpdater().start()
-        }
+
+        if(looper.checkRecordingState())
+            addTrack()
     }
 
     // 위로 스와이프 시의 처리동작
     private fun processWhenSwipeToUp() {
         Toast.makeText(this.context,"swipe",Toast.LENGTH_SHORT).show()
-        Log.d("RecordFragmentTest", "위로 스와이프 하셨습니다.")
+
         looper.mixerAction()
 
-        if(looper.recorder.isRecording.get()) {
-            val trackItem = TrackItem()
-            trackItem.trackName ="Track"
-            trackItem.visualizerView = VisualizerView(context, null)
-            trackListAdapter.addItem(trackItem)
-            VisualizerUpdater().start()
-        }
+        if(looper.checkRecordingState())
+            addTrack()
     }
 
-    /* 스와이프 처리 함수들
+    /*
     private fun processWhenSwipeToDown() {
         //Log.d("RecordFragmentTest", "위로 스와이프 하셨습니다.")
     }
@@ -164,8 +153,30 @@ class RecordFragment : androidx.fragment.app.Fragment() {
     }
 
     private fun processWhenItemLongClicked(parent: AdapterView<*>, view: View, position: Int, id: Long) : Boolean {
+        val menuList = listOf("Drop Track")
+        val context = this.context!!
+
+        MaterialDialog(context).show {
+            listItems(items = menuList) { dialog, index, text ->
+                when (index) {
+                    0 -> {
+                        trackListAdapter.removeItem(position)
+                        Toast.makeText(this.context, "track is removed!", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
         Log.d("RecordFragmentTest", "아이템 롱 클릭! postion: $position")
         return true
+    }
+
+    private fun addTrack() {
+        val trackItem = TrackItem()
+        trackItem.trackName ="Track"
+        trackItem.visualizerView = VisualizerView(context, null)
+        trackListAdapter.addItem(trackItem)
+
+        VisualizerUpdater().start()
     }
 
     inner class VisualizerUpdater : Thread() {
