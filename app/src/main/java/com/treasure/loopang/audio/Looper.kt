@@ -9,7 +9,7 @@ import kotlin.concurrent.schedule
 
 class Looper {
     val recorder = Recorder(Sound())
-    private var mixer = Mixer()
+    var mixer = Mixer()
     var maxSize : Int = 0
     var recordCount  : AtomicInteger = AtomicInteger(-1)
     var mixerCount : Int = -1
@@ -57,5 +57,7 @@ class Looper {
             }
         }
     }
+
+    fun checkRecordingState() :Boolean = recorder.isRecording.get()
 
 }

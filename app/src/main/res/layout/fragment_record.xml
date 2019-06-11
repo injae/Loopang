@@ -32,6 +32,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="23dp"
                 android:layout_marginBottom="23dp"
+                android:stackFromBottom="true"
+                android:transcriptMode="normal"
                 android:background="@android:color/transparent"
                 android:id="@+id/recording_sound_list"/>
     </FrameLayout>

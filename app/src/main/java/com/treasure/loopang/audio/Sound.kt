@@ -41,6 +41,7 @@ class Sound( var data : MutableList<Short> = mutableListOf()
         val buffer = ByteArray(outputBufferSize)
         val fis = FileInputStream(path)
         val dis = DataInputStream(fis)
+        data.clear()
         while(true) {
             val ret = dis.read(buffer, 0, outputBufferSize)
             convertByteArrayToShortArray(buffer).forEach { data.add(it) }
