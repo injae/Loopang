@@ -5,7 +5,7 @@ import java.io.File
 import java.nio.file.Files
 import java.nio.file.attribute.BasicFileAttributes
 
-data class Music(var name: String, var date: String)
+data class Music(var name: String, var date: String, var path: String)
 
 
 class FileManager {
@@ -14,5 +14,5 @@ class FileManager {
       if(!looperDir.isDirectory) looperDir.mkdir()
    }
 
-   fun SoundList() = looperDir.list().map{ Music(it,File(it).lastModified().toString())}
+   fun SoundList() = looperDir.list().map{ Music(it,File(it).lastModified().toString(), looperDir.absolutePath+'/'+it)}
 }

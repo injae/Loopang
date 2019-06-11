@@ -57,6 +57,18 @@ class RecordFragment : androidx.fragment.app.Fragment() {
         recording_sound_list.setOnItemClickListener { parent, view, position, id ->
             processWhenItemClicked(parent, view, position, id)
         }
+
+        recording_title.setOnClickListener {
+            MaterialDialog(context!!).show{
+                input { _, text ->
+                    changeSongName(text.toString())
+                }
+            }
+        }
+    }
+
+    fun changeSongName(text: String) {
+        recording_title.text = text
     }
 
     override fun onDestroy() {
@@ -75,7 +87,7 @@ class RecordFragment : androidx.fragment.app.Fragment() {
         /* 각 이벤트 시 어떤 처리를 할 것인지 결정 */
         private fun onSingleTap() = processWhenSingleTaped()
         private fun onSwipeUp() = processWhenSwipeToUp()
-        private fun onSwipeDown() {} // = processWhenSwipeToDown
+        private fun onSwipeDown() = processWhenSwipeToDown()
         private fun onSwipeLeft() {} // = processWhenSwipeToLeft
         private fun onSwipeRight() {} // = processWhenSwipeToRight
 
@@ -119,6 +131,7 @@ class RecordFragment : androidx.fragment.app.Fragment() {
 
         looper.recordAction()
 
+        SystemClock.sleep(40)
         if(looper.checkRecordingState())
             addTrack()
     }
@@ -129,15 +142,21 @@ class RecordFragment : androidx.fragment.app.Fragment() {
 
         looper.mixerAction()
 
+        SystemClock.sleep(40)
         if(looper.checkRecordingState())
             addTrack()
     }
 
-    /*
     private fun processWhenSwipeToDown() {
-        //Log.d("RecordFragmentTest", "위로 스와이프 하셨습니다.")
+        val fileManager = FileManager()
+        val path = fileManager.looperDir.absolutePath
+        val name: String = recording_title.text.toString()
+
+        Sound(looper.mixer.mixSounds()).save(path+'/'+name)
+        Log.d("RecordFragmentTest", "아래로 스와이프 하셨습니다.")
     }
 
+    /*
     private fun processWhenSwipeToRight() {
         //Log.d("RecordFragmentTest", "위로 스와이프 하셨습니다.")
     }
@@ -182,12 +201,12 @@ class RecordFragment : androidx.fragment.app.Fragment() {
     inner class VisualizerUpdater : Thread() {
         override fun run() {
             val visualizerView = trackItemList[0].visualizerView
-            while(looper.recorder.isRecording.get()) {
-                SystemClock.sleep(40)
+            while(looper.checkRecordingState()) {
                 activity?.runOnUiThread {
                     visualizerView.addAmplitude(looper.recorder.maxAmplitude.get().toFloat())
                     visualizerView.invalidate()
                 }
+                SystemClock.sleep(20)
                 Log.d("VisualizerUpdater","visualizer update")
             }
         }

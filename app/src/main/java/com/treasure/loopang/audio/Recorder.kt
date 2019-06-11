@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger
 class Recorder( val sound: Sound
               , val bufferSize: Int = sound.inputBufferSize
               , val audioRecord: AudioRecord = sound.makeAudioRecord()){
-    var isRecording = AtomicBoolean(true)
+    var isRecording = AtomicBoolean(false)
     var maxAmplitude = AtomicInteger(0)
     lateinit var routine : Deferred<Unit>;
 
