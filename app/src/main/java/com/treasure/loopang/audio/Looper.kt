@@ -58,6 +58,6 @@ class Looper {
         }
     }
 
-    fun checkRecordingState() :Boolean = recorder.isRecording.get()
+    fun checkRecordingState() :Boolean = ((mixerCount == 0 && recordCount.get() == -1) || recordCount.get() == 1 )
 
 }
