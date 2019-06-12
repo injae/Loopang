@@ -13,34 +13,39 @@ import com.treasure.loopang.listitem.TrackItem
 import kotlinx.android.synthetic.main.tracklist_item.view.*
 
 class TrackListAdapter (private val trackItemList: ArrayList<TrackItem>) : BaseAdapter() {
-
+    var is_remove = false
+    var removed_item = -1
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view : View
-        val holder : Holder
+        //val holder : Holder
 
+        Log.d("TESTTTTTT", "in ${position}, size: ${trackItemList.size}")
+        //val trackItem = trackItemList[position]
         if (convertView == null) {
-            val visualizerView = trackItemList[position].visualizerView
+            view = LayoutInflater.from(parent?.context).inflate( R.layout.tracklist_item, parent, false)
+            //holder = Holder()
+            //holder.trackName = view.track_name
+            //holder.visualizerView = visualizerView
 
-            view = LayoutInflater.from(parent?.context).inflate(
-                R.layout.tracklist_item, parent, false)
-
-            view.visualizer_frame.addView(visualizerView)
-
-            holder = Holder()
-
-            holder.trackName = view.track_name
-            holder.visualizerView = visualizerView
-
-            view.tag = holder
+            //view.tag = holder
+            if(!is_remove)  {
+                var visualizerView = trackItemList[position].visualizerView
+                view.visualizer_frame.addView(visualizerView)
+            }
+            else {
+                Log.d("TESTTTTTT", "remove ${removed_item}, size: ${trackItemList.size}")
+                is_remove = false
+                var item = trackItemList[removed_item]
+                view.visualizer_frame.removeView(item.visualizerView)
+                trackItemList.remove(item)
+                notifyDataSetChanged()
+            }
         } else {
-            view = convertView
-            holder = view.tag as Holder
+            view = convertView!!
+            //holder = view.tag as Holder
         }
-
-        /* trackItemList의 Item에서 tracklist_item 각 위젯에 매칭 */
-        val trackItem = trackItemList[position]
-        holder.trackName.text = trackItem.trackName
-        holder.visualizerView = trackItem.visualizerView
+        //holder.trackName.text = trackItem.trackName
+        //holder.visualizerView = trackItem.visualizerView
 
         return view
     }
@@ -63,7 +68,8 @@ class TrackListAdapter (private val trackItemList: ArrayList<TrackItem>) : BaseA
     }
 
     fun removeItem(position: Int) {
-        trackItemList.removeAt(position)
+        is_remove = true
+        removed_item = position
         notifyDataSetChanged()
     }
 
