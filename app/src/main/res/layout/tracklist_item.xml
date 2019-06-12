@@ -16,11 +16,11 @@
             android:textColor="#FFFFFF"
             android:textStyle="bold"
             android:textSize="15sp"/>
-    <FrameLayout
+    <com.treasure.loopang.customview.VisualizerView
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="60dp"
+            android:background="@color/fadeBlack"
             android:layout_below="@id/track_name"
-            android:id="@+id/visualizer_frame">
-    </FrameLayout>
+            android:id="@+id/visualizer"/>
 
 </RelativeLayout>

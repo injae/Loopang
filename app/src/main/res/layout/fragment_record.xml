@@ -35,6 +35,6 @@
                 android:stackFromBottom="true"
                 android:transcriptMode="normal"
                 android:background="@android:color/transparent"
-                android:id="@+id/recording_sound_list"/>
+                android:id="@+id/track_list"/>
     </FrameLayout>
 </RelativeLayout>
