@@ -7,10 +7,11 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.media.MediaExtractor;
 import android.util.AttributeSet;
-import android.view.View;
+import android.widget.FrameLayout;
 
-public class VisualizerView extends View {
+public class VisualizerView extends FrameLayout {
     private static final int LINE_WIDTH = 1; // width of visualizer lines
     private static final int LINE_SCALE = 75; // scales visualizer lines
     private List<Float> amplitudes; // amplitudes for line lengths
@@ -27,9 +28,34 @@ public class VisualizerView extends View {
         amplitudes = new ArrayList<>();
     }
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+        //super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+        if( widthMode == MeasureSpec.UNSPECIFIED)
+            width = 500;
+        else if( widthMode == MeasureSpec.AT_MOST)
+            width = widthMeasureSpec;
+        else if( widthMode == MeasureSpec.EXACTLY)
+            width = MeasureSpec.getSize(widthMeasureSpec);
+
+        if( heightMode == MeasureSpec.UNSPECIFIED)
+            height = 60;
+        else if( heightMode == MeasureSpec.AT_MOST)
+            height = heightMeasureSpec;
+        else if( heightMode == MeasureSpec.EXACTLY)
+            height = MeasureSpec.getSize(heightMeasureSpec);;
+
+        setMeasuredDimension(width, height);
+    }
+
     // called when the dimensions of the View change
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        if(w == 0 || h == 0) return;
+
         width = w; // new width of this View
         height = h; // new height of this View
         amplitudes = new ArrayList<>(width / LINE_WIDTH);
@@ -43,18 +69,30 @@ public class VisualizerView extends View {
     // add the given amplitude to the amplitudes ArrayList
     public void addAmplitude(float amplitude) {
         amplitudes.add(amplitude); // add newest to the amplitudes ArrayList
-
         // if the power lines completely fill the VisualizerView
         if (amplitudes.size() * LINE_WIDTH >= width) {
-            amplitudes.remove(0); // remove oldest power value
+           // amplitudes.remove(0); // remove oldest power value
         }
+    }
+
+    public void addAmplitudeAndInvalidate(float amplitude) {
+        this.addAmplitude(amplitude);
+        this.invalidate();
+    }
+
+    public List<Float> getAmplitudes() {
+        return amplitudes;
+    }
+
+    public void setAmplitudes(List<Float> amplitudes) {
+        this.amplitudes = amplitudes;
     }
 
     // draw the visualizer with scaled lines representing the amplitudes
     @Override
     public void onDraw(Canvas canvas) {
         int middle = height / 2; // get the middle of the View
-        float curX = 0; // start curX at zero
+        float curX =  0; // width - Float.intBitsToFloat(amplitudes.size())/ 2; // start curX at middle
 
         // for each item in the amplitudes ArrayList
         for (float power : amplitudes) {

@@ -1,13 +1,12 @@
 package com.treasure.loopang
 
 import android.os.Bundle
-import android.os.Environment
 import android.os.SystemClock
-import androidx.fragment.app.Fragment
 import android.util.Log
 import android.view.*
 import android.widget.AdapterView
-import android.widget.ListView
+import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.input.input
@@ -17,9 +16,7 @@ import com.treasure.loopang.audio.*
 import com.treasure.loopang.customview.VisualizerView
 import com.treasure.loopang.listitem.TrackItem
 import kotlinx.android.synthetic.main.fragment_record.*
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import java.util.concurrent.atomic.AtomicInteger
+import kotlinx.android.synthetic.main.tracklist_item.view.*
 import kotlin.math.abs
 
 private const val SWIPE_THRESHOLD = 100    // 스와이프 진단을 위한 위치차 임계치
@@ -41,20 +38,20 @@ class RecordFragment : androidx.fragment.app.Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recording_sound_list.adapter = trackListAdapter
+        track_list.adapter = trackListAdapter
 
         /* 프래그먼트 전체에 해당하는 제스쳐 이벤트 */
         val gesture = GestureDetector(view.context, RecordFragmentGestureListener())
         view.setOnTouchListener{ _, event -> gesture.onTouchEvent(event)}
 
         /* 리스트 아이템 롱클릭 이벤트 설정 */
-        recording_sound_list.isLongClickable = true
-        recording_sound_list.setOnItemLongClickListener{ parent, view, position, id ->
+        track_list.isLongClickable = true
+        track_list.setOnItemLongClickListener{ parent, view, position, id ->
             processWhenItemLongClicked(parent, view, position, id)
         }
 
         /* 리스트 아이템 싱글 클릭 이벤트 설정 */
-        recording_sound_list.setOnItemClickListener { parent, view, position, id ->
+        track_list.setOnItemClickListener { parent, view, position, id ->
             processWhenItemClicked(parent, view, position, id)
         }
 
@@ -132,8 +129,11 @@ class RecordFragment : androidx.fragment.app.Fragment() {
         looper.recordAction()
 
         SystemClock.sleep(40)
-        if(looper.checkRecordingState())
+        if(looper.checkRecordingState()){
             addTrack()
+            VisualizerUpdater().start()
+        }
+
     }
 
     // 위로 스와이프 시의 처리동작
@@ -143,8 +143,11 @@ class RecordFragment : androidx.fragment.app.Fragment() {
         looper.mixerAction()
 
         SystemClock.sleep(40)
-        if(looper.checkRecordingState())
+        if(looper.checkRecordingState()){
             addTrack()
+            VisualizerUpdater().start()
+        }
+
     }
 
     private fun processWhenSwipeToDown() {
@@ -176,7 +179,7 @@ class RecordFragment : androidx.fragment.app.Fragment() {
         val context = this.context!!
 
         MaterialDialog(context).show {
-            listItems(items = menuList) { dialog, index, text ->
+            listItems(items = menuList) { _, index, _ ->
                 when (index) {
                     0 -> {
                         trackListAdapter.removeItem(position)
@@ -191,20 +194,27 @@ class RecordFragment : androidx.fragment.app.Fragment() {
 
     private fun addTrack() {
         val trackItem = TrackItem()
-        trackItem.trackName ="Track"
-        trackItem.visualizerView = VisualizerView(context, null)
+        trackItem.trackName ="Track${trackItemList.size+1}"
         trackListAdapter.addItem(trackItem)
-
-        VisualizerUpdater().start()
     }
 
     inner class VisualizerUpdater : Thread() {
         override fun run() {
-            val visualizerView = trackItemList[0].visualizerView
+            while(track_list.childCount != trackItemList.size) {
+                SystemClock.sleep(200)
+            }
+            val currentItemView:View = track_list.getChildAt(0)
+            val visualizerView:VisualizerView = currentItemView.visualizer
+            val trackName:TextView
+            var nowMaxAmplitude: Float
+
             while(looper.checkRecordingState()) {
                 activity?.runOnUiThread {
-                    visualizerView.addAmplitude(looper.recorder.maxAmplitude.get().toFloat())
-                    visualizerView.invalidate()
+                    // currentItemView = trackListAdapter.getView(0, null, track_list)
+                    // visualizerView  = currentItemView.visualizer
+                    nowMaxAmplitude = looper.recorder.maxAmplitude.get().toFloat()
+                    visualizerView.addAmplitudeAndInvalidate(nowMaxAmplitude)
+                    Log.d("VisualizerUpdater","visualizer update ${currentItemView.track_name.text}")
                 }
                 SystemClock.sleep(20)
                 Log.d("VisualizerUpdater","visualizer update")
