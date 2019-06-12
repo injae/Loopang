@@ -44,7 +44,7 @@ class SongManageFragment : androidx.fragment.app.Fragment() {
         Thread{
             while(true) {
                 refreshSongList()
-                activity!!.runOnUiThread {
+                activity?.runOnUiThread {
                     songListAdapter.notifyDataSetChanged()
                 }
                 SystemClock.sleep(100)

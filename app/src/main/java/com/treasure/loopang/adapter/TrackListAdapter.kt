@@ -11,7 +11,6 @@ import com.treasure.loopang.listitem.TrackItem
 import kotlinx.android.synthetic.main.tracklist_item.view.*
 
 class TrackListAdapter (private val trackItemList: ArrayList<TrackItem>) : BaseAdapter() {
-
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view: View
         val trackListHolder: TrackListHolder
@@ -24,14 +23,13 @@ class TrackListAdapter (private val trackItemList: ArrayList<TrackItem>) : BaseA
             trackListHolder = TrackListHolder()
             trackListHolder.trackName = view.track_name
             trackListHolder.visualizerView = view.visualizer
+            trackItem.amplitudes = trackListHolder.visualizerView.amplitudes
 
             view.tag = trackListHolder
         } else {
             view = convertView
             trackListHolder = view.tag as TrackListHolder
         }
-
-        //trackItem.amplitudes = trackListHolder.visualizerView.amplitudes
 
         trackListHolder.trackName.text = trackItem.trackName
         trackListHolder.visualizerView.amplitudes = trackItem.amplitudes

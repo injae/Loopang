@@ -17,6 +17,10 @@ import com.treasure.loopang.customview.VisualizerView
 import com.treasure.loopang.listitem.TrackItem
 import kotlinx.android.synthetic.main.fragment_record.*
 import kotlinx.android.synthetic.main.tracklist_item.view.*
+import kotlinx.android.synthetic.main.tracklist_item.view.*
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import java.util.concurrent.atomic.AtomicInteger
 import kotlin.math.abs
 
 private const val SWIPE_THRESHOLD = 100    // 스와이프 진단을 위한 위치차 임계치
@@ -128,7 +132,6 @@ class RecordFragment : androidx.fragment.app.Fragment() {
 
         looper.recordAction()
 
-        SystemClock.sleep(40)
         if(looper.checkRecordingState()){
             addTrack()
             VisualizerUpdater().start()
@@ -140,9 +143,9 @@ class RecordFragment : androidx.fragment.app.Fragment() {
     private fun processWhenSwipeToUp() {
         Toast.makeText(this.context,"swipe",Toast.LENGTH_SHORT).show()
 
+        if (looper.mixerCount == 1 && trackItemList.size == 0) return
         looper.mixerAction()
 
-        SystemClock.sleep(40)
         if(looper.checkRecordingState()){
             addTrack()
             VisualizerUpdater().start()
@@ -175,6 +178,7 @@ class RecordFragment : androidx.fragment.app.Fragment() {
     }
 
     private fun processWhenItemLongClicked(parent: AdapterView<*>, view: View, position: Int, id: Long) : Boolean {
+        if(looper.mixer.isPlaying.get()) return false;
         val menuList = listOf("Drop Track")
         val context = this.context!!
 
@@ -182,6 +186,7 @@ class RecordFragment : androidx.fragment.app.Fragment() {
             listItems(items = menuList) { _, index, _ ->
                 when (index) {
                     0 -> {
+                        looper.mixer.sounds.removeAt(looper.mixer.sounds.size - (position+1))
                         trackListAdapter.removeItem(position)
                         Toast.makeText(this.context, "track is removed!", Toast.LENGTH_SHORT).show()
                     }
