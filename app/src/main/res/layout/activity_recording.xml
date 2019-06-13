@@ -4,7 +4,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/gradiant_background"
+        android:background="@drawable/gradient_background"
         tools:context=".Recording">
     <RelativeLayout
             android:orientation="vertical"
@@ -14,7 +14,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" android:id="@+id/fragment_frame"
                 android:layout_alignParentTop="true"
-                android:layout_marginTop="14dp" android:layout_marginBottom="58dp" android:layout_marginLeft="14dp"
+                android:layout_marginTop="30dp" android:layout_marginBottom="55dp" android:layout_marginLeft="14dp"
                 android:layout_marginRight="14dp">
             <androidx.viewpager.widget.ViewPager
                     android:id="@+id/pager"

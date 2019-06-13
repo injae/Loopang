@@ -5,8 +5,6 @@ import android.os.SystemClock
 import android.util.Log
 import android.view.*
 import android.widget.AdapterView
-import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.input.input
@@ -17,10 +15,6 @@ import com.treasure.loopang.customview.VisualizerView
 import com.treasure.loopang.listitem.TrackItem
 import kotlinx.android.synthetic.main.fragment_record.*
 import kotlinx.android.synthetic.main.tracklist_item.view.*
-import kotlinx.android.synthetic.main.tracklist_item.view.*
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import java.util.concurrent.atomic.AtomicInteger
 import kotlin.math.abs
 
 private const val SWIPE_THRESHOLD = 100    // 스와이프 진단을 위한 위치차 임계치
@@ -29,6 +23,7 @@ private const val SWIPE_VELOCITY_THRESHOLD = 100   // 스와이프 진단을 위
 class RecordFragment : androidx.fragment.app.Fragment() {
     private val trackItemList : ArrayList<TrackItem> = arrayListOf()
     private val trackListAdapter : TrackListAdapter = TrackListAdapter(trackItemList)
+    private lateinit var visualizerUpdater : VisualizerUpdater
     var looper: Looper = Looper()
 
     override fun onCreateView(
@@ -50,13 +45,13 @@ class RecordFragment : androidx.fragment.app.Fragment() {
 
         /* 리스트 아이템 롱클릭 이벤트 설정 */
         track_list.isLongClickable = true
-        track_list.setOnItemLongClickListener{ parent, view, position, id ->
-            processWhenItemLongClicked(parent, view, position, id)
+        track_list.setOnItemLongClickListener{ parent, v, position, id ->
+            processWhenItemLongClicked(parent, v, position, id)
         }
 
         /* 리스트 아이템 싱글 클릭 이벤트 설정 */
-        track_list.setOnItemClickListener { parent, view, position, id ->
-            processWhenItemClicked(parent, view, position, id)
+        track_list.setOnItemClickListener { parent, v, position, id ->
+            processWhenItemClicked(parent, v, position, id)
         }
 
         recording_title.setOnClickListener {
@@ -68,11 +63,13 @@ class RecordFragment : androidx.fragment.app.Fragment() {
         }
     }
 
-    fun changeSongName(text: String) {
+    private fun changeSongName(text: String) {
         recording_title.text = text
     }
 
     override fun onDestroy() {
+        looper.recorder.stop()
+        looper.mixer.stop()
         super.onDestroy()
         Log.d("RecordFragment", "RecordFragment Destroyed!")
     }
@@ -128,32 +125,47 @@ class RecordFragment : androidx.fragment.app.Fragment() {
     /******************************* 제스쳐 이벤트 처리 *******************************/
     // 싱글 탭 시의 처리동작
     private fun processWhenSingleTaped() {
-        Toast.makeText(this.context,"tap",Toast.LENGTH_SHORT).show()
+        if (looper.mixerCount == -1){
+            Toast.makeText(this.context,"You have to swipe up at first time",Toast.LENGTH_SHORT).show()
+            return
+        }
 
         looper.recordAction()
-
         if(looper.checkRecordingState()){
+            Toast.makeText(this.context,"Make New Track and Recording Start!",Toast.LENGTH_SHORT).show()
             addTrack()
-            VisualizerUpdater().start()
+        } else {
+            Toast.makeText(this.context,"Recording Stop!",Toast.LENGTH_SHORT).show()
         }
 
     }
 
     // 위로 스와이프 시의 처리동작
     private fun processWhenSwipeToUp() {
-        Toast.makeText(this.context,"swipe",Toast.LENGTH_SHORT).show()
+        if (looper.mixerCount == -1)
+            Toast.makeText(this.context,"Make New Track and Recording Start!",Toast.LENGTH_SHORT).show()
+        else if (looper.mixerCount == 0)
+            Toast.makeText(this.context,"PlayBack Stop!",Toast.LENGTH_SHORT).show()
+        else if (looper.mixerCount == 1 && trackItemList.size == 0){
+            Toast.makeText(this.context,"There is no any Track!",Toast.LENGTH_SHORT).show()
+            return
+        }
+        else if (looper.mixerCount == 1)
+            Toast.makeText(this.context,"PlayBack!",Toast.LENGTH_SHORT).show()
 
-        if (looper.mixerCount == 1 && trackItemList.size == 0) return
         looper.mixerAction()
 
         if(looper.checkRecordingState()){
             addTrack()
-            VisualizerUpdater().start()
         }
-
     }
 
     private fun processWhenSwipeToDown() {
+        if(trackItemList.isEmpty()){
+            Toast.makeText(this.context,"Please make Track at least 1",Toast.LENGTH_SHORT).show()
+            return
+        }
+
         val fileManager = FileManager()
         val path = fileManager.looperDir.absolutePath
         val name: String = recording_title.text.toString()
@@ -178,7 +190,7 @@ class RecordFragment : androidx.fragment.app.Fragment() {
     }
 
     private fun processWhenItemLongClicked(parent: AdapterView<*>, view: View, position: Int, id: Long) : Boolean {
-        if(looper.mixer.isPlaying.get()) return false;
+        if(looper.mixer.isPlaying.get()) return false
         val menuList = listOf("Drop Track")
         val context = this.context!!
 
@@ -188,7 +200,7 @@ class RecordFragment : androidx.fragment.app.Fragment() {
                     0 -> {
                         looper.mixer.sounds.removeAt(looper.mixer.sounds.size - (position+1))
                         trackListAdapter.removeItem(position)
-                        Toast.makeText(this.context, "track is removed!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this.context, "track is droped!", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -201,6 +213,8 @@ class RecordFragment : androidx.fragment.app.Fragment() {
         val trackItem = TrackItem()
         trackItem.trackName ="Track${trackItemList.size+1}"
         trackListAdapter.addItem(trackItem)
+        visualizerUpdater = VisualizerUpdater()
+        visualizerUpdater.start()
     }
 
     inner class VisualizerUpdater : Thread() {
@@ -208,22 +222,19 @@ class RecordFragment : androidx.fragment.app.Fragment() {
             while(track_list.childCount != trackItemList.size) {
                 SystemClock.sleep(200)
             }
-            val currentItemView:View = track_list.getChildAt(0)
+            val currentItemView:View          = track_list.getChildAt(0)
             val visualizerView:VisualizerView = currentItemView.visualizer
-            val trackName:TextView
             var nowMaxAmplitude: Float
 
+            visualizerView.clear()
             while(looper.checkRecordingState()) {
                 activity?.runOnUiThread {
-                    // currentItemView = trackListAdapter.getView(0, null, track_list)
-                    // visualizerView  = currentItemView.visualizer
                     nowMaxAmplitude = looper.recorder.maxAmplitude.get().toFloat()
                     visualizerView.addAmplitudeAndInvalidate(nowMaxAmplitude)
-                    Log.d("VisualizerUpdater","visualizer update ${currentItemView.track_name.text}")
                 }
                 SystemClock.sleep(20)
-                Log.d("VisualizerUpdater","visualizer update")
             }
+            trackItemList[0].amplitudes = visualizerView.amplitudes
         }
     }
 }
