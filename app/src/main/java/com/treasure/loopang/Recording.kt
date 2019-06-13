@@ -2,28 +2,36 @@ package com.treasure.loopang
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.viewpager.widget.ViewPager
 import android.util.Log
+import android.widget.Toast
 import com.treasure.loopang.adapter.SongPagerAdapter
 import kotlinx.android.synthetic.main.activity_recording.*
 
 class Recording : AppCompatActivity() {
+    private val FINISH_INTERVAL_TIME = 2000
+    private var backPressedTime: Long = 0
+
     private val pagerAdapter by lazy { SongPagerAdapter(supportFragmentManager) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recording)
 
-        /*
-        // fragment test
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_frame, SongManageFragment())
-            .commit()
-        */
-
         pager.adapter = pagerAdapter
         pager.addOnPageChangeListener(PageChangeListener())
         pager.setOnTouchListener { _, _ -> false}
+    }
+
+    override fun onBackPressed() {
+        val tempTime = System.currentTimeMillis()
+        val intervalTime = tempTime - backPressedTime
+
+        if (intervalTime in 0..FINISH_INTERVAL_TIME)
+            finishAffinity()
+        else {
+            backPressedTime = tempTime
+            Toast.makeText(this, "One More pressed, Turn OFF", Toast.LENGTH_SHORT).show()
+        }
     }
 
     inner class PageChangeListener: androidx.viewpager.widget.ViewPager.OnPageChangeListener {

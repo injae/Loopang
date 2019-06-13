@@ -23,7 +23,6 @@ class TrackListAdapter (private val trackItemList: ArrayList<TrackItem>) : BaseA
             trackListHolder = TrackListHolder()
             trackListHolder.trackName = view.track_name
             trackListHolder.visualizerView = view.visualizer
-            trackItem.amplitudes = trackListHolder.visualizerView.amplitudes
 
             view.tag = trackListHolder
         } else {
@@ -32,7 +31,9 @@ class TrackListAdapter (private val trackItemList: ArrayList<TrackItem>) : BaseA
         }
 
         trackListHolder.trackName.text = trackItem.trackName
-        trackListHolder.visualizerView.amplitudes = trackItem.amplitudes
+        if(!trackItem.amplitudes.isEmpty())
+            trackListHolder.visualizerView.amplitudes = trackItem.amplitudes
+        trackListHolder.visualizerView.invalidate()
 
         return view
     }
