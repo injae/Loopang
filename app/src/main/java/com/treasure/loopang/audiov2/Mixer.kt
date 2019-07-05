@@ -34,4 +34,18 @@ class Mixer(val sounds: MutableList<Sound> = mutableListOf()) : IPlayable {
 
     fun mixSounds() = sounds.map { it.data }.fold(MutableList<Short>(sounds[0].data.size, {0})) {
             acc, it -> acc.zip(it){ a, b -> (a + b).toShort() }.toMutableList() }
+
+    fun getExceptedData(select: Int) : ShortArray {
+        val dataSize = sounds[0].data.size
+        val sumList = ShortArray(dataSize){0}
+        for(index in 0 until dataSize) {
+            for(idx in 0 until sounds.size) {
+                if(idx != select) {
+                    sumList[index] = (sumList[index] + sounds[idx].data[index]).toShort()
+                }
+            }
+        }
+
+        return sumList
+    }
 }
