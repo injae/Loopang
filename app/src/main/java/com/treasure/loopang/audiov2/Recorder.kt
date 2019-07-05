@@ -33,10 +33,16 @@ class Recorder(var format: IFormat  = Pcm16(),
     }
 
     fun stop() : Sound {
-        isRecording.set(false)
-        info.inputAudio.stop()
-        runBlocking { routine.await() }
-        callStop(data)
+        if(isRecording.get()) {
+            isRecording.set(false)
+            info.inputAudio.stop()
+            runBlocking { routine.await() }
+            callStop(data)
+        }
+        return getSound()
+    }
+
+    fun getSound(): Sound {
         var export = Sound(data)
         data = mutableListOf()
         return export
