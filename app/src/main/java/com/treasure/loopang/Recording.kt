@@ -3,6 +3,7 @@ package com.treasure.loopang
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.WindowManager
 import android.widget.Toast
 import com.treasure.loopang.adapter.SongPagerAdapter
 import kotlinx.android.synthetic.main.activity_recording.*
@@ -16,6 +17,7 @@ class Recording : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recording)
+        window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
 
         pager.adapter = pagerAdapter
         pager.addOnPageChangeListener(PageChangeListener())
