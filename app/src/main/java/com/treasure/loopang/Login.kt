@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.WindowManager
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_login.*
@@ -20,6 +21,7 @@ class Login : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         checkPermission()
+        window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
 
         login_button.clicks()
             .subscribe { startActivity(Intent(this, Recording::class.java)) }.apply { disposables.add(this) }
