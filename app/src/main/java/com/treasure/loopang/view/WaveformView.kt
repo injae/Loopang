@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.os.Handler
 import android.util.AttributeSet
 import android.view.View
 
@@ -11,16 +12,26 @@ class WaveformView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
     private var _amplitudes: MutableList<Short>? = null   // _amplitudes for line lengths
+    var amplitude: MutableList<Short>? = null
+        set(value) {
+            value?.let{
+                _amplitudes = convertList(it)
+                mHandler.post { invalidate() }
+            }
+            field = value
+        }
     private var _width: Int = 0 // _width of this View
     private var _height: Int = 0 // _height of this View
     private var _size: Int = 0 // _amplitudes size
-    private val linePaint: Paint = Paint() // specifies line drawing characteristics
+
+    private val mLinePaint: Paint = Paint() // specifies line drawing characteristics
+    private val mHandler = Handler()
 
     init {
         // create Paint for lines
-        linePaint.color = Color.WHITE // set color to green
-        linePaint.strokeWidth = LINE_WIDTH.toFloat() // set stroke _width
-    }// call superclass constructor
+        mLinePaint.color = Color.WHITE // set color to green
+        mLinePaint.strokeWidth = LINE_WIDTH.toFloat() // set stroke _width
+    }
 
     // called when the dimensions of the View change
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -28,7 +39,7 @@ class WaveformView @JvmOverloads constructor(
 
         _width = w // new _width of this View
         _height = h // new _height of this View
-        _size = width / LINE_WIDTH
+        _size = _width / LINE_WIDTH
     }
 
     // clear all _amplitudes to prepare for a new visualization
@@ -47,14 +58,9 @@ class WaveformView @JvmOverloads constructor(
 
             // draw a line representing this item in the _amplitudes ArrayList
             canvas.drawLine(
-                curX, 0f, curX, scaledHeight.toFloat(), linePaint
+                curX, 0f, curX, scaledHeight.toFloat(), mLinePaint
             )
         }
-    }
-
-    fun setAmplitudes(data: MutableList<Short>) {
-        _amplitudes = convertList(data)
-        invalidate()
     }
 
     private fun convertList(data: MutableList<Short>): MutableList<Short> {

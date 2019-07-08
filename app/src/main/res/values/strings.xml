@@ -15,4 +15,6 @@
     <string name="example_track_item">Track Item</string>
     <string name="example_song_item">Song Item</string>
     <string name="song_item_date_example">2019/03/18</string>
+
+    <string name="layer_label">Layer #</string>
 </resources>
