@@ -6,6 +6,8 @@ typealias Flow<T> = (T) -> Unit
 abstract open class SoundFlow<T> {
     var effectorList : MutableList<Effector> = mutableListOf()
     fun addEffector(effector: Effector) { effectorList.add(effector) }
+    fun addEffector(index: Int, effector: Effector) { effectorList[index] = effector }
+    fun removeEffector(effector: Effector) { effectorList.remove(effector) }
     fun effect(data: ShortArray) : ShortArray { return effectorList.fold(data, {acc, it -> it(acc)}) }
 
     protected var callSuccess: Flow<T> = {  }
