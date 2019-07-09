@@ -45,7 +45,7 @@ class Sound ( var data: MutableList<Short> = mutableListOf(),
         val format = formatFactory(path)
         val fstream = FileOutputStream(path)
         data.chunked(info.inputBufferSize)
-            .map{ it.toShortArray() }
+            .map{ effect(it.toShortArray()) }
             .map{ format.encord(it) }
             .forEach { fstream.write(it,0,it.size) }
         fstream.close()
