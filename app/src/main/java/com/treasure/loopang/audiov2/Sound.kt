@@ -13,20 +13,22 @@ import java.util.concurrent.atomic.AtomicBoolean
 class Sound ( var data: MutableList<Short> = mutableListOf(),
               var format: IFormat = Pcm16(),
               var info: FormatInfo = format.info(),
-              var isPlaying: AtomicBoolean = AtomicBoolean(false)) : SoundFlow() {
+              var isPlaying: AtomicBoolean = AtomicBoolean(false)) : SoundFlow<Sound>() {
     fun play() {
         if(!isPlaying.get()) {
             info.outputAudio.play()
-            callStart(data)
             isPlaying.set(true)
-            run exit@{
-                data.chunked(info.outputBufferSize)
-                    .map { it.toShortArray() }
-                    .map { effect(it) }
-                    .forEach { if(!isPlaying.get()) return@exit else info.outputAudio.write(it, 0, it.size) }
+            callStart(this)
+            if(isPlaying.get()) {
+                run exit@{
+                    data.chunked(info.outputBufferSize)
+                        .map { it.toShortArray() }
+                        .map { effect(it) }
+                        .forEach { if (!isPlaying.get()) return@exit else info.outputAudio.write(it, 0, it.size) }
+                }
             }
             isPlaying.set(false)
-            callSuccess(data)
+            callSuccess(this)
         }
     }
 
@@ -34,7 +36,7 @@ class Sound ( var data: MutableList<Short> = mutableListOf(),
         if(isPlaying.get()) {
             isPlaying.set(false)
             info.outputAudio.stop()
-            callStop(data)
+            callStop(this)
             //audioTrack.release()
         }
     }

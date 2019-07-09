@@ -12,13 +12,13 @@ import java.util.concurrent.atomic.AtomicBoolean
 class Recorder(var format: IFormat  = Pcm16(),
                var info: FormatInfo =format.info(),
                var data: MutableList<Short> = mutableListOf(),
-               var isRecording: AtomicBoolean = AtomicBoolean(false)) : SoundFlow() {
+               var isRecording: AtomicBoolean = AtomicBoolean(false)) : SoundFlow<Recorder>() {
     lateinit var routine : Deferred<Unit>;
 
     fun start(maxSize: Int? = null) {
         Stabilizer.stabilizeAudio(info.inputAudio)
         info.inputAudio.startRecording()
-        callStart(data)
+        callStart(this)
         routine = async {
             isRecording.set(true)
             var buffer = ShortArray(info.inputBufferSize)
@@ -29,7 +29,7 @@ class Recorder(var format: IFormat  = Pcm16(),
                             ?: buffer.forEach { data.add(it) }
             }
         }
-        callSuccess(data)
+        callSuccess(this)
     }
 
     fun stop() : Sound {
@@ -37,7 +37,7 @@ class Recorder(var format: IFormat  = Pcm16(),
             isRecording.set(false)
             info.inputAudio.stop()
             runBlocking { routine.await() }
-            callStop(data)
+            callStop(this)
         }
         return getSound()
     }
