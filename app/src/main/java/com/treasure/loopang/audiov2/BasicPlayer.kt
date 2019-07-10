@@ -9,7 +9,7 @@ class BasicPlayer(var sound: Sound) : IPlayable {
 
     override fun start() {
         isLooping.set(true)
-        launch { while (isLooping.get()) { val routine = async { sound.play() }.await() } }.start()
+        launch { while (isLooping.get()) { async { sound.play() }.await() } }.start()
     }
 
     override fun stop() {
