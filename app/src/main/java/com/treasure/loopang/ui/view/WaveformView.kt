@@ -1,4 +1,4 @@
-package com.treasure.loopang.view
+package com.treasure.loopang.ui.view
 
 import android.content.Context
 import android.graphics.Canvas

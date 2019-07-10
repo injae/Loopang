@@ -1,4 +1,4 @@
-package com.treasure.loopang.view
+package com.treasure.loopang.ui.view
 
 import android.content.Context
 import android.graphics.Canvas
@@ -27,12 +27,18 @@ class IndicatorView @JvmOverloads constructor(
             mHandler.post { invalidate() }
         }
 
-    override fun onDraw(canvas: Canvas?) {
+    companion object {
+        private const val LINE_WIDTH = 2F
+    }
+
+    init {
         mIndicatorPaint.style = Paint.Style.STROKE
-        mIndicatorPaint.strokeWidth = 2f
+        mIndicatorPaint.strokeWidth = LINE_WIDTH
         mIndicatorPaint.isAntiAlias = true
         mIndicatorPaint.color = Color.RED
+    }
 
+    override fun onDraw(canvas: Canvas?) {
         val x = _width * playbackRate / 100
         val y = _height.toFloat()
 

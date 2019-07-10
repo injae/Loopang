@@ -4,4 +4,7 @@
     <color name="colorPrimaryDark">#af7872</color>
     <color name="colorAccent">#4b3330</color>
     <color name="fadeBlack">#0D000000</color>
+    <color name="colorLayerView">#26737373</color>
+    <color name="colorWaveform">#738B8585</color>
+    <color name="colorWaveformMute">#CCE4E1E1</color>
 </resources>
