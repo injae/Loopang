@@ -34,6 +34,7 @@ class RecordFragment : androidx.fragment.app.Fragment() {
         mTouchGestureListener.onSwipeToUp = { onThisSwipeToUp() }
 
         // recorder.onSuccess { addLayer() }
+        recorder.onSuccess { Log.d("recorder","recorder.onSuccess()")}
         recorder.onStop { addLayer() }
 
         mixer.isLooping.set(false)
