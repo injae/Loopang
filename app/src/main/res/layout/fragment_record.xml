@@ -16,7 +16,7 @@
             android:layout_marginTop="17dp"
             android:layout_marginStart="29dp"
             android:textColor="#FFFFFF"
-            android:id="@+id/recording_title"/>
+            android:id="@+id/loop_title_label"/>
     <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -25,16 +25,15 @@
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_centerHorizontal="true"
-            android:layout_alignParentTop="@+id/recording_title"
-            android:background="@drawable/view_pager_background">
+            android:layout_alignParentTop="@+id/loop_title_label">
         <ListView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="23dp"
-                android:layout_marginBottom="23dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:stackFromBottom="true"
                 android:transcriptMode="normal"
                 android:background="@android:color/transparent"
-                android:id="@+id/track_list"/>
+                android:id="@+id/layer_list"/>
     </FrameLayout>
 </RelativeLayout>
