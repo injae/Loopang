@@ -12,14 +12,17 @@ class WaveformView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
     private var _amplitudes: MutableList<Short>? = null   // _amplitudes for line lengths
-    var amplitude: MutableList<Short>? = null
+    var amplitudes: MutableList<Short>? = null
         set(value) {
             value?.let{
-                _amplitudes = convertList(it)
-                mHandler.post { invalidate() }
+                if(_width != 0 && _height != 0){
+                    _amplitudes = convertList(it)
+                    mHandler.post { invalidate() }
+                }
+                field = value
             }
-            field = value
         }
+
     private var _width: Int = 0 // _width of this View
     private var _height: Int = 0 // _height of this View
     private var _size: Int = 0 // _amplitudes size
@@ -40,6 +43,11 @@ class WaveformView @JvmOverloads constructor(
         _width = w // new _width of this View
         _height = h // new _height of this View
         _size = _width / LINE_WIDTH
+
+        amplitudes?.let{
+            _amplitudes = convertList(it)
+        }
+        mHandler.post { invalidate() }
     }
 
     // clear all _amplitudes to prepare for a new visualization
@@ -58,7 +66,7 @@ class WaveformView @JvmOverloads constructor(
 
             // draw a line representing this item in the _amplitudes ArrayList
             canvas.drawLine(
-                curX, 0f, curX, scaledHeight.toFloat(), mLinePaint
+                curX, _height.toFloat(), curX, _height.toFloat() - scaledHeight.toFloat(), mLinePaint
             )
         }
     }
@@ -69,7 +77,7 @@ class WaveformView @JvmOverloads constructor(
         }
         return if(data.size > _size){
             // Sound.data size 가 너비보다 클 경우
-            val n = data.size / _width
+            val n = data.size / _size
             data.chunked(n).map{
                 (it.fold(0) { acc, next-> acc + next} / it.count())
                     .toShort()
@@ -87,6 +95,6 @@ class WaveformView @JvmOverloads constructor(
 
     companion object {
         private const val LINE_WIDTH = 3 // _width of visualizer lines
-        private const val LINE_SCALE = 100 // scales visualizer lines
+        private const val LINE_SCALE = 10 // scales visualizer lines
     }
 }
