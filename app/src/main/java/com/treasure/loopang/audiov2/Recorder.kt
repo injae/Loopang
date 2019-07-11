@@ -15,7 +15,10 @@ class Recorder(var format: IFormat  = Pcm16(),
                var isRecording: AtomicBoolean = AtomicBoolean(false)) : SoundFlow<Recorder>() {
     lateinit var routine : Deferred<Unit>;
 
+    private var isStopCalled: AtomicBoolean = AtomicBoolean(false)
+
     fun start(maxSize: Int? = null) {
+        val recorder = this
         Stabilizer.stabilizeAudio(info.inputAudio)
         info.inputAudio.startRecording()
         callStart(this)
@@ -28,12 +31,14 @@ class Recorder(var format: IFormat  = Pcm16(),
                 maxSize?.let { buffer.forEach { if(maxSize > data.size) data.add(it) else isRecording.set(false) } }
                             ?: buffer.forEach { data.add(it) }
             }
+            if(!isStopCalled.get()) callSuccess(recorder)
+            else isStopCalled.set(false)
         }
-        callSuccess(this)
     }
 
     fun stop() : Sound {
         if(isRecording.get()) {
+            isStopCalled.set(true)
             isRecording.set(false)
             info.inputAudio.stop()
             runBlocking { routine.await() }
