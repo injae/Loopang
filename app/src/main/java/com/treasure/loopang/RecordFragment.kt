@@ -14,6 +14,7 @@ import com.treasure.loopang.audiov2.Sound
 import com.treasure.loopang.ui.adapter.LayerListAdapter
 import com.treasure.loopang.ui.listener.TouchGestureListener
 import kotlinx.android.synthetic.main.fragment_record.*
+import java.lang.RuntimeException
 
 class RecordFragment : androidx.fragment.app.Fragment() {
     private val mLayerListAdapter : LayerListAdapter = LayerListAdapter()
@@ -33,8 +34,8 @@ class RecordFragment : androidx.fragment.app.Fragment() {
         mTouchGestureListener.onSwipeToDown = { onThisSwipeToDown() }
         mTouchGestureListener.onSwipeToUp = { onThisSwipeToUp() }
 
-        // recorder.onSuccess { addLayer() }
-        recorder.onSuccess { Log.d("recorder","recorder.onSuccess()")}
+        recorder.onSuccess { addLayer() }
+        // recorder.onSuccess { Log.d("recorder","recorder.onSuccess()")}
         recorder.onStop { addLayer() }
 
         mixer.isLooping.set(false)
@@ -94,25 +95,30 @@ class RecordFragment : androidx.fragment.app.Fragment() {
     }
 
     private fun addLayer() {
+        try {
+            Toast.makeText(this.context,"Recording Stop!",Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            activity?.runOnUiThread {
+                Toast.makeText(this.context,"Recording Stop!",Toast.LENGTH_SHORT).show()
+            }
+        }
         val sound = recorder.getSound()
         mixer.addSound(sound)
         if(!mixer.isLooping.get()) mixer.start()
         mLayerListAdapter.addLayer(sound)
-
-        Toast.makeText(this.context,"Recording Stop!",Toast.LENGTH_SHORT).show()
     }
 
     private fun onThisSingleTap(): Boolean {
-        if(!mixer.isLooping.get() && !mixer.sounds.isEmpty()){
+        if(mixer.sounds.isNotEmpty() && !mixer.isLooping.get()){
             Toast.makeText(this.context,"You can start record only loop is playing!",Toast.LENGTH_SHORT).show()
         } else if (recorder.isRecording.get()) {
             recorder.stop()
         }
         else {
-            /*if(mixer.sounds.isNotEmpty()) {
+            if(mixer.sounds.isNotEmpty()) {
                 val maxLoopSize =  mixer.sounds[0].data.size
                 recorder.start(maxLoopSize)
-            } else recorder.start()*/
+            } else recorder.start()
             recorder.start()
             Toast.makeText(this.context,"Record New Layer!",Toast.LENGTH_SHORT).show()
         }
@@ -121,6 +127,9 @@ class RecordFragment : androidx.fragment.app.Fragment() {
     }
 
     private fun onThisSwipeToUp() {
+        if (recorder.isRecording.get()){
+            Toast.makeText(this.context,"You can't stop Looper during recording.",Toast.LENGTH_SHORT).show()
+        }
         if (!mixer.isLooping.get() && mixer.sounds.isEmpty()){
             Toast.makeText(this.context,"Make New Track and Recording Start!",Toast.LENGTH_SHORT).show()
         }
@@ -144,7 +153,7 @@ class RecordFragment : androidx.fragment.app.Fragment() {
         val path = fileManager.looperDir.absolutePath
         val name: String = loop_title_label.text.toString()
 
-        Sound(mixer.mixSounds()).save(path+'/'+name)
+        Sound(mixer.mixSounds()).save(path+'/'+ name + ".pcm")
         Log.d("RecordFragmentTest", "아래로 스와이프 하셨습니다.")
     }
 

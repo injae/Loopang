@@ -1,5 +1,6 @@
 package com.treasure.loopang.ui.adapter
 
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,11 +11,14 @@ import com.treasure.loopang.audiov2.Sound
 import com.treasure.loopang.ui.item.LayerItem
 import com.treasure.loopang.ui.view.LayerView
 import kotlinx.android.synthetic.main.layer_item.view.*
+import java.lang.RuntimeException
 
 class LayerListAdapter : BaseAdapter() {
     private val layerItemList: MutableList<LayerItem> = mutableListOf()
     private var nowPlayingLayer: LayerView? = null
     private var lastLayerNumber: Int = 1
+
+    private val mHandler = Handler()
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view: View
@@ -60,7 +64,7 @@ class LayerListAdapter : BaseAdapter() {
     fun addLayer(sound: Sound){
         val layerItem = LayerItem(sound, "Layer ${lastLayerNumber++}")
         layerItemList.add(layerItem)
-        notifyDataSetChanged()
+        mHandler.post { notifyDataSetChanged() }
     }
 
     fun onLayerClick(parent: AdapterView<*>, view: View, position: Int, id: Long){
