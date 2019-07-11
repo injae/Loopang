@@ -17,15 +17,27 @@
             android:layout_marginStart="29dp"
             android:textColor="#FFFFFF"
             android:id="@+id/loop_title_label"/>
+    <FrameLayout android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_marginTop="64dp"
+                 android:layout_marginLeft="15dp"
+                 android:layout_marginRight="15dp"
+                 android:layout_alignParentTop="@id/loop_title_label"
+                 android:id="@+id/realtime_visualizer_view_frame">
+        <com.treasure.loopang.ui.view.RealtimeVisualizerView
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:id="@+id/realtime_visualizer_view" android:visibility="gone"/>
+    </FrameLayout>
     <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="64dp"
             android:layout_marginBottom="67dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_centerHorizontal="true"
-            android:layout_alignParentTop="@+id/loop_title_label">
+            android:layout_below="@id/realtime_visualizer_view_frame"
+            android:id="@+id/layer_list_frame">
         <ListView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

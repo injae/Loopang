@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="realtime_visualizer_view">
+        <attr name="numColumns" format="integer"/>
+        <attr name="renderColor" format="color" />
+        <attr name="renderType">
+            <flag name="bar" value="0x1"/>
+            <flag name="pixel" value="0x2"/>
+            <flag name="fade" value="0x4"/>
+        </attr>
+    </declare-styleable>
+</resources>

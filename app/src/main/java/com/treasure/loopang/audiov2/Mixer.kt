@@ -19,7 +19,6 @@ class Mixer(val sounds: MutableList<Sound> = mutableListOf()) : IPlayable {
     override fun start() {
         isLooping.set(true)
         launch { while(isLooping.get()) { sounds.map { async { it.play() } }.forEach{ it.await() } } }.start()
-        isLooping.set(false)
     }
 
     override fun stop() {
