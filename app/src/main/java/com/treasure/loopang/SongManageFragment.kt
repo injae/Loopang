@@ -22,7 +22,6 @@ class SongManageFragment : androidx.fragment.app.Fragment() {
     private val fileManager: FileManager = FileManager()
     private val songItemList = arrayListOf<SongItem>()
     private val songListAdapter = SongListAdapter(songItemList)
-    private var isPlaying = false
     private val player = Player(Sound())
 
     override fun onCreateView(

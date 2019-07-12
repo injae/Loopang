@@ -36,9 +36,6 @@ class RecordFragment : androidx.fragment.app.Fragment() {
 
         recorder.onSuccess { addLayer() }
         // recorder.onSuccess { Log.d("recorder","recorder.onSuccess()")}
-        recorder.onStop { addLayer() }
-
-        mixer.isLooping.set(false)
     }
 
     override fun onCreateView(
@@ -111,16 +108,14 @@ class RecordFragment : androidx.fragment.app.Fragment() {
     private fun onThisSingleTap(): Boolean {
         if(mixer.sounds.isNotEmpty() && !mixer.isLooping.get()){
             Toast.makeText(this.context,"You can start record only loop is playing!",Toast.LENGTH_SHORT).show()
-        } else if (recorder.isRecording.get()) {
+        }
+        else if (recorder.isRecording.get()) {
             recorder.stop()
         }
         else {
-            if(mixer.sounds.isNotEmpty()) {
-                val maxLoopSize =  mixer.sounds[0].data.size
-                recorder.start(maxLoopSize)
-            } else recorder.start()
-            recorder.start()
             Toast.makeText(this.context,"Record New Layer!",Toast.LENGTH_SHORT).show()
+            if(mixer.sounds.isNotEmpty()) { recorder.start(mixer.sounds[0].data.size) }
+            else { recorder.start() }
         }
 
         return true
