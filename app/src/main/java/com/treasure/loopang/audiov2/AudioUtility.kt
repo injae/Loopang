@@ -57,28 +57,3 @@ object Stabilizer {
         }
     }
 }
-
-fun PCMtoWAV(pcmFile: File, destPath: String) {
-    val pcmData = ByteArray(pcmFile.length().toInt())
-    val dis = DataInputStream(FileInputStream(pcmFile))
-    dis.read(pcmData)
-    val dos = DataOutputStream(FileOutputStream(destPath))
-
-    dos.writeChars("RIFF")                      //  Chunk ID
-    dos.writeInt(pcmFile.length().toInt() + 36) //  Chunk size
-    dos.writeChars("WAVE")                      //  File format
-    dos.writeChars("fmt ")                      //  Subchunk 1 ID
-    dos.writeInt(16)                            //  Subchunk 1 size
-    dos.writeShort(1)                           //  1 == PCM
-    dos.writeShort(1)                           //  Number of channels
-    dos.writeInt(44100)                         //  Sample rate
-    dos.writeInt(44100 * 2)                     //  Byte rate
-    dos.writeShort(2)                           //  Block align
-    dos.writeShort(16)                          //  Bits per sample
-    dos.writeChars("data")                      //  Subchunk 2 ID
-    dos.writeInt(pcmData.size)                     //  Subchunk 2 size
-    dos.write(pcmData)                             //  문제 발생시 Endian 변환 코드 넣어줘야함
-
-    dos.close()
-    dis.close()
-}
