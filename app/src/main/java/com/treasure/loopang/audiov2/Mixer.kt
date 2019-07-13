@@ -5,7 +5,7 @@ import kotlinx.coroutines.*
 import java.util.concurrent.atomic.AtomicBoolean
 
 class Mixer(val sounds: MutableList<Sound> = mutableListOf()) : IPlayable {
-    var isLooping = AtomicBoolean(true)
+    var isLooping = AtomicBoolean(false)
 
     fun addSound(sound: Sound) {
         sound.onSuccess { Log.d("MixerTest", "${sounds.count() + 1} Sound Success") } //debug

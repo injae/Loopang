@@ -72,6 +72,9 @@ class WaveformView @JvmOverloads constructor(
     }
 
     private fun convertList(data: MutableList<Short>): MutableList<Short> {
+        if(_size == 0) {
+            return mutableListOf()
+        }
         if(data.size == _size) {
             return data
         }

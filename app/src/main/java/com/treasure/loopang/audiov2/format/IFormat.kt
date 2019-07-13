@@ -5,8 +5,9 @@ import android.media.*
 
 interface IFormat {
     fun info() : FormatInfo
-    fun encord(data: ShortArray): ByteArray
-    fun decord(data: ByteArray): ShortArray
+    fun encord(data: MutableList<Short>): MutableList<Byte>
+    fun decord(data: MutableList<Byte>): MutableList<Short>
+
 }
 
 data class FormatInfo(
@@ -23,9 +24,15 @@ data class FormatInfo(
 )
 
 class NotSupportFormat : IFormat {
+    override fun decord(data: MutableList<Byte>): MutableList<Short> {
+        error("Not Support Format")
+    }
+
+    override fun encord(data: MutableList<Short>): MutableList<Byte> {
+        error("Not Support Format")
+    }
+
     override fun info() = FormatInfo()
-    override fun encord(data: ShortArray): ByteArray { error("Not Supported File Format") }
-    override fun decord(data: ByteArray): ShortArray { error("Not Supported File Format") }
 }
 
 fun formatFactory(path: String) : IFormat {
