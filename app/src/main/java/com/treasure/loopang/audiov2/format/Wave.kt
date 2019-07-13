@@ -2,7 +2,7 @@ package com.treasure.loopang.audiov2.format
 
 import com.treasure.loopang.audiov2.convertShortArrayToByteArray
 
-class PcmToWav(private var info: FormatInfo = FormatInfo()) : IFormat {
+class Wave(private var info: FormatInfo = FormatInfo()) : IFormat {
     override fun info() = info
     override fun encord(data: MutableList<Short>) = getWavData(data)
 
