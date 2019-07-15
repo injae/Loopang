@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.*
 import android.os.Handler
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import com.treasure.loopang.R
 
@@ -13,7 +14,7 @@ class RealtimeVisualizerView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
     companion object {
-        const val DEFAULT_NUM_COLUMNS = 20
+        const val DEFAULT_NUM_COLUMNS = 200
         const val BAR = 0x1
         const val PIXEL = 0x2
         const val FADE = 0x3
@@ -69,6 +70,13 @@ class RealtimeVisualizerView @JvmOverloads constructor(
         canvas?.drawBitmap(mCanvasBitmap!!, Matrix(), null)
     }
 
+    fun claer(){
+        if (mCanvas != null) {
+            mCanvas!!.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
+            mHandler.post{ invalidate() }
+        }
+    }
+
     fun analyze(amplitude: Int) {
         if (mCanvas == null) return
 
@@ -79,11 +87,13 @@ class RealtimeVisualizerView @JvmOverloads constructor(
         }
 
         if((mVisualizerType and BAR) != 0) {
-            drawBar(amplitude)
+            drawBar(amplitude/100)
         }
         if ((mVisualizerType and PIXEL) != 0) {
             // drawPixel(amplitude)
         }
+
+        Log.d("RVV TEST", "RealtimeVisualizerView.analyze($amplitude)")
 
         mHandler.post{ invalidate() }
     }
