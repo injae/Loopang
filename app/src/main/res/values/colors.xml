@@ -7,4 +7,5 @@
     <color name="colorLayerView">#26737373</color>
     <color name="colorWaveform">#738B8585</color>
     <color name="colorWaveformMute">#CCE4E1E1</color>
+    <color name="colorRealtimeVisualizer">#73D96A6A</color>
 </resources>

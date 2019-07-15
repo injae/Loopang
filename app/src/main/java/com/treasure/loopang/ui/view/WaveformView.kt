@@ -7,6 +7,8 @@ import android.graphics.Paint
 import android.os.Handler
 import android.util.AttributeSet
 import android.view.View
+import kotlin.math.abs
+
 
 class WaveformView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -82,7 +84,7 @@ class WaveformView @JvmOverloads constructor(
             // Sound.data size 가 너비보다 클 경우
             val n = data.size / _size
             data.chunked(n).map{
-                (it.fold(0) { acc, next-> acc + next} / it.count())
+                (it.fold(0) { acc, next-> acc + abs(next.toInt()) } / it.count())
                     .toShort()
             }.subList(0, _size)
                 .toMutableList()
@@ -98,6 +100,6 @@ class WaveformView @JvmOverloads constructor(
 
     companion object {
         private const val LINE_WIDTH = 3 // _width of visualizer lines
-        private const val LINE_SCALE = 10 // scales visualizer lines
+        private const val LINE_SCALE = 90 // scales visualizer lines
     }
 }

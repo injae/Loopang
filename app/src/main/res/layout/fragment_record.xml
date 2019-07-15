@@ -23,11 +23,14 @@
                  android:layout_marginLeft="15dp"
                  android:layout_marginRight="15dp"
                  android:layout_alignParentTop="@id/loop_title_label"
+                 android:background="@drawable/visualizer_view_background"
                  android:id="@+id/realtime_visualizer_view_frame">
         <com.treasure.loopang.ui.view.RealtimeVisualizerView
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:id="@+id/realtime_visualizer_view" android:visibility="gone"/>
+                android:layout_margin="5dp"
+                android:id="@+id/realtime_visualizer_view"
+                android:visibility="gone"/>
     </FrameLayout>
     <FrameLayout
             android:layout_width="match_parent"

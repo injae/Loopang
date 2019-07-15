@@ -15,6 +15,7 @@ import com.treasure.loopang.ui.adapter.LayerListAdapter
 import com.treasure.loopang.ui.listener.TouchGestureListener
 import kotlinx.android.synthetic.main.fragment_record.*
 import java.lang.RuntimeException
+import kotlin.math.abs
 
 class RecordFragment : androidx.fragment.app.Fragment() {
     private val mLayerListAdapter : LayerListAdapter = LayerListAdapter()
@@ -36,6 +37,14 @@ class RecordFragment : androidx.fragment.app.Fragment() {
 
         recorder.onSuccess { addLayer() }
         // recorder.onSuccess { Log.d("recorder","recorder.onSuccess()")}
+        recorder.addEffector {
+            realtime_visualizer_view.analyze(
+                it.fold(0) { acc, next->
+                acc + abs(next.toInt())
+                } / it.size
+            )
+            it
+        }
     }
 
     override fun onCreateView(
@@ -92,13 +101,14 @@ class RecordFragment : androidx.fragment.app.Fragment() {
     }
 
     private fun addLayer() {
-        try {
+        activity?.runOnUiThread {
             Toast.makeText(this.context,"Recording Stop!",Toast.LENGTH_SHORT).show()
-        } catch (e: Exception) {
-            activity?.runOnUiThread {
-                Toast.makeText(this.context,"Recording Stop!",Toast.LENGTH_SHORT).show()
+            if(realtime_visualizer_view.visibility == View.VISIBLE) {
+                realtime_visualizer_view.claer()
+                realtime_visualizer_view.visibility = View.GONE
             }
         }
+
         val sound = recorder.getSound()
         mixer.addSound(sound)
         if(!mixer.isLooping.get()) mixer.start()
@@ -114,6 +124,9 @@ class RecordFragment : androidx.fragment.app.Fragment() {
         }
         else {
             Toast.makeText(this.context,"Record New Layer!",Toast.LENGTH_SHORT).show()
+            if(realtime_visualizer_view.visibility == View.GONE) {
+                realtime_visualizer_view.visibility = View.VISIBLE
+            }
             if(mixer.sounds.isNotEmpty()) { recorder.start(mixer.sounds[0].data.size) }
             else { recorder.start() }
         }
