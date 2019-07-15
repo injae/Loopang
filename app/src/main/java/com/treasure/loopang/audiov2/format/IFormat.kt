@@ -36,9 +36,10 @@ class NotSupportFormat : IFormat {
 }
 
 fun formatFactory(path: String) : IFormat {
-    return when(path.substringAfter('.',"")) {
-    "pcm" -> Pcm16()
-    else  -> NotSupportFormat()
+    return when (path.substringAfter('.',"")) {
+        "pcm" -> Pcm16()
+        "wav"-> Wave()
+        else  -> NotSupportFormat()
     }
 }
 
