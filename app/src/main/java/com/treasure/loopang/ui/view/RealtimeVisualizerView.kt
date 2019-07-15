@@ -17,7 +17,7 @@ class RealtimeVisualizerView @JvmOverloads constructor(
         const val DEFAULT_NUM_COLUMNS = 200
         const val BAR = 0x1
         const val PIXEL = 0x2
-        const val FADE = 0x3
+        const val FADE = 0x4
     }
 
     private var mNumColumns = DEFAULT_NUM_COLUMNS
@@ -70,7 +70,7 @@ class RealtimeVisualizerView @JvmOverloads constructor(
         canvas?.drawBitmap(mCanvasBitmap!!, Matrix(), null)
     }
 
-    fun claer(){
+    fun clear(){
         if (mCanvas != null) {
             mCanvas!!.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
             mHandler.post{ invalidate() }
@@ -81,8 +81,10 @@ class RealtimeVisualizerView @JvmOverloads constructor(
         if (mCanvas == null) return
 
         if((mVisualizerType and FADE) != 0) {
+            Log.d("RVV TEST", "FADE!")
             mFadePaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.MULTIPLY)
         } else {
+            Log.d("RVV TEST", "CLEAR!")
             mCanvas!!.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
         }
 
