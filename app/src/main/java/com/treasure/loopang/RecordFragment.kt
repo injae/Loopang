@@ -14,7 +14,6 @@ import com.treasure.loopang.audiov2.Sound
 import com.treasure.loopang.ui.adapter.LayerListAdapter
 import com.treasure.loopang.ui.listener.TouchGestureListener
 import kotlinx.android.synthetic.main.fragment_record.*
-import java.lang.RuntimeException
 import kotlin.math.abs
 
 class RecordFragment : androidx.fragment.app.Fragment() {
@@ -104,7 +103,7 @@ class RecordFragment : androidx.fragment.app.Fragment() {
         activity?.runOnUiThread {
             Toast.makeText(this.context,"Recording Stop!",Toast.LENGTH_SHORT).show()
             if(realtime_visualizer_view.visibility == View.VISIBLE) {
-                realtime_visualizer_view.claer()
+                realtime_visualizer_view.clear()
                 realtime_visualizer_view.visibility = View.GONE
             }
         }
