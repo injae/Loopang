@@ -3,10 +3,15 @@ package com.treasure.loopang
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.drawerlayout.widget.DrawerLayout
 import com.treasure.loopang.adapter.SongPagerAdapter
+import com.treasure.loopang.listitem.setEffector
+import com.treasure.loopang.listitem.setMetronome
 import kotlinx.android.synthetic.main.activity_recording.*
+import kotlinx.android.synthetic.main.drawer.*
 
 class Recording : AppCompatActivity() {
     private val FINISH_INTERVAL_TIME = 2000
@@ -18,12 +23,49 @@ class Recording : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recording)
         window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+        var drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
+        val drawerView: View = findViewById(R.id.drawer)
+        drawerLayout.addDrawerListener(myDrawerListener)
 
+        supportFragmentManager.beginTransaction().replace(R.id.fragContainer, setMetronome()).commit()
+
+
+        btn_setMetronome.setOnClickListener {
+            supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.fragContainer, setMetronome())
+                .commit()
+        }
+
+        btn_setEffector.setOnClickListener{
+            supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.fragContainer, setEffector())
+                .commit()
+        }
         pager.adapter = pagerAdapter
         pager.addOnPageChangeListener(PageChangeListener())
         pager.setOnTouchListener { _, _ -> false}
     }
+    internal var myDrawerListener: DrawerLayout.DrawerListener = object : DrawerLayout.DrawerListener {
 
+        override fun onDrawerClosed(drawerView: View) {}
+        override fun onDrawerOpened(drawerView: View) {}
+
+        override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
+            //txtPrompt.setText("onDrawerSlide: " + String.format("%.2f", slideOffset))
+        }
+
+        override fun onDrawerStateChanged(newState: Int) {
+            val state: String
+            when (newState) {
+                DrawerLayout.STATE_IDLE -> state = "STATE_IDLE"
+                DrawerLayout.STATE_DRAGGING -> state = "STATE_DRAGGING"
+                DrawerLayout.STATE_SETTLING -> state = "STATE_SETTLING"
+                else -> state = "unknown!"
+            }
+        }
+    }
     override fun onBackPressed() {
         val tempTime = System.currentTimeMillis()
         val intervalTime = tempTime - backPressedTime
