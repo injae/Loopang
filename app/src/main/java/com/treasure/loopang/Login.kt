@@ -12,9 +12,10 @@ import kotlinx.android.synthetic.main.activity_login.*
 class Login : AppCompatActivity() {
 
     protected val disposables by lazy { CompositeDisposable() }
-    private var permission_list = arrayOf( // 여기에 권한 추가
+    private var permission_list = arrayOf( // 필요한 권한 입력 후 AndroidManifest.xml에도 추가 해주면됌
         android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-        android.Manifest.permission.RECORD_AUDIO
+        android.Manifest.permission.RECORD_AUDIO,
+        android.Manifest.permission.INTERNET
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
