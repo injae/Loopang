@@ -1,6 +1,7 @@
 package com.treasure.loopang
 
 import android.os.Bundle
+import android.text.SpannableStringBuilder
 import android.util.Log
 import android.view.*
 import android.widget.AdapterView
@@ -199,7 +200,7 @@ class RecordFragment : androidx.fragment.app.Fragment() {
     }
 
     private fun onLayerListItemLongClick(parent: AdapterView<*>, view: View, position: Int, id: Long) : Boolean {
-/*        if(looper.mixer.isPlaying.get()) return false
+/*        if(mixer.isPlaying.get()) return false
         val menuList = listOf("Drop Track")
         val context = this.context!!
 
@@ -228,7 +229,9 @@ class RecordFragment : androidx.fragment.app.Fragment() {
         val dialog = MaterialDialog(activity!!, BottomSheet(LayoutMode.WRAP_CONTENT)).show {
             title(R.string.title_save_loop)
             customView(R.layout.dialog_save_loop, horizontalPadding = true)
+            cancelable(false)
             positiveButton(R.string.btn_save) {
+                // callback on positive button click
                 val loopTitle = it.edit_loop_title.text.toString()
                 val fileType = spinner.selectedItem.toString()
                 val isSaved = saveLoop(loopTitle, fileType)
@@ -238,6 +241,7 @@ class RecordFragment : androidx.fragment.app.Fragment() {
             negativeButton(R.string.btn_cancel)
             lifecycleOwner(activity)
         }
+        dialog.edit_loop_title.text = SpannableStringBuilder(loopTitle)
     }
 
     private fun saveLoop(loopTitle: String, fileType: String): Boolean {
@@ -260,5 +264,9 @@ class RecordFragment : androidx.fragment.app.Fragment() {
         Sound(mixer.mixSounds()).save(mDirectoryPath+fileLabel)
 
         return true
+    }
+
+    private fun dropLayer(position: Int) {
+
     }
 }
