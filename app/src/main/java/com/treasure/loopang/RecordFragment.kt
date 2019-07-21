@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.util.Log
 import android.view.*
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
 import android.widget.AdapterView
 import com.afollestad.materialdialogs.DialogBehavior
 import com.afollestad.materialdialogs.LayoutMode
@@ -156,7 +158,10 @@ class RecordFragment : androidx.fragment.app.Fragment() {
         else {
             toast(R.string.toast_record_start)
             if(realtime_visualizer_view.visibility == View.GONE) {
+                val animation: Animation = AlphaAnimation(0F, 1F)
+                animation.duration = 1000
                 realtime_visualizer_view.visibility = View.VISIBLE
+                realtime_visualizer_view.animation = animation
             }
             if(mixer.sounds.isNotEmpty()) { recorder.start(mixer.sounds[0].data.size) }
             else { recorder.start() }
