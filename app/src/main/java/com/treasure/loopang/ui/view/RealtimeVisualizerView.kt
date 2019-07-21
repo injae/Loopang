@@ -81,10 +81,10 @@ class RealtimeVisualizerView @JvmOverloads constructor(
         if (mCanvas == null) return
 
         if((mVisualizerType and FADE) != 0) {
-            Log.d("RVV TEST", "FADE!")
+            // Log.d("RVV TEST", "FADE!")
             mFadePaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.MULTIPLY)
         } else {
-            Log.d("RVV TEST", "CLEAR!")
+           // Log.d("RVV TEST", "CLEAR!")
             mCanvas!!.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
         }
 
@@ -95,7 +95,7 @@ class RealtimeVisualizerView @JvmOverloads constructor(
             // drawPixel(amplitude)
         }
 
-        Log.d("RVV TEST", "RealtimeVisualizerView.analyze($amplitude)")
+        // Log.d("RVV TEST", "RealtimeVisualizerView.analyze($amplitude)")
 
         mHandler.post{ invalidate() }
     }

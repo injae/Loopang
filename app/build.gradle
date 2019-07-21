@@ -32,11 +32,13 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
-    implementation 'com.afollestad.material-dialogs:core:3.0.0-beta2'
     implementation 'io.reactivex:rxandroid:1.1.0'
     implementation 'com.jakewharton.rxbinding3:rxbinding:3.0.0-alpha2'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.30.1-eap13'
     implementation 'com.chibde:audiovisualizer:2.1.0' // audio visualizer
-    implementation 'com.afollestad.material-dialogs:input:3.0.0-rc3'
+    implementation 'com.afollestad.material-dialogs:core:3.1.0'
+    implementation 'com.afollestad.material-dialogs:input:3.1.0'
+    implementation 'com.afollestad.material-dialogs:bottomsheets:3.1.0'
+    implementation 'com.afollestad.material-dialogs:lifecycle:3.1.0'
 }
 

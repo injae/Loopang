@@ -5,14 +5,18 @@ import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
-import com.treasure.loopang.adapter.SongPagerAdapter
+import androidx.viewpager.widget.ViewPager
+import com.treasure.loopang.ui.adapter.LoopstationPagerAdapter
 import kotlinx.android.synthetic.main.activity_recording.*
 
 class Recording : AppCompatActivity() {
-    private val FINISH_INTERVAL_TIME = 2000
+    companion object {
+        private const val FINISH_INTERVAL_TIME = 2000
+    }
     private var backPressedTime: Long = 0
+    private var currentPage: Int = 0
 
-    private val pagerAdapter by lazy { SongPagerAdapter(supportFragmentManager) }
+    private val pagerAdapter by lazy { LoopstationPagerAdapter(supportFragmentManager) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,27 +40,22 @@ class Recording : AppCompatActivity() {
         }
     }
 
-    inner class PageChangeListener: androidx.viewpager.widget.ViewPager.OnPageChangeListener {
+    inner class PageChangeListener: ViewPager.OnPageChangeListener {
         private var selectedPage: Int = 0
         private var scrollState: Int = 0
         private var prevPage: Int = 0
 
-        /* 페이지(플래그먼트)가 바뀌었을 때 처리 */
-        private fun processWhenPageChanged() {
-            Log.d("ViewPagerText", "페이지가 바뀌었어요!")
-        }
-
         /* 스크롤 시 드래깅 중인지 알려줌 */
         override fun onPageScrollStateChanged(state: Int) {
             when(state){
-                androidx.viewpager.widget.ViewPager.SCROLL_STATE_SETTLING -> {
+                ViewPager.SCROLL_STATE_SETTLING -> {
                     prevPage = selectedPage
                     Log.d("ViewPagerTest", "SCROLL_STATE_SETTLING")
                 }
-                androidx.viewpager.widget.ViewPager.SCROLL_STATE_DRAGGING -> {
+                ViewPager.SCROLL_STATE_DRAGGING -> {
                     Log.d("ViewPagerTest", "SCROLL_STATE_DRAGGING")
                 }
-                androidx.viewpager.widget.ViewPager.SCROLL_STATE_IDLE -> {
+                ViewPager.SCROLL_STATE_IDLE -> {
                     Log.d("ViewPagerTest", "SCROLL_STATE_IDLE")
                 }
             }
@@ -70,8 +69,14 @@ class Recording : AppCompatActivity() {
         override fun onPageSelected(p0: Int) {
             selectedPage = p0
             if(prevPage != selectedPage)
-                processWhenPageChanged()
+                onPageChanged()
             Log.d("ViewPagerTest", "onPageSelected : $selectedPage")
+        }
+
+        /* 페이지(플래그먼트)가 바뀌었을 때 처리 */
+        private fun onPageChanged() {
+            Log.d("ViewPagerText", "페이지가 바뀌었어요!")
+            this@Recording.currentPage = selectedPage
         }
     }
 }

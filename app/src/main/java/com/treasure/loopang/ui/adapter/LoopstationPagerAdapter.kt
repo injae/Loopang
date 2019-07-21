@@ -1,4 +1,4 @@
-package com.treasure.loopang.adapter
+package com.treasure.loopang.ui.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -6,7 +6,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter
 import com.treasure.loopang.RecordFragment
 import com.treasure.loopang.LoopManageFragment
 
-class SongPagerAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAdapter(fragmentManager) {
+class LoopstationPagerAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAdapter(fragmentManager) {
 
     override fun getCount(): Int = 2
 
