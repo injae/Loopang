@@ -3,21 +3,18 @@ package com.treasure.loopang
 
 import android.os.Bundle
 import android.os.SystemClock
-import androidx.fragment.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.treasure.loopang.adapter.SongListAdapter
-import com.treasure.loopang.audio.FileManager
+import com.treasure.loopang.audiov2.FileManager
 import com.treasure.loopang.audio.Player
 import com.treasure.loopang.audio.Sound
 import com.treasure.loopang.listitem.SongItem
-import kotlinx.android.synthetic.main.fragment_record.*
 import kotlinx.android.synthetic.main.fragment_song_manage.*
-import java.util.*
 
-class SongManageFragment : androidx.fragment.app.Fragment() {
+class LoopManageFragment : androidx.fragment.app.Fragment() {
 
     private val fileManager: FileManager = FileManager()
     private val songItemList = arrayListOf<SongItem>()
@@ -64,7 +61,7 @@ class SongManageFragment : androidx.fragment.app.Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.d("Loopang", "SongManageFragment Destroyed!")
+        Log.d("Loopang", "LoopManageFragment Destroyed!")
     }
 
     private fun refreshSongList(){

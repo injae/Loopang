@@ -1,3 +1,5 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="margin_save_dialog">5dp</dimen>
+    <dimen name="heigth_save_dialog"></dimen>
 </resources>

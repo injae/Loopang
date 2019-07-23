@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <TextView
+            android:text="@string/title_loop_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:id="@+id/txt_loop_title"/>
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/edit_loop_title"/>
+    <TextView
+            android:text="@string/title_file_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_save_dialog"
+            android:id="@+id/txt_file_type"/>
+    <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:id="@+id/spinner"
+            android:spinnerMode="dropdown"
+            android:entries="@array/spinner_file_type_kr"/>
+    <CheckBox
+            android:text="@string/check_split"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_save_dialog"
+            android:id="@+id/check_split"/>
+</LinearLayout>

@@ -1,18 +1,26 @@
 package com.treasure.loopang
 
 import android.os.Bundle
+import android.text.SpannableStringBuilder
 import android.util.Log
 import android.view.*
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
 import android.widget.AdapterView
-import android.widget.Toast
+import com.afollestad.materialdialogs.LayoutMode
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.bottomsheets.BottomSheet
+import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.input.input
+import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import com.treasure.loopang.audiov2.FileManager
 import com.treasure.loopang.audiov2.Mixer
 import com.treasure.loopang.audiov2.Recorder
 import com.treasure.loopang.audiov2.Sound
 import com.treasure.loopang.ui.adapter.LayerListAdapter
 import com.treasure.loopang.ui.listener.TouchGestureListener
+import com.treasure.loopang.ui.toast
+import kotlinx.android.synthetic.main.dialog_save_loop.*
 import kotlinx.android.synthetic.main.fragment_record.*
 import kotlin.math.abs
 
@@ -20,30 +28,21 @@ class RecordFragment : androidx.fragment.app.Fragment() {
     private val mLayerListAdapter : LayerListAdapter = LayerListAdapter()
     private val mTouchGestureListener = TouchGestureListener()
 
-    private var mixer: Mixer = Mixer()
-    private var recorder: Recorder = Recorder()
+    private var mMixer: Mixer = Mixer()
+    private var mRecorder: Recorder = Recorder()
 
-    private var loopTitle: String = ""
-        set(value) {
-            changeLoopTitle(value)
-            field = value
-        }
+    private val mFileManager = FileManager()
+    private val mDirectoryPath = mFileManager.looperDir.absolutePath
+
+    private var mLoopPlaybackState: Boolean = false
+    private var mRecordState: Boolean = false
 
     init{
         mTouchGestureListener.onSingleTap = { onThisSingleTap() }
         mTouchGestureListener.onSwipeToDown = { onThisSwipeToDown() }
         mTouchGestureListener.onSwipeToUp = { onThisSwipeToUp() }
 
-        recorder.onSuccess { addLayer() }
-        // recorder.onSuccess { Log.d("recorder","recorder.onSuccess()")}
-        recorder.addEffector {
-            realtime_visualizer_view.analyze(
-                it.fold(0) { acc, next->
-                acc + abs(next.toInt())
-                } / it.size
-            )
-            it
-        }
+        initRecorder()
     }
 
     override fun onCreateView(
@@ -73,19 +72,11 @@ class RecordFragment : androidx.fragment.app.Fragment() {
         layer_list.setOnItemClickListener { parent, v, position, id ->
             onLayerListItemClick(parent, v, position, id)
         }
-
-        loop_title_label.setOnClickListener {
-            MaterialDialog(context!!).show{
-                input { _, text ->
-                    changeLoopTitle(text.toString())
-                }
-            }
-        }
     }
 
     override fun onDestroy() {
-        recorder.stop()
-        mixer.stop()
+        mRecorder.stop()
+        mMixer.stop()
         super.onDestroy()
         Log.d("RecordFragment", "RecordFragment Destroyed!")
     }
@@ -95,73 +86,92 @@ class RecordFragment : androidx.fragment.app.Fragment() {
         Log.d("RecordFragment", "RecordFragment Paused!")
     }
 
-    private fun changeLoopTitle(string: String){
-        loop_title_label.text = string
+    private fun initRecorder(){
+        mRecorder.onSuccess {
+            addLayer()
+            mRecordState = false
+        }
+        mRecorder.onStart {
+            mRecordState = true
+        }
+        // mRecorder.onSuccess { Log.d("mRecorder","mRecorder.onSuccess()")}
+        // For Realtime Visualizer
+        mRecorder.addEffector {
+            realtime_visualizer_view.analyze(
+                it.fold(0) { acc, next->
+                    acc + abs(next.toInt())
+                } / it.size
+            )
+            it
+        }
     }
+
+    private fun initMixer() {}
 
     private fun addLayer() {
         activity?.runOnUiThread {
-            Toast.makeText(this.context,"Recording Stop!",Toast.LENGTH_SHORT).show()
+            toast(R.string.toast_record_stop)
             if(realtime_visualizer_view.visibility == View.VISIBLE) {
                 realtime_visualizer_view.clear()
                 realtime_visualizer_view.visibility = View.GONE
             }
         }
 
-        val sound = recorder.getSound()
-        mixer.addSound(sound)
-        if(!mixer.isLooping.get()) mixer.start()
+        val sound = mRecorder.getSound()
+        mMixer.addSound(sound)
+        if(!mMixer.isLooping.get()) mMixer.start()
         mLayerListAdapter.addLayer(sound)
     }
 
     private fun onThisSingleTap(): Boolean {
-        if(mixer.sounds.isNotEmpty() && !mixer.isLooping.get()){
-            Toast.makeText(this.context,"You can start record only loop is playing!",Toast.LENGTH_SHORT).show()
+        if(mMixer.sounds.isNotEmpty() && !mMixer.isLooping.get()){
+            toast(R.string.toast_record_start_error_without_playback)
         }
-        else if (recorder.isRecording.get()) {
-            recorder.stop()
+        else if (mRecordState) {
+            mRecorder.stop()
         }
         else {
-            Toast.makeText(this.context,"Record New Layer!",Toast.LENGTH_SHORT).show()
+            toast(R.string.toast_record_start)
             if(realtime_visualizer_view.visibility == View.GONE) {
+                val animation: Animation = AlphaAnimation(0F, 1F)
+                animation.duration = 1000
                 realtime_visualizer_view.visibility = View.VISIBLE
+                realtime_visualizer_view.animation = animation
             }
-            if(mixer.sounds.isNotEmpty()) { recorder.start(mixer.sounds[0].data.size) }
-            else { recorder.start() }
+            if(mMixer.sounds.isNotEmpty()) { mRecorder.start(mMixer.sounds[0].data.size) }
+            else { mRecorder.start() }
         }
 
         return true
     }
 
     private fun onThisSwipeToUp() {
-        if (recorder.isRecording.get()){
-            Toast.makeText(this.context,"You can't stop Looper during recording.",Toast.LENGTH_SHORT).show()
+        if (mRecordState){
+            toast(R.string.toast_playback_stop_error)
+            return
         }
-        if (!mixer.isLooping.get() && mixer.sounds.isEmpty()){
-            Toast.makeText(this.context,"Make New Track and Recording Start!",Toast.LENGTH_SHORT).show()
+        if (!mMixer.isLooping.get() && mMixer.sounds.isEmpty()){
+            toast(R.string.toast_record_start)
         }
-        else if (mixer.isLooping.get()) {
-            Toast.makeText(this.context, "PlayBack Stop!", Toast.LENGTH_SHORT).show()
-            mixer.stop()
+        else if (mMixer.isLooping.get()) {
+            toast(R.string.toast_playback_stop)
+            mMixer.stop()
         }
         else {
-            Toast.makeText(this.context,"PlayBack!",Toast.LENGTH_SHORT).show()
-            mixer.start()
+            toast(R.string.toast_playback_start)
+            mMixer.start()
         }
     }
 
     private fun onThisSwipeToDown() {
-        if(mixer.sounds.isEmpty()){
-            Toast.makeText(this.context,"Please make Track at least 1",Toast.LENGTH_SHORT).show()
+        Log.d("RecordFragmentTest", "아래로 스와이프 하셨습니다.")
+        if(mRecordState) {
+            toast(R.string.toast_save_error_while_record)
             return
         }
+        if(mMixer.isLooping.get()) mMixer.stop()
 
-        val fileManager = FileManager()
-        val path = fileManager.looperDir.absolutePath
-        val name: String = loop_title_label.text.toString()
-
-        Sound(mixer.mixSounds()).save(path+'/'+ name + ".pcm")
-        Log.d("RecordFragmentTest", "아래로 스와이프 하셨습니다.")
+        showSaveLoopDialog()
     }
 
     /* 리스트 아이템 클릭 시 처리동작 (onItemClick 함수와 같이 사용) */
@@ -170,7 +180,7 @@ class RecordFragment : androidx.fragment.app.Fragment() {
     }
 
     private fun onLayerListItemLongClick(parent: AdapterView<*>, view: View, position: Int, id: Long) : Boolean {
-/*        if(looper.mixer.isPlaying.get()) return false
+/*        if(mMixer.isPlaying.get()) return false
         val menuList = listOf("Drop Track")
         val context = this.context!!
 
@@ -178,7 +188,7 @@ class RecordFragment : androidx.fragment.app.Fragment() {
             listItems(items = menuList) { _, index, _ ->
                 when (index) {
                     0 -> {
-                        looper.mixer.sounds.removeAt(looper.mixer.sounds.size - (position+1))
+                        looper.mMixer.sounds.removeAt(looper.mMixer.sounds.size - (position+1))
                         trackListAdapter.removeItem(position)
                         Toast.makeText(this.context, "track is droped!", Toast.LENGTH_SHORT).show()
                     }
@@ -188,5 +198,68 @@ class RecordFragment : androidx.fragment.app.Fragment() {
         Log.d("RecordFragmentTest", "아이템 롱 클릭! postion: $position")
         return true*/
         return false
+    }
+
+    private fun showSaveLoopDialog() {
+        if(mMixer.sounds.isEmpty()){
+            toast(R.string.toast_save_error_no_layer)
+            return
+        }
+
+        MaterialDialog(activity!!, BottomSheet(LayoutMode.WRAP_CONTENT)).show {
+            noAutoDismiss()
+            title(R.string.title_save_loop)
+            customView(R.layout.dialog_save_loop, horizontalPadding = true)
+            cornerRadius(16f)
+            cancelable(false)
+            positiveButton(R.string.btn_save) {
+                // callback on positive button click
+                val loopTitle = it.edit_loop_title.text.toString()
+                if(loopTitle == ""){
+                    toast(R.string.toast_save_error_without_title)
+                } else {
+                    val fileType = spinner.selectedItem.toString()
+                    val isSaveChecked = check_split.isChecked
+                    Log.d("SaveDialog", "\nloopTitle: $loopTitle, \nfileType: $fileType, \nisSaveChecked: $isSaveChecked")
+                    val isSaved = saveLoop(mMixer, loopTitle, fileType, isSaveChecked)
+
+                    if(isSaved) toast(getString(R.string.toast_save))
+                    else toast(R.string.toast_save_error_failed)
+
+                    it.dismiss()
+                }
+            }
+            negativeButton(R.string.btn_cancel) {
+                it.dismiss()
+            }
+            lifecycleOwner(activity)
+        }
+    }
+
+    private fun saveLoop(mixer: Mixer, loopTitle: String, fileType: String, isSplitChecked: Boolean = false): Boolean {
+        if(mixer.sounds.isEmpty()){
+            toast(R.string.toast_save_error_no_layer)
+            return false
+        }
+
+        if (isSplitChecked) {
+            // 나눠서 저장할 경우
+            val fileLabelList = (1..mixer.sounds.size).map {
+                "/${loopTitle}_$it.${fileType.toLowerCase()}"
+            }
+            mixer.sounds.forEachIndexed { index, sound ->
+                sound.save(mDirectoryPath+fileLabelList[index])
+            }
+        } else {
+            // 나누지 않을 경우
+            val fileLabel = "/$loopTitle.${fileType.toLowerCase()}"
+            Sound(mixer.mixSounds()).save(mDirectoryPath+fileLabel)
+        }
+
+        return true
+    }
+
+    private fun dropLayer(position: Int) {
+
     }
 }
