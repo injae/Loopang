@@ -11,16 +11,6 @@ class FileManager {
    private val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
    init{ if(!looperDir.isDirectory) looperDir.mkdir() }
    fun SoundList() = looperDir.list().map{ Music(it,simpleDateFormat.format(File(looperDir.absolutePath+'/'+it).lastModified()) , looperDir.absolutePath+'/'+it)}
-
-   fun deleteFile(fileName: String) {
-      val targetFile = File("${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)}/Loopang/${fileName}")
-      targetFile.delete()
-   }
-
-   fun deleteAllFiles() {
-      val directory = File("${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)}/Loopang")
-      directory.list().forEach {
-         deleteFile(it)
-      }
-   }
+   fun deleteFile(fileName: String) { File("${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)}/Loopang/${fileName}").delete() }
+   fun deleteAllFiles() { looperDir.list().forEach { deleteFile(it) } }
 }
