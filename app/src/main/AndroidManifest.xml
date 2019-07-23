@@ -11,13 +11,10 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/LoopangAppTheme">
-        <activity android:name=".SongManager">
-        </activity>
         <activity android:name=".Login">
         </activity>
         <activity
-                android:name=".Recording"
-                android:windowSoftInputMode="adjustNothing">
+                android:name=".Recording">
         </activity>
         <activity android:name=".SplashActivity">
             <intent-filter>
