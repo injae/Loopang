@@ -15,11 +15,17 @@ import com.treasure.loopang.listitem.setMetronome
 import com.treasure.loopang.ui.statusBarHeight
 import kotlinx.android.synthetic.main.activity_recording.*
 import kotlinx.android.synthetic.main.drawer.*
+import android.os.Build
+
+
 
 class Recording : AppCompatActivity() {
     companion object {
         private const val FINISH_INTERVAL_TIME = 2000
     }
+    private val mDecorView: View by lazy { window.decorView }
+    private var mUiOption: Int = 0
+
     private var backPressedTime: Long = 0
     private var currentPage: Int = 0
 
@@ -35,7 +41,13 @@ class Recording : AppCompatActivity() {
         window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         recording_main_layout.setPadding(0, statusBarHeight(this), 0, 0) //Padding for transparent status bar
 
-        var drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
+        //Hide Bottom Soft Navigation Bar
+        mUiOption = mDecorView.systemUiVisibility
+        mUiOption = mUiOption or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+        mUiOption = mUiOption or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        mDecorView.systemUiVisibility = mUiOption
+
+        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val drawerView: View = findViewById(R.id.drawer)
         // drawerLayout.setPadding(0, statusBarHeight(this), 0, 0) //Padding for transparent status bar
         drawerLayout.addDrawerListener(myDrawerListener)
@@ -60,6 +72,13 @@ class Recording : AppCompatActivity() {
         pager.addOnPageChangeListener(PageChangeListener())
         pager.setOnTouchListener { _, _ -> false}
     }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        if( hasFocus ) {
+            mDecorView.systemUiVisibility = mUiOption
+        }
+    }
+
     internal var myDrawerListener: DrawerLayout.DrawerListener = object : DrawerLayout.DrawerListener {
 
         override fun onDrawerClosed(drawerView: View) {}
