@@ -9,7 +9,7 @@ class Wave(private var info: FormatInfo = FormatInfo()) : IFormat {
     override fun decord(data: MutableList<Byte>) = data.chunked(info.inputBufferSize).flatMap { convertByteArrayToShortArray(it.toByteArray()).toList() }.toMutableList()
 
     private fun getWavData(data: MutableList<Short>): MutableList<Byte> {
-        val wavData = MutableList<Byte>(1,{0})
+        val wavData = MutableList<Byte>(0,{0})
 
         // Wave file header insertion procedure
         insertString(wavData, "RIFF")
