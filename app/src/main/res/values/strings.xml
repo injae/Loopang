@@ -21,6 +21,7 @@
     <string name="title_save_loop">Save Loop</string>
     <string name="title_loop_title">Loop Title</string>
     <string name="title_file_type">File Type</string>
+    <string name="check_split">Split and Save</string>
     <string name="btn_ok">OK</string>
     <string name="btn_save">Save</string>
     <string name="btn_cancel">Cancel</string>
@@ -35,5 +36,6 @@
     <string name="toast_save">Your Loop is saved</string>
     <string name="toast_save_error_failed">Save Failed</string>
     <string name="toast_save_error_while_record">Stop record before save Loop</string>
+    <string name="toast_save_error_without_title">Please set title of your loop</string>
 
 </resources>

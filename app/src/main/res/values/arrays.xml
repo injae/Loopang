@@ -17,5 +17,6 @@
     <string-array name="spinner_file_type_kr">
         <item>PCM</item>
         <item>WAV</item>
+        <item>MP4</item>
     </string-array>
 </resources>
