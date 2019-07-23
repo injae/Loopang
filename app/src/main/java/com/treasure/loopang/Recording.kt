@@ -12,6 +12,7 @@ import com.treasure.loopang.ui.adapter.LoopstationPagerAdapter
 import androidx.drawerlayout.widget.DrawerLayout
 import com.treasure.loopang.listitem.setEffector
 import com.treasure.loopang.listitem.setMetronome
+import com.treasure.loopang.ui.statusBarHeight
 import kotlinx.android.synthetic.main.activity_recording.*
 import kotlinx.android.synthetic.main.drawer.*
 
@@ -29,11 +30,14 @@ class Recording : AppCompatActivity() {
 
         // 화면을 세로로 고정
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
         setContentView(R.layout.activity_recording)
         window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+        recording_main_layout.setPadding(0, statusBarHeight(this), 0, 0) //Padding for transparent status bar
 
         var drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val drawerView: View = findViewById(R.id.drawer)
+        // drawerLayout.setPadding(0, statusBarHeight(this), 0, 0) //Padding for transparent status bar
         drawerLayout.addDrawerListener(myDrawerListener)
 
         supportFragmentManager.beginTransaction().replace(R.id.fragContainer, setMetronome()).commit()

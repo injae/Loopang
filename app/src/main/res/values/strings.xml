@@ -7,9 +7,9 @@
     <string name="login_string">Start Loopstation</string>
 
     <!-- 레코딩 액티비티, 프래그먼트 용 스트링 리소스 -->
-    <string name="title_activity_recording">Recording</string>
+    <string name="title_activity_recording">Make Loop</string>
 
-    <string name="music_list">Music List</string>
+    <string name="music_list">My Loop List</string>
     <string name="music_list_search_hint">Search…</string>
 
     <string name="example_track_item">Track Item</string>
