@@ -67,15 +67,30 @@ class LayerListAdapter : BaseAdapter() {
         mHandler.post { notifyDataSetChanged() }
     }
 
-    fun onLayerClick(parent: AdapterView<*>, view: View, position: Int, id: Long){
+    fun dropLayer(position: Int){
+        layerItemList.removeAt(position)
+        mHandler.post { notifyDataSetChanged() }
+    }
+
+    fun dropAllLayer() {
+        layerItemList.clear()
+        mHandler.post { notifyDataSetChanged() }
+    }
+
+    fun playLayer(view: View){
         var layerPlayingState = false
 
         nowPlayingLayer?.let{ layerPlayingState = it.playState }
         if(layerPlayingState) {
             nowPlayingLayer?.let{ it.stop() }
         }
-        nowPlayingLayer = view as LayerView
+        nowPlayingLayer = view.layer_view as LayerView
         nowPlayingLayer?.play()
+    }
+
+    fun setLayerMuteState(view: View, muteState: Boolean){
+        val selectedLayer = view.layer_view
+        mHandler.post{ selectedLayer.muteState = muteState }
     }
 
     fun onLayerLongClick(parent: AdapterView<*>, view: View, position: Int, id: Long) : Boolean = false

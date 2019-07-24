@@ -22,6 +22,7 @@ import com.treasure.loopang.ui.listener.TouchGestureListener
 import com.treasure.loopang.ui.toast
 import kotlinx.android.synthetic.main.dialog_save_loop.*
 import kotlinx.android.synthetic.main.fragment_record.*
+import kotlinx.android.synthetic.main.layer_item.view.*
 import kotlin.math.abs
 
 class RecordFragment : androidx.fragment.app.Fragment() {
@@ -178,7 +179,13 @@ class RecordFragment : androidx.fragment.app.Fragment() {
 
     /* 리스트 아이템 클릭 시 처리동작 (onItemClick 함수와 같이 사용) */
     private fun onLayerListItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-        Log.d("RecordFragmentTest", "아이템 클릭! postion: $position")
+        if(mMixer.isLooping.get()) {
+            // 믹서가 작동 중일 때 레이어 아이템 클릭 시 뮤트
+            muteLayer(view, position)
+        } else {
+            // 믹서가 미작동 중일 때 레이어 아이템 클릭 시 레이어 한번 듣기
+            playLayer(view)
+        }
     }
 
     private fun onLayerListItemLongClick(parent: AdapterView<*>, view: View, position: Int, id: Long) : Boolean {
@@ -261,7 +268,26 @@ class RecordFragment : androidx.fragment.app.Fragment() {
         return true
     }
 
-    private fun dropLayer(position: Int) {
+    private fun muteLayer(view: View, position: Int) {
+        Log.d("LayerFunctionTest", "muteLayer(position: $position)")
+        // mLayerListAdapter.setLayerMuteState(view, true)
+        mMixer.setMute(position, true)
+    }
 
+    private fun dropLayer(position: Int) {
+        Log.d("LayerFunctionTest", "dropLayer(position: $position)")
+        mMixer.sounds.removeAt(position)
+        mLayerListAdapter.dropLayer(position)
+    }
+
+    private fun dropAllLayer() {
+        Log.d("LayerFunctionTest", "dropAllLayer()")
+        mMixer.sounds.clear()
+        mLayerListAdapter.dropAllLayer()
+    }
+
+    private fun playLayer(view: View) {
+        Log.d("LayerFunctionTest", "playLayer()")
+        mLayerListAdapter.playLayer(view)
     }
 }
