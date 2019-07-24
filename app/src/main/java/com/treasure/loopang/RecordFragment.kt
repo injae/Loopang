@@ -145,10 +145,10 @@ class RecordFragment : androidx.fragment.app.Fragment() {
         return true
     }
 
-    private fun onThisSwipeToUp() {
+    private fun onThisSwipeToUp(): Boolean {
         if (mRecordState){
             toast(R.string.toast_playback_stop_error)
-            return
+            return true
         }
         if (!mMixer.isLooping.get() && mMixer.sounds.isEmpty()){
             toast(R.string.toast_record_start)
@@ -161,17 +161,19 @@ class RecordFragment : androidx.fragment.app.Fragment() {
             toast(R.string.toast_playback_start)
             mMixer.start()
         }
+        return true
     }
 
-    private fun onThisSwipeToDown() {
+    private fun onThisSwipeToDown(): Boolean {
         Log.d("RecordFragmentTest", "아래로 스와이프 하셨습니다.")
         if(mRecordState) {
             toast(R.string.toast_save_error_while_record)
-            return
+            return true
         }
         if(mMixer.isLooping.get()) mMixer.stop()
 
         showSaveLoopDialog()
+        return true
     }
 
     /* 리스트 아이템 클릭 시 처리동작 (onItemClick 함수와 같이 사용) */
