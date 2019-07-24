@@ -4,7 +4,7 @@ import android.util.Log
 import kotlinx.coroutines.*
 import java.util.concurrent.atomic.AtomicBoolean
 
-class Mixer(val sounds: MutableList<Sound> = mutableListOf()) : IPlayable {
+class Mixer(val sounds: MutableList<Sound> = mutableListOf()) : SoundFlow<Mixer>(), IPlayable {
     var isLooping = AtomicBoolean(false)
 
     fun addSound(sound: Sound) {
@@ -14,7 +14,7 @@ class Mixer(val sounds: MutableList<Sound> = mutableListOf()) : IPlayable {
         sounds.add(sound)
     }
 
-    fun setMute(index: Int, isMute: Boolean) { sounds[index].onStart { it.isPlaying.set(isMute) }}
+    fun setMute(index: Int, isMute: Boolean) { sounds[index].onStart {  it.isPlaying.set(isMute) }}
 
     override fun start() {
         isLooping.set(true)
