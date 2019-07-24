@@ -24,19 +24,21 @@ class TouchGestureListener : GestureDetector.OnGestureListener{
     }
 
     override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
+        var result = false
+
         if(e1 == null || e2 == null) return false
         val diffY: Float = e2.y - e1.y
         val diffX: Float = e2.x - e1.x
         if (abs(diffX) > SWIPE_THRESHOLD && abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
-            return if (diffX > 0) onSwipeToRight()
+            result = if (diffX > 0) onSwipeToRight()
             else onSwipeToLeft()
         }
         if (abs(diffY) > SWIPE_THRESHOLD && abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
-            return if (diffY > 0) onSwipeToDown()
+            result = if (diffY > 0) onSwipeToDown()
             else onSwipeToUp()
         }
 
-        return false
+        return result
     }
 
     override fun onDown(e: MotionEvent?): Boolean = true
