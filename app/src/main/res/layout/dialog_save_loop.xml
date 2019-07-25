@@ -32,4 +32,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_save_dialog"
             android:id="@+id/check_split"/>
+    <CheckBox
+            android:text="@string/check_drop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_save_dialog"
+            android:id="@+id/check_drop"/>
 </LinearLayout>

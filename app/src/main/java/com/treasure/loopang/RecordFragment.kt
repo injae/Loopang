@@ -1,7 +1,6 @@
 package com.treasure.loopang
 
 import android.os.Bundle
-import android.text.SpannableStringBuilder
 import android.util.Log
 import android.view.*
 import android.view.animation.AlphaAnimation
@@ -11,7 +10,6 @@ import com.afollestad.materialdialogs.LayoutMode
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.customview.customView
-import com.afollestad.materialdialogs.input.input
 import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import com.treasure.loopang.audiov2.FileManager
 import com.treasure.loopang.audiov2.Mixer
@@ -22,7 +20,6 @@ import com.treasure.loopang.ui.listener.TouchGestureListener
 import com.treasure.loopang.ui.toast
 import kotlinx.android.synthetic.main.dialog_save_loop.*
 import kotlinx.android.synthetic.main.fragment_record.*
-import kotlinx.android.synthetic.main.layer_item.view.*
 import kotlin.math.abs
 
 class RecordFragment : androidx.fragment.app.Fragment() {
@@ -72,6 +69,10 @@ class RecordFragment : androidx.fragment.app.Fragment() {
         /* 리스트 아이템 싱글 클릭 이벤트 설정 */
         layer_list.setOnItemClickListener { parent, v, position, id ->
             onLayerListItemClick(parent, v, position, id)
+        }
+
+        btn_drop_all_layer.setOnClickListener {
+            showDropAllLayerDialog()
         }
     }
 
@@ -211,7 +212,10 @@ class RecordFragment : androidx.fragment.app.Fragment() {
     }
 
     private fun showSaveLoopDialog() {
-        if(mMixer.sounds.isEmpty()){
+        if (mRecordState) {
+            toast(R.string.toast_save_error_while_record)
+            return
+        } else if(mMixer.sounds.isEmpty()){
             toast(R.string.toast_save_error_no_layer)
             return
         }
@@ -230,8 +234,9 @@ class RecordFragment : androidx.fragment.app.Fragment() {
                 } else {
                     val fileType = spinner.selectedItem.toString()
                     val isSaveChecked = check_split.isChecked
+                    val isDropChecked = check_drop.isChecked
                     Log.d("SaveDialog", "\nloopTitle: $loopTitle, \nfileType: $fileType, \nisSaveChecked: $isSaveChecked")
-                    val isSaved = saveLoop(mMixer, loopTitle, fileType, isSaveChecked)
+                    val isSaved = saveLoop(mMixer, loopTitle, fileType, isSaveChecked, isDropChecked)
 
                     if(isSaved) toast(getString(R.string.toast_save))
                     else toast(R.string.toast_save_error_failed)
@@ -246,7 +251,36 @@ class RecordFragment : androidx.fragment.app.Fragment() {
         }
     }
 
-    private fun saveLoop(mixer: Mixer, loopTitle: String, fileType: String, isSplitChecked: Boolean = false): Boolean {
+    private fun showDropAllLayerDialog() {
+        if (mRecordState) {
+            toast(R.string.toast_drop_all_of_layer_error_recording)
+            return
+        } else if(mMixer.sounds.isEmpty()){
+            toast(R.string.toast_drop_all_of_layer_error_empty)
+            return
+        }
+
+        MaterialDialog(activity!!, BottomSheet(LayoutMode.WRAP_CONTENT)).show {
+            title(R.string.title_drop_all_of_layer)
+            message(R.string.query_drop_all_of_layer)
+            cornerRadius(16f)
+            cancelable(false)
+            positiveButton(R.string.btn_ok) {
+                // callback on positive button click
+                dropAllLayer()
+            }
+            negativeButton(R.string.btn_cancel)
+            lifecycleOwner(activity)
+        }
+    }
+
+    private fun saveLoop(
+        mixer: Mixer,
+        loopTitle: String,
+        fileType: String,
+        isSplitChecked: Boolean = false,
+        isDropChecked: Boolean
+    ): Boolean {
         if(mixer.sounds.isEmpty()){
             toast(R.string.toast_save_error_no_layer)
             return false
@@ -266,6 +300,10 @@ class RecordFragment : androidx.fragment.app.Fragment() {
             Sound(mixer.mixSounds()).save(mDirectoryPath+fileLabel)
         }
 
+        if (isDropChecked) {
+            dropAllLayer()
+        }
+
         return true
     }
 
@@ -283,8 +321,10 @@ class RecordFragment : androidx.fragment.app.Fragment() {
 
     private fun dropAllLayer() {
         Log.d("LayerFunctionTest", "dropAllLayer()")
+        mMixer.stop()
         mMixer.sounds.clear()
         mLayerListAdapter.dropAllLayer()
+        toast(R.string.toast_drop_all_of_layer)
     }
 
     private fun playLayer(view: View) {
