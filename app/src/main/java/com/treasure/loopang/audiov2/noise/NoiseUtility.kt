@@ -17,3 +17,9 @@ fun getLowestPoint(sourceData: MutableList<Short>): Short {
     }
     return lowest
 }
+
+fun changeValueOfMap(pattern: MutableMap<Short, Int>, key: Short) {
+    val temp = pattern.getValue(key)
+    pattern.remove(key)
+    pattern.put(key, temp + 1)
+}
