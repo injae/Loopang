@@ -54,9 +54,12 @@ class Sound ( var data: MutableList<Short> = mutableListOf(),
     fun save(path: String) {
         val format = formatFactory(path)
         val fstream = FileOutputStream(path)
-        var preprocess = data.chunked(info.inputBufferSize)
-            .map{ effect(it.toShortArray()) }
-            .flatMap { it.toList() }.toMutableList()
+        //var preprocess = data.chunked(info.inputBufferSize)
+        //    .map{ effect(it.toShortArray()) }
+        //    .flatMap { it.toList() }.toMutableList()
+        var preprocess = data.chunked(info.sampleRate)
+            .map { timeEffect(it.toShortArray()).toList() }
+            .flatMap { it.chunked(info.outputBufferSize).flatMap { effect(it.toShortArray()).toList() } }.toMutableList()
         format.encord(preprocess).chunked(info.inputBufferSize).map{ it.toByteArray() }.forEach { fstream.write(it,0,it.size) }
         fstream.close()
     }
