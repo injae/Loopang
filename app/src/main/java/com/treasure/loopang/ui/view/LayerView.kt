@@ -1,10 +1,12 @@
 package com.treasure.loopang.ui.view
 
 import android.content.Context
+import android.media.Image
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.TextView
 import com.treasure.loopang.R
 import com.treasure.loopang.audiov2.Sound
@@ -17,6 +19,7 @@ class LayerView @JvmOverloads constructor(
     private val waveformView: WaveformView
     private val indicatorView: IndicatorView
     private val layerLabelTextView: TextView
+    private val muteIcon: ImageView
 
     var playState = false
     var sound: Sound? = null
@@ -39,9 +42,11 @@ class LayerView @JvmOverloads constructor(
     var muteState = false
         set(value) {
             if(value){
-                waveformView.setBackgroundResource(R.color.colorWaveformMute)
+                waveformView.setBackgroundResource(R.drawable.waveform_view_background_mute)
+                muteIcon.visibility = View.VISIBLE
             } else {
-                waveformView.setBackgroundResource(R.color.colorWaveform)
+                waveformView.setBackgroundResource(R.drawable.waveform_view_background)
+                muteIcon.visibility = View.GONE
             }
             field = value
         }
@@ -55,6 +60,7 @@ class LayerView @JvmOverloads constructor(
         waveformView = v.waveform_view
         indicatorView = v.indicator_view
         layerLabelTextView = v.layer_label
+        muteIcon = v.mute_icon
     }
 
     fun play(){
