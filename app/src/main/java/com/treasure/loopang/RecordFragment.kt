@@ -182,7 +182,7 @@ class RecordFragment : androidx.fragment.app.Fragment() {
     private fun onLayerListItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
         if(mMixer.isLooping.get()) {
             // 믹서가 작동 중일 때 레이어 아이템 클릭 시 뮤트
-            muteLayer(view, position)
+            muteLayer(position)
         } else {
             // 믹서가 미작동 중일 때 레이어 아이템 클릭 시 레이어 한번 듣기
             playLayer(view)
@@ -269,10 +269,10 @@ class RecordFragment : androidx.fragment.app.Fragment() {
         return true
     }
 
-    private fun muteLayer(view: View, position: Int) {
+    private fun muteLayer(position: Int) {
         Log.d("LayerFunctionTest", "muteLayer(position: $position)")
-        // mLayerListAdapter.setLayerMuteState(view, true)
         mMixer.setMute(position, true)
+        mLayerListAdapter.switchLayerMuteState(position)
     }
 
     private fun dropLayer(position: Int) {
