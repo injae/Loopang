@@ -37,6 +37,14 @@ class LayerView @JvmOverloads constructor(
             field = value
         }
     var muteState = false
+        set(value) {
+            if(value){
+                waveformView.setBackgroundResource(R.color.colorWaveformMute)
+            } else {
+                waveformView.setBackgroundResource(R.color.colorWaveform)
+            }
+            field = value
+        }
     var effectState = false
 
     init{
@@ -58,5 +66,9 @@ class LayerView @JvmOverloads constructor(
     fun stop(){
         if(!playState) return
         sound?.stop()
+    }
+    fun setLayerMuteBackgroundColor(muteState: Boolean){
+        this.muteState = muteState
+
     }
 }
