@@ -14,6 +14,10 @@ class Sound ( var data: MutableList<Short> = mutableListOf(),
               var format: IFormat = Pcm16(),
               var info: FormatInfo = format.info(),
               var isPlaying: AtomicBoolean = AtomicBoolean(false)) : SoundFlow<Sound>() {
+    fun to_time() : Int {
+        return data.size / info.sampleRate
+    }
+
     fun play() {
         if(!isPlaying.get()) {
             info.outputAudio.play()
@@ -21,9 +25,11 @@ class Sound ( var data: MutableList<Short> = mutableListOf(),
             callStart(this)
             if(isPlaying.get()) {
                 run exit@{
-                    data.chunked(info.outputBufferSize)
+                    data.chunked(info.sampleRate)
+                        .map { effect(it.toShortArray()) }
+                        .flatMap { it.toList() }
+                        .chunked(info.outputBufferSize)
                         .map { it.toShortArray() }
-                        .map { effect(it) }
                         .forEach { if (!isPlaying.get()) return@exit else info.outputAudio.write(it, 0, it.size) }
                 }
             }
