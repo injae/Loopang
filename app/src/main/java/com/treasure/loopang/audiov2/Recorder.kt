@@ -1,5 +1,6 @@
 package com.treasure.loopang.audiov2
 
+import android.util.Log
 import com.treasure.loopang.audio.Stabilizer
 import com.treasure.loopang.audiov2.format.FormatInfo
 import com.treasure.loopang.audiov2.format.IFormat
@@ -16,7 +17,6 @@ class Recorder(var format: IFormat  = Pcm16(),
     lateinit var routine : Deferred<Unit>;
 
     fun start(maxSize: Int? = null) {
-        val recorder = this
         Stabilizer.stabilizeAudio(info.inputAudio)
         info.inputAudio.startRecording()
         callStart(this)
@@ -29,7 +29,8 @@ class Recorder(var format: IFormat  = Pcm16(),
                 maxSize?.let { buffer.forEach { if(maxSize > data.size) data.add(it) else isRecording.set(false) } }
                             ?: buffer.forEach { data.add(it) }
             }
-            callSuccess(recorder)
+            data = data.chunked(info.sampleRate).map{ effect(it.toShortArray()) }.flatMap { it.toList() }.toMutableList()
+            callSuccess(this@Recorder)
         }
     }
 
@@ -46,6 +47,7 @@ class Recorder(var format: IFormat  = Pcm16(),
     fun getSound(): Sound {
         var export = Sound(data)
         data = mutableListOf()
+        Log.d("SoundTest", "sound to time ${export.to_time()}")
         return export
     }
 }
