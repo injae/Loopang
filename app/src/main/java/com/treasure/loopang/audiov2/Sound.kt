@@ -1,5 +1,6 @@
 package com.treasure.loopang.audiov2
 
+import android.util.Log
 import com.treasure.loopang.audiov2.format.FormatInfo
 import com.treasure.loopang.audiov2.format.IFormat
 import com.treasure.loopang.audiov2.format.Pcm16
@@ -26,11 +27,14 @@ class Sound ( var data: MutableList<Short> = mutableListOf(),
             if(isPlaying.get()) {
                 run exit@{
                     data.chunked(info.sampleRate)
-                        .map { effect(it.toShortArray()) }
-                        .flatMap { it.toList() }
-                        .chunked(info.outputBufferSize)
-                        .map { it.toShortArray() }
-                        .forEach { if (!isPlaying.get()) return@exit else info.outputAudio.write(it, 0, it.size) }
+                        .map { timeEffect(it.toShortArray()).toList() }
+                        .forEach {
+                            it.chunked(info.outputBufferSize)
+                                .map { effect(it.toShortArray()) }
+                                .forEach {
+                                    if (!isPlaying.get()) return@exit else info.outputAudio.write(it, 0, it.size)
+                                }
+                        }
                 }
             }
             isPlaying.set(false)
