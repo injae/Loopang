@@ -22,9 +22,13 @@
     <string name="title_loop_title">Loop Title</string>
     <string name="title_file_type">File Type</string>
     <string name="check_split">Split and Save</string>
+    <string name="check_drop">Drop all of Layers</string>
     <string name="btn_ok">OK</string>
     <string name="btn_save">Save</string>
     <string name="btn_cancel">Cancel</string>
+
+    <string name="title_drop_all_of_layer">Drop all of Layer</string>
+    <string name="query_drop_all_of_layer">Do you want to delete all of layer?</string>
 
     <string name="toast_playback_stop_error">You can\'t stop Looper during recording.</string>
     <string name="toast_playback_stop">PlayBack Stop!</string>
@@ -37,5 +41,8 @@
     <string name="toast_save_error_failed">Save Failed</string>
     <string name="toast_save_error_while_record">Stop record before save Loop</string>
     <string name="toast_save_error_without_title">Please set title of your loop</string>
+    <string name="toast_drop_all_of_layer">Drop all of Layers</string>
+    <string name="toast_drop_all_of_layer_error_empty">No layer</string>
+    <string name="toast_drop_all_of_layer_error_recording">To drop during recoding is unavailable</string>
 
 </resources>

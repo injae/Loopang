@@ -6,4 +6,6 @@
     <dimen name="layer_view_icon_width">16dp</dimen>
     <dimen name="layer_view_icon_margin_bottom">2dp</dimen>
     <dimen name="layer_view_icon_margin_left">5dp</dimen>
+    <dimen name="record_fragment_icon_height">26dp</dimen>
+    <dimen name="record_fragment_icon_width">26dp</dimen>
 </resources>
