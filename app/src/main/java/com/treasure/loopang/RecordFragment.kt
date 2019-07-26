@@ -43,6 +43,7 @@ class RecordFragment : androidx.fragment.app.Fragment() {
         mTouchGestureListener.onSwipeToUp = { onThisSwipeToUp() }
 
         initRecorder()
+        initMixer()
     }
 
     override fun onCreateView(
@@ -132,7 +133,14 @@ class RecordFragment : androidx.fragment.app.Fragment() {
         }
     }
 
-    private fun initMixer() {}
+    private fun initMixer() {
+        mMixer.onSuccess {
+            mLoopPlaybackState = false
+        }
+        mMixer.onStart {
+            mLoopPlaybackState = true
+        }
+    }
 
     private fun addLayer() {
         activity?.runOnUiThread {
@@ -177,6 +185,12 @@ class RecordFragment : androidx.fragment.app.Fragment() {
         }
         if (!mMixer.isLooping.get() && mMixer.sounds.isEmpty()){
             toast(R.string.toast_record_start)
+            if(realtime_visualizer_view.visibility == View.GONE) {
+                val animation: Animation = AlphaAnimation(0F, 1F)
+                animation.duration = 1000
+                realtime_visualizer_view.visibility = View.VISIBLE
+                realtime_visualizer_view.animation = animation
+            }
             mMixer.start()
             mRecorder.start()
         }
