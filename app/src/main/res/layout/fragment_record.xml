@@ -49,6 +49,9 @@
                 android:layout_marginBottom="5dp"
                 android:stackFromBottom="true"
                 android:transcriptMode="normal"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="5dp"
+                android:listSelector="@drawable/layer_listview_selector"
                 android:background="@android:color/transparent"
                 android:id="@+id/layer_list"/>
     </FrameLayout>
