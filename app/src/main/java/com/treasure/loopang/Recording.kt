@@ -39,6 +39,7 @@ class Recording : AppCompatActivity() {
 
         setContentView(R.layout.activity_recording)
         window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+
         recording_main_layout.setPadding(0, statusBarHeight(this), 0, 0) //Padding for transparent status bar
 
         //Hide Bottom Soft Navigation Bar
@@ -48,26 +49,37 @@ class Recording : AppCompatActivity() {
         mDecorView.systemUiVisibility = mUiOption
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
-        val drawerView: View = findViewById(R.id.drawer)
         // drawerLayout.setPadding(0, statusBarHeight(this), 0, 0) //Padding for transparent status bar
+
         drawerLayout.addDrawerListener(myDrawerListener)
 
-        supportFragmentManager.beginTransaction().replace(R.id.fragContainer, setMetronome()).commit()
-
-
+       // supportFragmentManager.beginTransaction().replace(R.id.fragContainer, setMetronome()).commit()
+        getSupportFragmentManager().beginTransaction()
+            .setCustomAnimations( R.anim.fade_in, 0, 0, R.anim.fade_out).replace(R.id.fragContainer, setMetronome()).commit()
         btn_setMetronome.setOnClickListener {
-            supportFragmentManager
+            getSupportFragmentManager()
                 .beginTransaction()
+                .setCustomAnimations( R.anim.fade_in, 0, 0, R.anim.fade_out)
                 .replace(R.id.fragContainer, setMetronome())
                 .commit()
         }
-
         btn_setEffector.setOnClickListener{
-            supportFragmentManager
+
+            getSupportFragmentManager()
                 .beginTransaction()
+                .setCustomAnimations( R.anim.fade_in, 0, 0, R.anim.fade_out)
                 .replace(R.id.fragContainer, setEffector())
                 .commit()
         }
+        btn_setting.setOnClickListener {
+            getSupportFragmentManager()
+                .beginTransaction()
+                .setCustomAnimations( R.anim.fade_in, 0, 0, R.anim.fade_out)
+                .replace(R.id.fragContainer, setting())
+                .commit()
+
+        }
+
         pager.adapter = pagerAdapter
         pager.addOnPageChangeListener(PageChangeListener())
         pager.setOnTouchListener { _, _ -> false}
@@ -109,6 +121,7 @@ class Recording : AppCompatActivity() {
             Toast.makeText(this, "One More pressed, Turn OFF", Toast.LENGTH_SHORT).show()
         }
     }
+
 
     inner class PageChangeListener: ViewPager.OnPageChangeListener {
         private var selectedPage: Int = 0

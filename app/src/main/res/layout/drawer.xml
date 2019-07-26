@@ -1,53 +1,46 @@
     <LinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:layout_width="100dp"
+            android:layout_width="80dp"
             android:layout_height="match_parent"
             android:background="#b3000000"
             android:orientation="vertical"
-            android:id="@+id/drawer">
-        <LinearLayout
+            android:id="@+id/drawer"
+            android:clickable="true"
+            android:focusable="true"
 
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:background="@android:color/transparent"
-                android:layout_marginTop="170dp"
-                android:layout_marginBottom="0dp"
+    >
 
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:orientation="vertical"
-        >
             <ImageButton
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:gravity="center"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="170dp"
+                    android:layout_marginBottom="0dp"
                     android:id="@+id/btn_setMetronome"
                     android:src="@drawable/icon_metronome"
                     android:background="@drawable/rounded"/>
-
-
-        </LinearLayout>
-
-        <LinearLayout
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:background="@android:color/transparent"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="0dp"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:orientation="vertical">
-
             <ImageButton
-                    android:layout_width="match_parent"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:gravity="center"
                     android:layout_gravity="center"
-                    android:layout_height="49dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="0dp"
                     android:id="@+id/btn_setEffector"
-                    android:background="@drawable/rounded"
-
+                    android:background="@drawable/icon_effector"
                     />
 
-        </LinearLayout>
+        <ImageButton
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="0dp"
+                android:id="@+id/btn_setting"
+                android:src="@drawable/icon_setting"
+                android:background="@drawable/rounded"
+        />
     </LinearLayout>

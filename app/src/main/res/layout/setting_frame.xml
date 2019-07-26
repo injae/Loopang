@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/settingFrame">
+
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="230dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center">
+
+        <TextView
+                android:text="Setting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="30dp"
+                android:layout_gravity="right"
+                android:textSize="36dp"
+                android:textColor="#ffffff"/>
+
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="27dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/rounded">
+
+            <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:gravity="center"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    app:srcCompat="@drawable/icon_search"
+                    android:id="@+id/imageView4"
+            />
+            <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/editText"
+                    android:layout_marginStart="5dp"
+                    android:textColor="#FFFFFF"
+                    android:background = "@android:color/transparent"
+                   android:textSize="14dp"
+                    android:layout_weight="1"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    android:maxLength="10"/>
+            <Button
+                    android:text="x"
+                    android:layout_width="28dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/btn_deleteAll"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textSize="14dp"
+                    android:background="#00ff0000"
+                    android:textColor="#FFFFFF"/>
+
+
+        </LinearLayout>
+
+        <ImageView
+               android:background="@drawable/setting_dividing_line"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+               android:layout_gravity="center"
+                android:id="@+id/imageView5"
+                 android:layout_marginTop="10dp"/>
+
+        <ListView
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="348dp"
+                android:layout_gravity="center"
+                android:id="@+id/settingListView"
+                android:dividerHeight="9dp"
+                android:divider="#00000000"
+        />
+
+    </LinearLayout>
+
+        </FrameLayout>
