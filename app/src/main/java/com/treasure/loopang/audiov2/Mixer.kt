@@ -14,7 +14,7 @@ class Mixer(val sounds: MutableList<Sound> = mutableListOf()) : SoundFlow<Mixer>
         sounds.add(sound)
     }
 
-    fun setMute(index: Int, isMute: Boolean) { sounds[index].onStart {  it.isPlaying.set(isMute) }}
+    fun setMute(index: Int, isMute: Boolean) { sounds[index].onStart { it.isPlaying.set(!isMute) }}
 
     override fun start() {
         isLooping.set(true)
