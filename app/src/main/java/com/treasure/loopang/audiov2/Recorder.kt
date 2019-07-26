@@ -1,5 +1,6 @@
 package com.treasure.loopang.audiov2
 
+import android.util.Log
 import com.treasure.loopang.audio.Stabilizer
 import com.treasure.loopang.audiov2.format.FormatInfo
 import com.treasure.loopang.audiov2.format.IFormat
@@ -8,6 +9,7 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.math.max
 
 class Recorder(var format: IFormat  = Pcm16(),
                var info: FormatInfo =format.info(),
@@ -16,20 +18,33 @@ class Recorder(var format: IFormat  = Pcm16(),
     lateinit var routine : Deferred<Unit>;
 
     fun start(maxSize: Int? = null) {
-        val recorder = this
         Stabilizer.stabilizeAudio(info.inputAudio)
         info.inputAudio.startRecording()
         callStart(this)
         routine = async {
             isRecording.set(true)
             var buffer = ShortArray(info.inputBufferSize)
+            var sampleCounter: Int = 0
             while(isRecording.get()) {
                 info.inputAudio.read(buffer,0, buffer.size)
                 buffer = effect(buffer)
                 maxSize?.let { buffer.forEach { if(maxSize > data.size) data.add(it) else isRecording.set(false) } }
                             ?: buffer.forEach { data.add(it) }
+
+                var currentSampleCount = data.chunked(info.sampleRate).count() - 1
+                if(sampleCounter < currentSampleCount) {
+                    sampleCounter = currentSampleCount
+                    var minSample = (currentSampleCount-1)*info.sampleRate
+                    var maxSample = (currentSampleCount*info.sampleRate)- 1
+                    var sampleData = timeEffect(data.subList(minSample, maxSample).toShortArray())
+
+                    var count: Int = 0
+                    var scount: Int = minSample
+                    do { data[scount++] = sampleData[count++] } while(scount > maxSample)
+                }
+
             }
-            callSuccess(recorder)
+            callSuccess(this@Recorder)
         }
     }
 
@@ -46,6 +61,7 @@ class Recorder(var format: IFormat  = Pcm16(),
     fun getSound(): Sound {
         var export = Sound(data)
         data = mutableListOf()
+        Log.d("SoundTest", "sound to time ${export.to_time()}")
         return export
     }
 }

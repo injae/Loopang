@@ -7,9 +7,9 @@
     <string name="login_string">Start Loopstation</string>
 
     <!-- 레코딩 액티비티, 프래그먼트 용 스트링 리소스 -->
-    <string name="title_activity_recording">Recording</string>
+    <string name="title_activity_recording">Make Loop</string>
 
-    <string name="music_list">Music List</string>
+    <string name="music_list">My Loop List</string>
     <string name="music_list_search_hint">Search…</string>
 
     <string name="example_track_item">Track Item</string>
@@ -17,4 +17,32 @@
     <string name="song_item_date_example">2019/03/18</string>
 
     <string name="layer_label">Layer #</string>
+
+    <string name="title_save_loop">Save Loop</string>
+    <string name="title_loop_title">Loop Title</string>
+    <string name="title_file_type">File Type</string>
+    <string name="check_split">Split and Save</string>
+    <string name="check_drop">Drop all of Layers</string>
+    <string name="btn_ok">OK</string>
+    <string name="btn_save">Save</string>
+    <string name="btn_cancel">Cancel</string>
+
+    <string name="title_drop_all_of_layer">Drop all of Layer</string>
+    <string name="query_drop_all_of_layer">Do you want to delete all of layer?</string>
+
+    <string name="toast_playback_stop_error">You can\'t stop Looper during recording.</string>
+    <string name="toast_playback_stop">PlayBack Stop!</string>
+    <string name="toast_playback_start">PlayBack!</string>
+    <string name="toast_record_start">Record New Layer!!</string>
+    <string name="toast_record_start_error_without_playback">You can start record only loop is playing!</string>
+    <string name="toast_record_stop">Recording Stop!</string>
+    <string name="toast_save_error_no_layer">Please make Track at least 1</string>
+    <string name="toast_save">Your Loop is saved</string>
+    <string name="toast_save_error_failed">Save Failed</string>
+    <string name="toast_save_error_while_record">Stop record before save Loop</string>
+    <string name="toast_save_error_without_title">Please set title of your loop</string>
+    <string name="toast_drop_all_of_layer">Drop all of Layers</string>
+    <string name="toast_drop_all_of_layer_error_empty">No layer</string>
+    <string name="toast_drop_all_of_layer_error_recording">To drop during recoding is unavailable</string>
+
 </resources>

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/fragment_record_layout"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/view_pager_background"
+        android:animateLayoutChanges="true"
         tools:context=".RecordFragment">
     <TextView
             android:text="@string/title_activity_recording"
@@ -48,7 +49,20 @@
                 android:layout_marginBottom="5dp"
                 android:stackFromBottom="true"
                 android:transcriptMode="normal"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="5dp"
+                android:listSelector="@drawable/layer_listview_selector"
                 android:background="@android:color/transparent"
                 android:id="@+id/layer_list"/>
     </FrameLayout>
+    <ImageButton
+            android:src="@drawable/bin_icon"
+            android:layout_width="@dimen/record_fragment_icon_width"
+            android:layout_height="@dimen/record_fragment_icon_height"
+            android:id="@+id/btn_drop_all_layer"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="19dp"
+            android:background="@android:color/transparent" android:tint="#00FFFFFF" android:scaleType="fitCenter"/>
 </RelativeLayout>

@@ -1,29 +1,55 @@
 package com.treasure.loopang
 
+import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.viewpager.widget.ViewPager
+import com.treasure.loopang.ui.adapter.LoopstationPagerAdapter
 import androidx.drawerlayout.widget.DrawerLayout
-import com.treasure.loopang.adapter.SongPagerAdapter
 import com.treasure.loopang.listitem.setEffector
 import com.treasure.loopang.listitem.setMetronome
+import com.treasure.loopang.ui.statusBarHeight
 import kotlinx.android.synthetic.main.activity_recording.*
 import kotlinx.android.synthetic.main.drawer.*
+import android.os.Build
+
+
 
 class Recording : AppCompatActivity() {
-    private val FINISH_INTERVAL_TIME = 2000
-    private var backPressedTime: Long = 0
+    companion object {
+        private const val FINISH_INTERVAL_TIME = 2000
+    }
+    private val mDecorView: View by lazy { window.decorView }
+    private var mUiOption: Int = 0
 
-    private val pagerAdapter by lazy { SongPagerAdapter(supportFragmentManager) }
+    private var backPressedTime: Long = 0
+    private var currentPage: Int = 0
+
+    private val pagerAdapter by lazy { LoopstationPagerAdapter(supportFragmentManager) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // 화면을 세로로 고정
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
         setContentView(R.layout.activity_recording)
         window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+
+        recording_main_layout.setPadding(0, statusBarHeight(this), 0, 0) //Padding for transparent status bar
+
+        //Hide Bottom Soft Navigation Bar
+        mUiOption = mDecorView.systemUiVisibility
+        mUiOption = mUiOption or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+        mUiOption = mUiOption or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        mDecorView.systemUiVisibility = mUiOption
+
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
+        // drawerLayout.setPadding(0, statusBarHeight(this), 0, 0) //Padding for transparent status bar
         drawerLayout.addDrawerListener(myDrawerListener)
 
        // supportFragmentManager.beginTransaction().replace(R.id.fragContainer, setMetronome()).commit()
@@ -57,6 +83,13 @@ class Recording : AppCompatActivity() {
         pager.addOnPageChangeListener(PageChangeListener())
         pager.setOnTouchListener { _, _ -> false}
     }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        if( hasFocus ) {
+            mDecorView.systemUiVisibility = mUiOption
+        }
+    }
+
     internal var myDrawerListener: DrawerLayout.DrawerListener = object : DrawerLayout.DrawerListener {
 
         override fun onDrawerClosed(drawerView: View) {}
@@ -88,28 +121,22 @@ class Recording : AppCompatActivity() {
         }
     }
 
-
-    inner class PageChangeListener: androidx.viewpager.widget.ViewPager.OnPageChangeListener {
+    inner class PageChangeListener: ViewPager.OnPageChangeListener {
         private var selectedPage: Int = 0
         private var scrollState: Int = 0
         private var prevPage: Int = 0
 
-        /* 페이지(플래그먼트)가 바뀌었을 때 처리 */
-        private fun processWhenPageChanged() {
-            Log.d("ViewPagerText", "페이지가 바뀌었어요!")
-        }
-
         /* 스크롤 시 드래깅 중인지 알려줌 */
         override fun onPageScrollStateChanged(state: Int) {
             when(state){
-                androidx.viewpager.widget.ViewPager.SCROLL_STATE_SETTLING -> {
+                ViewPager.SCROLL_STATE_SETTLING -> {
                     prevPage = selectedPage
                     Log.d("ViewPagerTest", "SCROLL_STATE_SETTLING")
                 }
-                androidx.viewpager.widget.ViewPager.SCROLL_STATE_DRAGGING -> {
+                ViewPager.SCROLL_STATE_DRAGGING -> {
                     Log.d("ViewPagerTest", "SCROLL_STATE_DRAGGING")
                 }
-                androidx.viewpager.widget.ViewPager.SCROLL_STATE_IDLE -> {
+                ViewPager.SCROLL_STATE_IDLE -> {
                     Log.d("ViewPagerTest", "SCROLL_STATE_IDLE")
                 }
             }
@@ -123,8 +150,14 @@ class Recording : AppCompatActivity() {
         override fun onPageSelected(p0: Int) {
             selectedPage = p0
             if(prevPage != selectedPage)
-                processWhenPageChanged()
+                onPageChanged()
             Log.d("ViewPagerTest", "onPageSelected : $selectedPage")
+        }
+
+        /* 페이지(플래그먼트)가 바뀌었을 때 처리 */
+        private fun onPageChanged() {
+            Log.d("ViewPagerText", "페이지가 바뀌었어요!")
+            this@Recording.currentPage = selectedPage
         }
     }
 }
