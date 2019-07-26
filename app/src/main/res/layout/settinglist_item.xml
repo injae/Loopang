@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
+                android:layout_height="33dp"
+                android:background="@drawable/effectorlist_background">
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="6dp">
+        <ImageView
+                android:id="@+id/settingListImage"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/icon_setting"
+        />
+        <TextView
+                android:text="공지사항"
+                android:textColor="#FFFFFF"
+                android:layout_marginStart="6dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:textSize="13dp"
+        android:gravity="center_vertical"
+        android:id="@+id/settingListText"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
