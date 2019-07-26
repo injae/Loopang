@@ -50,6 +50,7 @@ class Recording : AppCompatActivity() {
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         // drawerLayout.setPadding(0, statusBarHeight(this), 0, 0) //Padding for transparent status bar
+
         drawerLayout.addDrawerListener(myDrawerListener)
 
        // supportFragmentManager.beginTransaction().replace(R.id.fragContainer, setMetronome()).commit()
@@ -120,6 +121,7 @@ class Recording : AppCompatActivity() {
             Toast.makeText(this, "One More pressed, Turn OFF", Toast.LENGTH_SHORT).show()
         }
     }
+
 
     inner class PageChangeListener: ViewPager.OnPageChangeListener {
         private var selectedPage: Int = 0
