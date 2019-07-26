@@ -60,7 +60,7 @@ class Sound ( var data: MutableList<Short> = mutableListOf(),
         var preprocess = data.chunked(info.sampleRate)
             .map { timeEffect(it.toShortArray()).toList() }
             .flatMap { it.chunked(info.outputBufferSize).flatMap { effect(it.toShortArray()).toList() } }.toMutableList()
-        format.encord(preprocess).chunked(info.inputBufferSize).map{ it.toByteArray() }.forEach { fstream.write(it,0,it.size }
+        format.encord(preprocess).chunked(info.inputBufferSize).map{ it.toByteArray() }.forEach { fstream.write(it,0,it.size) }
         fstream.close()
     }
 
