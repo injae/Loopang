@@ -6,33 +6,32 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/setEffectorFrame"
-            android:background="@drawable/drawer_background"
+            android:layout_height="match_parent"   android:id="@+id/setEffectorFrame"
 
     >
         <LinearLayout
                 android:orientation="vertical"
-                android:layout_width="match_parent"
+                android:layout_width="236dp"
                 android:layout_height="match_parent"
+                android:layout_gravity="center"
 
         >
 
             <LinearLayout
                     android:orientation="horizontal"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="40dp"
-                    >
+            >
                 <TextView
-                        android:text="Effector"
+                        android:text="Instrument"
                         android:layout_width="130dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:id="@+id/textView6"
                         android:layout_weight="1"
-                        android:layout_gravity="center"
-                        android:textSize="36dp"
+                        android:layout_gravity="bottom"
+                        android:textSize="26dp"
                         android:textColor="#ffffff"
                 >
 
@@ -42,9 +41,9 @@
                         android:layout_height="25dp"
                         app:srcCompat="@drawable/icon_bassguitar"
                         android:id="@+id/imageView6"
-                        android:layout_weight="1"
                         android:layout_marginLeft="8dp"
-                        android:layout_marginTop="20dp"/>
+                        android:layout_marginBottom="5dp"
+                        android:layout_gravity="bottom"/>
                 <ImageView
                         android:layout_width="25dp"
                         android:layout_height="25dp"
@@ -52,7 +51,8 @@
                         android:id="@+id/imageView7"
                         android:layout_weight="1"
                         android:layout_marginLeft="8dp"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_gravity="bottom"
                 />
                 <ImageView
                         android:layout_width="25dp"
@@ -61,18 +61,20 @@
                         android:id="@+id/imageView8"
                         android:layout_weight="1"
                         android:layout_marginLeft="8dp"
-                        android:layout_marginTop="20dp"/>
+                        android:layout_marginBottom="5dp"
+                        android:layout_gravity="bottom"/>
 
             </LinearLayout>
             <ListView
                     android:id="@+id/effectorListView"
-                    android:layout_width="274dp"
-                    android:layout_height="576dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="478.3dp"
                     android:layout_gravity="center"
                     android:layout_marginTop="30dp"
                     android:layout_alignParentStart="true"
+                    android:dividerHeight="13.5dp"
+                    android:divider="#00000000"
             />
-
 
         </LinearLayout>
     </FrameLayout>

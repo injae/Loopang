@@ -49,7 +49,10 @@
         <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/fragContainer">
+                android:id="@+id/fragContainer"
+                android:background="@drawable/drawer_background"
+                android:clickable="true"
+                android:focusable="true">
 
         </FrameLayout>
 

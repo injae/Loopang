@@ -8,31 +8,33 @@
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+    android:layout_marginStart="15dp">
         <TextView
                 android:id="@+id/name_musical_instrument"
                 android:text="드럼 1"
                 android:textColor="#FFFFFF"
-
                 android:layout_width="100dp"
                 android:layout_height="25dp"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:textSize="18sp" />
+                android:textSize="20sp" />
         <ImageButton
                 android:id="@+id/btn_playback"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_gravity="center_vertical"
-                android:background="@drawable/icon_play__musical_instrument"
-                 android:layout_marginRight="2dp"/>
+                android:background="@android:color/transparent"
+                 android:layout_marginRight="2dp"
+        android:layout_marginTop="4dp"/>
         <ImageButton
                 android:id="@+id/btn_add"
                 android:layout_width="wrap_content"
                 android:layout_height="25dp"
                 android:layout_gravity="center_vertical"
-                android:background="@drawable/icon_stop__musical_instrument"
-                android:layout_marginRight="2dp"/>
+                android:background="@drawable/icon_add__musical_instrument"
+                android:layout_marginRight="2dp"
+        android:layout_marginTop="6dp"/>
     </LinearLayout>
 
 </RelativeLayout>

@@ -5,7 +5,8 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".Login">
+        tools:context=".Login"
+        >>
 
     <RelativeLayout
             android:orientation="vertical"
@@ -21,6 +22,9 @@
                 android:layout_alignParentStart="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="191dp" tools:srcCompat="@drawable/logo"/>
+
+
+
         <Button
                 android:text="@string/login_string"
                 android:layout_width="match_parent"
