@@ -4,25 +4,27 @@ import android.util.Log
 import kotlinx.coroutines.*
 import java.util.concurrent.atomic.AtomicBoolean
 
-class Mixer(val sounds: MutableList<Sound> = mutableListOf()) : IPlayable {
+class Mixer(val sounds: MutableList<Sound> = mutableListOf()) : SoundFlow<Mixer>(), IPlayable {
     var isLooping = AtomicBoolean(false)
 
     fun addSound(sound: Sound) {
-        sound.onSuccess { Log.d("MixerTest", "${sounds.count() + 1} Sound Success") } //debug
-        sound.onStart   { Log.d("MixerTest", "${sounds.count() + 1} Sound Start") }   //debug
-        sound.onStop    { Log.d("MixerTest", "${sounds.count() + 1} Sound Stop") }    //debug
+        sound.onSuccess { Log.d("SoundTest", "${sounds.count() + 1} Sound Success") } //debug
+        sound.onStart   { Log.d("SoundTest", "${sounds.count() + 1} Sound Start") }   //debug
+        sound.onStop    { Log.d("SoundTest", "${sounds.count() + 1} Sound Stop") }    //debug
         sounds.add(sound)
     }
 
-    fun setMute(index: Int, isMute: Boolean) { sounds[index].onStart { it.isPlaying.set(isMute) }}
+    fun setMute(index: Int, isMute: Boolean) { sounds[index].onStart {  it.isPlaying.set(isMute) }}
 
     override fun start() {
         isLooping.set(true)
-        launch { while(isLooping.get()) { sounds.map { async { it.play() } }.forEach{ it.await() } } }.start()
+        callStart(this)
+        launch { while(isLooping.get()) { sounds.map { async { it.play() } }.forEach{ it.await() }; callSuccess(this@Mixer) } }.start()
     }
 
     override fun stop() {
         isLooping.set(false)
+        callStop(this)
         sounds.forEach { it.stop() }
     }
 

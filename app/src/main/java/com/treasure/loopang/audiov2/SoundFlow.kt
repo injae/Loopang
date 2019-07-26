@@ -10,6 +10,12 @@ abstract open class SoundFlow<T> {
     fun removeEffector(effector: Effector) { effectorList.remove(effector) }
     fun effect(data: ShortArray) : ShortArray { return effectorList.fold(data, {acc, it -> it(acc)}) }
 
+    var timeEffectorList : MutableList<Effector> = mutableListOf()
+    fun addTimeEffector(effector: Effector) { timeEffectorList.add(effector) }
+    fun addTimeEffector(index: Int, effector: Effector) { timeEffectorList[index] = effector }
+    fun removeTimeEffector(effector: Effector) { timeEffectorList.remove(effector) }
+    fun timeEffect(data: ShortArray) : ShortArray { return timeEffectorList.fold(data, {acc, it -> it(acc)}) }
+
     protected var callSuccess: Flow<T> = {  }
     protected var callStart:   Flow<T> = {  }
     protected var callStop:    Flow<T> = {  }

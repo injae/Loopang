@@ -4,14 +4,12 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.BaseAdapter
 import com.treasure.loopang.R
 import com.treasure.loopang.audiov2.Sound
 import com.treasure.loopang.ui.item.LayerItem
 import com.treasure.loopang.ui.view.LayerView
 import kotlinx.android.synthetic.main.layer_item.view.*
-import java.lang.RuntimeException
 
 class LayerListAdapter : BaseAdapter() {
     private val layerItemList: MutableList<LayerItem> = mutableListOf()
@@ -41,6 +39,7 @@ class LayerListAdapter : BaseAdapter() {
 
         layerListHolder.layerView.sound = layerItem.sound
         layerListHolder.layerView.layerLabel = layerItem.layerLabel
+        layerListHolder.layerView.muteState = layerItem.muteState
 
         return view
     }
@@ -67,18 +66,42 @@ class LayerListAdapter : BaseAdapter() {
         mHandler.post { notifyDataSetChanged() }
     }
 
-    fun onLayerClick(parent: AdapterView<*>, view: View, position: Int, id: Long){
-        var layerPlayingState = false
+    fun dropLayer(position: Int){
+        stopNowLayer()
+        layerItemList.removeAt(position)
+        mHandler.post { notifyDataSetChanged() }
+    }
 
-        nowPlayingLayer?.let{ layerPlayingState = it.playState }
-        if(layerPlayingState) {
-            nowPlayingLayer?.let{ it.stop() }
-        }
-        nowPlayingLayer = view as LayerView
+    fun dropAllLayer() {
+        stopNowLayer()
+        layerItemList.clear()
+        mHandler.post { notifyDataSetChanged() }
+    }
+
+    fun playLayer(view: View){
+        stopNowLayer()
+        nowPlayingLayer = view.layer_view as LayerView
         nowPlayingLayer?.play()
     }
 
-    fun onLayerLongClick(parent: AdapterView<*>, view: View, position: Int, id: Long) : Boolean = false
+    fun switchLayerMuteState(position: Int){
+        // Log.d("LayerListAdapter", "layerItemList[$position].muteState: ${layerItemList[position].muteState}")
+        layerItemList[position].muteState = !layerItemList[position].muteState
+        notifyDataSetChanged()
+    }
+    fun setLayerMuteState(position: Int, muteState: Boolean){
+        layerItemList[position].muteState = muteState
+        notifyDataSetChanged()
+    }
+
+    private fun stopNowLayer(){
+        var layerPlayingState = false
+
+        nowPlayingLayer?.let{ layerPlayingState = it.playState } ?: return
+        if(layerPlayingState) {
+            nowPlayingLayer?.stop()
+        }
+    }
 }
 
 class LayerListHolder{

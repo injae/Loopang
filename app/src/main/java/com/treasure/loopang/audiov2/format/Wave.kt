@@ -1,17 +1,15 @@
 package com.treasure.loopang.audiov2.format
 
+import com.treasure.loopang.audiov2.convertByteArrayToShortArray
 import com.treasure.loopang.audiov2.convertShortArrayToByteArray
 
 class Wave(private var info: FormatInfo = FormatInfo()) : IFormat {
     override fun info() = info
     override fun encord(data: MutableList<Short>) = getWavData(data)
-
-    override fun decord(data: MutableList<Byte>): MutableList<Short> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun decord(data: MutableList<Byte>) = data.chunked(info.inputBufferSize).flatMap { convertByteArrayToShortArray(it.toByteArray()).toList() }.toMutableList()
 
     private fun getWavData(data: MutableList<Short>): MutableList<Byte> {
-        val wavData = MutableList<Byte>(1,{0})
+        val wavData = MutableList<Byte>(0,{0})
 
         // Wave file header insertion procedure
         insertString(wavData, "RIFF")
