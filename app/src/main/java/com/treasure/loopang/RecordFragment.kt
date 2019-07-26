@@ -6,6 +6,7 @@ import android.view.*
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.widget.AdapterView
+import android.widget.ListView
 import com.afollestad.materialdialogs.LayoutMode
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
@@ -16,6 +17,7 @@ import com.treasure.loopang.audiov2.Mixer
 import com.treasure.loopang.audiov2.Recorder
 import com.treasure.loopang.audiov2.Sound
 import com.treasure.loopang.ui.adapter.LayerListAdapter
+import com.treasure.loopang.ui.listener.SwipeDismissListViewTouchListener
 import com.treasure.loopang.ui.listener.TouchGestureListener
 import com.treasure.loopang.ui.toast
 import kotlinx.android.synthetic.main.dialog_save_loop.*
@@ -54,23 +56,11 @@ class RecordFragment : androidx.fragment.app.Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        layer_list.adapter = mLayerListAdapter
-
         /* 프래그먼트 전체에 해당하는 제스쳐 이벤트 */
         val gesture = GestureDetector(view.context, mTouchGestureListener)
         view.setOnTouchListener{ _, event -> gesture.onTouchEvent(event)}
 
-        /* 리스트 아이템 롱클릭 이벤트 설정 */
-        layer_list.isLongClickable = true
-        layer_list.setOnItemLongClickListener{ parent, v, position, id ->
-            onLayerListItemLongClick(parent, v, position, id)
-        }
-
-        /* 리스트 아이템 싱글 클릭 이벤트 설정 */
-        layer_list.setOnItemClickListener { parent, v, position, id ->
-            onLayerListItemClick(parent, v, position, id)
-        }
-
+        initLayerListView()
         btn_drop_all_layer.setOnClickListener {
             showDropAllLayerDialog()
         }
@@ -86,6 +76,40 @@ class RecordFragment : androidx.fragment.app.Fragment() {
     override fun onPause() {
         super.onPause()
         Log.d("RecordFragment", "RecordFragment Paused!")
+    }
+
+    private fun initLayerListView() {
+        val layerList = layer_list
+        val swipeDismissListViewTouchListener = SwipeDismissListViewTouchListener(
+            layerList
+            , object: SwipeDismissListViewTouchListener.DismissCallbacks{
+                override fun canDismiss(position: Int): Boolean {
+                    return true
+                }
+
+                override fun onDismiss(listView: ListView?, reverseSortedPositions: IntArray?) {
+                    Log.d("SwipeDismissTest", "onDismiss($reverseSortedPositions)")
+                    for(position in reverseSortedPositions!!)
+                        dropLayer(position)
+                }
+            }
+        )
+
+        layerList.adapter = mLayerListAdapter
+
+        /* 리스트 아이템 롱클릭 이벤트 설정 */
+        layerList.isLongClickable = true
+        layerList.setOnItemLongClickListener{ parent, v, position, id ->
+            onLayerListItemLongClick(parent, v, position, id)
+        }
+
+        /* 리스트 아이템 싱글 클릭 이벤트 설정 */
+        layerList.setOnItemClickListener { parent, v, position, id ->
+            onLayerListItemClick(parent, v, position, id)
+        }
+
+        layerList.setOnTouchListener(swipeDismissListViewTouchListener)
+        layerList.setOnScrollListener(swipeDismissListViewTouchListener.makeScrollListener())
     }
 
     private fun initRecorder(){
@@ -317,6 +341,7 @@ class RecordFragment : androidx.fragment.app.Fragment() {
         Log.d("LayerFunctionTest", "dropLayer(position: $position)")
         mMixer.sounds.removeAt(position)
         mLayerListAdapter.dropLayer(position)
+        toast("Drop Layer")
     }
 
     private fun dropAllLayer() {
