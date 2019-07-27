@@ -16,7 +16,9 @@ import com.treasure.loopang.ui.statusBarHeight
 import kotlinx.android.synthetic.main.activity_recording.*
 import kotlinx.android.synthetic.main.drawer.*
 import android.os.Build
-
+import android.widget.Button
+import android.widget.ImageButton
+import androidx.core.app.ActivityCompat.finishAffinity
 
 
 class Recording : AppCompatActivity() {
@@ -56,28 +58,15 @@ class Recording : AppCompatActivity() {
        // supportFragmentManager.beginTransaction().replace(R.id.fragContainer, setMetronome()).commit()
         getSupportFragmentManager().beginTransaction()
             .setCustomAnimations( R.anim.fade_in, 0, 0, R.anim.fade_out).replace(R.id.fragContainer, setMetronome()).commit()
+
         btn_setMetronome.setOnClickListener {
-            getSupportFragmentManager()
-                .beginTransaction()
-                .setCustomAnimations( R.anim.fade_in, 0, 0, R.anim.fade_out)
-                .replace(R.id.fragContainer, setMetronome())
-                .commit()
+            checkPresentFragAndReplaceFrag(btn_setMetronome)
         }
         btn_setEffector.setOnClickListener{
-
-            getSupportFragmentManager()
-                .beginTransaction()
-                .setCustomAnimations( R.anim.fade_in, 0, 0, R.anim.fade_out)
-                .replace(R.id.fragContainer, setEffector())
-                .commit()
+            checkPresentFragAndReplaceFrag(btn_setEffector)
         }
         btn_setting.setOnClickListener {
-            getSupportFragmentManager()
-                .beginTransaction()
-                .setCustomAnimations( R.anim.fade_in, 0, 0, R.anim.fade_out)
-                .replace(R.id.fragContainer, setting())
-                .commit()
-
+            checkPresentFragAndReplaceFrag(btn_setting)
         }
 
         pager.adapter = pagerAdapter
@@ -85,6 +74,35 @@ class Recording : AppCompatActivity() {
         pager.setOnTouchListener { _, _ -> false}
     }
 
+    fun checkPresentFragAndReplaceFrag(fragBtn : ImageButton){
+        for (fragment in supportFragmentManager.fragments) {
+            if (fragment.isVisible) {
+                when(fragBtn){
+                    btn_setMetronome -> if( fragment is setEffector || fragment is setting){
+                            getSupportFragmentManager()
+                                .beginTransaction()
+                                .setCustomAnimations( R.anim.fade_in, 0, 0, R.anim.fade_out)
+                                .replace(R.id.fragContainer, setMetronome())
+                                .commit()
+                        }
+                    btn_setEffector -> if(fragment is setMetronome || fragment is setting) {
+                        getSupportFragmentManager()
+                            .beginTransaction()
+                            .setCustomAnimations(R.anim.fade_in, 0, 0, R.anim.fade_out)
+                            .replace(R.id.fragContainer, setEffector())
+                            .commit()
+                    }
+                    btn_setting -> if(fragment is setMetronome || fragment is setEffector) {
+                        getSupportFragmentManager()
+                            .beginTransaction()
+                            .setCustomAnimations( R.anim.fade_in, 0, 0, R.anim.fade_out)
+                            .replace(R.id.fragContainer, setting())
+                            .commit()
+                    }
+                }
+            }
+        }
+    }
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         if( hasFocus ) {
             mDecorView.systemUiVisibility = mUiOption

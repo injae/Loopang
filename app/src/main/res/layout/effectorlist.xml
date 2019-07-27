@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="216dp"
+                android:layout_width="match_parent"
                 android:layout_height="57dp"
                 android:padding="10dp"
                 android:background="@drawable/effectorlist_background">
@@ -25,6 +25,7 @@
                 android:layout_height="25dp"
                 android:layout_gravity="center_vertical"
                 android:background="@android:color/transparent"
+                android:src ="@drawable/icon_play__musical_instrument"
                  android:layout_marginRight="2dp"
         android:layout_marginTop="4dp"/>
         <ImageButton

@@ -1,5 +1,6 @@
 package com.treasure.loopang.listitem
 
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,18 +25,21 @@ class setEffector : androidx.fragment.app.Fragment() {
         effectorListView.adapter =adapter
 
         //아이템 추가
-        adapter.addItem("드럼 1")
-        adapter.addItem("드럼 2")
-        adapter.addItem("드럼 3")
-        adapter.addItem("심벌 1")
-        adapter.addItem("심벌 2")
-        adapter.addItem("심벌 3")
-        adapter.addItem("피아노 1")
-        adapter.addItem("피아노 2")
-         adapter.addItem("피아노 3")
-           adapter.addItem("베이스 1")
-          adapter.addItem("베이스 2")
-         adapter.addItem("배이스 3")
+       //music = MediaPlayer.create(context, com.treasure.loopang.R.raw.soap)
+       //        music.setLooping(true)
+
+       adapter.addItem("생방송", MediaPlayer.create(context, com.treasure.loopang.R.raw.live_broadcast))
+       adapter.addItem("니소식",MediaPlayer.create(context, com.treasure.loopang.R.raw.your_news))
+       adapter.addItem("soap",MediaPlayer.create(context, com.treasure.loopang.R.raw.soap))
+       adapter.addItem("연인",MediaPlayer.create(context, com.treasure.loopang.R.raw.lover))
+       adapter.addItem("야생화",MediaPlayer.create(context, com.treasure.loopang.R.raw.a_wild_flower))
+       adapter.addItem("초록빛",MediaPlayer.create(context, com.treasure.loopang.R.raw.green_color))
+       adapter.addItem("123", MediaPlayer.create(context, com.treasure.loopang.R.raw.live_broadcast))
+       adapter.addItem("456",MediaPlayer.create(context, com.treasure.loopang.R.raw.your_news))
+       adapter.addItem("789",MediaPlayer.create(context, com.treasure.loopang.R.raw.soap))
+       adapter.addItem("101",MediaPlayer.create(context, com.treasure.loopang.R.raw.lover))
+       adapter.addItem("112",MediaPlayer.create(context, com.treasure.loopang.R.raw.a_wild_flower))
+       adapter.addItem("131",MediaPlayer.create(context, com.treasure.loopang.R.raw.green_color))
 
         // 위에서 생성한 listview에 클릭 이벤트 핸들러 정의.
         effectorListView.setOnItemClickListener { parent, view, position, id ->
