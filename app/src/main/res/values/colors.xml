@@ -8,4 +8,7 @@
     <color name="colorWaveform">#738B8585</color>
     <color name="colorWaveformMute">#CCE4E1E1</color>
     <color name="colorRealtimeVisualizer">#73D96A6A</color>
+
+    <color name="metronome_tik">#EA1C11</color>
+    <color name="metronome_default">#CCE4E1E1</color>
 </resources>
