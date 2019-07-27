@@ -1,6 +1,5 @@
 package com.treasure.loopang.audiov2
 
-import android.util.Log
 import com.treasure.loopang.audiov2.format.FormatInfo
 import com.treasure.loopang.audiov2.format.IFormat
 import com.treasure.loopang.audiov2.format.Pcm16
@@ -11,10 +10,10 @@ import java.io.FileOutputStream
 import java.util.concurrent.atomic.AtomicBoolean
 
 
-class Sound ( var data: MutableList<Short> = mutableListOf(),
-              var format: IFormat = Pcm16(),
-              var info: FormatInfo = format.info(),
-              var isPlaying: AtomicBoolean = AtomicBoolean(false)) : SoundFlow<Sound>() {
+open class Sound (var data: MutableList<Short> = mutableListOf(),
+                  var format: IFormat = Pcm16(),
+                  var info: FormatInfo = format.info(),
+                  var isPlaying: AtomicBoolean = AtomicBoolean(false)) : SoundFlow<Sound>() {
     fun to_time() : Int {
         return data.size / info.sampleRate
     }
