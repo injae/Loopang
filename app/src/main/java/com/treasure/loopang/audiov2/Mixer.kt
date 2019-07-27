@@ -43,12 +43,12 @@ class Mixer(val sounds: MutableList<MixerSound> = mutableListOf()) : SoundFlow<M
 
     fun mixSounds() =
         sounds.map { it.data }
-              .fold(MutableList<Short>(sounds[0].data.size) {}) {
+              .fold(MutableList<Short>(sounds[0].data.size) {0}) {
                     acc, it -> acc.zip(it){ a, b -> (a + b).toShort() }.toMutableList() }
 
     fun mixSounds(filteredIndex: Int) =
         sounds.map { it.data }
               .filterIndexed{ index, _ -> index != filteredIndex }
-              .fold(MutableList<Short>(sounds[0].data.size) {}) {
+              .fold(MutableList<Short>(sounds[0].data.size) {0}) {
                     acc, it -> acc.zip(it){ a, b -> (a + b).toShort() }.toMutableList() }
 }
