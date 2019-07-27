@@ -65,6 +65,8 @@ class RecordFragment : androidx.fragment.app.Fragment() {
         btn_drop_all_layer.setOnClickListener {
             showDropAllLayerDialog()
         }
+
+        initMetronome()
     }
 
     override fun onDestroy() {
@@ -140,6 +142,11 @@ class RecordFragment : androidx.fragment.app.Fragment() {
         mMixer.onStart {
             mLoopPlaybackState = true
         }
+    }
+
+    private fun initMetronome() {
+        metronome_view.onStart = { startMetronome() }
+        metronome_view.onStop = { stopMetronome() }
     }
 
     private fun addLayer() {
@@ -370,5 +377,15 @@ class RecordFragment : androidx.fragment.app.Fragment() {
     private fun playLayer(view: View) {
         Log.d("LayerFunctionTest", "playLayer()")
         mLayerListAdapter.playLayer(view)
+    }
+
+    private fun startMetronome() {
+        toast("metronome start!")
+        metronome_view.tik()    //tik
+        metronome_view.clear() //default
+    }
+
+    private fun stopMetronome() {
+        toast("metronome stop!")
     }
 }
