@@ -1,5 +1,6 @@
 package com.treasure.loopang.audiov2
 
+import android.util.Log
 import com.treasure.loopang.audiov2.format.FormatInfo
 import com.treasure.loopang.audiov2.format.IFormat
 import com.treasure.loopang.audiov2.format.Pcm16
@@ -59,23 +60,16 @@ open class Sound (var data: MutableList<Short> = mutableListOf(),
 
         bufos.write(format.encord(preprocess).toByteArray())
 
+
         bufos.close()
         fstream.close()
     }
 
     fun load(path: String) {
         val format = formatFactory(path)
-        val buffer = ByteArray(info.outputBufferSize)
-        val originData : MutableList<Byte> = mutableListOf()
-        val fis = FileInputStream(path)
-        val bufis = BufferedInputStream(fis)
         data.clear()
-
-        while(-1 != bufis.read(buffer)) { buffer.forEach { originData.add(it) } }
+        var originData = File(path).inputStream().readBytes().toMutableList()
         data = format.decord(originData)
-
-        bufis.close()
-        fis.close()
     }
 
 }

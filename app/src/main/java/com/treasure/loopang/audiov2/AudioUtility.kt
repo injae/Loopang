@@ -36,7 +36,8 @@ fun convertByteArrayToShortArray(array: ByteArray): ShortArray {
 }
 
 fun convertBytesToShort(array: ByteArray) : Short {
-    return (array[0].toInt() + array[1].toInt().shl(8)).toShort()
+    var bb = ByteBuffer.allocate(2).order(ByteOrder.LITTLE_ENDIAN)
+    return bb.put(array[0]).put(array[1]).getShort(0)
 }
 
 
