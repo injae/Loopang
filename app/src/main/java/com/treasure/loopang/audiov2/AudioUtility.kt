@@ -4,7 +4,6 @@ import android.media.AudioRecord
 import android.media.audiofx.AcousticEchoCanceler
 import android.media.audiofx.AutomaticGainControl
 import android.media.audiofx.NoiseSuppressor
-import java.io.*
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
