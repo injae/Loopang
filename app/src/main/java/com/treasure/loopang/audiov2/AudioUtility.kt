@@ -35,6 +35,11 @@ fun convertByteArrayToShortArray(array: ByteArray): ShortArray {
                 .toShortArray()
 }
 
+fun convertBytesToShort(array: ByteArray) : Short {
+    return (array[0].toInt() + array[1].toInt().shl(8)).toShort()
+}
+
+
 object Stabilizer {
     var ns: NoiseSuppressor? = null
     var aec: AcousticEchoCanceler? = null

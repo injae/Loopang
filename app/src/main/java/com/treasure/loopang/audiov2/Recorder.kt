@@ -1,6 +1,5 @@
 package com.treasure.loopang.audiov2
 
-import android.util.Log
 import com.treasure.loopang.audio.Stabilizer
 import com.treasure.loopang.audiov2.format.FormatInfo
 import com.treasure.loopang.audiov2.format.IFormat
@@ -9,7 +8,6 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.atomic.AtomicBoolean
-import kotlin.math.max
 
 class Recorder(var format: IFormat  = Pcm16(),
                var info: FormatInfo =format.info(),
