@@ -37,18 +37,18 @@ class setMetronome : androidx.fragment.app.Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         var metronomeBpm = 120 //얘를 나중에 메트로놈 bpm 실제 매개변수로 변경
-        metronomeBpmText.text = "" + metronomeBpm
+        metronomeBpmText.text = metronomeBpm.toString()
         informBpsTempo(metronomeBpm)
 
         btn_bpmUp.setOnClickListener {
             metronomeBpm += 1
-            metronomeBpmText.text = "" + metronomeBpm
+            metronomeBpmText.text = metronomeBpm.toString()
             informBpsTempo(metronomeBpm)
         }
         btn_bpmDown.setOnClickListener {
             if (metronomeBpm > 10) {
                 metronomeBpm -= 1
-                metronomeBpmText.text = "" + metronomeBpm
+                metronomeBpmText.text = metronomeBpm.toString()
                 informBpsTempo(metronomeBpm)
             }
         }
@@ -56,13 +56,8 @@ class setMetronome : androidx.fragment.app.Fragment() {
         var NumOfClick = 0
         btn_beat.setOnClickListener {
             NumOfClick++
-            if (NumOfClick % 2 == 0) {
-                btn_beat.text ="4/4"
-                //비트 4/4로 설정
-            } else {
-                btn_beat.text ="3/4"
-                //비트 3/4로 설정
-            }
+            if (NumOfClick % 2 == 0) { btn_beat.text ="4/4" }
+            else                     { btn_beat.text ="3/4" }
         }
     }
 
