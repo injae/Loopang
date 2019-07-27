@@ -8,48 +8,40 @@ class Wave(private var info: FormatInfo = FormatInfo()) : IFormat {
     override fun encord(data: MutableList<Short>) = getWavData(data)
     override fun decord(data: MutableList<Byte>) = data.chunked(info.inputBufferSize).flatMap { convertByteArrayToShortArray(it.toByteArray()).toList() }.toMutableList()
 
+    private var index = 0
     private fun getWavData(data: MutableList<Short>): MutableList<Byte> {
-        val wavData = MutableList<Byte>(0,{0})
+        val wavHeader = ByteArray(44)
+        val pcmData = convertShortArrayToByteArray(data.toShortArray())
 
-        // Wave file header insertion procedure
-        insertString(wavData, "RIFF")
-        insertInt(wavData, wavData.size)
-        insertString(wavData,"WAVE")
-        insertString(wavData, "fmt ")
-        insertInt(wavData, 16)
-        insertShort(wavData, 1)
-        insertShort(wavData, 1)
-        insertInt(wavData, info.sampleRate)
-        insertInt(wavData, info.sampleRate * 2)
-        insertShort(wavData, 2)
-        insertShort(wavData, 16)
+        insertString(wavHeader, "RIFF")
+        insertInt(wavHeader, (36 + pcmData.size))
+        insertString(wavHeader,"WAVE")
+        insertString(wavHeader, "fmt ")
+        insertInt(wavHeader, 16)
+        insertShort(wavHeader, 1)
+        insertShort(wavHeader, 1)
+        insertInt(wavHeader, 44100)
+        insertInt(wavHeader, (44100 * 2))
+        insertShort(wavHeader, 2)
+        insertShort(wavHeader, 16)
+        insertString(wavHeader, "data")
+        insertInt(wavHeader, pcmData.size)
+        index = 0
 
-        // Audio data insertion procedure
-        insertString(wavData, "data")
-        insertInt(wavData, data.size)
-        copyData(data, wavData)
-
-        return wavData
+        return copyData(wavHeader, pcmData)
     }
 
-    private fun insertString(wavData: MutableList<Byte>, text: String) {
-        text.forEach {
-            wavData.add(it.toByte())
-        }
+    private fun insertString(wavHeader: ByteArray, text: String) {
+        text.forEach { wavHeader[index++] = it.toByte() }
     }
 
-    private fun insertInt(wavData: MutableList<Byte>, number: Int) {
-        wavData.add(number.toByte())
+    private fun insertInt(wavHeader: ByteArray, number: Int) {
+        wavHeader[index++] = number.toByte()
     }
 
-    private fun insertShort(wavData: MutableList<Byte>, number: Short){
-        wavData.add(number.toByte())
+    private fun insertShort(wavHeader: ByteArray, number: Short) {
+        wavHeader[index++] = number.toByte()
     }
 
-    private fun copyData(pcmData: MutableList<Short>, wavData: MutableList<Byte>) {
-        val temp = convertShortArrayToByteArray(pcmData.toShortArray())
-        temp.forEach {
-            wavData.add(it)
-        }
-    }
+    private fun copyData(wavHeader: ByteArray, pcmData: ByteArray) = (wavHeader + pcmData).toMutableList()
 }
