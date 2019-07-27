@@ -182,6 +182,7 @@ class RecordFragment : androidx.fragment.app.Fragment() {
     private fun onThisSwipeToUp(): Boolean {
         if (mRecordState){
             toast(R.string.toast_playback_stop_error)
+            return true
         }
         if (!mMixer.isLooping.get() && mMixer.sounds.isEmpty()){
             toast(R.string.toast_record_start)
