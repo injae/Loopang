@@ -61,7 +61,6 @@ class Recorder(var format: IFormat  = Pcm16(),
     fun getSound(): Sound {
         var export = Sound(data)
         data = mutableListOf()
-        Log.d("SoundTest", "sound to time ${export.to_time()}")
         return export
     }
 }
