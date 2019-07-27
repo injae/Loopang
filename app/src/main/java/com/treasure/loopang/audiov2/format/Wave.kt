@@ -9,7 +9,6 @@ class Wave(private var info: FormatInfo = FormatInfo()) : IFormat {
     override fun encord(data: MutableList<Short>) = getWavData(data)
     override fun decord(data: MutableList<Byte>) = data.chunked(info.inputBufferSize).flatMap { convertByteArrayToShortArray(it.toByteArray()).toList() }.toMutableList()
 
-    private var index = 0
     private fun getWavData(data: MutableList<Short>): MutableList<Byte> {
         val wavHeader = ByteArray(44)
         val pcmData = convertShortArrayToByteArray(data.toShortArray())
