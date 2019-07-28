@@ -12,10 +12,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
-import com.treasure.loopang.audiov2.FileManager
-import com.treasure.loopang.audiov2.Mixer
-import com.treasure.loopang.audiov2.Recorder
-import com.treasure.loopang.audiov2.Sound
+import com.treasure.loopang.audiov2.*
 import com.treasure.loopang.ui.adapter.LayerListAdapter
 import com.treasure.loopang.ui.listener.SwipeDismissListViewTouchListener
 import com.treasure.loopang.ui.listener.TouchGestureListener
@@ -41,7 +38,6 @@ class RecordFragment : androidx.fragment.app.Fragment() {
         mTouchGestureListener.onSingleTap = { onThisSingleTap() }
         mTouchGestureListener.onSwipeToDown = { onThisSwipeToDown() }
         mTouchGestureListener.onSwipeToUp = { onThisSwipeToUp() }
-
         initRecorder()
         initMixer()
     }
@@ -65,6 +61,8 @@ class RecordFragment : androidx.fragment.app.Fragment() {
         btn_drop_all_layer.setOnClickListener {
             showDropAllLayerDialog()
         }
+
+        initMetronome()
     }
 
     override fun onDestroy() {
@@ -140,6 +138,11 @@ class RecordFragment : androidx.fragment.app.Fragment() {
         mMixer.onStart {
             mLoopPlaybackState = true
         }
+    }
+
+    private fun initMetronome() {
+        metronome_view.onStart = { startMetronome() }
+        metronome_view.onStop = { stopMetronome() }
     }
 
     private fun addLayer() {
@@ -370,5 +373,15 @@ class RecordFragment : androidx.fragment.app.Fragment() {
     private fun playLayer(view: View) {
         Log.d("LayerFunctionTest", "playLayer()")
         mLayerListAdapter.playLayer(view)
+    }
+
+    private fun startMetronome() {
+        toast("metronome start!")
+        metronome_view.tik()    //tik
+        metronome_view.clear() //default
+    }
+
+    private fun stopMetronome() {
+        toast("metronome stop!")
     }
 }

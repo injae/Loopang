@@ -9,8 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.treasure.loopang.adapter.SongListAdapter
 import com.treasure.loopang.audiov2.FileManager
-import com.treasure.loopang.audio.Player
-import com.treasure.loopang.audio.Sound
+import com.treasure.loopang.audiov2.Sound
 import com.treasure.loopang.listitem.SongItem
 import kotlinx.android.synthetic.main.fragment_song_manage.*
 
@@ -19,7 +18,7 @@ class LoopManageFragment : androidx.fragment.app.Fragment() {
     private val fileManager: FileManager = FileManager()
     private val songItemList = arrayListOf<SongItem>()
     private val songListAdapter = SongListAdapter(songItemList)
-    private val player = Player(Sound())
+    private val sound = Sound()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,13 +47,13 @@ class LoopManageFragment : androidx.fragment.app.Fragment() {
         }.start()
 
         song_list.setOnItemClickListener { parent, view, position, id ->
-            if(!player.isPlaying.get()){
+            if(!sound.isPlaying.get()){
                 val path: String = songItemList[position].filePath!!
 
-                player.sound.load(path = path)
-                player.start()
+                sound.load(path = path)
+                sound.play()
             } else {
-                player.stop()
+                sound.stop()
             }
         }
     }
