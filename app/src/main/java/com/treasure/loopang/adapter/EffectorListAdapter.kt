@@ -12,8 +12,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.treasure.loopang.R
 
-var playedPos : Int = -1
+
 class EffectorListAdapter : BaseAdapter() {
+    var playedPos : Int = -1
     // Adapter에 추가된 데이터를 저장하기 위한 ArrayList
     private var listViewItemList = ArrayList<EffectorListItem>()
 
@@ -59,17 +60,14 @@ class EffectorListAdapter : BaseAdapter() {
         view?.findViewById<View>(com.treasure.loopang.R.id.btn_playback).setOnClickListener{
 
             if(listViewItemList[position].isPlayingMusic == true) {
-                Log.d("지금 누른 버튼","지금버튼멈추기")
                 musicStop(position) //지금 누른 버튼의 노래 멈추기
             }
             else{ //지금 누른 버튼의 노래 재생을 하되
                 if(playedPos == -1){
                     musicPlay(position)
                     playedPos = position
-                    Log.d("재생","재생")
                 }
                 else if(playedPos != -1){
-                    Log.d("멈춰라","멈춰라고")
                     musicStop(playedPos)
                     musicPlay(position)
                     playedPos = position
