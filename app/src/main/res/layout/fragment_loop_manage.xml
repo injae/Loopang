@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:background="@drawable/view_pager_background"
-             tools:context=".LoopManageFragment">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/view_pager_background"
+                tools:context=".LoopManageFragment">
 
     <TextView
             android:layout_width="wrap_content"
@@ -28,7 +28,8 @@
             android:background="@drawable/view_pager_background"
             android:hint="@string/music_list_search_hint"
             android:id="@+id/search_bar"
-            android:importantForAutofill="no" android:inputType="text"/>
+            android:importantForAutofill="no"
+            android:inputType="text"/>
 
     <FrameLayout
             android:layout_width="match_parent"
@@ -38,8 +39,7 @@
             android:layout_marginBottom="18dp"
             android:layout_marginLeft="14dp"
             android:layout_marginRight="14dp"
-            android:background="@drawable/view_pager_background"
-    >
+            android:background="@drawable/view_pager_background">
         <ListView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -48,5 +48,16 @@
                 android:layout_marginBottom="23dp"
                 android:id="@+id/loop_list"/>
     </FrameLayout>
+
+    <ImageButton
+            android:src="@drawable/bin_icon"
+            android:layout_width="@dimen/record_fragment_icon_width"
+            android:layout_height="@dimen/record_fragment_icon_height"
+            android:id="@+id/btn_drop_all_loop"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="21dp"
+            android:background="@android:color/transparent" android:tint="#00FFFFFF" android:scaleType="fitCenter"/>
 
 </RelativeLayout>

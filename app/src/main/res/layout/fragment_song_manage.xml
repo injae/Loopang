@@ -29,13 +29,13 @@
             android:paddingBottom="10dp"
             android:background="@drawable/view_pager_background"
             android:hint="@string/music_list_search_hint"
-            android:id="@+id/song_search_bar"
+            android:id="@+id/search_bar"
             />
 
     <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/song_search_bar"
+            android:layout_below="@+id/search_bar"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="18dp"
             android:layout_marginLeft="14dp"
@@ -48,7 +48,7 @@
                 android:background="@android:color/transparent"
                 android:layout_marginTop="23dp"
                 android:layout_marginBottom="23dp"
-                android:id="@+id/song_list"/>
+                android:id="@+id/loop_list"/>
     </FrameLayout>
 
 </RelativeLayout>
