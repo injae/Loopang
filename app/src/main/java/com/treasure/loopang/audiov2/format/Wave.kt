@@ -2,12 +2,13 @@ package com.treasure.loopang.audiov2.format
 
 import android.util.Log
 import com.treasure.loopang.audiov2.convertByteArrayToShortArray
+import com.treasure.loopang.audiov2.convertBytesToShort
 import com.treasure.loopang.audiov2.convertShortArrayToByteArray
 
 class Wave(private var info: FormatInfo = FormatInfo()) : IFormat {
     override fun info() = info
     override fun encord(data: MutableList<Short>) = getWavData(data)
-    override fun decord(data: MutableList<Byte>) = data.chunked(info.inputBufferSize).flatMap { convertByteArrayToShortArray(it.toByteArray()).toList() }.toMutableList()
+    override fun decord(data: MutableList<Byte>) = getSourceData(data)
 
     private fun getWavData(data: MutableList<Short>): MutableList<Byte> {
         val wavHeader = ByteArray(44)
@@ -70,4 +71,10 @@ class Wave(private var info: FormatInfo = FormatInfo()) : IFormat {
     }
 
     private fun copyData(wavHeader: ByteArray, pcmData: ByteArray) = (wavHeader + pcmData).toMutableList()
+
+    private fun getSourceData(wavData: MutableList<Byte>): MutableList<Short> {
+        val sourceData = ByteArray(wavData.size - 44)
+        for(index in 44 until wavData.size) { sourceData[index - 44] = wavData[index] }
+        return sourceData.toMutableList().chunked(2).map{ it.toByteArray() }.flatMap { listOf(convertBytesToShort(it)) }.toMutableList()
+    }
 }
