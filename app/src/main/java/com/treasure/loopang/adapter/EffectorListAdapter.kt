@@ -8,8 +8,10 @@ import android.widget.*
 import com.treasure.loopang.listitem.EffectorListItem
 import kotlinx.android.synthetic.main.effectorlist.view.*
 import android.media.MediaPlayer
-import com.treasure.loopang.audio.Music
+import androidx.recyclerview.widget.RecyclerView
 import java.io.IOException
+import android.widget.TextView
+
 
 
 class EffectorListAdapter : BaseAdapter() {
@@ -26,11 +28,23 @@ class EffectorListAdapter : BaseAdapter() {
         var view = convertView
         val context = parent.context
 
+        val viewHolder : RecyclerView.ViewHolder
+
         // "listview_item" Layout을 inflate하여 convertView 참조 획득.
         if (view == null) {
             val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             view = inflater.inflate(com.treasure.loopang.R.layout.effectorlist, parent, false)
+
+            /*    viewHolder = ViewHolder()
+            val imageBtn = viewHolder.imageBtnView?.findViewById<ImageButton>(com.treasure.loopang.R.id.btn_playback) as ImageButton
+            //viewHolder.imageBtnView = convertView!!.findViewById(com.treasure.loopang.R.id.btn_playback) as ImageButton
+            //var ImageBtnView = viewHolder.findViewById(com.treasure.loopang.R.id.btn_playback) as ImageButton
+            view.tag = viewHolder
+        }else{
+            viewHolder = convertView!!.getTag() as ViewHolder
+        }*/
         }
+
 
         // 화면에 표시될 View(Layout이 inflate된)으로부터 위젯에 대한 참조 획득
         val titleTextView = view?.findViewById(com.treasure.loopang.R.id.name_musical_instrument) as TextView
@@ -41,18 +55,21 @@ class EffectorListAdapter : BaseAdapter() {
         // 아이템 내 각 위젯에 데이터 반영
         titleTextView.setText(listViewItem.title)
 
-        //얘네를 이제 매개변수로 받아와서 music하나하나를 설정해줘야지..
-        /*val music: MediaPlayer
-        music = MediaPlayer.create(context, com.treasure.loopang.R.raw.soap)
-        music.setLooping(true)*/
         listViewItem.music?.setLooping(true)
 
-        var NumOfClick: Int = 0
         view.findViewById<View>(com.treasure.loopang.R.id.btn_playback).setOnClickListener{
-            NumOfClick = 1 - NumOfClick;
+            //다른 노래 재생중인지 체크하기 isPlayingMusic
+            for(position in listViewItemList.indices) {
+                if (listViewItemList[position].isPlayingMusic == true) {
+                    listViewItemList[position].music?.stop()
+                    //position의 버튼에 어떻게 접근할까...??? 이미지 바꿔줘야 하는데 ㅋㅋ
+                }
+            }
             if (listViewItem.music!!.isPlaying()) {
-                // 재생중이면 노래 정지 //일시정지?pause()
-                view.btn_playback.setImageResource(com.treasure.loopang.R.drawable.icon_play__musical_instrument)
+                // 재생중이면 노래 정지
+                listViewItem.isPlayingMusic = false
+                 view.btn_playback.setImageResource(com.treasure.loopang.R.drawable.icon_play__musical_instrument)
+                //viewHolder.imageBtnView!!.setImageResource(com.treasure.loopang.R.drawable.icon_play__musical_instrument)
                 listViewItem.music?.stop()
                 try {
                     listViewItem.music?.prepare()
@@ -64,7 +81,9 @@ class EffectorListAdapter : BaseAdapter() {
                 listViewItem.music?.seekTo(0)
             } else {
                 // 재생중이 아니면 재생
+                listViewItem.isPlayingMusic= true
                 view.btn_playback.setImageResource(com.treasure.loopang.R.drawable.icon_stop__musical_instrument)
+                //viewHolder.imageBtnView!!.setImageResource(com.treasure.loopang.R.drawable.icon_stop__musical_instrument)
                 listViewItem.music?.start()
                 Thread()
             }
@@ -87,11 +106,17 @@ class EffectorListAdapter : BaseAdapter() {
     }
 
     // 아이템 데이터
-    fun addItem(title: String, music: MediaPlayer) {
+    fun addItem(title: String, music: MediaPlayer,  isPlayingMusic :Boolean) {
         val item = EffectorListItem()
         item.title = title
         item.music = music
+        item.isPlayingMusic = isPlayingMusic
 
         listViewItemList.add(item)
     }
+
+    private  class ViewHolder{
+        var imageBtnView : ImageButton? = null
+    }
+
 }
