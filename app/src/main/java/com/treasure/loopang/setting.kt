@@ -14,6 +14,8 @@ import android.text.Editable
 import android.R.id.edit
 import android.content.Intent
 import android.widget.AdapterView
+import com.treasure.loopang.ui.toast
+import kotlinx.android.synthetic.*
 
 class setting : androidx.fragment.app.Fragment() {
 
@@ -32,13 +34,16 @@ class setting : androidx.fragment.app.Fragment() {
         adapter.addItem(ContextCompat.getDrawable(context!!, R.drawable.icon_setting_pcm)!!,"pcm")
         adapter.addItem(ContextCompat.getDrawable(context!!, R.drawable.icon_setting_help)!!,"도움말")
 
-        var editTextFilter : EditText =editText
+
+        var editTextFilter : EditText? =null
+        editTextFilter = editText
 
         editTextFilter.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(edit: Editable) {
-                val filterText = edit.toString()
+                val filterText : String = edit.toString()
                 (settingListView.getAdapter() as SettingAdapter).getFilter().filter(filterText)
             }
+
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
         })
@@ -49,9 +54,8 @@ class setting : androidx.fragment.app.Fragment() {
             val title = item.title
             val icon = item.icon
             //to do
-            fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                toast(title + " click")
 
-            }
         }
 
         btn_deleteAll.setOnClickListener{

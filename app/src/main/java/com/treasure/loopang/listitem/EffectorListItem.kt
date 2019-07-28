@@ -6,5 +6,5 @@ import android.media.MediaPlayer
 class EffectorListItem {
     var title: String? = null
     var music: MediaPlayer? = null
-    var isPlayingMusic : Boolean? = null
+    var isPlayingMusic : Boolean = false
 }
