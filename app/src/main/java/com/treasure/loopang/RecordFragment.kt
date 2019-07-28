@@ -36,6 +36,7 @@ class RecordFragment : androidx.fragment.app.Fragment() {
 
     private var mLoopPlaybackState: Boolean = false
     private var mRecordState: Boolean = false
+    private var mIsFirstRecord: Boolean = true
 
     init{
         mTouchGestureListener.onSingleTap = { onThisSingleTap() }
@@ -172,15 +173,7 @@ class RecordFragment : androidx.fragment.app.Fragment() {
             mRecorder.stop()
         }
         else {
-            toast(R.string.toast_record_start)
-            if(realtime_visualizer_view.visibility == View.GONE) {
-                val animation: Animation = AlphaAnimation(0F, 1F)
-                animation.duration = 1000
-                realtime_visualizer_view.visibility = View.VISIBLE
-                realtime_visualizer_view.animation = animation
-            }
-            if(mMixer.sounds.isNotEmpty()) { mRecorder.start(mMixer.sounds[0].data.size) }
-            else { mRecorder.start() }
+            recordStart()
         }
 
         return true
@@ -193,14 +186,8 @@ class RecordFragment : androidx.fragment.app.Fragment() {
         }
         if (!mMixer.isLooping.get() && mMixer.sounds.isEmpty()){
             toast(R.string.toast_record_start)
-            if(realtime_visualizer_view.visibility == View.GONE) {
-                val animation: Animation = AlphaAnimation(0F, 1F)
-                animation.duration = 1000
-                realtime_visualizer_view.visibility = View.VISIBLE
-                realtime_visualizer_view.animation = animation
-            }
             mMixer.start()
-            mRecorder.start()
+            recordStart()
         }
         else if (mMixer.isLooping.get()) {
             toast(R.string.toast_playback_stop)
@@ -320,6 +307,21 @@ class RecordFragment : androidx.fragment.app.Fragment() {
         }
     }
 
+    private fun recordStart() {
+        if(mIsFirstRecord) onFirstRecord()
+        else{
+            toast(R.string.toast_record_start)
+            if(realtime_visualizer_view.visibility == View.GONE) {
+                val animation: Animation = AlphaAnimation(0F, 1F)
+                animation.duration = 1000
+                realtime_visualizer_view.visibility = View.VISIBLE
+                realtime_visualizer_view.animation = animation
+            }
+            if(mMixer.sounds.isNotEmpty()) { mRecorder.start(mMixer.sounds[0].data.size) }
+            else { mRecorder.start() }
+        }
+    }
+
     private fun saveLoop(
         mixer: Mixer,
         loopTitle: String,
@@ -387,5 +389,36 @@ class RecordFragment : androidx.fragment.app.Fragment() {
 
     private fun stopMetronome() {
         toast("metronome stop!")
+    }
+
+    private fun onFirstRecord() {
+        toast("First Record!")
+        MaterialDialog(activity!!, BottomSheet(LayoutMode.WRAP_CONTENT)).show {
+            noAutoDismiss()
+            title(null, "Check WhiteNoise")
+            message(null, "버튼을 눌러 화이트 노이즈를 체크해주세요")
+            cornerRadius(16f)
+            cancelable(false)
+            positiveButton(null, "Check") {
+                // callback on positive button click
+                toast("화이트 노이즈 체크 중")
+                if(checkWhitenoise()){
+                    toast("화이트 노이즈 체크 완료")
+                    mIsFirstRecord = false
+                    it.dismiss()
+                } else {
+                    toast("다시 시도해주세요")
+                }
+            }
+            negativeButton(R.string.btn_cancel){
+                toast("Check white noise before recording")
+                it.dismiss()
+            }
+            lifecycleOwner(activity)
+        }
+    }
+
+    private fun checkWhitenoise(): Boolean {
+        return true
     }
 }
