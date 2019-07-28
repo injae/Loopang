@@ -8,22 +8,22 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.viewpager.widget.ViewPager
-import com.treasure.loopang.ui.adapter.LoopstationPagerAdapter
+import com.treasure.loopang.ui.adapter.LoopStationPagerAdapter
 import androidx.drawerlayout.widget.DrawerLayout
 import com.treasure.loopang.listitem.setEffector
 import com.treasure.loopang.listitem.setMetronome
 import com.treasure.loopang.ui.statusBarHeight
 import kotlinx.android.synthetic.main.activity_recording.*
 import kotlinx.android.synthetic.main.drawer.*
-import android.os.Build
-import android.widget.Button
 import android.widget.ImageButton
-import androidx.core.app.ActivityCompat.finishAffinity
+import com.treasure.loopang.ui.interfaces.IPageFragment
 
 
 class Recording : AppCompatActivity() {
     companion object {
         private const val FINISH_INTERVAL_TIME = 2000
+        private const val RECORD_FRAGMENT = 0
+        private const val LOOP_MANAGE_FRAGMENT = 1
     }
     private val mDecorView: View by lazy { window.decorView }
     private var mUiOption: Int = 0
@@ -31,7 +31,7 @@ class Recording : AppCompatActivity() {
     private var backPressedTime: Long = 0
     private var currentPage: Int = 0
 
-    private val pagerAdapter by lazy { LoopstationPagerAdapter(supportFragmentManager) }
+    private val pagerAdapter by lazy { LoopStationPagerAdapter(supportFragmentManager) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -140,7 +140,6 @@ class Recording : AppCompatActivity() {
         }
     }
 
-
     inner class PageChangeListener: ViewPager.OnPageChangeListener {
         private var selectedPage: Int = 0
         private var scrollState: Int = 0
@@ -176,7 +175,10 @@ class Recording : AppCompatActivity() {
 
         /* 페이지(플래그먼트)가 바뀌었을 때 처리 */
         private fun onPageChanged() {
-            Log.d("ViewPagerText", "페이지가 바뀌었어요!")
+            val selectedFragment: IPageFragment = pagerAdapter.getItem(selectedPage) as IPageFragment
+            val unselectedFragment: IPageFragment = pagerAdapter.getItem(prevPage) as IPageFragment
+            selectedFragment.onSelected()
+            unselectedFragment.onUnselected()
             this@Recording.currentPage = selectedPage
         }
     }

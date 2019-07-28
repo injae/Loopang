@@ -13,6 +13,7 @@ import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import com.treasure.loopang.audiov2.*
+import com.treasure.loopang.ui.interfaces.IPageFragment
 import com.treasure.loopang.ui.adapter.LayerListAdapter
 import com.treasure.loopang.ui.listener.SwipeDismissListViewTouchListener
 import com.treasure.loopang.ui.listener.TouchGestureListener
@@ -21,7 +22,9 @@ import kotlinx.android.synthetic.main.dialog_save_loop.*
 import kotlinx.android.synthetic.main.fragment_record.*
 import kotlin.math.abs
 
-class RecordFragment : androidx.fragment.app.Fragment() {
+class RecordFragment : androidx.fragment.app.Fragment(), IPageFragment {
+
+
     private val mLayerListAdapter : LayerListAdapter = LayerListAdapter()
     private val mTouchGestureListener = TouchGestureListener()
 
@@ -76,6 +79,14 @@ class RecordFragment : androidx.fragment.app.Fragment() {
     override fun onPause() {
         super.onPause()
         Log.d("RecordFragment", "RecordFragment Paused!")
+    }
+
+    override fun onSelected() {
+        Log.d("RecordFragment", "RecordFragment.onSelected()")
+    }
+
+    override fun onUnselected() {
+        Log.d("RecordFragment", "RecordFragment.onUnselected()")
     }
 
     private fun initLayerListView() {
