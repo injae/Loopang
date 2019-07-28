@@ -28,24 +28,28 @@ class setEffector : androidx.fragment.app.Fragment() {
        //music = MediaPlayer.create(context, com.treasure.loopang.R.raw.soap)
        //        music.setLooping(true)
 
-       adapter.addItem("생방송", MediaPlayer.create(context, com.treasure.loopang.R.raw.live_broadcast))
-       adapter.addItem("니소식",MediaPlayer.create(context, com.treasure.loopang.R.raw.your_news))
-       adapter.addItem("soap",MediaPlayer.create(context, com.treasure.loopang.R.raw.soap))
-       adapter.addItem("연인",MediaPlayer.create(context, com.treasure.loopang.R.raw.lover))
-       adapter.addItem("야생화",MediaPlayer.create(context, com.treasure.loopang.R.raw.a_wild_flower))
-       adapter.addItem("초록빛",MediaPlayer.create(context, com.treasure.loopang.R.raw.green_color))
-       adapter.addItem("123", MediaPlayer.create(context, com.treasure.loopang.R.raw.live_broadcast))
-       adapter.addItem("456",MediaPlayer.create(context, com.treasure.loopang.R.raw.your_news))
-       adapter.addItem("789",MediaPlayer.create(context, com.treasure.loopang.R.raw.soap))
-       adapter.addItem("101",MediaPlayer.create(context, com.treasure.loopang.R.raw.lover))
-       adapter.addItem("112",MediaPlayer.create(context, com.treasure.loopang.R.raw.a_wild_flower))
-       adapter.addItem("131",MediaPlayer.create(context, com.treasure.loopang.R.raw.green_color))
+       adapter.addItem("생방송", MediaPlayer.create(context, com.treasure.loopang.R.raw.live_broadcast),false)
+       adapter.addItem("니소식",MediaPlayer.create(context, com.treasure.loopang.R.raw.your_news),false)
+       adapter.addItem("soap",MediaPlayer.create(context, com.treasure.loopang.R.raw.soap),false)
+       adapter.addItem("연인",MediaPlayer.create(context, com.treasure.loopang.R.raw.lover),false)
+       adapter.addItem("야생화",MediaPlayer.create(context, com.treasure.loopang.R.raw.a_wild_flower),false)
+       adapter.addItem("초록빛",MediaPlayer.create(context, com.treasure.loopang.R.raw.green_color),false)
+       adapter.addItem("123", MediaPlayer.create(context, com.treasure.loopang.R.raw.live_broadcast),false)
+       adapter.addItem("456",MediaPlayer.create(context, com.treasure.loopang.R.raw.your_news),false)
+       adapter.addItem("789",MediaPlayer.create(context, com.treasure.loopang.R.raw.soap),false)
+       adapter.addItem("101",MediaPlayer.create(context, com.treasure.loopang.R.raw.lover),false)
+       adapter.addItem("112",MediaPlayer.create(context, com.treasure.loopang.R.raw.a_wild_flower),false)
+       adapter.addItem("131",MediaPlayer.create(context, com.treasure.loopang.R.raw.green_color),false)
 
         // 위에서 생성한 listview에 클릭 이벤트 핸들러 정의.
         effectorListView.setOnItemClickListener { parent, view, position, id ->
             // get item
             val item = parent.getItemAtPosition(position) as EffectorListItem
             val title = item.title
+            val music = item.music
+            val isPlayingMusic = item.isPlayingMusic
+
+
             // TODO : use item data.
         }
     }
