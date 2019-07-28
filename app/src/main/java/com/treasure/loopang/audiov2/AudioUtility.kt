@@ -4,7 +4,6 @@ import android.media.AudioRecord
 import android.media.audiofx.AcousticEchoCanceler
 import android.media.audiofx.AutomaticGainControl
 import android.media.audiofx.NoiseSuppressor
-import java.io.*
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
@@ -31,9 +30,18 @@ fun convertShortArrayToByteArray(array: ShortArray): ByteArray {
 fun convertByteArrayToShortArray(array: ByteArray): ShortArray {
     return array.asList()
                 .chunked(2)
-                .map { (l, h) -> (l.toInt() + h.toInt().shl(8)).toShort() }
+                .map { (l, h) ->
+                    var bb = ByteBuffer.allocate(2).order(ByteOrder.LITTLE_ENDIAN)
+                    bb.put(array[0]).put(array[1]).getShort(0)
+                }
                 .toShortArray()
 }
+
+fun convertBytesToShort(array: ByteArray) : Short {
+    var bb = ByteBuffer.allocate(2).order(ByteOrder.LITTLE_ENDIAN)
+    return bb.put(array[0]).put(array[1]).getShort(0)
+}
+
 
 object Stabilizer {
     var ns: NoiseSuppressor? = null

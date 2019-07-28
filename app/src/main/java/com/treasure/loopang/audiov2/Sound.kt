@@ -1,12 +1,11 @@
 package com.treasure.loopang.audiov2
 
+import android.util.Log
 import com.treasure.loopang.audiov2.format.FormatInfo
 import com.treasure.loopang.audiov2.format.IFormat
 import com.treasure.loopang.audiov2.format.Pcm16
 import com.treasure.loopang.audiov2.format.formatFactory
-import java.io.DataInputStream
-import java.io.FileInputStream
-import java.io.FileOutputStream
+import java.io.*
 import java.util.concurrent.atomic.AtomicBoolean
 
 
@@ -50,30 +49,27 @@ open class Sound (var data: MutableList<Short> = mutableListOf(),
     fun save(path: String) {
         val format = formatFactory(path)
         val fstream = FileOutputStream(path)
+        var bufos = BufferedOutputStream(fstream)
         var preprocess = data.chunked(info.sampleRate)
             .map { timeEffect(it.toShortArray()).toList() }
-            .flatMap { it.chunked(info.outputBufferSize).flatMap { effect(it.toShortArray()).toList() } }.toMutableList()
-        format.encord(preprocess).chunked(info.inputBufferSize).map{ it.toByteArray() }.forEach { fstream.write(it,0,it.size) }
+            .flatMap {
+                it.chunked(info.outputBufferSize)
+                  .map { it.toShortArray() }
+                  .flatMap { effect(it).toList() }
+           }.toMutableList()
+
+        bufos.write(format.encord(preprocess).toByteArray())
+
+
+        bufos.close()
         fstream.close()
     }
 
     fun load(path: String) {
         val format = formatFactory(path)
-        val buffer = ByteArray(info.outputBufferSize)
-        val originData : MutableList<Byte> = mutableListOf()
-        val fis = FileInputStream(path)
-        val dis = DataInputStream(fis)
         data.clear()
-
-        while(true) {
-            val ret = dis.read(buffer, 0, info.outputBufferSize)
-            buffer.forEach { originData.add(it) }
-            if(ret == -1) break
-        }
+        var originData = File(path).inputStream().readBytes().toMutableList()
         data = format.decord(originData)
-
-        dis.close()
-        fis.close()
     }
 
 }
