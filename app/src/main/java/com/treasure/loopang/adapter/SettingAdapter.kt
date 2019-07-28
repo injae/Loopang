@@ -7,13 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import com.treasure.loopang.listitem.SettingItem
 import android.widget.*
+import java.util.*
 
 class SettingAdapter : BaseAdapter(),Filterable{
 
     private var listViewItemList = ArrayList<SettingItem>()
     private var filteredItemList = listViewItemList
 
-    var listFilter: Filter? = null
+    internal var listFilter: Filter? = null
 
     override fun getFilter(): Filter {
         if (listFilter == null) {
@@ -27,17 +28,16 @@ class SettingAdapter : BaseAdapter(),Filterable{
         override  protected fun performFiltering(constraint: CharSequence?): FilterResults {
             val results = FilterResults()
 
-            if (constraint == null || constraint.length == 0) {
+            if (constraint == null || constraint.isEmpty()) {
                 results.values = listViewItemList
                 results.count = listViewItemList.size
             } else {
-                val itemList = ArrayList<SettingItem>()
+                var itemList = ArrayList<SettingItem>()
 
                 for (item in listViewItemList) {
                     if (item.title!!.toUpperCase().contains(constraint.toString().toUpperCase()))
-                    {
                         itemList.add(item)
-                    }
+
                 }
 
                 results.values = itemList
@@ -100,6 +100,5 @@ class SettingAdapter : BaseAdapter(),Filterable{
 
         listViewItemList.add(item)
     }
-
 
 }

@@ -1,19 +1,18 @@
 package com.treasure.loopang.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.treasure.loopang.listitem.EffectorListItem
-import kotlinx.android.synthetic.main.effectorlist.view.*
 import android.media.MediaPlayer
-import androidx.recyclerview.widget.RecyclerView
+import android.util.Log
 import java.io.IOException
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import com.treasure.loopang.R
 
-
-
+var playedPos : Int = -1
 class EffectorListAdapter : BaseAdapter() {
     // Adapter에 추가된 데이터를 저장하기 위한 ArrayList
     private var listViewItemList = ArrayList<EffectorListItem>()
@@ -25,74 +24,79 @@ class EffectorListAdapter : BaseAdapter() {
 
     // position에 위치한 데이터를 화면에 출력하는데 사용될 View를 리턴
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        var view = convertView
+        var view : View
         val context = parent.context
+        val effectorViewHolder : ViewHolder
 
-        val viewHolder : RecyclerView.ViewHolder
 
         // "listview_item" Layout을 inflate하여 convertView 참조 획득.
-        if (view == null) {
-            val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            view = inflater.inflate(com.treasure.loopang.R.layout.effectorlist, parent, false)
+        if (convertView == null) {
+            view = LayoutInflater.from(context).inflate(R.layout.effectorlist, null)
+            effectorViewHolder = ViewHolder()
+            effectorViewHolder.titleTextView = view.findViewById(R.id.name_musical_instrument) as TextView
+            effectorViewHolder.playbackBtnView = view.findViewById(R.id.btn_playback) as ImageButton
 
-            /*    viewHolder = ViewHolder()
-            val imageBtn = viewHolder.imageBtnView?.findViewById<ImageButton>(com.treasure.loopang.R.id.btn_playback) as ImageButton
-            //viewHolder.imageBtnView = convertView!!.findViewById(com.treasure.loopang.R.id.btn_playback) as ImageButton
-            //var ImageBtnView = viewHolder.findViewById(com.treasure.loopang.R.id.btn_playback) as ImageButton
-            view.tag = viewHolder
+            view.tag = effectorViewHolder
         }else{
-            viewHolder = convertView!!.getTag() as ViewHolder
-        }*/
+            effectorViewHolder = convertView.tag as ViewHolder //viewHolder = convertView!!.getTag() as ViewHolder
+            view = convertView
+            //viewHolder.playbackBtnView?.setImageDrawable(null)
         }
 
-
-        // 화면에 표시될 View(Layout이 inflate된)으로부터 위젯에 대한 참조 획득
-        val titleTextView = view?.findViewById(com.treasure.loopang.R.id.name_musical_instrument) as TextView
+        effectorViewHolder.titleTextView?.setText(listViewItemList.get(position).title)
 
         // Data Set(listViewItemList)에서 position에 위치한 데이터 참조 획득
         val listViewItem = listViewItemList[position]
 
-        // 아이템 내 각 위젯에 데이터 반영
-        titleTextView.setText(listViewItem.title)
-
         listViewItem.music?.setLooping(true)
 
-        view.findViewById<View>(com.treasure.loopang.R.id.btn_playback).setOnClickListener{
-            //다른 노래 재생중인지 체크하기 isPlayingMusic
-            for(position in listViewItemList.indices) {
-                if (listViewItemList[position].isPlayingMusic == true) {
-                    listViewItemList[position].music?.stop()
-                    //position의 버튼에 어떻게 접근할까...??? 이미지 바꿔줘야 하는데 ㅋㅋ
+        if(listViewItem.isPlayingMusic){
+            effectorViewHolder.playbackBtnView!!.setImageResource(R.drawable.icon_stop__musical_instrument)
+        } else {
+            effectorViewHolder.playbackBtnView!!.setImageResource(R.drawable.icon_play__musical_instrument)
+        }
+
+        view?.findViewById<View>(com.treasure.loopang.R.id.btn_playback).setOnClickListener{
+
+            if(listViewItemList[position].isPlayingMusic == true) {
+                Log.d("지금 누른 버튼","지금버튼멈추기")
+                musicStop(position) //지금 누른 버튼의 노래 멈추기
+            }
+            else{ //지금 누른 버튼의 노래 재생을 하되
+                if(playedPos == -1){
+                    musicPlay(position)
+                    playedPos = position
+                    Log.d("재생","재생")
+                }
+                else if(playedPos != -1){
+                    Log.d("멈춰라","멈춰라고")
+                    musicStop(playedPos)
+                    musicPlay(position)
+                    playedPos = position
                 }
             }
-            if (listViewItem.music!!.isPlaying()) {
-                // 재생중이면 노래 정지
-                listViewItem.isPlayingMusic = false
-                 view.btn_playback.setImageResource(com.treasure.loopang.R.drawable.icon_play__musical_instrument)
-                //viewHolder.imageBtnView!!.setImageResource(com.treasure.loopang.R.drawable.icon_play__musical_instrument)
-                listViewItem.music?.stop()
-                try {
-                    listViewItem.music?.prepare()
-                } catch (e: IllegalStateException) {
-                    e.printStackTrace()
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
-                listViewItem.music?.seekTo(0)
-            } else {
-                // 재생중이 아니면 재생
-                listViewItem.isPlayingMusic= true
-                view.btn_playback.setImageResource(com.treasure.loopang.R.drawable.icon_stop__musical_instrument)
-                //viewHolder.imageBtnView!!.setImageResource(com.treasure.loopang.R.drawable.icon_stop__musical_instrument)
-                listViewItem.music?.start()
-                Thread()
-            }
+            notifyDataSetChanged()
         }
         view.findViewById<View>(com.treasure.loopang.R.id.btn_add).setOnClickListener{
             //recording 에 저장된 음원 추가되게 하는 기능 여기다 추가
         }
-
         return view
+    }
+    fun musicStop(position: Int){
+        listViewItemList[position].isPlayingMusic = false //곡을 멈추는 것을 명시해줌
+        listViewItemList[position].music?.stop()
+        try {
+            listViewItemList[position].music?.prepare()
+        } catch (e: IllegalStateException) {
+            e.printStackTrace()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+    fun musicPlay(position: Int){
+        listViewItemList[position].isPlayingMusic = true //재생중으로 명시해줌
+        listViewItemList[position].music?.start()
+        Thread()
     }
 
     // 지정한 위치(position)에 있는 데이터와 관계된 아이템(row)의 ID를 리턴
@@ -116,7 +120,8 @@ class EffectorListAdapter : BaseAdapter() {
     }
 
     private  class ViewHolder{
-        var imageBtnView : ImageButton? = null
+        var playbackBtnView : ImageButton? = null
+        var titleTextView :TextView? = null
     }
-
 }
+
