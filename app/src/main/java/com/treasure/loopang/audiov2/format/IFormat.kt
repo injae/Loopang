@@ -39,6 +39,7 @@ fun formatFactory(path: String) : IFormat {
     return when (path.substringAfter('.',"")) {
         "pcm" -> Pcm16()
         "wav"-> Wave()
+        "aac" -> AAC()
         else  -> NotSupportFormat()
     }
 }
