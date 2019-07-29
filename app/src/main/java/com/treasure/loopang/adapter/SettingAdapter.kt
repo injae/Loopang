@@ -9,12 +9,13 @@ import com.treasure.loopang.listitem.SettingItem
 import android.widget.*
 import java.util.*
 
+
 class SettingAdapter : BaseAdapter(),Filterable{
 
     private var listViewItemList = ArrayList<SettingItem>()
-    private var filteredItemList = listViewItemList
+    private var filteredItemList= listViewItemList   //필터링 된 데이터 저장 하기위한 리스트 //최초에 전체 리스트 보유
 
-    internal var listFilter: Filter? = null
+    var listFilter: Filter? = null
 
     override fun getFilter(): Filter {
         if (listFilter == null) {
@@ -24,11 +25,10 @@ class SettingAdapter : BaseAdapter(),Filterable{
     }
 
     private inner class ListFilter : Filter() {
-
         override  protected fun performFiltering(constraint: CharSequence?): FilterResults {
             val results = FilterResults()
 
-            if (constraint == null || constraint.isEmpty()) {
+            if (constraint == null || constraint.length == 0) {
                 results.values = listViewItemList
                 results.count = listViewItemList.size
             } else {
@@ -37,7 +37,6 @@ class SettingAdapter : BaseAdapter(),Filterable{
                 for (item in listViewItemList) {
                     if (item.title!!.toUpperCase().contains(constraint.toString().toUpperCase()))
                         itemList.add(item)
-
                 }
 
                 results.values = itemList
@@ -45,12 +44,11 @@ class SettingAdapter : BaseAdapter(),Filterable{
             }
             return results
         }
-
-        override  protected fun publishResults(constraint: CharSequence, results: FilterResults) {
-
+        //protected
+        override fun publishResults(constraint: CharSequence, results: FilterResults) {
             // update listview by filtered data list.
             filteredItemList = results.values as ArrayList<SettingItem>
-            // notify
+
             if (results.count > 0) {
                 notifyDataSetChanged()
             } else {
@@ -58,12 +56,12 @@ class SettingAdapter : BaseAdapter(),Filterable{
             }
         }
     }
-
     override fun getCount(): Int {
-        return listViewItemList.size
+        return filteredItemList.size
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+
         var view = convertView
         val context = parent.context
 
@@ -75,7 +73,7 @@ class SettingAdapter : BaseAdapter(),Filterable{
         val iconImageView = view?.findViewById(com.treasure.loopang.R.id.settingListImage) as ImageView
         val titleTextView = view?.findViewById(com.treasure.loopang.R.id.settingListText) as TextView
 
-        val listViewItem = listViewItemList[position]
+        val listViewItem = filteredItemList[position]
 
         iconImageView.setImageDrawable(listViewItem.icon)
         titleTextView.setText(listViewItem.title)
@@ -86,11 +84,13 @@ class SettingAdapter : BaseAdapter(),Filterable{
     override fun getItemId(position: Int): Long {
         return position.toLong()
     }
-
+/*
     override fun getItem(position: Int): Any {
         return listViewItemList[position]
+    }*/
+    override fun getItem(position: Int): Any {
+        return filteredItemList[position]
     }
-
     // 아이템 데이터
     fun addItem(icon: Drawable,  title: String) {
         val item = SettingItem()
