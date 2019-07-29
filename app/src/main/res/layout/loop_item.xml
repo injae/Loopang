@@ -13,7 +13,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/song_name"
-            android:textSize="18sp" android:layout_marginTop="8dp"
+            android:textSize="18sp" android:layout_marginTop="16dp"
             app:layout_constraintTop_toTopOf="parent" android:layout_marginStart="16dp"
             app:layout_constraintStart_toStartOf="parent"/>
     <TextView
@@ -24,9 +24,10 @@
             android:layout_height="wrap_content"
             android:id="@+id/song_date"
             android:layout_alignStart="@+id/song_name"
-            android:textSize="14sp" android:layout_marginTop="8dp"
+            android:textSize="14sp"
             app:layout_constraintTop_toBottomOf="@+id/song_name"
-            app:layout_constraintStart_toStartOf="@+id/song_name"/>
+            app:layout_constraintStart_toStartOf="@+id/song_name" android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"/>
     <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -39,15 +40,17 @@
             android:id="@+id/frame_btn_playback">
             <ImageButton
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:focusableInTouchMode="true"
                     app:srcCompat="@drawable/icon_play__musical_instrument"
-                    android:id="@+id/btn_playback" />
+                    android:background="@android:color/transparent"
+                    android:id="@+id/btn_playback"/>
             <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:focusableInTouchMode="true"
                     android:visibility="gone"
+                    android:background="@android:color/transparent"
                     app:srcCompat="@drawable/icon_stop__musical_instrument"
                     android:id="@+id/btn_stop" />
     </FrameLayout>

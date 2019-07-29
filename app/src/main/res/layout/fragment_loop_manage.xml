@@ -31,23 +31,18 @@
             android:importantForAutofill="no"
             android:inputType="text"/>
 
-    <FrameLayout
+    <ListView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/search_bar"
+            android:background="@android:color/transparent"
+            android:dividerHeight="5dp"
+            android:divider="@android:color/transparent"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="18dp"
             android:layout_marginLeft="14dp"
             android:layout_marginRight="14dp"
-            android:background="@drawable/view_pager_background">
-        <ListView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@android:color/transparent"
-                android:layout_marginTop="23dp"
-                android:layout_marginBottom="23dp"
-                android:id="@+id/loop_list"/>
-    </FrameLayout>
+            android:id="@+id/loop_list"/>
 
     <ImageButton
             android:src="@drawable/bin_icon"
