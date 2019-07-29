@@ -70,8 +70,7 @@ class RecordFragment : androidx.fragment.app.Fragment(), IPageFragment {
     }
 
     override fun onDestroy() {
-        mRecorder.stop()
-        mMixer.stop()
+        stopAll()
         super.onDestroy()
         Log.d("RecordFragment", "RecordFragment Destroyed!")
     }
@@ -99,56 +98,54 @@ class RecordFragment : androidx.fragment.app.Fragment(), IPageFragment {
                 }
 
                 override fun onDismiss(listView: ListView?, reverseSortedPositions: IntArray?) {
-                    Log.d("SwipeDismissTest", "onDismiss($reverseSortedPositions)")
+                    // Log.d("SwipeDismissTest", "onDismiss($reverseSortedPositions)")
                     for(position in reverseSortedPositions!!)
                         dropLayer(position)
                 }
             }
         )
-
         layerList.adapter = mLayerListAdapter
-
-        /* 리스트 아이템 롱클릭 이벤트 설정 */
         layerList.isLongClickable = true
         layerList.setOnItemLongClickListener{ parent, v, position, id ->
             onLayerListItemLongClick(parent, v, position, id)
         }
-
-        /* 리스트 아이템 싱글 클릭 이벤트 설정 */
         layerList.setOnItemClickListener { parent, v, position, id ->
             onLayerListItemClick(parent, v, position, id)
         }
-
         layerList.setOnTouchListener(swipeDismissListViewTouchListener)
         layerList.setOnScrollListener(swipeDismissListViewTouchListener.makeScrollListener())
     }
 
     private fun initRecorder(){
-        mRecorder.onSuccess {
-            addLayer()
-            mRecordState = false
-        }
-        mRecorder.onStart {
-            mRecordState = true
-        }
-        // mRecorder.onSuccess { Log.d("mRecorder","mRecorder.onSuccess()")}
-        // For Realtime Visualizer
-        mRecorder.addEffector {
-            realtime_visualizer_view.analyze(
-                it.fold(0) { acc, next->
-                    acc + abs(next.toInt())
-                } / it.size
-            )
-            it
+        mRecorder.apply{
+            onSuccess {
+                addLayer()
+                mRecordState = false
+                activity?.runOnUiThread{
+                    hideVisualizerView()
+                }
+            }
+            onStart {
+                mRecordState = true
+                activity?.runOnUiThread{
+                    showVisualizerView()
+                }
+            }
+            addEffector {
+                realtime_visualizer_view.analyze(
+                    it.fold(0) { acc, next->
+                        acc + abs(next.toInt())
+                    } / it.size
+                )
+                it
+            }
         }
     }
 
     private fun initMixer() {
-        mMixer.onSuccess {
-            mLoopPlaybackState = false
-        }
-        mMixer.onStart {
-            mLoopPlaybackState = true
+        mMixer.apply{
+            onSuccess { mLoopPlaybackState = false }
+            onStart { mLoopPlaybackState = true }
         }
     }
 
@@ -157,27 +154,13 @@ class RecordFragment : androidx.fragment.app.Fragment(), IPageFragment {
         metronome_view.onStop = { stopMetronome() }
     }
 
-    private fun addLayer() {
-        activity?.runOnUiThread {
-            toast(R.string.toast_record_stop)
-            if(realtime_visualizer_view.visibility == View.VISIBLE) {
-                realtime_visualizer_view.clear()
-                realtime_visualizer_view.visibility = View.GONE
-            }
-        }
-
-        val sound = mRecorder.getSound()
-        mMixer.addSound(sound)
-        if(!mMixer.isLooping.get()) mMixer.start()
-        mLayerListAdapter.addLayer(sound)
-    }
-
     private fun onThisSingleTap(): Boolean {
         if(mMixer.sounds.isNotEmpty() && !mMixer.isLooping.get()){
             toast(R.string.toast_record_start_error_without_playback)
         }
         else if (mRecordState) {
-            mRecorder.stop()
+            toast(R.string.toast_record_stop)
+            recordStop()
         }
         else {
             recordStart()
@@ -222,10 +205,8 @@ class RecordFragment : androidx.fragment.app.Fragment(), IPageFragment {
     /* 리스트 아이템 클릭 시 처리동작 (onItemClick 함수와 같이 사용) */
     private fun onLayerListItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
         if(mMixer.isLooping.get()) {
-            // 믹서가 작동 중일 때 레이어 아이템 클릭 시 뮤트
             muteLayer(position)
         } else {
-            // 믹서가 미작동 중일 때 레이어 아이템 클릭 시 레이어 한번 듣기
             playLayer(view)
         }
     }
@@ -249,6 +230,19 @@ class RecordFragment : androidx.fragment.app.Fragment(), IPageFragment {
         Log.d("RecordFragmentTest", "아이템 롱 클릭! postion: $position")
         return true*/
         return false
+    }
+
+    private fun showVisualizerView() {
+        if(realtime_visualizer_view.visibility == View.GONE) {
+            realtime_visualizer_view.visibility = View.VISIBLE
+        }
+    }
+
+    private fun hideVisualizerView() {
+        if(realtime_visualizer_view.visibility == View.VISIBLE) {
+            realtime_visualizer_view.clear()
+            realtime_visualizer_view.visibility = View.GONE
+        }
     }
 
     private fun showSaveLoopDialog() {
@@ -318,15 +312,14 @@ class RecordFragment : androidx.fragment.app.Fragment(), IPageFragment {
         if(mIsFirstRecord) onFirstRecord()
         else{
             toast(R.string.toast_record_start)
-            if(realtime_visualizer_view.visibility == View.GONE) {
-                val animation: Animation = AlphaAnimation(0F, 1F)
-                animation.duration = 1000
-                realtime_visualizer_view.visibility = View.VISIBLE
-                realtime_visualizer_view.animation = animation
-            }
+            showVisualizerView()
             if(mMixer.sounds.isNotEmpty()) { mRecorder.start(mMixer.sounds[0].data.size) }
             else { mRecorder.start() }
         }
+    }
+
+    private fun recordStop() {
+        mRecorder.stop()
     }
 
     private fun saveLoop(
@@ -362,9 +355,20 @@ class RecordFragment : androidx.fragment.app.Fragment(), IPageFragment {
         return true
     }
 
+    fun addSoundToLayerList(sound:Sound) {
+        mMixer.addSound(sound)
+        if(!mMixer.isLooping.get()) mMixer.start()
+        mLayerListAdapter.addLayer(sound)
+    }
+
+    private fun addLayer() {
+        val sound = mRecorder.getSound()
+        addSoundToLayerList(sound)
+    }
+
     private fun muteLayer(position: Int) {
         Log.d("LayerFunctionTest", "muteLayer(position: $position)")
-        mMixer.setMute(position, true)
+        mMixer.switchMute(position)
         mLayerListAdapter.switchLayerMuteState(position)
     }
 
@@ -372,20 +376,22 @@ class RecordFragment : androidx.fragment.app.Fragment(), IPageFragment {
         Log.d("LayerFunctionTest", "dropLayer(position: $position)")
         mMixer.sounds.removeAt(position)
         mLayerListAdapter.dropLayer(position)
-        toast("Drop Layer")
     }
 
-    private fun dropAllLayer() {
+    fun dropAllLayer() {
         Log.d("LayerFunctionTest", "dropAllLayer()")
         mMixer.stop()
         mMixer.sounds.clear()
         mLayerListAdapter.dropAllLayer()
-        toast(R.string.toast_drop_all_of_layer)
     }
 
     private fun playLayer(view: View) {
         Log.d("LayerFunctionTest", "playLayer()")
         mLayerListAdapter.playLayer(view)
+    }
+
+    private fun stopLayer() {
+        mLayerListAdapter.stopNowLayer()
     }
 
     private fun startMetronome() {
@@ -396,6 +402,13 @@ class RecordFragment : androidx.fragment.app.Fragment(), IPageFragment {
 
     private fun stopMetronome() {
         toast("metronome stop!")
+    }
+
+    private fun stopAll() {
+        recordStop()
+        mMixer.stop()
+        stopLayer()
+        stopMetronome()
     }
 
     private fun onFirstRecord() {

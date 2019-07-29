@@ -69,7 +69,7 @@ class LayerListAdapter : BaseAdapter() {
     fun dropLayer(position: Int){
         stopNowLayer()
         layerItemList.removeAt(position)
-        mHandler.post { notifyDataSetChanged() }
+        // mHandler.post { notifyDataSetChanged() }
     }
 
     fun dropAllLayer() {
@@ -94,7 +94,7 @@ class LayerListAdapter : BaseAdapter() {
         notifyDataSetChanged()
     }
 
-    private fun stopNowLayer(){
+    fun stopNowLayer(){
         var layerPlayingState = false
 
         nowPlayingLayer?.let{ layerPlayingState = it.playState } ?: return

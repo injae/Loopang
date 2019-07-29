@@ -1,19 +1,21 @@
 package com.treasure.loopang
 
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.treasure.loopang.audiov2.FileManager
+import com.treasure.loopang.audiov2.Sound
 import com.treasure.loopang.ui.interfaces.ILoopManager
 import com.treasure.loopang.ui.interfaces.IPageFragment
 import com.treasure.loopang.ui.adapter.LoopListAdapter
 import com.treasure.loopang.ui.item.LoopItem
 import kotlinx.android.synthetic.main.fragment_loop_manage.*
-import kotlinx.android.synthetic.main.fragment_song_manage.*
 import kotlinx.android.synthetic.main.fragment_song_manage.loop_list
+import kotlin.RuntimeException
 
 class LoopManageFragment : androidx.fragment.app.Fragment()
     , IPageFragment
@@ -21,6 +23,7 @@ class LoopManageFragment : androidx.fragment.app.Fragment()
     private val mFileManager: FileManager = FileManager()
     private val mLoopItemList = arrayListOf<LoopItem>()
     private val mAdapter = LoopListAdapter(mLoopItemList)
+    private var mOnLoopManageListener: OnLoopManageListener? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,6 +41,17 @@ class LoopManageFragment : androidx.fragment.app.Fragment()
         loop_list!!.adapter = mAdapter
         btn_drop_all_loop.setOnClickListener {
             clear()
+        }
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        context?.let{
+            if(it is OnLoopManageListener){
+                mOnLoopManageListener = it
+            } else {
+                RuntimeException("$it must implement OnLoopManageListener")
+            }
         }
     }
 
@@ -65,8 +79,15 @@ class LoopManageFragment : androidx.fragment.app.Fragment()
         mAdapter.stop()
     }
 
-    override fun addLoop() {
+    override fun setLoop(sound: Sound){
         stop()
+        mOnLoopManageListener?.onClear() ?: return
+        mOnLoopManageListener!!.onAddLoop(sound)
+    }
+
+    override fun addLoop(sound: Sound) {
+        stop()
+        mOnLoopManageListener?.onAddLoop(sound) ?: return
     }
 
     override fun clear() {
@@ -89,5 +110,10 @@ class LoopManageFragment : androidx.fragment.app.Fragment()
         for(sound in  soundList)
             mLoopItemList.add(LoopItem(sound.name, sound.date, sound.path))
         mAdapter.notifyDataSetChanged()
+    }
+
+    interface OnLoopManageListener{
+        fun onAddLoop(sound: Sound)
+        fun onClear()
     }
 }
