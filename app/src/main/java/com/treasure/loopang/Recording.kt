@@ -16,10 +16,12 @@ import com.treasure.loopang.ui.statusBarHeight
 import kotlinx.android.synthetic.main.activity_recording.*
 import kotlinx.android.synthetic.main.drawer.*
 import android.widget.ImageButton
+import com.treasure.loopang.audiov2.Sound
 import com.treasure.loopang.ui.interfaces.IPageFragment
 
 
-class Recording : AppCompatActivity() {
+class Recording : AppCompatActivity()
+    , LoopManageFragment.OnLoopManageListener {
     companion object {
         private const val FINISH_INTERVAL_TIME = 2000
         private const val RECORD_FRAGMENT = 0
@@ -181,6 +183,16 @@ class Recording : AppCompatActivity() {
             unselectedFragment.onUnselected()
             this@Recording.currentPage = selectedPage
         }
+    }
+
+    override fun onAddLoop(sound: Sound) {
+        val recordFragment = pagerAdapter.getItem(0) as RecordFragment
+        recordFragment.addSoundToLayerList(sound)
+    }
+
+    override fun onClear() {
+        val recordFragment = pagerAdapter.getItem(0) as RecordFragment
+        recordFragment.dropAllLayer()
     }
 }
 
