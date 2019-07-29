@@ -6,12 +6,10 @@
         <item>삭제</item>
     </string-array>
 
-    <string-array name="song_dialog_menu_array_kr">
-        <item>재생</item>
-        <item>곡 편집</item>
-        <item>곡 제목 변경</item>
-        <item>곡 공유</item>
-        <item>삭제</item>
+    <string-array name="loop_manager_dialog_menu_array_kr">
+        <item>Add Loop as Layer</item>
+        <item>Set Loop as Layer</item>
+        <item>Remove This</item>
     </string-array>
 
     <string-array name="spinner_file_type_kr">
