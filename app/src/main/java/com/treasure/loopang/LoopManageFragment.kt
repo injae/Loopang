@@ -3,6 +3,8 @@ package com.treasure.loopang
 
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -44,6 +46,15 @@ class LoopManageFragment : androidx.fragment.app.Fragment()
         btn_drop_all_loop.setOnClickListener {
             clear()
         }
+        search_bar.addTextChangedListener(object : TextWatcher{
+            override fun afterTextChanged(s: Editable?) {
+                stop()
+                val filterText = s.toString()
+                mAdapter.filter.filter(filterText)
+            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
+        })
     }
 
     override fun onAttach(context: Context?) {
