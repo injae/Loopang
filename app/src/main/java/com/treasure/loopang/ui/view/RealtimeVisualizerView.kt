@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import com.treasure.loopang.R
+import com.treasure.loopang.ui.util.AudioAnalyzer
 
 
 class RealtimeVisualizerView @JvmOverloads constructor(
@@ -34,6 +35,8 @@ class RealtimeVisualizerView @JvmOverloads constructor(
     private var mSpace: Float = 0F
 
     private val mHandler = Handler()
+
+    private val mAudioAnalyzer = AudioAnalyzer()
 
     init{
         val args = context.obtainStyledAttributes(attrs, R.styleable.realtime_visualizer_view)
@@ -63,6 +66,8 @@ class RealtimeVisualizerView @JvmOverloads constructor(
                 mCanvas = Canvas(mCanvasBitmap!!)
             }
         }
+
+        mAudioAnalyzer.setMaxAmplitude(height)
     }
 
     @SuppressLint("DrawAllocation")
@@ -79,6 +84,7 @@ class RealtimeVisualizerView @JvmOverloads constructor(
 
     fun analyze(amplitude: Int) {
         if (mCanvas == null) return
+        val analyzedAmplitude = mAudioAnalyzer.analyze(amplitude)
 
         if((mVisualizerType and FADE) != 0) {
             // Log.d("RVV TEST", "FADE!")
@@ -89,13 +95,13 @@ class RealtimeVisualizerView @JvmOverloads constructor(
         }
 
         if((mVisualizerType and BAR) != 0) {
-            drawBar(amplitude/100)
+            drawBar(analyzedAmplitude)
         }
         if ((mVisualizerType and PIXEL) != 0) {
-            // drawPixel(amplitude)
+            // drawPixel(analyzedAmplitude)
         }
 
-        // Log.d("RVV TEST", "RealtimeVisualizerView.analyze($amplitude)")
+        // Log.d("RVV TEST", "RealtimeVisualizerView.analyze($analyzedAmplitude)")
 
         mHandler.post{ invalidate() }
     }
