@@ -27,6 +27,7 @@ class RecordFragment : androidx.fragment.app.Fragment(), IPageFragment {
 
     private val mLayerListAdapter : LayerListAdapter = LayerListAdapter()
     private val mTouchGestureListener = TouchGestureListener()
+    private val metronome: Metronome = Metronome(task= { metronome_view.tik(); Log.d("Metronome test", "tick")})
 
     private var mMixer: Mixer = Mixer()
     private var mRecorder: Recorder = Recorder()
@@ -396,12 +397,15 @@ class RecordFragment : androidx.fragment.app.Fragment(), IPageFragment {
 
     private fun startMetronome() {
         toast("metronome start!")
-        metronome_view.tik()    //tik
+        metronome.bpm = 60
+        //metronome_view.tik()    //tik
         metronome_view.clear() //default
     }
 
     private fun stopMetronome() {
         toast("metronome stop!")
+        Log.d("Metronome test", "stop")
+        metronome.cancle()
     }
 
     private fun stopAll() {
