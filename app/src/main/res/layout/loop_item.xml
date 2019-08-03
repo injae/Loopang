@@ -38,21 +38,21 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="8dp"
             android:id="@+id/frame_btn_playback">
-            <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:focusableInTouchMode="true"
-                    app:srcCompat="@drawable/icon_play__musical_instrument"
-                    android:background="@android:color/transparent"
-                    android:id="@+id/btn_playback"/>
-            <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:focusableInTouchMode="true"
-                    android:visibility="gone"
-                    android:background="@android:color/transparent"
-                    app:srcCompat="@drawable/icon_stop__musical_instrument"
-                    android:id="@+id/btn_stop" />
+        <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusableInTouchMode="true"
+                app:srcCompat="@drawable/icon_play__musical_instrument"
+                android:background="@android:color/transparent"
+                android:id="@+id/btn_playback" android:scaleType="centerCrop"/>
+        <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusableInTouchMode="true"
+                android:visibility="gone"
+                android:background="@android:color/transparent"
+                app:srcCompat="@drawable/icon_stop__musical_instrument"
+                android:id="@+id/btn_stop" android:scaleType="centerCrop"/>
     </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
