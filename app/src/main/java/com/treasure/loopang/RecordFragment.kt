@@ -3,8 +3,6 @@ package com.treasure.loopang
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.view.animation.AlphaAnimation
-import android.view.animation.Animation
 import android.widget.AdapterView
 import android.widget.ListView
 import com.afollestad.materialdialogs.LayoutMode
@@ -12,7 +10,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
-import com.treasure.loopang.audiov2.*
+import com.treasure.loopang.audio.*
 import com.treasure.loopang.ui.interfaces.IPageFragment
 import com.treasure.loopang.ui.adapter.LayerListAdapter
 import com.treasure.loopang.ui.listener.SwipeDismissListViewTouchListener
@@ -398,6 +396,7 @@ class RecordFragment : androidx.fragment.app.Fragment(), IPageFragment {
     private fun startMetronome() {
         toast("metronome start!")
         metronome.bpm = 60
+        metronome.note.parent = 8
         //metronome_view.tik()    //tik
         metronome_view.clear() //default
     }

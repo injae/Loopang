@@ -1,54 +1,75 @@
 package com.treasure.loopang.audio
 
-import android.media.AudioFormat
-import android.media.AudioRecord
-import android.media.AudioTrack
-import android.media.MediaRecorder
-import android.media.AudioManager
-import java.io.DataInputStream
-import java.io.FileInputStream
-import java.io.FileOutputStream
+import com.treasure.loopang.audio.format.FormatInfo
+import com.treasure.loopang.audio.format.IFormat
+import com.treasure.loopang.audio.format.Pcm16
+import com.treasure.loopang.audio.format.formatFactory
+import java.io.*
+import java.util.concurrent.atomic.AtomicBoolean
 
 
-class Sound( var data : MutableList<Short> = mutableListOf()
-           , val sampleRate : Int = 44100
-           , val inputChannel : Int = AudioFormat.CHANNEL_IN_MONO
-           , val outputChannel: Int = AudioFormat.CHANNEL_OUT_MONO
-           , val audioFormat  : Int = AudioFormat.ENCODING_PCM_16BIT
-           , val inputBufferSize : Int = AudioRecord.getMinBufferSize(sampleRate,inputChannel,audioFormat)
-           , val outputBufferSize: Int = AudioTrack.getMinBufferSize(sampleRate,outputChannel,audioFormat)) {
+open class Sound (var data: MutableList<Short> = mutableListOf(),
+                  var format: IFormat = Pcm16(),
+                  var info: FormatInfo = format.info(),
+                  var isPlaying: AtomicBoolean = AtomicBoolean(false)) : SoundFlow<Sound>() {
 
-    fun makeAudioRecord() : AudioRecord {
-        return AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, inputChannel, audioFormat, inputBufferSize)
+    fun play() {
+        if(!isPlaying.get()) {
+            info.outputAudio.play()
+            isPlaying.set(true)
+            callStart(this)
+            if(isPlaying.get()) {
+                run exit@{
+                    data.chunked(info.sampleRate)
+                        .map { timeEffect(it.toShortArray()).toList() }
+                        .forEach {
+                            it.chunked(info.outputBufferSize)
+                                .map { effect(it.toShortArray()) }
+                                .forEach {
+                                    if (!isPlaying.get()) return@exit else info.outputAudio.write(it, 0, it.size)
+                                }
+                        }
+                }
+            }
+            isPlaying.set(false)
+            callSuccess(this)
+        }
     }
 
-    fun makeAudioTrack() : AudioTrack {
-        return AudioTrack( AudioManager.STREAM_MUSIC, sampleRate, outputChannel
-                         , audioFormat, outputBufferSize, AudioTrack.MODE_STREAM)
+    fun stop() {
+        if(isPlaying.get()) {
+            isPlaying.set(false)
+            info.outputAudio.stop()
+            callStop(this)
+            //audioTrack.release()
+        }
     }
 
     fun save(path: String) {
+        val format = formatFactory(path)
         val fstream = FileOutputStream(path)
-        for(i in 0 until data.size/inputBufferSize) {
-            val shortArray = data.subList(i * inputBufferSize, (i * inputBufferSize) + inputBufferSize).toShortArray()
-            val byteArray = convertShortArrayToByteArray(shortArray)
-            fstream.write(byteArray,0, byteArray.size)
-        }
+        var bufos = BufferedOutputStream(fstream)
+        var preprocess = data.chunked(info.sampleRate)
+            .map { timeEffect(it.toShortArray()).toList() }
+            .flatMap {
+                it.chunked(info.outputBufferSize)
+                  .map { it.toShortArray() }
+                  .flatMap { effect(it).toList() }
+           }.toMutableList()
+
+        bufos.write(format.encord(preprocess).toByteArray())
+
+
+        bufos.close()
         fstream.close()
     }
 
     fun load(path: String) {
-        val buffer = ByteArray(outputBufferSize)
-        val fis = FileInputStream(path)
-        val dis = DataInputStream(fis)
+        val format = formatFactory(path)
         data.clear()
-        while(true) {
-            val ret = dis.read(buffer, 0, outputBufferSize)
-            convertByteArrayToShortArray(buffer).forEach { data.add(it) }
-            if(ret == -1) break
-        }
-        dis.close()
-        fis.close()
+        var originData = File(path).inputStream().readBytes().toMutableList()
+        data = format.decord(originData)
     }
 
 }
+

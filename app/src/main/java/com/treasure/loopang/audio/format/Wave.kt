@@ -1,9 +1,7 @@
-package com.treasure.loopang.audiov2.format
+package com.treasure.loopang.audio.format
 
-import android.util.Log
-import com.treasure.loopang.audiov2.convertByteArrayToShortArray
-import com.treasure.loopang.audiov2.convertBytesToShort
-import com.treasure.loopang.audiov2.convertShortArrayToByteArray
+import com.treasure.loopang.audio.convertBytesToShort
+import com.treasure.loopang.audio.convertShortArrayToByteArray
 
 class Wave(private var info: FormatInfo = FormatInfo()) : IFormat {
     override fun info() = info

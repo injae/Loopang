@@ -1,6 +1,6 @@
 package com.treasure.loopang.ui.item
 
-import com.treasure.loopang.audiov2.Sound
+import com.treasure.loopang.audio.Sound
 
 class LayerItem (
     val sound: Sound,

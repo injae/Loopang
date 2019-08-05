@@ -13,8 +13,8 @@ import com.afollestad.materialdialogs.LayoutMode
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.list.listItems
-import com.treasure.loopang.audiov2.FileManager
-import com.treasure.loopang.audiov2.Sound
+import com.treasure.loopang.audio.FileManager
+import com.treasure.loopang.audio.Sound
 import com.treasure.loopang.ui.interfaces.ILoopManager
 import com.treasure.loopang.ui.interfaces.IPageFragment
 import com.treasure.loopang.ui.adapter.LoopListAdapter

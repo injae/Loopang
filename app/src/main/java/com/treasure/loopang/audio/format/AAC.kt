@@ -1,10 +1,10 @@
-package com.treasure.loopang.audiov2.format
+package com.treasure.loopang.audio.format
 
 import android.media.MediaCodec
 import android.media.MediaCodecInfo
 import android.media.MediaFormat
 import android.util.Log
-import com.treasure.loopang.audiov2.convertShortArrayToByteArray
+import com.treasure.loopang.audio.convertShortArrayToByteArray
 
 class AAC(private var info: FormatInfo = FormatInfo()) : IFormat {
     override fun info() = info
