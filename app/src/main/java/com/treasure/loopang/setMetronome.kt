@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.treasure.loopang.R
+import kotlinx.android.synthetic.main.fragment_record.*
 
 import kotlinx.android.synthetic.main.set_metronome_frame.*
 

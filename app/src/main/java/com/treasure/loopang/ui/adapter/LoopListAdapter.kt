@@ -8,7 +8,7 @@ import android.widget.BaseAdapter
 import android.widget.Filter
 import android.widget.Filterable
 import com.treasure.loopang.R
-import com.treasure.loopang.audiov2.Sound
+import com.treasure.loopang.audio.Sound
 import com.treasure.loopang.ui.item.LoopItem
 import kotlinx.android.synthetic.main.loop_item.view.*
 import kotlinx.android.synthetic.main.songlist_item.view.song_date

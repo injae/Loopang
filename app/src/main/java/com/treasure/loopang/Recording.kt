@@ -16,7 +16,7 @@ import com.treasure.loopang.ui.statusBarHeight
 import kotlinx.android.synthetic.main.activity_recording.*
 import kotlinx.android.synthetic.main.drawer.*
 import android.widget.ImageButton
-import com.treasure.loopang.audiov2.Sound
+import com.treasure.loopang.audio.Sound
 import com.treasure.loopang.ui.interfaces.IPageFragment
 
 
