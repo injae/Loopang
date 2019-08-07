@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.viewpager.widget.ViewPager
 import com.treasure.loopang.ui.adapter.LoopStationPagerAdapter
 import androidx.drawerlayout.widget.DrawerLayout
@@ -15,9 +14,21 @@ import com.treasure.loopang.listitem.setMetronome
 import com.treasure.loopang.ui.statusBarHeight
 import kotlinx.android.synthetic.main.activity_recording.*
 import kotlinx.android.synthetic.main.drawer.*
-import android.widget.ImageButton
 import com.treasure.loopang.audiov2.Sound
 import com.treasure.loopang.ui.interfaces.IPageFragment
+import android.util.DisplayMetrics
+import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.Spinner
+import android.widget.AdapterView
+import android.widget.Toast
+import com.treasure.loopang.audiov2.FileManager
+import kotlinx.android.synthetic.main.final_storage_.*
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import android.view.animation.Animation.AnimationListener
+
+
 
 
 class Recording : AppCompatActivity()
@@ -33,10 +44,20 @@ class Recording : AppCompatActivity()
     private var backPressedTime: Long = 0
     private var currentPage: Int = 0
 
+    lateinit var setEffectorFrag : setEffector
+    lateinit var setMetronomeFrag : setMetronome
+    lateinit var setting : setting
+
+    val fileManager : FileManager =FileManager()
+    val loopList = fileManager.SoundList()
+
     private val pagerAdapter by lazy { LoopStationPagerAdapter(supportFragmentManager) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setEffectorFrag = setEffector()
+        setMetronomeFrag = setMetronome()
+        setting = setting()
 
         // 화면을 세로로 고정
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -52,12 +73,76 @@ class Recording : AppCompatActivity()
         mUiOption = mUiOption or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         mDecorView.systemUiVisibility = mUiOption
 
-        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
-        // drawerLayout.setPadding(0, statusBarHeight(this), 0, 0) //Padding for transparent status bar
+        val dm = applicationContext.resources.displayMetrics
 
+        val displayMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+
+        var isPageOpen = false
+        val translateUp : Animation = AnimationUtils.loadAnimation(this, R.anim.translate_up)
+        val translateDown :Animation = AnimationUtils.loadAnimation(this, R.anim.translate_down)
+        final_storage_layout.visibility = View.INVISIBLE
+        btn_open_final_storage.visibility = View.VISIBLE
+
+        translateDown.setAnimationListener(object : AnimationListener {
+            override fun onAnimationStart(ani: Animation) {} override fun onAnimationRepeat(ani: Animation) {}
+            override fun onAnimationEnd(ani: Animation) { //닫기
+                isPageOpen = false
+                //final_storage_layout.setVisibility(View.INVISIBLE);
+                final_storage_layout.visibility = View.INVISIBLE
+                btn_open_final_storage.visibility = View.VISIBLE
+                Log.d("hello","내려가는 애니메이션~")
+            }
+        })
+        translateUp.setAnimationListener(object : AnimationListener {
+            override fun onAnimationStart(ani: Animation) {} override fun onAnimationRepeat(ani: Animation) {}
+            override fun onAnimationEnd(ani: Animation) {
+                isPageOpen = true
+            }
+        }) //  translateUp.setAnimationListener(SlidingAnimationListener())
+        btn_open_final_storage.setOnClickListener{
+            final_storage_layout.visibility = View.VISIBLE
+            final_storage_layout.startAnimation(translateUp);
+            btn_open_final_storage.visibility = View.INVISIBLE
+        }
+        val spinner: Spinner
+        val arrayList: ArrayList<String>  //private val mLoopItemList = arrayListOf<LoopItem>()
+        val arrayAdapter: ArrayAdapter<String>
+        arrayList = ArrayList()
+        for(i in loopList.indices) {
+            arrayList.add(loopList[i].name)
+        }
+        arrayAdapter = ArrayAdapter(
+            applicationContext,
+            android.R.layout.simple_spinner_dropdown_item,
+            arrayList
+        )
+        spinner = findViewById<View>(R.id.final_loop_name_spinner) as Spinner
+        spinner.setAdapter(arrayAdapter)
+        spinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {}
+            override fun onNothingSelected(adapterView: AdapterView<*>) {}
+        })
+        btn_final_play.setOnClickListener {
+            Toast.makeText(applicationContext, "Loop 재생", Toast.LENGTH_SHORT).show()
+            //recordFragment에서 들리는거랑 안들리는 거 구분해서 재생하는 애 여기다가 넣어주기?  Mixer
+        }
+        btn_final_record.setOnClickListener {
+            Toast.makeText(applicationContext, "최종 녹음", Toast.LENGTH_SHORT).show()
+            // slidingDrawer.lock()
+            //녹음기능 여기다가 넣기
+        }
+        btn_final_stop.setOnClickListener {
+            Toast.makeText(applicationContext, "최종 녹음을 저장합니다.", Toast.LENGTH_SHORT).show()
+            //slidingDrawer.unlock()
+            //최종 녹음
+            final_storage_layout.startAnimation(translateDown); //녹음저장하고 닫거나
+        }
+
+        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
+         //drawerLayout.setPadding(0, statusBarHeight(this), 0, 0) //Padding for transparent status bar
         drawerLayout.addDrawerListener(myDrawerListener)
 
-       // supportFragmentManager.beginTransaction().replace(R.id.fragContainer, setMetronome()).commit()
         getSupportFragmentManager().beginTransaction()
             .setCustomAnimations( R.anim.fade_in, 0, 0, R.anim.fade_out).replace(R.id.fragContainer, setMetronome()).commit()
 
@@ -84,27 +169,30 @@ class Recording : AppCompatActivity()
                             getSupportFragmentManager()
                                 .beginTransaction()
                                 .setCustomAnimations( R.anim.fade_in, 0, 0, R.anim.fade_out)
-                                .replace(R.id.fragContainer, setMetronome())
+                                .replace(R.id.fragContainer, setMetronomeFrag)
                                 .commit()
+                        setEffectorFrag.adapter.positionMusicStop()
                         }
                     btn_setEffector -> if(fragment is setMetronome || fragment is setting) {
-                        getSupportFragmentManager()
-                            .beginTransaction()
-                            .setCustomAnimations(R.anim.fade_in, 0, 0, R.anim.fade_out)
-                            .replace(R.id.fragContainer, setEffector())
-                            .commit()
-                    }
+                    getSupportFragmentManager()
+                        .beginTransaction()
+                        .setCustomAnimations(R.anim.fade_in, 0, 0, R.anim.fade_out)
+                        .replace(R.id.fragContainer, setEffectorFrag )
+                        .commit()
+                }
                     btn_setting -> if(fragment is setMetronome || fragment is setEffector) {
                         getSupportFragmentManager()
                             .beginTransaction()
                             .setCustomAnimations( R.anim.fade_in, 0, 0, R.anim.fade_out)
-                            .replace(R.id.fragContainer, setting())
+                            .replace(R.id.fragContainer, setting)
                             .commit()
+                       setEffectorFrag.adapter.positionMusicStop()
                     }
                 }
             }
         }
     }
+
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         if( hasFocus ) {
             mDecorView.systemUiVisibility = mUiOption
@@ -113,9 +201,10 @@ class Recording : AppCompatActivity()
 
     internal var myDrawerListener: DrawerLayout.DrawerListener = object : DrawerLayout.DrawerListener {
 
-        override fun onDrawerClosed(drawerView: View) {}
+        override fun onDrawerClosed(drawerView: View) {
+                setEffectorFrag.adapter.positionMusicStop()
+        }
         override fun onDrawerOpened(drawerView: View) {}
-
         override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
             //txtPrompt.setText("onDrawerSlide: " + String.format("%.2f", slideOffset))
         }
