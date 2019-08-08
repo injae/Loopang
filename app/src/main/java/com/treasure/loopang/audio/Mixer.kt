@@ -51,4 +51,19 @@ class Mixer(val sounds: MutableList<MixerSound> = mutableListOf()) : SoundFlow<M
               .filterIndexed{ index, _ -> index != filteredIndex }
               .fold(MutableList<Short>(sounds[0].data.size) {0}) {
                     acc, it -> acc.zip(it){ a, b -> (a + b).toShort() }.toMutableList() }
+
+    fun load(config: LoopMusic) {
+        config.child?.forEach { music ->
+            addSound(Sound().apply { load(music.path) })
+        }
+    }
+
+    fun save(config: LoopMusic) {
+        if(config.child?.count() != sounds.count()) error("not match child and sounds length")
+        config.save()
+        (0 until sounds.count()-1).forEach {
+            sounds[it].save(config.child!![it].path)
+        }
+        Sound(mixSounds()).save(config.path)
+    }
 }
