@@ -9,7 +9,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import com.treasure.loopang.R
-import com.treasure.loopang.audiov2.Metronome
+import com.treasure.loopang.audio.Metronome
 import kotlinx.android.synthetic.main.fragment_record.*
 
 

@@ -14,9 +14,8 @@ import com.treasure.loopang.listitem.setMetronome
 import com.treasure.loopang.ui.statusBarHeight
 import kotlinx.android.synthetic.main.activity_recording.*
 import kotlinx.android.synthetic.main.drawer.*
-import com.treasure.loopang.audiov2.Sound
-import android.widget.ImageButton
 import com.treasure.loopang.audio.Sound
+import android.widget.ImageButton
 import com.treasure.loopang.ui.interfaces.IPageFragment
 import android.util.DisplayMetrics
 import android.widget.*
@@ -24,7 +23,7 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.AdapterView
 import android.widget.Toast
-import com.treasure.loopang.audiov2.FileManager
+import com.treasure.loopang.audio.FileManager
 import kotlinx.android.synthetic.main.final_storage_.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
