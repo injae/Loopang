@@ -10,6 +10,8 @@ import android.text.TextWatcher
 import android.util.Log
 import com.treasure.loopang.R
 import com.treasure.loopang.audiov2.Metronome
+import kotlinx.android.synthetic.main.fragment_record.*
+
 
 
 class setMetronome : androidx.fragment.app.Fragment() {

@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.os.Handler
 import android.util.AttributeSet
 import android.view.View
+import com.treasure.loopang.ui.util.AudioAnalyzer
 import kotlin.math.abs
 
 
@@ -31,6 +32,7 @@ class WaveformView @JvmOverloads constructor(
 
     private val mLinePaint: Paint = Paint() // specifies line drawing characteristics
     private val mHandler = Handler()
+    private val mAudioAnalyzer = AudioAnalyzer()
 
     init {
         // create Paint for lines
@@ -45,6 +47,8 @@ class WaveformView @JvmOverloads constructor(
         _width = w // new _width of this View
         _height = h // new _height of this View
         _size = _width / LINE_WIDTH
+
+        mAudioAnalyzer.setMaxAmplitude(_height)
 
         amplitudes?.let{
             _amplitudes = convertList(it)
@@ -63,7 +67,7 @@ class WaveformView @JvmOverloads constructor(
 
         // for each item in the _amplitudes ArrayList
         _amplitudes?.forEach{ power ->
-            val scaledHeight = power / LINE_SCALE // scale the power
+            val scaledHeight = mAudioAnalyzer.analyze(power.toInt()) // scale the power
             curX += LINE_WIDTH.toFloat() // increase X by LINE_WIDTH
 
             // draw a line representing this item in the _amplitudes ArrayList
@@ -92,7 +96,7 @@ class WaveformView @JvmOverloads constructor(
             val n = _size / data.size    //코틀린에서 정수형 나누기 시 자동내림.
             (0 until _size).mapIndexed{ index, _ ->
                 if(data.size * n > index)
-                    data.flatMap{ power -> (0 until n).map{power}}[index]
+                    data.flatMap{ power -> (0 until n).map{abs(power.toInt()).toShort()}}[index]
                 else data.last()
             }.toMutableList()
         }

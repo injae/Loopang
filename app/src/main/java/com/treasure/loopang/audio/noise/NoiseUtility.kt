@@ -1,4 +1,4 @@
-package com.treasure.loopang.audiov2.noise
+package com.treasure.loopang.audio.noise
 
 fun getHighestPoint(sourceData: MutableList<Short>): Short {
     var highest: Short = sourceData[0]

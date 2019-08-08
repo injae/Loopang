@@ -1,10 +1,10 @@
-package com.treasure.loopang.audiov2.format
+package com.treasure.loopang.audio.format
 
 import android.media.MediaCodec
 import android.media.MediaCodecInfo
 import android.media.MediaFormat
 import android.util.Log
-import com.treasure.loopang.audiov2.convertShortArrayToByteArray
+import com.treasure.loopang.audio.convertShortArrayToByteArray
 
 class AAC(private var info: FormatInfo = FormatInfo()) : IFormat {
     override fun info() = info
@@ -15,9 +15,6 @@ class AAC(private var info: FormatInfo = FormatInfo()) : IFormat {
 
     private val mediaEncodeCodec = MediaCodec.createEncoderByType("audio/mp4a-latm")
     private val mediaEncodeFormat = MediaFormat()
-
-    private val mediaDecodeCodec = MediaCodec.createDecoderByType("audio/mp4a-latm")
-    private val mediaDecodeFormat = MediaFormat()
 
     private fun encodePrepare() {
         mediaEncodeFormat.setString(MediaFormat.KEY_MIME, "audio/mp4a-latm")
@@ -98,15 +95,4 @@ class AAC(private var info: FormatInfo = FormatInfo()) : IFormat {
     }
 
     private fun getEncodedData(pcmData: MutableList<Short>) = encodeProcess(pcmData).toMutableList()
-
-    private fun decodePrepare() {
-        mediaDecodeFormat.setString(MediaFormat.KEY_MIME, "audio/mp4a-latm")
-        mediaDecodeFormat.setInteger(MediaFormat.KEY_CHANNEL_COUNT, 1)
-        mediaDecodeFormat.setInteger(MediaFormat.KEY_SAMPLE_RATE, 44100)
-        mediaDecodeFormat.setInteger(MediaFormat.KEY_BIT_RATE, 320 * 1024)
-        mediaDecodeFormat.setInteger(MediaFormat.KEY_AAC_PROFILE, MediaCodecInfo.CodecProfileLevel.AACObjectLC)
-
-        mediaDecodeCodec.configure(mediaDecodeFormat, null, null, 0)
-        mediaDecodeCodec.start()
-    }
 }

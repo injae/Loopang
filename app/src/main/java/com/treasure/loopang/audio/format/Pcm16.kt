@@ -1,7 +1,7 @@
-package com.treasure.loopang.audiov2.format
+package com.treasure.loopang.audio.format
 
-import com.treasure.loopang.audiov2.convertBytesToShort
-import com.treasure.loopang.audiov2.convertShortArrayToByteArray
+import com.treasure.loopang.audio.convertBytesToShort
+import com.treasure.loopang.audio.convertShortArrayToByteArray
 
 
 open class Pcm16(private var info: FormatInfo = FormatInfo()) : IFormat {

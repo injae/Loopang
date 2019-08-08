@@ -1,4 +1,4 @@
-package com.treasure.loopang.audiov2.noise
+package com.treasure.loopang.audio.noise
 
 class NoiseCanceler() {
     fun makeReverse(sourceData: Short) = sourceData * (-1)

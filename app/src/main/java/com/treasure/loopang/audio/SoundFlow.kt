@@ -1,4 +1,4 @@
-package com.treasure.loopang.audiov2
+package com.treasure.loopang.audio
 
 typealias Effector = (ShortArray) -> ShortArray
 typealias Flow<T> = (T) -> Unit

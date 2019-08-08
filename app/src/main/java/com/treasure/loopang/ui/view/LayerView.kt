@@ -1,7 +1,6 @@
 package com.treasure.loopang.ui.view
 
 import android.content.Context
-import android.media.Image
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +8,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import com.treasure.loopang.R
-import com.treasure.loopang.audiov2.Sound
+import com.treasure.loopang.audio.Sound
 import kotlinx.android.synthetic.main.layerview_layout.view.*
 import kotlinx.coroutines.async
 

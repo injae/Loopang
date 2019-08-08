@@ -15,6 +15,8 @@ import com.treasure.loopang.ui.statusBarHeight
 import kotlinx.android.synthetic.main.activity_recording.*
 import kotlinx.android.synthetic.main.drawer.*
 import com.treasure.loopang.audiov2.Sound
+import android.widget.ImageButton
+import com.treasure.loopang.audio.Sound
 import com.treasure.loopang.ui.interfaces.IPageFragment
 import android.util.DisplayMetrics
 import android.widget.*
@@ -258,6 +260,8 @@ class Recording : AppCompatActivity()
 
         /* 선택된 페이지 알려줌 */
         override fun onPageSelected(p0: Int) {
+
+
             selectedPage = p0
             if(prevPage != selectedPage)
                 onPageChanged()

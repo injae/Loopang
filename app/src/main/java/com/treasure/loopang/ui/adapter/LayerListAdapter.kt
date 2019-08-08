@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import com.treasure.loopang.R
-import com.treasure.loopang.audiov2.Sound
+import com.treasure.loopang.audio.Sound
 import com.treasure.loopang.ui.item.LayerItem
 import com.treasure.loopang.ui.view.LayerView
 import kotlinx.android.synthetic.main.layer_item.view.*
