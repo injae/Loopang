@@ -41,4 +41,3 @@ dependencies {
     implementation 'com.afollestad.material-dialogs:bottomsheets:3.1.0'
     implementation 'com.afollestad.material-dialogs:lifecycle:3.1.0'
 }
-

@@ -14,6 +14,7 @@ import android.text.Editable
 import android.R.id.edit
 import android.content.Intent
 import android.widget.AdapterView
+import androidx.fragment.app.FragmentManager
 import com.treasure.loopang.ui.toast
 import kotlinx.android.synthetic.*
 
@@ -48,6 +49,10 @@ class setting : androidx.fragment.app.Fragment() {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
         })
 
+        btn_deleteAll.setOnClickListener{
+            editText.setText("")
+        }
+
         settingListView.setOnItemClickListener { parent, view, position, id ->
             // get item
             val item = parent.getItemAtPosition(position) as SettingItem
@@ -55,11 +60,14 @@ class setting : androidx.fragment.app.Fragment() {
             val icon = item.icon
             //to do
                 toast(title + " click")
-
+         when(title){
+             "공지사항" -> toast(title + " click")
+             "비주얼라이저" ->  toast(title + " click")
+             "pcm" -> toast(title + " click")
+             "도움말" -> toast(title + " click")
+         }
         }
 
-        btn_deleteAll.setOnClickListener{
-            //검색하던 모든 내용 지우기 기능
-        }
+
     }
 }

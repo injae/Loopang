@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.*
 import android.widget.AdapterView
 import android.widget.ListView
+import androidx.drawerlayout.widget.DrawerLayout
 import com.afollestad.materialdialogs.LayoutMode
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
@@ -18,10 +19,10 @@ import com.treasure.loopang.ui.listener.TouchGestureListener
 import com.treasure.loopang.ui.toast
 import kotlinx.android.synthetic.main.dialog_save_loop.*
 import kotlinx.android.synthetic.main.fragment_record.*
+import kotlinx.android.synthetic.main.set_metronome_frame.*
 import kotlin.math.abs
 
 class RecordFragment : androidx.fragment.app.Fragment(), IPageFragment {
-
 
     private val mLayerListAdapter : LayerListAdapter = LayerListAdapter()
     private val mTouchGestureListener = TouchGestureListener()
@@ -66,6 +67,7 @@ class RecordFragment : androidx.fragment.app.Fragment(), IPageFragment {
         }
 
         initMetronome()
+
     }
 
     override fun onDestroy() {
@@ -149,6 +151,9 @@ class RecordFragment : androidx.fragment.app.Fragment(), IPageFragment {
     }
 
     private fun initMetronome() {
+        (activity as Recording).setMetronomeFrag.metronome.task={
+            metronome_view.tik()
+        }
         metronome_view.onStart = { startMetronome() }
         metronome_view.onStop = { stopMetronome() }
     }
@@ -398,6 +403,9 @@ class RecordFragment : androidx.fragment.app.Fragment(), IPageFragment {
 
     private fun startMetronome() {
         toast("metronome start!")
+
+        (activity as Recording).setMetronomeFrag.metronome.excute()
+
         metronome.bpm = 60
         metronome.note.parent = 8
         //metronome_view.tik()    //tik
@@ -407,7 +415,7 @@ class RecordFragment : androidx.fragment.app.Fragment(), IPageFragment {
     private fun stopMetronome() {
         toast("metronome stop!")
         Log.d("Metronome test", "stop")
-        metronome.cancle()
+        (activity as Recording).setMetronomeFrag.metronome.cancle()
     }
 
     private fun stopAll() {
