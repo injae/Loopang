@@ -46,13 +46,16 @@
                     android:layout_height="match_parent"
                     android:id="@+id/editText"
                     android:layout_marginStart="5dp"
-                    android:textColor="#FFFFFF"
+                    android:textColor="#939393"
                     android:background = "@android:color/transparent"
                    android:textSize="14dp"
                     android:layout_weight="1"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentStart="true"
-                    android:maxLength="10"/>
+                    android:maxLength="10"
+                    android:hint="설정 검색"
+                    android:singleLine="true"
+                    android:imeOptions="actionSearch"/>
             <Button
                     android:text="x"
                     android:layout_width="28dp"
@@ -60,6 +63,7 @@
                     android:id="@+id/btn_deleteAll"
                     android:layout_gravity="center"
                     android:gravity="center"
+                    android:layout_marginEnd="5dp"
                     android:textSize="14dp"
                     android:background="#00ff0000"
                     android:textColor="#FFFFFF"/>
