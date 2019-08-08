@@ -32,7 +32,7 @@ class RecordFragment : androidx.fragment.app.Fragment(), IPageFragment {
     private var mRecorder: Recorder = Recorder()
 
     private val mFileManager = FileManager()
-    private val mDirectoryPath = mFileManager.looperDir.absolutePath
+    private val mDirectoryPath = mFileManager.looperSoundDir.absolutePath
 
     private var mLoopPlaybackState: Boolean = false
     private var mRecordState: Boolean = false
@@ -340,12 +340,15 @@ class RecordFragment : androidx.fragment.app.Fragment(), IPageFragment {
 
         if (isSplitChecked) {
             // 나눠서 저장할 경우
-            val fileLabelList = (1..mixer.sounds.size).map {
-                "/${loopTitle}_$it.${fileType.toLowerCase()}"
-            }
-            mixer.sounds.forEachIndexed { index, sound ->
-                sound.save(mDirectoryPath+fileLabelList[index])
-            }
+            var childs = (1..mixer.sounds.size).map { LoopMusic("$it") }
+            mixer.save(LoopMusic(name=loopTitle,type="${fileType.toLowerCase()}", child=childs))
+
+            //val fileLabelList = (1..mixer.sounds.size).map {
+            //    "/${loopTitle}_$it.${fileType.toLowerCase()}"
+            //}
+            //mixer.sounds.forEachIndexed { index, sound ->
+            //    sound.save(mDirectoryPath+fileLabelList[index])
+            //}
         } else {
             // 나누지 않을 경우
             val fileLabel = "/$loopTitle.${fileType.toLowerCase()}"

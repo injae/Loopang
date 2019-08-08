@@ -127,10 +127,12 @@ class LoopManageFragment : androidx.fragment.app.Fragment()
     }
 
     override fun loadLoops() {
-        val soundList = mFileManager.SoundList()
+        val soundList = mFileManager.soundList()
         mLoopItemList.clear()
-        for(sound in  soundList)
+
+        for(sound in  soundList) {
             mLoopItemList.add(LoopItem(sound.name, sound.date, sound.path))
+        }
         mAdapter.notifyDataSetChanged()
     }
 
