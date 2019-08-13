@@ -23,4 +23,8 @@ class Login(val connector: Connector) {
         user.name = makeSHA256(user.name)
         user.email = makeSHA256(user.email)
     }
+
+    fun makePasswordHash() {
+        setPassword(makeSHA256(user.password))
+    }
 }
