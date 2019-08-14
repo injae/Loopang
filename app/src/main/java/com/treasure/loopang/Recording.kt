@@ -50,7 +50,7 @@ class Recording : AppCompatActivity()
     lateinit var setting : setting
 
     val fileManager : FileManager =FileManager()
-    val loopList = fileManager.SoundList()
+    val loopList = fileManager.soundList()
 
     private val pagerAdapter by lazy { LoopStationPagerAdapter(supportFragmentManager) }
 
