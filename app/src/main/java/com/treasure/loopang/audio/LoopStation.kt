@@ -10,6 +10,7 @@ class LoopStation {
     private var linkedVisualizer: RealtimeVisualizerView? = null
     private val mMixer: Mixer = Mixer()
     private val mRecorder: Recorder = Recorder()
+    private val mMetronome: Metronome = Metronome()
 
     private val mFileManager = FileManager()
     private val mDirectoryPath = mFileManager.looperSoundDir.absolutePath
@@ -72,14 +73,23 @@ class LoopStation {
     }
 
     fun recordStart(firstRecordMessageFlag: Boolean = true) {
-        if(isRecording() || !isLooping()) return
         if(isFirstRecord()){
             if(firstRecordMessageFlag) mLoopStationMessageListener?.onFirstRecord()
             firstRecordFlag = mLoopStationEventListener?.onFirstRecord() ?: true
         }
         else{
-            if(mMixer.sounds.isNotEmpty()) { mRecorder.start(mMixer.sounds[0].data.size) }
-            else { mRecorder.start() }
+            when {
+                !isLooping() -> {
+                    mLoopStationMessageListener?.onRecordWithoutLoopingError()
+                    return
+                }
+                isRecording() -> {
+                    mLoopStationMessageListener?.onDuplicateRecordStartError()
+                    return
+                }
+                mMixer.sounds.isNotEmpty() -> mRecorder.start(mMixer.sounds[0].data.size)
+                else -> mRecorder.start()
+            }
             showVisualizer()
             mLoopStationEventListener?.onRecordStart()
             mLoopStationMessageListener?.onRecordStart()
@@ -122,20 +132,28 @@ class LoopStation {
     }
 
     fun addLayer(sound: Sound,
+                 layerLabel: String = DEFAULT_LAYER_LABEL + mLastLayerNum++,
+                 autoLoopStartFlag: Boolean = true,
                  loopStartMessageFlag: Boolean = false,
                  addLayerMessageFlag: Boolean = true) {
-        mMixer.addSound(sound)
-        mLayerLabelList.add(DEFAULT_LAYER_LABEL + mLastLayerNum++)
-        if (!isLooping()){
+        this._addLayer(sound, layerLabel)
+        if (!isLooping() && autoLoopStartFlag){
             loopStart(loopStartMessageFlag)
         }
+        mLoopStationEventListener?.onLayerAdd(sound, layerLabel)
         if(addLayerMessageFlag) {
-            mLoopStationMessageListener?.onAddLayer()
+            mHandler.post{ mLoopStationMessageListener?.onLayerAdd() }
         }
     }
 
+    private fun _addLayer(sound: Sound,
+                          layerLabel: String) {
+        mMixer.addSound(sound)
+        mLayerLabelList.add(layerLabel)
+    }
+
     fun muteLayer(position: Int,
-                  messageFlag: Boolean = true) {
+                  messageFlag: Boolean = true): Boolean {
         Log.d("LayerFunctionTest", "muteLayer(position: $position)")
         val muteState = mMixer.switchMuteWithReturnState(position)
         val layerLabel = mLayerLabelList[position]
@@ -146,9 +164,11 @@ class LoopStation {
             mLoopStationEventListener?.onLayerMuteCancel(position)
             if(messageFlag) mLoopStationMessageListener?.onLayerMuteCancel(position, layerLabel)
         }
+        return muteState
     }
 
     fun playLayer(position: Int) {
+
     }
 
     fun stopPlayingLayer(messageFlag: Boolean = true) {
@@ -174,14 +194,44 @@ class LoopStation {
         if(messageFlag) mLoopStationMessageListener?.onLayerAllDrop()
     }
 
+    fun changeLayerLabel(position: Int,
+                         layerLabel: String,
+                         messageFlag: Boolean = false) {
+        if(layerLabel == "") return
+        val oldLayerLabel = mLayerLabelList[position]
+        mLayerLabelList[position] = layerLabel
+        mLoopStationEventListener?.onChangeLayerLabel(position, layerLabel, oldLayerLabel)
+        if(messageFlag) mLoopStationMessageListener?.onChangeLayerLabel(position, layerLabel, oldLayerLabel)
+    }
+
     fun stopAll() {
         recordStop(messageFlag = false)
         loopStop(messageFlag = false)
         stopPlayingLayer(messageFlag = false)
     }
 
-    fun import(project: LoopMusic, mixFlag: Boolean = false){
-
+    fun import(project: LoopMusic,
+               newLoadFlag: Boolean = false,
+               messageFlag: Boolean = false){
+        // 기존 레이어들을 모두 드롭하고 새 프로젝트를 로드할지 결정하는 분기문.
+        if(newLoadFlag) {
+            mLoopTitle = project.name
+            dropAllLayer(messageFlag = false)
+        }
+        // 프로젝트 파일 혹은 사운드 파일 여부에 따라 분기함.
+        project.child?.let {
+            it.forEach { child ->
+                val sound = Sound().apply { load(child.path) }
+                val layerLabel = child.name
+                this._addLayer(sound, layerLabel)
+            }
+        }.let {
+            val sound = Sound().apply{ load(project.path) }
+            val layerLabel = DEFAULT_LAYER_LABEL + mLastLayerNum++
+            this._addLayer(sound, layerLabel)
+        }
+        mLoopStationEventListener?.onImport(mLoopTitle, newLoadFlag)
+        if(messageFlag) mLoopStationMessageListener?.onImport(mLoopTitle, newLoadFlag)
     }
 
     fun export(loopTitle: String = mLoopTitle,
@@ -198,7 +248,9 @@ class LoopStation {
             val fileLabel = "/$loopTitle.${fileType.toLowerCase()}"
             Sound(mMixer.mixSounds()).save(mDirectoryPath+fileLabel)
         } else {
-            val children = (1..mMixer.sounds.size).map { LoopMusic("$it") }
+            val children = (0 until mMixer.sounds.size).map {
+                LoopMusic(mLayerLabelList[it])
+            }
             mMixer.save(LoopMusic(name=loopTitle,type= fileType.toLowerCase(), child=children))
         }
 
@@ -217,6 +269,18 @@ class LoopStation {
     fun isEmpty(): Boolean = mMixer.sounds.isEmpty()
     fun isNotLoopingAndEmpty(): Boolean = (!(this.isLooping()) && this.isEmpty())
 
+    fun setMetronomeBpm(bpm: Long) {
+        mMetronome.bpm = bpm
+    }
+    fun setOnMetronomeTik(task: MetronomeTask) {
+        mMetronome.task = {
+            task()
+            Log.d("Metronome test", "tick")
+        }
+    }
+    fun MetronomeStart() {}
+    fun MetronomeStop() {}
+
     private fun showVisualizer() {
         linkedVisualizer?.let{
             if(it.visibility == View.GONE) {
@@ -234,49 +298,58 @@ class LoopStation {
         }
     }
 
+    fun getMixer() : Mixer = mMixer
+    fun getRecorder(): Recorder = mRecorder
+    fun getSounds() : MutableList<MixerSound> = mMixer.sounds
+    fun getLayerLabels() : MutableList<String> = mLayerLabelList
 
-    abstract inner class LoopStationEventListener {
-        open fun onRecordStart() {}
-        open fun onRecordStop() {}
-        open fun onRecordFinish() {}
-        open fun onLoopStart() {}
-        open fun onLoopStop() {}
-        open fun onLoopFinish() {}
-        open fun onAddLayer() {}
-        open fun onLayerDrop(position: Int) {}
-        open fun onLayerAllDrop() {}
-        open fun onLayerPlay(position: Int) {}
-        open fun onLayerMute(position: Int) {}
-        open fun onLayerMuteCancel(position: Int) {}
-        open fun onFirstRecord(): Boolean = false
+    interface LoopStationEventListener {
+        fun onRecordStart() {}
+        fun onRecordStop() {}
+        fun onRecordFinish() {}
+        fun onLoopStart() {}
+        fun onLoopStop() {}
+        fun onLoopFinish() {}
+        fun onLayerAdd(sound: Sound, layerLabel: String) {}
+        fun onLayerDrop(position: Int) {}
+        fun onLayerAllDrop() {}
+        fun onLayerPlay(position: Int) {}
+        fun onLayerMute(position: Int) {}
+        fun onLayerMuteCancel(position: Int) {}
+        fun onChangeLayerLabel(position: Int, newLayerLabel: String, oldLayerLabel: String) {}
+        fun onFirstRecord(): Boolean = false
+
+        fun onExport(loopTitle: String) {}
+        fun onImport(loopTitle: String, newLoadFlag: Boolean) {}
     }
 
-    abstract inner class LoopStationMessageListener {
-        open fun onDuplicateRecordStartError() {}
-        open fun onDuplicateRecordStopError() {}
-        open fun onDuplicateLoopStartError() {}
-        open fun onDuplicateLoopStopError() {}
-        open fun onRecordWithoutLoopingError() {}
-        open fun onSaveDuringRecordingError() {}
-        open fun onSaveNoneLayerError() {}
+    interface LoopStationMessageListener {
+        fun onDuplicateRecordStartError() {}
+        fun onDuplicateRecordStopError() {}
+        fun onDuplicateLoopStartError() {}
+        fun onDuplicateLoopStopError() {}
+        fun onRecordWithoutLoopingError() {}
+        fun onSaveDuringRecordingError() {}
+        fun onSaveNoneLayerError() {}
 
-        open fun onFirstRecord() {}
+        fun onFirstRecord() {}
 
-        open fun onRecordStart() {}
-        open fun onRecordStop() {}
-        open fun onRecordFinish() {}
+        fun onRecordStart() {}
+        fun onRecordStop() {}
+        fun onRecordFinish() {}
 
-        open fun onLoopStart() {}
-        open fun onLoopStop() {}
+        fun onLoopStart() {}
+        fun onLoopStop() {}
 
-        open fun onAddLayer() {}
-        open fun onLayerDrop(position: Int, layerLabel: String) {}
-        open fun onLayerAllDrop() {}
-        open fun onLayerPlay(position: Int, layerLabel: String) {}
-        open fun onLayerMute(position: Int, layerLabel: String) {}
-        open fun onLayerMuteCancel(position: Int, layerLabel: String) {}
+        fun onLayerAdd() {}
+        fun onLayerDrop(position: Int, layerLabel: String) {}
+        fun onLayerAllDrop() {}
+        fun onLayerPlay(position: Int, layerLabel: String) {}
+        fun onLayerMute(position: Int, layerLabel: String) {}
+        fun onLayerMuteCancel(position: Int, layerLabel: String) {}
+        fun onChangeLayerLabel(position: Int, newLayerLabel: String, oldLayerLabel: String) {}
 
-        open fun onExport(loopTitle: String) {}
-        open fun onImport(loopTitle: String) {}
+        fun onExport(loopTitle: String) {}
+        fun onImport(loopTitle: String, newLoadFlag: Boolean) {}
     }
 }
