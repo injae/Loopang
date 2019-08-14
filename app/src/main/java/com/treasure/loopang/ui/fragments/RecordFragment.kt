@@ -168,20 +168,7 @@ class RecordFragment : Fragment(), IPageFragment {
 
     private fun initLayerListView() {
         val layerList = layer_list
-        val swipeDismissListViewTouchListener = SwipeDismissListViewTouchListener(
-            layerList
-            , object: SwipeDismissListViewTouchListener.DismissCallbacks{
-                override fun canDismiss(position: Int): Boolean {
-                    return true
-                }
-
-                override fun onDismiss(listView: ListView?, reverseSortedPositions: IntArray?) {
-                    for(position in reverseSortedPositions!!) {
-                        mLoopStation.dropLayer(position)
-                    }
-                }
-            }
-        )
+        val swipeDismissListViewTouchListener = SwipeDismissListViewTouchListener(layerList, SwipeDismissListener())
         layerList.adapter = mLayerListAdapter
         layerList.isLongClickable = true
         layerList.setOnItemLongClickListener{ parent, v, position, id ->
@@ -213,6 +200,17 @@ class RecordFragment : Fragment(), IPageFragment {
                     mLoopStation.getLayerLabels() )
             }
         }
+        override fun onRecordStart() {
+            val layerList = layer_list
+            layerList.setOnTouchListener(null)
+            layerList.setOnScrollListener(null)
+        }
+        override fun onRecordFinish() {
+            val layerList = layer_list
+            val swipeDismissListViewTouchListener = SwipeDismissListViewTouchListener(layerList, SwipeDismissListener())
+            layerList.setOnTouchListener(swipeDismissListViewTouchListener)
+            layerList.setOnScrollListener(swipeDismissListViewTouchListener.makeScrollListener())
+        }
     }
 
     private inner class MyLoopStationMessageListener: LoopStation.LoopStationMessageListener {
@@ -220,6 +218,18 @@ class RecordFragment : Fragment(), IPageFragment {
         override fun onRecordWithoutLoopingError() { toast(R.string.toast_record_start_error_without_playback) }
         override fun onSaveDuringRecordingError() { toast(R.string.toast_save_error_while_record) }
         override fun onSaveNoneLayerError() { toast(R.string.toast_save_error_no_layer) }
+    }
+
+    private inner class SwipeDismissListener : SwipeDismissListViewTouchListener.DismissCallbacks{
+        override fun canDismiss(position: Int): Boolean {
+            return true
+        }
+
+        override fun onDismiss(listView: ListView?, reverseSortedPositions: IntArray?) {
+            for(position in reverseSortedPositions!!) {
+                mLoopStation.dropLayer(position)
+            }
+        }
     }
 
 }

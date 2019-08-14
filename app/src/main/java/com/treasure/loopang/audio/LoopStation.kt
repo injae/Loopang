@@ -79,15 +79,18 @@ class LoopStation {
         }
         else{
             when {
-                !isLooping() -> {
+                (!isLooping() && !isEmpty()) -> {
                     mLoopStationMessageListener?.onRecordWithoutLoopingError()
                     return
                 }
+
                 isRecording() -> {
                     mLoopStationMessageListener?.onDuplicateRecordStartError()
                     return
                 }
+
                 mMixer.sounds.isNotEmpty() -> mRecorder.start(mMixer.sounds[0].data.size)
+
                 else -> mRecorder.start()
             }
             showVisualizer()
