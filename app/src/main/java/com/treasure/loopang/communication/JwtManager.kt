@@ -46,7 +46,7 @@ class JwtManager {
         return this@JwtManager
     }
 
-    fun encodeJws() = jwt?.signWith(key)?.compact()
+    fun makeFinish() = jwt!!.signWith(key)!!.compact()
 
     fun decodeJws(jws: String) { decodedJwt = Jwts.parser().setSigningKey(key).parseClaimsJws(jws) }
 }
