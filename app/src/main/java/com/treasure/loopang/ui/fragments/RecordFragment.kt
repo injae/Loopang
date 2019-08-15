@@ -27,10 +27,8 @@ import kotlinx.android.synthetic.main.dialog_save_loop.*
 import kotlinx.android.synthetic.main.fragment_record.*
 
 class RecordFragment : Fragment(), IPageFragment {
-    private val mLayerListAdapter : LayerListAdapter =
-        LayerListAdapter()
+    private val mLayerListAdapter : LayerListAdapter = LayerListAdapter()
     private val mTouchGestureListener = TouchGestureListener()
-
     val loopStation: LoopStation = LoopStation()
 
     init {

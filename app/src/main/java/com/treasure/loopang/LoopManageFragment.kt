@@ -20,7 +20,6 @@ import com.treasure.loopang.ui.interfaces.IPageFragment
 import com.treasure.loopang.ui.adapter.LoopListAdapter
 import com.treasure.loopang.ui.item.LoopItem
 import kotlinx.android.synthetic.main.fragment_loop_manage.*
-import kotlinx.android.synthetic.main.fragment_song_manage.loop_list
 import kotlin.RuntimeException
 
 class LoopManageFragment : androidx.fragment.app.Fragment()
@@ -88,9 +87,7 @@ class LoopManageFragment : androidx.fragment.app.Fragment()
         Log.d("RecordFragment", "LoopManageFragment.onSelected()")
     }
 
-    override fun play(position: Int) {
-        mAdapter.play(position)
-    }
+    override fun play(position: Int) {}
 
     override fun stop() {
         mAdapter.stop()

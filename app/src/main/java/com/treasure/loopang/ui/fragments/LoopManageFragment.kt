@@ -12,21 +12,22 @@ import android.view.ViewGroup
 import com.afollestad.materialdialogs.LayoutMode
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
+import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.list.listItems
 import com.treasure.loopang.R
 import com.treasure.loopang.audio.FileManager
 import com.treasure.loopang.audio.LoopMusic
-import com.treasure.loopang.ui.interfaces.ILoopManager
 import com.treasure.loopang.ui.interfaces.IPageFragment
 import com.treasure.loopang.ui.adapter.v2.LoopListAdapter
+import com.treasure.loopang.ui.toast
 import kotlinx.android.synthetic.main.fragment_loop_manage.*
-import kotlinx.android.synthetic.main.fragment_song_manage.loop_list
+import kotlinx.android.synthetic.main.fragment_loop_manage.loop_list
+import kotlinx.android.synthetic.main.manager_detail_information_dialog_layout.*
 import kotlin.RuntimeException
 
 
 class LoopManageFragment : androidx.fragment.app.Fragment()
-    , IPageFragment
-    , ILoopManager {
+    , IPageFragment {
     private val mFileManager: FileManager = FileManager()
     private var mProjectList = listOf<LoopMusic>()
     private val mAdapter = LoopListAdapter(mProjectList)
@@ -43,7 +44,7 @@ class LoopManageFragment : androidx.fragment.app.Fragment()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initLoopList()
+        initListView()
         btn_drop_all_loop.setOnClickListener {
             clear()
         }
@@ -80,7 +81,7 @@ class LoopManageFragment : androidx.fragment.app.Fragment()
     }
 
     override fun onSelected() {
-        loadLoops()
+        refreshList()
         Log.d("RecordFragment", "LoopManageFragment.onSelected()")
     }
 
@@ -89,66 +90,114 @@ class LoopManageFragment : androidx.fragment.app.Fragment()
         Log.d("RecordFragment", "LoopManageFragment.onSelected()")
     }
 
-    override fun play(position: Int) {}
+    fun play(position: Int) {}
 
-    override fun stop() {
-        mAdapter.stop()
-    }
+    fun stop() {}
 
-    override fun setLoop(position: Int){
-        stop()
-        mOnLoopManageListener?.onImport(mAdapter.getItem(position) as LoopMusic, true)
-    }
-
-    override fun addLoop(position: Int) {
-        stop()
-        mOnLoopManageListener?.onImport(mAdapter.getItem(position) as LoopMusic, false)
-    }
-
-    override fun clear() {
+    private fun clear() {
         stop()
         Log.d("FileManagerTest","removeAll()")
         mFileManager.deleteAllFiles()
-        loadLoops()
+        refreshList()
     }
 
-    override fun remove(position: Int) {
-        val project = (mAdapter.getItem(position) as LoopMusic)
-        Log.d("FileManagerTest","remove($project.name)")
-        stop()
+    private fun deleteSound(soundMusic: LoopMusic) {
+        mFileManager.deleteFilePath(soundMusic.path)
+        refreshList()
+    }
+
+    private fun addLoopAsLayer(soundMusic: LoopMusic) {
+        mOnLoopManageListener?.onImport(soundMusic, newLoadFlag = false)
+    }
+
+    private fun deleteProject(project: LoopMusic) {
         project.delete()
-        loadLoops()
+        refreshList()
     }
 
-    override fun loadLoops() {
-        Log.d("LoopManagerTest","loadLoops()")
+    private fun loadProject(project: LoopMusic, clearFlag: Boolean) {
+        mOnLoopManageListener?.onImport(project, clearFlag)
+    }
+
+    private fun refreshList() {
+        Log.d("LoopManagerTest","refreshList()")
         val projects = mFileManager.soundList()
 
         mProjectList = projects
         mAdapter.setLoopList(mProjectList)
     }
 
-    private fun initLoopList(){
+    private fun initListView(){
         val loopList = loop_list!!
         loopList.adapter = mAdapter
+        mAdapter.apply {
+            onPreviewButtonClick = { this@LoopManageFragment.showPreviewPlayDialog(it) }
+            onInfoButtonClick = { this@LoopManageFragment.showDetailInfoDialog(it) }
+            onMoreButtonClick = { this@LoopManageFragment.showMoreDialog(it) }
+        }
         loopList.setOnItemClickListener { _, _, position, _ ->
-            showLoopManagerDialog(position)
+            this.showMoreDialog(position)
         }
     }
 
-    private fun showLoopManagerDialog(position: Int) {
-        val loopTitle = (mAdapter.getItem(position) as LoopMusic).name
+    private fun showDetailInfoDialog(loopMusic: LoopMusic) {
+        val projectTitle = loopMusic.name
+        MaterialDialog(activity!!).show {
+            title(null, projectTitle)
+            customView(R.layout.manager_detail_information_dialog_layout)
+            this.txt_title.text = loopMusic.name
+            if(loopMusic.child == null) { this.tr_child_num.visibility = View.GONE }
+            else { this.txt_child_num.text = loopMusic.child?.size?.toString() }
+            this.txt_date.text = loopMusic.date
+            this.txt_path.text = loopMusic.path
+            this.txt_type.text = loopMusic.type
+            positiveButton(R.string.btn_ok)
+            cornerRadius(16f)
+        }
+    }
+
+    private fun showPreviewPlayDialog(loopMusic: LoopMusic) {
+        toast("preview play of ${loopMusic.name}")
+    }
+
+    private fun showMoreDialog(position: Int) {
+        val loopMusic = mAdapter.getItem(position) as LoopMusic
+        if(loopMusic.child == null){ showSoundMoreDialog(loopMusic) }
+        else { showProjectMoreDialog(loopMusic) }
+    }
+
+    private fun showMoreDialog(loopMusic: LoopMusic) {
+        if(loopMusic.child == null){ showSoundMoreDialog(loopMusic) }
+        else { showProjectMoreDialog(loopMusic) }
+    }
+
+    private fun showProjectMoreDialog(project: LoopMusic) {
+        val projectTitle = project.name
         MaterialDialog(activity!!, BottomSheet(LayoutMode.WRAP_CONTENT)).show {
-            title(null, loopTitle)
-            listItems(R.array.loop_manager_dialog_menu_array_kr){ _, index: Int, _ ->
+            title(null, projectTitle)
+            listItems(R.array.project_more_dialog_menu_array_kr){ _, index: Int, _ ->
                 when(index){
-                    0 -> addLoop(position)
-                    1 -> setLoop(position)
-                    2 -> remove(position)
+                    0 -> this@LoopManageFragment.loadProject(project, true)
+                    1 -> this@LoopManageFragment.loadProject(project, false)
+                    2 -> this@LoopManageFragment.deleteProject(project)
                 }
             }
         }
     }
+
+    private fun showSoundMoreDialog(soundMusic: LoopMusic) {
+        val soundTitle = soundMusic.name
+        MaterialDialog(activity!!, BottomSheet(LayoutMode.WRAP_CONTENT)).show {
+            title(null, soundTitle)
+            listItems(R.array.sound_more_dialog_menu_array_kr){ _, index: Int, _ ->
+                when(index){
+                    0 -> this@LoopManageFragment.addLoopAsLayer(soundMusic)
+                    1 -> this@LoopManageFragment.deleteSound(soundMusic)
+                }
+            }
+        }
+    }
+
 
     interface OnLoopManageListener{
         fun onClear()

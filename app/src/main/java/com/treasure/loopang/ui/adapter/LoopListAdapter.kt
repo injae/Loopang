@@ -11,8 +11,6 @@ import com.treasure.loopang.R
 import com.treasure.loopang.audio.Sound
 import com.treasure.loopang.ui.item.LoopItem
 import kotlinx.android.synthetic.main.loop_item.view.*
-import kotlinx.android.synthetic.main.songlist_item.view.song_date
-import kotlinx.android.synthetic.main.songlist_item.view.song_name
 import kotlinx.coroutines.async
 
 class LoopListAdapter(private val loopItemList: ArrayList<LoopItem>) : BaseAdapter()
@@ -111,8 +109,8 @@ class LoopListAdapter(private val loopItemList: ArrayList<LoopItem>) : BaseAdapt
     }
 
     inner class LoopListHolder(view: View) {
-        var loopTitleText = view.song_name
-        var loopDateText = view.song_date
+        var loopTitleText = view.title
+        var loopDateText = view.txt_date
         var playbackButton = view.btn_playback
         var stopButton = view.btn_stop
     }

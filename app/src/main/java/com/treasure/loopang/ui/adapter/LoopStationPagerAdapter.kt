@@ -3,8 +3,8 @@ package com.treasure.loopang.ui.adapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
-import com.treasure.loopang.RecordFragment
-import com.treasure.loopang.LoopManageFragment
+import com.treasure.loopang.ui.fragments.RecordFragment
+import com.treasure.loopang.ui.fragments.LoopManageFragment
 
 class LoopStationPagerAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAdapter(fragmentManager) {
     private val fragmentList: ArrayList<Fragment> = arrayListOf()
