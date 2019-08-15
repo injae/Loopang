@@ -59,10 +59,11 @@ class Mixer(val sounds: MutableList<MixerSound> = mutableListOf()) : SoundFlow<M
     }
 
     fun save(config: LoopMusic) {
-        if(config.child?.count() != sounds.count()) error("not match child and sounds length")
+        if(config.child?.count() != sounds.count()){}
         config.save()
-        (0 until sounds.count()-1).forEach {
+        (0 until sounds.count()).forEach {
             sounds[it].save(config.child!![it].path)
+            Log.d("Mixer", "sound.save(config.child!![it].path: ${config.child!![it].path})")
         }
         Sound(mixSounds()).save(config.path)
     }
