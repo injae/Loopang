@@ -18,7 +18,7 @@ import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import com.treasure.loopang.R
 import com.treasure.loopang.audio.LoopStation
 import com.treasure.loopang.audio.Sound
-import com.treasure.loopang.ui.adapter.LayerListAdapter2
+import com.treasure.loopang.ui.adapter.v2.LayerListAdapter
 import com.treasure.loopang.ui.interfaces.IPageFragment
 import com.treasure.loopang.ui.listener.SwipeDismissListViewTouchListener
 import com.treasure.loopang.ui.listener.TouchGestureListener
@@ -27,10 +27,11 @@ import kotlinx.android.synthetic.main.dialog_save_loop.*
 import kotlinx.android.synthetic.main.fragment_record.*
 
 class RecordFragment : Fragment(), IPageFragment {
-    private val mLayerListAdapter : LayerListAdapter2 = LayerListAdapter2()
+    private val mLayerListAdapter : LayerListAdapter =
+        LayerListAdapter()
     private val mTouchGestureListener = TouchGestureListener()
 
-    private val mLoopStation: LoopStation = LoopStation()
+    val loopStation: LoopStation = LoopStation()
 
     init {
         mTouchGestureListener.apply{
@@ -64,14 +65,20 @@ class RecordFragment : Fragment(), IPageFragment {
         val gesture = GestureDetector(view.context, mTouchGestureListener)
         view.setOnTouchListener{ _, event -> gesture.onTouchEvent(event)}
         initLayerListView()
-        btn_drop_all_layer.setOnClickListener { showDropAllLayerDialog() }
-        mLoopStation.linkVisualizer(realtime_visualizer_view)
-        metronome_view.onStart = { mLoopStation.MetronomeStart() }
-        metronome_view.onStop = { mLoopStation.MetronomeStop() }
+        btn_drop_all_layer.setOnClickListener {
+            when {
+                loopStation.isRecording() -> toast(R.string.toast_drop_all_of_layer_error_recording)
+                loopStation.isEmpty() -> toast(R.string.toast_drop_all_of_layer_error_empty)
+                else -> showDropAllLayerDialog()
+            }
+        }
+        loopStation.linkVisualizer(realtime_visualizer_view)
+        metronome_view.onStart = { loopStation.MetronomeStart() }
+        metronome_view.onStop = { loopStation.MetronomeStop() }
     }
 
     override fun onDestroy() {
-        mLoopStation.stopAll()
+        loopStation.stopAll()
         super.onDestroy()
         Log.d("RecordFragment", "RecordFragment Destroyed!")
     }
@@ -82,33 +89,37 @@ class RecordFragment : Fragment(), IPageFragment {
     }
 
     private fun onThisSingleTap(): Boolean {
-        if (mLoopStation.isRecording()) { mLoopStation.recordStop() }
-        else { mLoopStation.recordStart() }
+        if (loopStation.isRecording()) { loopStation.recordStop() }
+        else { loopStation.recordStart() }
         return true
     }
 
     private fun onThisSwipeToUp(): Boolean {
-        if (mLoopStation.isLooping()) { mLoopStation.loopStop() }
-        else { mLoopStation.loopStart() }
+        if (loopStation.isLooping()) { loopStation.loopStop() }
+        else { loopStation.loopStart() }
         return true
     }
 
     private fun onThisSwipeToDown(): Boolean {
-        if(mLoopStation.isRecording()) {
+        if(loopStation.isRecording()) {
             toast(R.string.toast_save_error_while_record)
             return true
         }
-        if(mLoopStation.isLooping()) mLoopStation.loopStop(messageFlag = false)
+        if(loopStation.isEmpty()) {
+            toast(R.string.toast_save_error_no_layer)
+            return true
+        }
+        if(loopStation.isLooping()) loopStation.loopStop(messageFlag = false)
         showSaveLoopDialog()
         return true
     }
 
     private fun onLayerClick(parent: AdapterView<*>, view: View, position: Int) {
-        if(mLoopStation.isLooping()) {
-            val muteState = mLoopStation.muteLayer(position)
+        if(loopStation.isLooping()) {
+            val muteState = loopStation.muteLayer(position)
             mLayerListAdapter.setLayerMuteState(position,view, muteState)
         } else {
-            mLoopStation.playLayer(position)
+            loopStation.playLayer(position)
         }
     }
 
@@ -117,6 +128,7 @@ class RecordFragment : Fragment(), IPageFragment {
             noAutoDismiss()
             title(R.string.title_save_loop)
             customView(R.layout.dialog_save_loop, horizontalPadding = true)
+            if(loopStation.getSounds().size == 1) this.check_split.visibility = View.GONE
             cornerRadius(16f)
             cancelable(false)
             positiveButton(R.string.btn_save) {
@@ -126,13 +138,16 @@ class RecordFragment : Fragment(), IPageFragment {
                     toast(R.string.toast_save_error_without_title)
                 } else {
                     val fileType = spinner.selectedItem.toString()
-                    val isSaveChecked = check_split.isChecked
+                    val isSplitChecked = check_split.isChecked
                     val isDropChecked = check_drop.isChecked
-                    Log.d("SaveDialog", "\nloopTitle: $loopTitle, \nfileType: $fileType, \nisSaveChecked: $isSaveChecked")
-                    val isSaved = mLoopStation.export(loopTitle, fileType, isSaveChecked, isDropChecked)
+                    Log.d("SaveDialog", "\nloopTitle: $loopTitle, \nfileType: $fileType, \nisSaveChecked: $isSplitChecked")
 
-                    if(isSaved != LoopStation.SAVE_SUCCESS) toast(getString(R.string.toast_save))
-                    else toast(R.string.toast_save_error_failed)
+                    when (loopStation.export(loopTitle, fileType, allDropFlag = isDropChecked, mixFlag = !isSplitChecked)){
+                        LoopStation.SAVE_SUCCESS -> toast(getString(R.string.toast_save))
+                        LoopStation.SAVE_ERROR_DUPLICATE_NAME -> toast("Name Duplication")
+                        LoopStation.SAVE_ERROR_NONE_LAYER -> toast("None Layer")
+                        else -> toast("Save Failed")
+                    }
 
                     it.dismiss()
                 }
@@ -145,7 +160,7 @@ class RecordFragment : Fragment(), IPageFragment {
     }
 
     private fun showDropAllLayerDialog() {
-        if(mLoopStation.isRecording()) return
+        if(loopStation.isRecording()) return
 
         MaterialDialog(activity!!, BottomSheet(LayoutMode.WRAP_CONTENT)).show {
             title(R.string.title_drop_all_of_layer)
@@ -154,16 +169,41 @@ class RecordFragment : Fragment(), IPageFragment {
             cancelable(false)
             positiveButton(R.string.btn_ok) {
                 // callback on positive button click
-                mLoopStation.dropAllLayer()
+                loopStation.dropAllLayer()
             }
             negativeButton(R.string.btn_cancel)
             lifecycleOwner(activity)
         }
     }
 
+    private fun showWhiteNoiseCheckDialog() {
+        MaterialDialog(activity!!, BottomSheet(LayoutMode.WRAP_CONTENT)).show {
+            noAutoDismiss()
+            title(null, "Check WhiteNoise")
+            message(null, "버튼을 눌러 화이트 노이즈를 체크해주세요")
+            cornerRadius(16f)
+            cancelable(false)
+            positiveButton(null, "Check") {
+                // callback on positive button click
+                toast("화이트 노이즈 체크 중")
+                if(loopStation.checkWhiteNoise()){
+                    toast("화이트 노이즈 체크 완료")
+                    it.dismiss()
+                } else {
+                    toast("다시 시도해주세요")
+                }
+            }
+            negativeButton(R.string.btn_cancel){
+                toast("Check white noise before recording")
+                it.dismiss()
+            }
+            lifecycleOwner(activity)
+        }
+    }
+
     private fun initLoopStation() {
-        mLoopStation.setLoopStationEventListener(MyLoopStationEventListener())
-        mLoopStation.setLoopStationMessageListener(MyLoopStationMessageListener())
+        loopStation.setLoopStationEventListener(MyLoopStationEventListener())
+        loopStation.setLoopStationMessageListener(MyLoopStationMessageListener())
     }
 
     private fun initLayerListView() {
@@ -189,6 +229,7 @@ class RecordFragment : Fragment(), IPageFragment {
         override fun onLayerDrop(position: Int) {
             activity?.runOnUiThread { mLayerListAdapter.dropLayer(position) }
         }
+
         override fun onLayerAllDrop() {
             activity?.runOnUiThread { mLayerListAdapter.dropAllLayer() }
         }
@@ -196,20 +237,27 @@ class RecordFragment : Fragment(), IPageFragment {
             activity?.runOnUiThread {
                 loop_title_label.text = loopTitle
                 mLayerListAdapter.setLayerItemList(
-                    mLoopStation.getSounds(),
-                    mLoopStation.getLayerLabels() )
+                    loopStation.getSounds(),
+                    loopStation.getLayerLabels() )
             }
         }
         override fun onRecordStart() {
             val layerList = layer_list
             layerList.setOnTouchListener(null)
             layerList.setOnScrollListener(null)
+            // 페이저 디서블 설정 해야함
         }
         override fun onRecordFinish() {
-            val layerList = layer_list
-            val swipeDismissListViewTouchListener = SwipeDismissListViewTouchListener(layerList, SwipeDismissListener())
-            layerList.setOnTouchListener(swipeDismissListViewTouchListener)
-            layerList.setOnScrollListener(swipeDismissListViewTouchListener.makeScrollListener())
+            activity?.runOnUiThread {
+                val layerList = layer_list
+                val swipeDismissListViewTouchListener = SwipeDismissListViewTouchListener(layerList, SwipeDismissListener())
+                layerList.setOnTouchListener(swipeDismissListViewTouchListener)
+                layerList.setOnScrollListener(swipeDismissListViewTouchListener.makeScrollListener())
+            }
+        }
+        override fun onFirstRecord(): Boolean {
+            showWhiteNoiseCheckDialog()
+            return true
         }
     }
 
@@ -218,18 +266,22 @@ class RecordFragment : Fragment(), IPageFragment {
         override fun onRecordWithoutLoopingError() { toast(R.string.toast_record_start_error_without_playback) }
         override fun onSaveDuringRecordingError() { toast(R.string.toast_save_error_while_record) }
         override fun onSaveNoneLayerError() { toast(R.string.toast_save_error_no_layer) }
+        override fun onFirstRecord() { toast("첫녹음입니다.") }
+        override fun onDropAllLayerDuringRecordingError() { toast(R.string.toast_drop_all_of_layer_error_recording)}
+        override fun onStopLoopDuringRecordingError() { toast(R.string.toast_playback_stop_error) }
+        override fun onLoopStartWithoutLayerError() { toast(R.string.toast_playback_start_error) }
+        override fun onDropAllLayerEmptyError() { toast(R.string.toast_drop_all_of_layer_error_empty) }
+
+        override fun onRecordStart() { toast(R.string.toast_record_start)}
+        override fun onRecordStop() { toast(R.string.toast_record_stop)}
+        override fun onLoopStart() { toast(R.string.toast_playback_start) }
+        override fun onLoopStop() { toast(R.string.toast_playback_stop)}
     }
 
     private inner class SwipeDismissListener : SwipeDismissListViewTouchListener.DismissCallbacks{
-        override fun canDismiss(position: Int): Boolean {
-            return true
-        }
-
+        override fun canDismiss(position: Int): Boolean = true
         override fun onDismiss(listView: ListView?, reverseSortedPositions: IntArray?) {
-            for(position in reverseSortedPositions!!) {
-                mLoopStation.dropLayer(position)
-            }
+            for(position in reverseSortedPositions!!) { loopStation.dropLayer(position) }
         }
     }
-
 }

@@ -1,4 +1,4 @@
-package com.treasure.loopang.ui.adapter
+package com.treasure.loopang.ui.adapter.v2
 
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +11,7 @@ import com.treasure.loopang.ui.item.LayerItem
 import com.treasure.loopang.ui.view.LayerView
 import kotlinx.android.synthetic.main.layer_item.view.*
 
-class LayerListAdapter2 : BaseAdapter() {
+class LayerListAdapter : BaseAdapter() {
     private var mLayerItemList: MutableList<LayerItem> = mutableListOf()
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
@@ -83,7 +83,7 @@ class LayerListAdapter2 : BaseAdapter() {
     }
 
     fun setLayerMuteState(position: Int, view: View, muteState: Boolean){
-        val layerView = view as LayerView
+        val layerView = view.layer_view as LayerView
         mLayerItemList[position].muteState = muteState
         layerView.muteState = muteState
     }
@@ -95,7 +95,12 @@ class LayerListAdapter2 : BaseAdapter() {
 
     fun setLayerItemList(sounds: MutableList<MixerSound>,
                          layerLabelList: MutableList<String>) {
-        setLayerItemList(makeLayerItemList(sounds, layerLabelList))
+        setLayerItemList(
+            makeLayerItemList(
+                sounds,
+                layerLabelList
+            )
+        )
     }
 
     companion object{

@@ -61,7 +61,7 @@ class LoopMusic( var name: String = ""
             project.path = jsonData.get("path").toString()
 
             var subSounds = jsonData.getJSONArray("sub_sounds")
-            project.child = (0 until subSounds.length()-1).map { num ->
+            project.child = (0 until subSounds.length()).map { num ->
                 var obj = subSounds.getJSONObject(num)
                 LoopMusic().also {
                     it.name = obj.get("name").toString()

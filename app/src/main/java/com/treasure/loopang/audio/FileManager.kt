@@ -39,5 +39,9 @@ class FileManager {
        return projects + sounds
    }
    fun deleteFile(fileName: String) { File("${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)}/Loopang/${fileName}").delete() }
-   fun deleteAllFiles() { looperSoundDir.list().forEach { deleteFile(it) } }
+   fun deleteFilePath(filePath: String){ File(filePath).delete() }
+   fun deleteAllFiles() {
+       looperSoundDir.listFiles().forEach { it.delete() }
+       looperProjectDir.listFiles().forEach{ it.delete() }
+   }
 }
