@@ -1,6 +1,7 @@
 package com.treasure.loopang.audio
 
 import android.os.Handler
+import android.os.SystemClock
 import android.util.Log
 import android.view.View
 import com.treasure.loopang.ui.view.RealtimeVisualizerView
@@ -75,9 +76,11 @@ class LoopStation {
     fun recordStart(firstRecordMessageFlag: Boolean = true) {
         if(isFirstRecord()){
             if(firstRecordMessageFlag) mLoopStationMessageListener?.onFirstRecord()
-            firstRecordFlag = mLoopStationEventListener?.onFirstRecord() ?: true
-        }
-        else{
+            mLoopStationEventListener?.onFirstRecord()
+            firstRecordFlag = false
+        } else if (!whiteNoiseCheckFlag) {
+            mLoopStationEventListener?.onFirstRecord()
+        } else{
             when {
                 (!isLooping() && !isEmpty()) -> {
                     mLoopStationMessageListener?.onRecordWithoutLoopingError()
@@ -90,7 +93,6 @@ class LoopStation {
                 }
 
                 mMixer.sounds.isNotEmpty() -> mRecorder.start(mMixer.sounds[0].data.size)
-
                 else -> mRecorder.start()
             }
             showVisualizer()
@@ -135,7 +137,7 @@ class LoopStation {
     }
 
     fun addLayer(sound: Sound,
-                 layerLabel: String = DEFAULT_LAYER_LABEL + mLastLayerNum++,
+                 layerLabel: String = this.makeNotDuplicatedLabel(DEFAULT_LAYER_LABEL + mLastLayerNum++),
                  autoLoopStartFlag: Boolean = true,
                  loopStartMessageFlag: Boolean = false,
                  addLayerMessageFlag: Boolean = true) {
@@ -189,6 +191,14 @@ class LoopStation {
 
     fun dropAllLayer(messageFlag: Boolean = true) {
         Log.d("LayerFunctionTest", "dropAllLayer()")
+        if(isEmpty()){
+            if(messageFlag) mLoopStationMessageListener?.onDropAllLayerEmptyError()
+            return
+        }
+        if(isRecording()){
+            if(messageFlag) mLoopStationMessageListener?.onDropAllLayerDuringRecordingError()
+            return
+        }
         loopStop(messageFlag = false)
         mMixer.sounds.clear()
         mLayerLabelList.clear()
@@ -207,6 +217,15 @@ class LoopStation {
         if(messageFlag) mLoopStationMessageListener?.onChangeLayerLabel(position, layerLabel, oldLayerLabel)
     }
 
+    fun setTitle(title: String,
+                    messageFlag: Boolean = false) {
+        if(title == "") return
+        val oldTitle = mLoopTitle
+        mLoopTitle = title
+        mLoopStationEventListener?.onTitleChanged(title, oldTitle)
+        if(messageFlag) mLoopStationMessageListener?.onTitleChanged(title, oldTitle)
+    }
+
     fun stopAll() {
         recordStop(messageFlag = false)
         loopStop(messageFlag = false)
@@ -219,19 +238,24 @@ class LoopStation {
         // 기존 레이어들을 모두 드롭하고 새 프로젝트를 로드할지 결정하는 분기문.
         if(newLoadFlag) {
             mLoopTitle = project.name
+            mLoopStationEventListener?.onTitleChanged(mLoopTitle, "")
             dropAllLayer(messageFlag = false)
+        } else {
+            if(getSounds().isEmpty()) return
         }
         // 프로젝트 파일 혹은 사운드 파일 여부에 따라 분기함.
         project.child?.let {
             it.forEach { child ->
                 val sound = Sound().apply { load(child.path) }
-                val layerLabel = child.name
+                var layerLabel = this.makeNotDuplicatedLabel(child.name)
                 this._addLayer(sound, layerLabel)
             }
         }.let {
-            val sound = Sound().apply{ load(project.path) }
-            val layerLabel = DEFAULT_LAYER_LABEL + mLastLayerNum++
-            this._addLayer(sound, layerLabel)
+            if(it == null) {
+                val sound = Sound().apply{ load(project.path) }
+                val layerLabel = DEFAULT_LAYER_LABEL + mLastLayerNum++
+                this._addLayer(sound, layerLabel)
+            }
         }
         mLoopStationEventListener?.onImport(mLoopTitle, newLoadFlag)
         if(messageFlag) mLoopStationMessageListener?.onImport(mLoopTitle, newLoadFlag)
@@ -246,14 +270,13 @@ class LoopStation {
             return SAVE_ERROR_NONE_LAYER
         }
         if(mFileManager.checkDuplication(loopTitle)) return SAVE_ERROR_DUPLICATE_NAME
-
-        if (mixFlag){
+        if (mixFlag || getSounds().size == 1){
             val fileLabel = "/$loopTitle.${fileType.toLowerCase()}"
             Sound(mMixer.mixSounds()).save(mDirectoryPath+fileLabel)
+            mMixer.save(LoopMusic(name=loopTitle, type=fileType.toLowerCase(), child=null))
         } else {
-            val children = (0 until mMixer.sounds.size).map {
-                LoopMusic(mLayerLabelList[it])
-            }
+            val children = mLayerLabelList.map{ LoopMusic(it) }
+            children.forEach{ Log.d("export", "Saved Layer Name : ${it.name}") }
             mMixer.save(LoopMusic(name=loopTitle,type= fileType.toLowerCase(), child=children))
         }
 
@@ -263,6 +286,7 @@ class LoopStation {
     }
 
     fun checkWhiteNoise(): Boolean {
+        whiteNoiseCheckFlag = true
         return true
     }
 
@@ -301,6 +325,19 @@ class LoopStation {
         }
     }
 
+    private fun makeNotDuplicatedLabel(label: String): String {
+        return if(checkLayerLabelDuplication(label)) {
+            var num = 1
+            var tempLabel = "${label}_${num++}"
+            while(checkLayerLabelDuplication(tempLabel)) tempLabel = "${label}_${num++}"
+            tempLabel
+        } else label
+    }
+
+    private fun checkLayerLabelDuplication(label: String): Boolean {
+        return (label in mLayerLabelList)
+    }
+
     fun getMixer() : Mixer = mMixer
     fun getRecorder(): Recorder = mRecorder
     fun getSounds() : MutableList<MixerSound> = mMixer.sounds
@@ -320,6 +357,7 @@ class LoopStation {
         fun onLayerMute(position: Int) {}
         fun onLayerMuteCancel(position: Int) {}
         fun onChangeLayerLabel(position: Int, newLayerLabel: String, oldLayerLabel: String) {}
+        fun onTitleChanged(newTitle: String, oldTitle: String) {}
         fun onFirstRecord(): Boolean = false
 
         fun onExport(loopTitle: String) {}
@@ -334,6 +372,10 @@ class LoopStation {
         fun onRecordWithoutLoopingError() {}
         fun onSaveDuringRecordingError() {}
         fun onSaveNoneLayerError() {}
+        fun onDropAllLayerDuringRecordingError() {}
+        fun onDropAllLayerEmptyError() {}
+        fun onStopLoopDuringRecordingError() {}
+        fun onLoopStartWithoutLayerError() {}
 
         fun onFirstRecord() {}
 
@@ -351,6 +393,7 @@ class LoopStation {
         fun onLayerMute(position: Int, layerLabel: String) {}
         fun onLayerMuteCancel(position: Int, layerLabel: String) {}
         fun onChangeLayerLabel(position: Int, newLayerLabel: String, oldLayerLabel: String) {}
+        fun onTitleChanged(newTitle: String, oldTitle: String) {}
 
         fun onExport(loopTitle: String) {}
         fun onImport(loopTitle: String, newLoadFlag: Boolean) {}
