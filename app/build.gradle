@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'kotlin-kapt'
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -42,4 +44,7 @@ dependencies {
     implementation 'com.afollestad.material-dialogs:lifecycle:3.1.0'
     implementation 'io.jsonwebtoken:jjwt-api:0.10.7'
     implementation 'io.jsonwebtoken:jjwt-impl:0.10.7', 'io.jsonwebtoken:jjwt-jackson:0.10.7'
+    implementation "android.arch.persistence.room:runtime:1.1.1"
+    kapt "android.arch.persistence.room:compiler:1.1.1"
+    kaptTest "android.arch.persistence.room:testing:1.1.1"
 }
