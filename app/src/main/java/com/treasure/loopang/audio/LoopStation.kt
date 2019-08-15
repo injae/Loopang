@@ -247,7 +247,7 @@ class LoopStation {
         project.child?.let {
             it.forEach { child ->
                 val sound = Sound().apply { load(child.path) }
-                var layerLabel = this.makeNotDuplicatedLabel(child.name)
+                val layerLabel = this.makeNotDuplicatedLabel(child.name)
                 this._addLayer(sound, layerLabel)
             }
         }.let {
