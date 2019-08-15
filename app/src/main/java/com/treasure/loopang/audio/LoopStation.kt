@@ -273,7 +273,6 @@ class LoopStation {
         if (mixFlag || getSounds().size == 1){
             val fileLabel = "/$loopTitle.${fileType.toLowerCase()}"
             Sound(mMixer.mixSounds()).save(mDirectoryPath+fileLabel)
-            mMixer.save(LoopMusic(name=loopTitle, type=fileType.toLowerCase(), child=null))
         } else {
             val children = mLayerLabelList.map{ LoopMusic(it) }
             children.forEach{ Log.d("export", "Saved Layer Name : ${it.name}") }
