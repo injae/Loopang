@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.*
 import android.widget.AdapterView
 import android.widget.ListView
-import androidx.drawerlayout.widget.DrawerLayout
 import com.afollestad.materialdialogs.LayoutMode
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
@@ -19,7 +18,6 @@ import com.treasure.loopang.ui.listener.TouchGestureListener
 import com.treasure.loopang.ui.toast
 import kotlinx.android.synthetic.main.dialog_save_loop.*
 import kotlinx.android.synthetic.main.fragment_record.*
-import kotlinx.android.synthetic.main.set_metronome_frame.*
 import kotlin.math.abs
 
 class RecordFragment : androidx.fragment.app.Fragment(), IPageFragment {
@@ -341,7 +339,7 @@ class RecordFragment : androidx.fragment.app.Fragment(), IPageFragment {
         if (isSplitChecked) {
             // 나눠서 저장할 경우
             var childs = (1..mixer.sounds.size).map { LoopMusic("$it") }
-            mixer.save(LoopMusic(name=loopTitle,type="${fileType.toLowerCase()}", child=childs))
+            mixer.save(LoopMusic(name=loopTitle,type= fileType.toLowerCase(), child=childs))
 
             //val fileLabelList = (1..mixer.sounds.size).map {
             //    "/${loopTitle}_$it.${fileType.toLowerCase()}"

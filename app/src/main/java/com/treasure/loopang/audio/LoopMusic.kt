@@ -5,6 +5,7 @@ import org.json.JSONObject
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
+import java.text.SimpleDateFormat
 
 class LoopMusic( var name: String = ""
                , var path: String = ""
@@ -52,6 +53,7 @@ class LoopMusic( var name: String = ""
 
     companion object{
         fun searchLoopMusic(path: String) : LoopMusic? {
+            val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
             var file = File(path)
             if(!file.exists()) return null
             var jsonData = JSONObject(file.readText())
@@ -59,6 +61,7 @@ class LoopMusic( var name: String = ""
             var project = LoopMusic()
             project.name = jsonData.get("name").toString()
             project.path = jsonData.get("path").toString()
+            project.date = simpleDateFormat.format(file.lastModified())
 
             var subSounds = jsonData.getJSONArray("sub_sounds")
             project.child = (0 until subSounds.length()).map { num ->
