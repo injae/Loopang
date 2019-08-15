@@ -1,10 +1,6 @@
-package com.treasure.loopang.ui.adapter
+package com.treasure.loopang.ui.adapter.v2
 
-import android.content.Context
-import android.media.AudioManager
 import android.media.MediaPlayer
-import android.os.Handler
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,16 +8,16 @@ import android.widget.BaseAdapter
 import android.widget.Filter
 import android.widget.Filterable
 import com.treasure.loopang.R
+import com.treasure.loopang.audio.LoopMusic
 import com.treasure.loopang.ui.item.LoopItem
 import kotlinx.android.synthetic.main.loop_item.view.*
 
-class LoopListAdapter2 (private val loopItemList: ArrayList<LoopItem>)
+class LoopListAdapter (var loopItemList: List<LoopMusic>)
     : BaseAdapter(), Filterable {
     var onPlaybackButtonClick: (Int) -> Unit = {}
     var onStopButtonClick: (Int) -> Unit = {}
 
-    private val mHandler: Handler = Handler()
-    private var mFilteredLoopItemList: ArrayList<LoopItem> = loopItemList
+    private var mFilteredLoopItemList: List<LoopMusic> = loopItemList
     private val mLoopListFilter = LoopListFilter()
 
     private val mMediaPlayer: MediaPlayer = MediaPlayer()
@@ -44,8 +40,8 @@ class LoopListAdapter2 (private val loopItemList: ArrayList<LoopItem>)
         }
 
         val loopItem = mFilteredLoopItemList[position]
-        holder.loopTitleText.text = loopItem.loopTitle
-        holder.loopDateText.text = loopItem.dateString
+        holder.loopTitleText.text = loopItem.name
+        holder.loopDateText.text = loopItem.date
         holder.playbackButton.setOnClickListener {
             onPlaybackButtonClick(position)
             play(holder, position)
@@ -53,13 +49,6 @@ class LoopListAdapter2 (private val loopItemList: ArrayList<LoopItem>)
         holder.stopButton.setOnClickListener{
             onStopButtonClick(position)
             stop()
-        }
-        if(loopItem.playState){
-            holder.playbackButton.visibility = View.GONE
-            holder.stopButton.visibility = View.VISIBLE
-        } else {
-            holder.stopButton.visibility = View.GONE
-            holder.playbackButton.visibility = View.VISIBLE
         }
 
         return view
@@ -82,6 +71,13 @@ class LoopListAdapter2 (private val loopItemList: ArrayList<LoopItem>)
         return mLoopListFilter
     }
 
+    fun setLoopList(projects: List<LoopMusic>) {
+        loopItemList = projects
+        mFilteredLoopItemList = loopItemList
+        if(loopItemList.isEmpty()) notifyDataSetInvalidated()
+        else notifyDataSetChanged()
+    }
+
     fun play(holder: LoopListHolder, position: Int) {
         if(mMediaPlayer.isPlaying) {
             // 플레이어를 멈추고 리셋
@@ -95,7 +91,7 @@ class LoopListAdapter2 (private val loopItemList: ArrayList<LoopItem>)
             }
         }
         val loopItem = mFilteredLoopItemList[position]
-        loopItem.filePath?.let{
+        /*loopItem.filePath?.let{
             mMediaPlayer.apply {
                 setAudioStreamType(AudioManager.STREAM_MUSIC)
                 Log.d("MediaPlayerTest", "$it")
@@ -105,7 +101,7 @@ class LoopListAdapter2 (private val loopItemList: ArrayList<LoopItem>)
             loopItem.playState = true
             switchPlayIcon(holder)
             nowPlayHolder = holder
-        }
+        }*/
     }
 
     fun stop() {
@@ -148,9 +144,9 @@ class LoopListAdapter2 (private val loopItemList: ArrayList<LoopItem>)
                 results.values = loopItemList
                 results.count = loopItemList.size
             } else {
-                val filteredLoopItemList = arrayListOf<LoopItem>()
+                val filteredLoopItemList = arrayListOf<LoopMusic>()
                 loopItemList.forEach {
-                    if (it.loopTitle.toUpperCase().contains(constraint.toString().toUpperCase()))
+                    if (it.name.toUpperCase().contains(constraint.toString().toUpperCase()))
                         filteredLoopItemList.add(it)
                 }
                 results.values = filteredLoopItemList
@@ -161,7 +157,7 @@ class LoopListAdapter2 (private val loopItemList: ArrayList<LoopItem>)
 
         override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
             results?.let{
-                mFilteredLoopItemList = it.values as ArrayList<LoopItem>
+                mFilteredLoopItemList = it.values as List<LoopMusic>
 
                 if (results.count > 0) {
                     notifyDataSetChanged()
