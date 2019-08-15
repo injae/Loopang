@@ -39,6 +39,17 @@ class LoopMusic( var name: String = ""
             }
         }
 
+        fun delete() {
+            FileManager().deleteFilePath(path)
+            child?.let {
+                it.forEach{ loopMusic -> loopMusic.delete() }
+                FileManager().let{ fileManager ->
+                    //delete config file
+                    fileManager.deleteFilePath("${fileManager.looperProjectDir.absolutePath}/$name.json")
+                }
+            }
+        }
+
     companion object{
         fun searchLoopMusic(path: String) : LoopMusic? {
             var file = File(path)
