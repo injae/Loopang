@@ -14,11 +14,9 @@ import com.treasure.loopang.listitem.setMetronome
 import com.treasure.loopang.ui.statusBarHeight
 import kotlinx.android.synthetic.main.activity_recording.*
 import kotlinx.android.synthetic.main.drawer.*
-import com.treasure.loopang.audio.Sound
 import android.widget.ImageButton
 import com.treasure.loopang.ui.interfaces.IPageFragment
 import android.util.DisplayMetrics
-import android.widget.*
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.AdapterView
@@ -28,8 +26,9 @@ import kotlinx.android.synthetic.main.final_storage_.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.animation.Animation.AnimationListener
-
-
+import com.treasure.loopang.audio.LoopMusic
+import com.treasure.loopang.ui.fragments.RecordFragment
+import com.treasure.loopang.ui.fragments.LoopManageFragment
 
 
 class Recording : AppCompatActivity()
@@ -50,7 +49,7 @@ class Recording : AppCompatActivity()
     lateinit var setting : setting
 
     val fileManager : FileManager =FileManager()
-    val loopList = fileManager.SoundList()
+    val loopList = fileManager.soundList()
 
     private val pagerAdapter by lazy { LoopStationPagerAdapter(supportFragmentManager) }
 
@@ -277,14 +276,14 @@ class Recording : AppCompatActivity()
         }
     }
 
-    override fun onAddLoop(sound: Sound) {
+    override fun onImport(project: LoopMusic, newLoadFlag: Boolean) {
         val recordFragment = pagerAdapter.getItem(0) as RecordFragment
-        recordFragment.addSoundToLayerList(sound)
+        recordFragment.loopStation.import(project, newLoadFlag, messageFlag = false)
     }
 
     override fun onClear() {
         val recordFragment = pagerAdapter.getItem(0) as RecordFragment
-        recordFragment.dropAllLayer()
+        recordFragment.loopStation.dropAllLayer(messageFlag = false)
     }
 }
 

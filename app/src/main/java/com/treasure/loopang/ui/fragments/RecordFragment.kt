@@ -16,6 +16,7 @@ import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import com.treasure.loopang.R
+import com.treasure.loopang.Recording
 import com.treasure.loopang.audio.LoopStation
 import com.treasure.loopang.audio.Sound
 import com.treasure.loopang.ui.adapter.v2.LayerListAdapter
@@ -71,8 +72,17 @@ class RecordFragment : Fragment(), IPageFragment {
             }
         }
         loopStation.linkVisualizer(realtime_visualizer_view)
-        metronome_view.onStart = { loopStation.MetronomeStart() }
-        metronome_view.onStop = { loopStation.MetronomeStop() }
+        metronome_view.onStart = {
+            toast("metronome start!")
+            (activity as Recording).setMetronomeFrag.metronome.excute()
+            //metronome_view.tik()    //tik
+            metronome_view.clear() //default
+        }
+        metronome_view.onStop = {
+            toast("metronome stop!")
+            Log.d("Metronome test", "stop")
+            (activity as Recording).setMetronomeFrag.metronome.cancle()
+        }
     }
 
     override fun onDestroy() {
