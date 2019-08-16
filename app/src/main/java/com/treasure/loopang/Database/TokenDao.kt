@@ -11,13 +11,13 @@ interface TokenDao {
     fun getAllTokens(): List<TokenEntity>
 
     @Insert
-    fun insertRefreshToken(token: String)
+    fun insertToken(token: String)
 
     @Update
-    fun updateRefreshToken(token: String)
+    fun updateToken(token: String)
 
     @Query("DELETE FROM Tokens")
-    fun DeleteAllTokens()
+    fun DeleteToken()
 
     @Query("SELECT refreshToken FROM Tokens WHERE refreshToken = :token")
     fun getToken(token: String)

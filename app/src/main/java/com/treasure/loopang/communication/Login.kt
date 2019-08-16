@@ -1,26 +1,15 @@
 package com.treasure.loopang.communication
 
-data class User(var id: String = "", var password: String = "",
-                var name: String = "", var email: String = "")
+import org.json.JSONObject
 
-class Login(var user: User = User()) : UserInterface {
-    private fun setID(id: String) { user.id = id }
-    private fun setPassword(password: String) { user.password = password }
-
-    fun setUserInfo(id: String, password: String) {
-        setID(id)
-        setPassword(password)
+class Login(private var user: User = User()) : UserInterface {
+    fun setUserInfo(email: String, password: String) {
+        user.email = email
+        user.password = makeSHA256(password)
     }
 
-    override fun makeUserHash() {
-        user.id = makeSHA256(user.id)
-        user.password = makeSHA256(user.password)
-    }
-
-    override fun getToken(): String {
-        return JwtManager()
-            .makeCustomPayload("public_id", user.id)
-            .makeCustomPayload("password", user.password)
-            .makeFinish()
+    override fun getJson() = JSONObject().apply {
+        put("email", user.email)
+        put("password", user.password)
     }
 }
