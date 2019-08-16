@@ -1,24 +1,18 @@
 package com.treasure.loopang.Database
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 
 @Dao
 interface TokenDao {
     @Query("SELECT * FROM Tokens")
     fun getAllTokens(): List<TokenEntity>
 
-    @Insert
-    fun insertToken(token: String)
-
-    @Update
-    fun updateToken(token: String)
+    @Query("SELECT * FROM Tokens LIMIT 1")
+    fun getToken(): TokenEntity
 
     @Query("DELETE FROM Tokens")
     fun DeleteToken()
 
-    @Query("SELECT refreshToken FROM Tokens WHERE refreshToken = :token")
-    fun getToken(token: String)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertToken(token: TokenEntity)
 }
