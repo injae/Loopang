@@ -30,6 +30,8 @@ class WaveformView @JvmOverloads constructor(
     private var _height: Int = 0 // _height of this View
     private var _size: Int = 0 // _amplitudes size
 
+    private val mColumnsNum: Int = 200
+
     private val mLinePaint: Paint = Paint() // specifies line drawing characteristics
     private val mHandler = Handler()
     private val mAudioAnalyzer = AudioAnalyzer()
