@@ -1,5 +1,6 @@
 package com.treasure.loopang.ui
 
+import android.app.Activity
 import android.content.Context
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -22,6 +23,20 @@ internal fun Fragment.toast(res: Int) {
             .apply { show() }
     }
 }
+
+fun Activity.toast(res: Int) {
+        val message = getString(res)
+        toast?.cancel()
+        toast = Toast.makeText(this, message, Toast.LENGTH_SHORT)
+            .apply { show() }
+}
+
+fun Activity.toast(message: CharSequence) {
+    toast?.cancel()
+    toast = Toast.makeText(this, message, Toast.LENGTH_SHORT)
+        .apply { show() }
+}
+
 
 fun statusBarHeight(context: Context): Int {
     val resourceId = context.resources.getIdentifier("status_bar_height", "dimen", "android")
