@@ -29,32 +29,37 @@ object ResultManager {
         when(result.status) {
             "success" -> {
                 when(result.message) {
-                    "refreshed token" -> {
-                        code = SUCCESS_AUTH
-                        accessToken = result.accessToken
-                    }
-                    "login" -> {
-                        code = SUCCESS_LOGIN
-                        //refreshToken = result.refreshToken
-                        accessToken = result.accessToken
-                    }
-                    "sign up" -> code = SUCCESS_SIGN_UP
+                    "refreshed token" ->    code = SUCCESS_AUTH
+                    "login" ->              code = SUCCESS_LOGIN
+                    "sign up" ->            code = SUCCESS_SIGN_UP
                 }
+                accessToken = result.accessToken    // in case of SUCCESS_SIGN_UP, accessToken == ""
             }
-
             "fail" -> {
                 when(result.message) {
-                    "expired signature" -> code = EXPIRED_SIGNATURE
-                    "invalid token" -> code = INVALID_TOKEN
-                    "unregistered id or wrong password" -> code = UNREG_OR_WRONG
-                    "duplicate id" -> code = DUPLICATED_ID
+                    "expired signature" ->                  code = EXPIRED_SIGNATURE
+                    "invalid token" ->                      code = INVALID_TOKEN
+                    "unregistered id or wrong password" ->  code = UNREG_OR_WRONG
+                    "duplicate id" ->                       code = DUPLICATED_ID
                 }
             }
-
             "error" -> code = ERROR
-
             else -> {}
         }
         return code
+    }
+
+    fun codeToString(code: Int): String {
+        when(code) {
+            SUCCESS_AUTH ->         return "SUCCESS_AUTH"
+            SUCCESS_LOGIN ->        return "SUCCESS_LOGIN"
+            SUCCESS_SIGN_UP ->      return "SUCCESS_SIGN_UP"
+            DUPLICATED_ID ->        return "DUPLICATED_ID"
+            UNREG_OR_WRONG ->       return "UNREG_OR_WRONG"
+            EXPIRED_SIGNATURE ->    return "EXPIRED_SIGNATURE"
+            INVALID_TOKEN ->        return "INVALID_TOKEN"
+            ERROR ->                return "ERROR"
+            else ->                 return ""
+        }
     }
 }
