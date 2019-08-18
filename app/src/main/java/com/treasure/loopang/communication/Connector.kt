@@ -25,6 +25,7 @@ class Connector(val DNS: String = "http://127.0.0.1", val port: Int = 46729,
         }
 
         call?.enqueue(object : Callback<Result> {
+            override fun onFailure(call: Call<Result>, t: Throwable) { }
             override fun onResponse(call: Call<Result>, response: Response<Result>) {
                 if(response.body() != null) {
                     result.status = response.body()!!.status
@@ -32,10 +33,6 @@ class Connector(val DNS: String = "http://127.0.0.1", val port: Int = 46729,
                     result.refreshToken = response.body()!!.refreshToken
                     result.accessToken = response.body()!!.accessToken
                 }
-            }
-
-            override fun onFailure(call: Call<Result>, t: Throwable) {
-                // 실패했다는 토스트알림 같은거..
             }
         })
         return result
