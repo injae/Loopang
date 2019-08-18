@@ -32,10 +32,6 @@ class Login : AppCompatActivity() {
         checkPermission()
         window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
 
-        GlobalScope.launch {
-            DatabaseManager.deleteToken(this@Login)
-        }
-
         login_button.clicks()
             .subscribe { onLoginButtonClick() }.apply { disposables.add(this) }
         btn_sign_up.clicks()
