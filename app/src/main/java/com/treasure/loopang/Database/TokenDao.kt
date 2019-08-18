@@ -11,7 +11,7 @@ interface TokenDao {
     fun getToken(): TokenEntity
 
     @Query("DELETE FROM Tokens")
-    fun DeleteToken()
+    fun deleteToken()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertToken(token: TokenEntity)

@@ -5,12 +5,17 @@ import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
+import android.util.Log
 import android.view.WindowManager
+import androidx.room.Database
 import com.afollestad.materialdialogs.MaterialDialog
 import com.jakewharton.rxbinding3.view.clicks
+import com.treasure.loopang.Database.DatabaseManager
 import com.treasure.loopang.ui.toast
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class Login : AppCompatActivity() {
 
@@ -26,6 +31,10 @@ class Login : AppCompatActivity() {
         setContentView(R.layout.activity_login)
         checkPermission()
         window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+
+        GlobalScope.launch {
+            DatabaseManager.deleteToken(this@Login)
+        }
 
         login_button.clicks()
             .subscribe { onLoginButtonClick() }.apply { disposables.add(this) }
