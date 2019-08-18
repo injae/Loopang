@@ -1,6 +1,11 @@
 package com.treasure.loopang.communication
 
 object ResultManager {
+    // Case
+    val AUTH = 100
+    val SIGN_UP = 101
+    val LOGIN = 102
+
     // Sign Up Part
     val SUCCESS_SIGN_UP     = 50
     val DUPLICATED_ID       = 51
@@ -30,9 +35,8 @@ object ResultManager {
                     }
                     "login" -> {
                         code = SUCCESS_LOGIN
-                        refreshToken = result.refreshToken
+                        //refreshToken = result.refreshToken
                         accessToken = result.accessToken
-                        // db에 리프레쉬 토큰 넣어줘야함
                     }
                     "sign up" -> code = SUCCESS_SIGN_UP
                 }
