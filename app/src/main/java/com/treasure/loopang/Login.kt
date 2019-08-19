@@ -56,7 +56,7 @@ class Login : AppCompatActivity() {
     }
 
     private fun onSignUpButtonClick() {
-        // not yet....
+        startActivity(Intent(this, RegisterActivity::class.java))
     }
 
     private fun onLoginButtonClick(){
