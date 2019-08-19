@@ -59,5 +59,6 @@
     <string name="btn_sign_in">Sign in</string>
     <string name="btn_register_sign_up">Sign up</string>
     <string name="hint_e_mail">E-MAIL</string>
+    <string name="manage_preview_dialog_title_example">title_example</string>
 
 </resources>
