@@ -19,10 +19,11 @@ import com.treasure.loopang.audio.FileManager
 import com.treasure.loopang.audio.LoopMusic
 import com.treasure.loopang.ui.interfaces.IPageFragment
 import com.treasure.loopang.ui.adapter.v2.LoopListAdapter
-import com.treasure.loopang.ui.toast
 import kotlinx.android.synthetic.main.fragment_loop_manage.*
 import kotlinx.android.synthetic.main.fragment_loop_manage.loop_list
+import kotlinx.android.synthetic.main.manage_preview_dialog.*
 import kotlinx.android.synthetic.main.manager_detail_information_dialog_layout.*
+import kotlinx.android.synthetic.main.manager_detail_information_dialog_layout.txt_title
 import kotlin.RuntimeException
 
 
@@ -136,7 +137,7 @@ class LoopManageFragment : androidx.fragment.app.Fragment()
             onMoreButtonClick = { this@LoopManageFragment.showMoreDialog(it) }
         }
         loopList.setOnItemClickListener { _, _, position, _ ->
-            this.showMoreDialog(position)
+            showPreviewPlayDialog(mAdapter.getItem(position) as LoopMusic)
         }
     }
 
@@ -157,7 +158,24 @@ class LoopManageFragment : androidx.fragment.app.Fragment()
     }
 
     private fun showPreviewPlayDialog(loopMusic: LoopMusic) {
-        toast("preview play of ${loopMusic.name}")
+        val projectTitle = loopMusic.name
+        MaterialDialog(activity!!, BottomSheet(LayoutMode.WRAP_CONTENT)).show {
+            customView(R.layout.manage_preview_dialog)
+            txt_title.text = projectTitle
+            btn_add.setOnClickListener {
+                this.dismiss()
+                showMoreDialog(loopMusic)
+            }
+            btn_info.setOnClickListener {
+                showDetailInfoDialog(loopMusic)
+            }
+            btn_drop.setOnClickListener {
+                this.dismiss()
+                if(loopMusic.child == null){ deleteSound(loopMusic) }
+                else { deleteProject(loopMusic) }
+            }
+            cornerRadius(16f)
+        }
     }
 
     private fun showMoreDialog(position: Int) {
@@ -175,6 +193,7 @@ class LoopManageFragment : androidx.fragment.app.Fragment()
         val projectTitle = project.name
         MaterialDialog(activity!!, BottomSheet(LayoutMode.WRAP_CONTENT)).show {
             title(null, projectTitle)
+            cornerRadius(16f)
             listItems(R.array.project_more_dialog_menu_array_kr){ _, index: Int, _ ->
                 when(index){
                     0 -> this@LoopManageFragment.loadProject(project, true)
@@ -189,6 +208,7 @@ class LoopManageFragment : androidx.fragment.app.Fragment()
         val soundTitle = soundMusic.name
         MaterialDialog(activity!!, BottomSheet(LayoutMode.WRAP_CONTENT)).show {
             title(null, soundTitle)
+            cornerRadius(16f)
             listItems(R.array.sound_more_dialog_menu_array_kr){ _, index: Int, _ ->
                 when(index){
                     0 -> this@LoopManageFragment.addLoopAsLayer(soundMusic)

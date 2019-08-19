@@ -42,8 +42,6 @@ class LoopListAdapter (var loopItemList: List<LoopMusic>)
         holder.fileTypeText.text = loopItem.child?.let{ "Loopang Project" } ?: "${loopItem.type.toUpperCase()} Sound File"
         holder.loopTitleText.text = loopItem.name
         holder.loopDateText.text = loopItem.date
-        holder.previewButton.setOnClickListener { onPreviewButtonClick(loopItem) }
-        holder.infoButton.setOnClickListener { onInfoButtonClick(loopItem) }
         holder.moreButton.setOnClickListener { onMoreButtonClick(loopItem) }
 
         return view
@@ -78,8 +76,6 @@ class LoopListAdapter (var loopItemList: List<LoopMusic>)
         var fileTypeText: TextView = view.txt_type
         var loopTitleText: TextView = view.txt_title
         var loopDateText: TextView = view.txt_date
-        var previewButton: ImageButton = view.btn_playback
-        var infoButton: ImageButton = view.btn_info
         var moreButton: ImageButton = view.btn_more
     }
 
