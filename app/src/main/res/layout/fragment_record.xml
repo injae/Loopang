@@ -8,7 +8,7 @@
         android:layout_height="match_parent"
         android:background="@drawable/view_pager_background"
         android:animateLayoutChanges="true"
-        tools:context=".RecordFragment">
+        tools:context=".ui.fragments.v1.RecordFragment">
     <TextView
             android:text="@string/title_activity_recording"
             android:textSize="24sp"

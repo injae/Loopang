@@ -57,5 +57,7 @@
     <string name="btn_login_wiat">Wait...</string>
     <string name="btn_sign_up">No account yet? Create one</string>
     <string name="btn_sign_in">Sign in</string>
+    <string name="btn_register_sign_up">Sign up</string>
+    <string name="hint_e_mail">E-MAIL</string>
 
 </resources>
