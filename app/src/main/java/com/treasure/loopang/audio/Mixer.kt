@@ -15,7 +15,7 @@ class MixerSound(var _sound: Sound) {
     fun load(path: String) = _sound.load(path)
 }
 
-class Mixer(val sounds: MutableList<MixerSound> = mutableListOf()) : SoundFlow<Mixer>(), IPlayable {
+class Mixer(val sounds: MutableList<MixerSound> = mutableListOf()) : SoundFlow<Mixer>() {
     var isLooping = AtomicBoolean(false)
 
     fun addSound(sound: Sound) {
@@ -27,13 +27,13 @@ class Mixer(val sounds: MutableList<MixerSound> = mutableListOf()) : SoundFlow<M
 
     fun setMute(index: Int, isMute: Boolean) { sounds[index].isMute = isMute}
 
-    override fun start() {
+    fun start() {
         isLooping.set(true)
         callStart(this)
         launch { while(isLooping.get()) { sounds.map { async { it.play() } }.forEach{ it.await() }; callSuccess(this@Mixer) } }.start()
     }
 
-    override fun stop() {
+    fun stop() {
         isLooping.set(false)
         callStop(this)
         sounds.forEach { it.stop() }
