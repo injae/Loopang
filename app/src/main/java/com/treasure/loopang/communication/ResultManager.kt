@@ -25,7 +25,6 @@ object ResultManager {
     var refreshToken: String = ""
 
     fun getCode(result: Result): Int {
-
         var code = 0
         when(result.status) {
             "success" -> {
