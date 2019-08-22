@@ -9,8 +9,8 @@ import android.util.Log
 import android.view.WindowManager
 import com.jakewharton.rxbinding3.view.clicks
 import com.treasure.loopang.communication.Connector
-import com.treasure.loopang.communication.Login
 import com.treasure.loopang.communication.ResultManager
+import com.treasure.loopang.communication.UserManager
 import com.treasure.loopang.ui.toast
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_login.*
@@ -83,9 +83,8 @@ class Login : AppCompatActivity() {
 
     private fun login(txtId: Editable?, txtPassword: Editable?): Int {
         val connector = Connector()
-        val lg = Login()
-        lg.setUserInfo(txtId.toString(), txtPassword.toString())
-        connector.process(ResultManager.LOGIN, lg.getJson())
+        UserManager.setUser(txtId.toString(), txtPassword.toString())
+        connector.process(ResultManager.LOGIN, UserManager.getJson())
         return ResultManager.getCode(connector.result.get())
     }
 }
