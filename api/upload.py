@@ -16,8 +16,10 @@ class Upload(Resource):
         #    return public_id[1], 200
         if args['file'] == "":
             return {'status': 'fail', 'message': 'No File Found'}, 202
+        
         file = args['file']
-        #if file:
+        if file:
+            return {'status:': 'success', 'message': 'file send success'}, 200
         #    music = Music(name=args['name'], owner=public_id[0])
         #    if music.save_music(file):
         #        return {'status:': 'success', 'message': 'Uploaded' + music.name}, 200
