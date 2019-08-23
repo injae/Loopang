@@ -1,7 +1,6 @@
 from flask_jwt import jwt
 from flask_restful import Resource, reqparse
 import datetime
-from typing import Optional
 
 
 secret_key = 'loopang'
@@ -41,7 +40,7 @@ class Auth(Resource):
         return Auth.encord_token(pub_id, datetime.timedelta(minutes=10))
 
     @staticmethod
-    def decord_token(token: str) -> (Optional[str], str):
+    def decord_token(token: str):
         try:
             return (jwt.decode(token, secret_key), '')
         except jwt.ExpiredSignatureError:
