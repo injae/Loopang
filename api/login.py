@@ -26,7 +26,7 @@ class Login(Resource):
                     'access_token': Auth.encord_access_token(db_user.public_id).decode()
                 }, 200
             else:
-                return {'status': 'fail', 'message': 'unregisted id or wrong password'}, 200
+                return {'status': 'fail', 'message': 'unregisted id or wrong password'}, 202
 
         except Exception as e:
             return {'status': 'error', 'message': str(e)}, 404

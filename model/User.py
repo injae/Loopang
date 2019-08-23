@@ -17,3 +17,9 @@ class User(db.Model):
 
     def check_password(self, password):
         return flask_bcrypt.check_password_hash(self.password, password)
+
+    def is_duplicate(self) -> bool:
+        if User.query.filter_by(email=self.email).first() is None:
+            return True
+        else:
+            return False

@@ -19,6 +19,8 @@ def create_app():
     api.add_resource(Login, '/login')
     from api.auth import Auth
     api.add_resource(Auth, '/auth')
+    from api.upload import Upload
+    api.add_resource(Upload, '/upload')
 
     return app
 

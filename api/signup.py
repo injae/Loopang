@@ -1,7 +1,6 @@
 from flask_restful import Resource, reqparse
 from model.User import User
-from model.database import db
-import uuid
+from model.database import db, gen_id
 
 secret_key = ""
 
@@ -15,18 +14,16 @@ class SignUp(Resource):
             parser.add_argument('password', type=str)
             args = parser.parse_args()
 
-            public_id = str(uuid.uuid4())
+            public_id = gen_id()
             email = args['email']
             name = args['name']
             password = args['password']
             user = User(public_id=public_id, email=email, name=name, password=password)
-            if User.query.filter_by(email=email).first() is not None:
-                return {'status': 'fail', 'message': "duplicate id"}, 200
+            if(user.is_duplicate()):
+                return {'status': 'fail', 'message': "duplicate id"}, 202
             else:
                 db.session.add(user)
                 db.session.commit()
-
-            return {'status': 'success', 'message': 'sign up'}, 200
-
+                return {'status': 'success', 'message': 'sign up'}, 200
         except Exception as e:
             return {'status': 'error', 'message': str(e)}, 400
