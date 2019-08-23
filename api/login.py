@@ -22,8 +22,8 @@ class Login(Resource):
                 return {
                     'status': 'success',
                     'message': 'login',
-                    'refresh_token': Auth.encord_refresh_token(db_user.public_id).decode(),
-                    'access_token': Auth.encord_access_token(db_user.public_id).decode()
+                    'refreshToken': Auth.encord_refresh_token(db_user.public_id).decode(),
+                    'accessToken': Auth.encord_access_token(db_user.public_id).decode()
                 }, 200
             else:
                 return {'status': 'fail', 'message': 'unregisted id or wrong password'}, 202
