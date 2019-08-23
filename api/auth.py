@@ -40,7 +40,7 @@ class Auth(Resource):
         return Auth.encord_token(pub_id, datetime.timedelta(minutes=10))
 
     @staticmethod
-    def decord_token(token: str):
+    def decord_token(token):
         try:
             return (jwt.decode(token, secret_key), '')
         except jwt.ExpiredSignatureError:
