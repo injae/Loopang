@@ -13,9 +13,9 @@ class Auth(Resource):
             parser.add_argument('token', type=str)
             args = parser.parse_args()
 
-            pub_id = Auth.decord_token(args['token']).get('sub')
+            pub_id = Auth.decord_token(args['token'])
             if pub_id[0] is not None:
-                token = Auth.encord_access_token(pub_id[0])
+                token = Auth.encord_access_token(pub_id[0].get('sub'))
                 return {'status': 'success', 'message': 'refreshed token', 'token':  token.decode()}, 200
             else:
                 return pub_id[1], 202
@@ -42,7 +42,7 @@ class Auth(Resource):
     @staticmethod
     def decord_token(token):
         try:
-            return (jwt.decode(token, secret_key), '')
+            return (jwt.decode(token, secret_key), 'HS256')
         except jwt.ExpiredSignatureError:
             return (None, {'status': 'fail', 'message': 'expired signature', 'token': ''})
         except jwt.InvalidTokenError:
