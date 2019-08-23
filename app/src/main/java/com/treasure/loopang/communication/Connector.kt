@@ -15,7 +15,6 @@ import java.io.File
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
 import javax.net.ssl.*
-import java.util.concurrent.atomic.AtomicReference
 
 class Connector(private val DNS: String = "https://ec2-3-15-172-177.us-east-2.compute.amazonaws.com",
                 private val port: Int = 5000,
@@ -24,18 +23,16 @@ class Connector(private val DNS: String = "https://ec2-3-15-172-177.us-east-2.co
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(getUnsafeOkHttpClient())
                     .build(),
-                private var service: LoopangNetwork = retrofit.create(LoopangNetwork::class.java),
-                var result: AtomicReference<Result> = AtomicReference()) {
-    fun process(case: Int, json: JSONObject? = null, fileName: String = "") {
+                private var service: LoopangNetwork = retrofit.create(LoopangNetwork::class.java)) {
+    fun process(case: Int, json: JSONObject? = null, fileName: String = ""): Result{
         var call: Call<Result>? = null
-
         when(case) {
             ResultManager.AUTH -> { call = service.receiveTokens() }
-            ResultManager.SIGN_UP -> { call = service.sendSignUpInfo(json?.get("email").toString(), json?.get("name").toString(), json?.get("password").toString()) }
+            ResultManager.SIGN_UP -> { call = service.sendSignUpInfo(json?.get("email").toString(), json?.get("password").toString(), json?.get("name").toString()) }
             ResultManager.LOGIN -> { call = service.sendLoginInfo(json?.get("email").toString(), json?.get("password").toString()) }
-            ResultManager.FILE_UPLOAD -> { call = service.sendFile(ResultManager.accessToken, fileName, getMultiPartBody(fileName)) }
-        }
-        result.set(call?.execute()?.body())
+            ResultManager.FILE_UPLOAD -> { call = service.sendFile(ResultManager.accessToken, fileName, getMultiPartBody(fileName)) } }
+
+        return call?.execute()?.body()!!
     }
 }
 

@@ -18,8 +18,8 @@ object UserManager {
      */
     fun setUser(email: String, password: String, name: String) {
         user.email = email
-        user.password = makeSHA256(password)
         user.name = name
+        user.password = makeSHA256(password)
     }
 
     /**

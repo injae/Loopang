@@ -84,7 +84,6 @@ class Login : AppCompatActivity() {
     private fun login(txtId: Editable?, txtPassword: Editable?): Int {
         val connector = Connector()
         UserManager.setUser(txtId.toString(), txtPassword.toString())
-        connector.process(ResultManager.LOGIN, UserManager.getJson())
-        return ResultManager.getCode(connector.result.get())
+        return ResultManager.getCode(connector.process(ResultManager.LOGIN, UserManager.getJson()))
     }
 }
