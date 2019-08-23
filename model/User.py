@@ -20,6 +20,6 @@ class User(db.Model):
 
     def is_duplicate(self) -> bool:
         if User.query.filter_by(email=self.email).first() is None:
-            return True
-        else:
             return False
+        else:
+            return True
