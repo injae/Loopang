@@ -12,18 +12,18 @@ services:
       - 5432:5432
     volumes:
       - var/lib/postgresql/data
-#  loopang:
-#    container_name: loopang
-#    build:
-#      context: .
-#      dockerfile: ./Dockerfile
-#    restart: always
-#    ports:
-#      - "5000:8080"
-#    depends_on:
-#      - postgres
-#    volumes:
-#      - ./:/app
+  loopang:
+    container_name: loopang
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    restart: always
+    ports:
+      - "5000:8080"
+    depends_on:
+      - postgres
+    volumes:
+      - ./:/app
 #  pgadmin:
 #    container_name: pgadmin
 #    image: dpage/pgadmin4
