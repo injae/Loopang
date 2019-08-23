@@ -5,6 +5,8 @@ object ResultManager {
     val AUTH = 100
     val SIGN_UP = 101
     val LOGIN = 102
+    val FILE_UPLOAD = 103
+    val FILE_DOWNLOAD = 104
 
     // Sign Up Part
     val SUCCESS_SIGN_UP     = 50
@@ -19,7 +21,16 @@ object ResultManager {
     val EXPIRED_SIGNATURE   = 71
     val INVALID_TOKEN       = 72
 
-    val ERROR = 80
+    // File Upload Part
+    val SUCCESS_UPLOAD      = 80
+    val NO_FILE_FOUND       = 81
+    val IS_EXISTED          = 82
+
+    // File Download Part
+    val SUCCESS_DOWNLOAD    = 90
+
+    // Error
+    val ERROR = 400
 
     var accessToken: String = ""
     var refreshToken: String = ""
@@ -32,6 +43,7 @@ object ResultManager {
                     "refreshed token" ->    code = SUCCESS_AUTH
                     "login" ->              code = SUCCESS_LOGIN
                     "sign up" ->            code = SUCCESS_SIGN_UP
+                    "Uploaded${result.message.slice(IntRange(8, result.message.length - 1))}" -> code = SUCCESS_UPLOAD
                 }
                 accessToken = result.accessToken    // in case of SUCCESS_SIGN_UP, accessToken == ""
             }
@@ -41,6 +53,8 @@ object ResultManager {
                     "invalid token" ->                      code = INVALID_TOKEN
                     "unregistered id or wrong password" ->  code = UNREG_OR_WRONG
                     "duplicate id" ->                       code = DUPLICATED_ID
+                    "No File Found" ->                      code = NO_FILE_FOUND
+                    "Is Existed file:${result.message.slice(IntRange(16, result.message.length - 1))}" -> code = IS_EXISTED
                 }
             }
             "error" -> code = ERROR
@@ -51,13 +65,22 @@ object ResultManager {
 
     fun codeToString(code: Int): String {
         when(code) {
+            AUTH ->                 return "AUTH"
+            SIGN_UP ->              return "SIGN_UP"
+            LOGIN ->                return "LOGIN"
+            FILE_UPLOAD ->          return "FILE_UPLOAD"
+            FILE_DOWNLOAD ->        return "FILE_DOWNLOAD"
             SUCCESS_AUTH ->         return "SUCCESS_AUTH"
             SUCCESS_LOGIN ->        return "SUCCESS_LOGIN"
             SUCCESS_SIGN_UP ->      return "SUCCESS_SIGN_UP"
+            SUCCESS_UPLOAD ->       return "SUCCESS_UPLOAD"
+            SUCCESS_DOWNLOAD ->     return "SUCCESS_DOWNLOAD"
             DUPLICATED_ID ->        return "DUPLICATED_ID"
             UNREG_OR_WRONG ->       return "UNREG_OR_WRONG"
             EXPIRED_SIGNATURE ->    return "EXPIRED_SIGNATURE"
             INVALID_TOKEN ->        return "INVALID_TOKEN"
+            NO_FILE_FOUND ->        return "NO_FILE_FOUND"
+            IS_EXISTED ->           return "IS_EXISTED"
             ERROR ->                return "ERROR"
             else ->                 return ""
         }
