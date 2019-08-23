@@ -9,8 +9,8 @@ interface LoopangNetwork {
     @FormUrlEncoded
     @POST("/sign-up")
     fun sendSignUpInfo(@Field("email") email: String,
-                       @Field("name") name: String,
-                       @Field("password") password: String): Call<Result>
+                       @Field("password") password: String,
+                       @Field("name") name: String): Call<Result>
 
     @FormUrlEncoded
     @POST("/login")

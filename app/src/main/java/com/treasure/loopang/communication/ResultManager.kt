@@ -33,7 +33,6 @@ object ResultManager {
     val ERROR = 400
 
     var accessToken: String = ""
-    var refreshToken: String = ""
 
     fun getCode(result: Result): Int {
         var code = 0
