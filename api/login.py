@@ -18,7 +18,7 @@ class Login(Resource):
             if db_user is None:
                 return {'status': 'fail', 'message': 'unregistered id or wrong password'}, 200
             access = Auth.encord_access_token(db_user.public_id).decode('UTF-8')
-            print(type(access))
+            print(access.size())
             if db_user.check_password(password):
                 return {
                     'status': 'success',

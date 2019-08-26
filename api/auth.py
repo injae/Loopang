@@ -42,9 +42,7 @@ class Auth(Resource):
     @staticmethod
     def decord_token(token):
         try:
-            token = jwt.decode(token, secret_key, 'HS256')
-            print(type(token))
-            return (token, '')
+            return (jwt.decode(token, secret_key, 'HS256'), '')
         except jwt.ExpiredSignatureError:
             return (None, {'status': 'fail', 'message': 'expired signature', 'token': ''})
         except jwt.InvalidTokenError:
