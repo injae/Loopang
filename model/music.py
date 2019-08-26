@@ -24,9 +24,8 @@ class Music(db.Model):
 
     def save_music(self, file):
         path = self.path()
-        
         if Path(path).exists():
             return False
         else:
-            file.save(path())
+            file.save(path)
             return True
