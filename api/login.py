@@ -13,13 +13,11 @@ class Login(Resource):
 
             email = args['email']
             password = args['password']
-            print(email)
 
             db_user = User.query.filter_by(email=email).first()
             if db_user is None:
                 return {'status': 'fail', 'message': 'unregistered id or wrong password'}, 200
             access = Auth.encord_access_token(db_user.public_id).decode('UTF-8')
-            print(len(access))
             if db_user.check_password(password):
                 return {
                     'status': 'success',
