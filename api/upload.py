@@ -12,7 +12,7 @@ class Upload(Resource):
         parser.add_argument('file', type=werkzeug.datastructures.FileStorage, location='files')
         args = parser.parse_args()
         print(args['name'])
-        print(args['token'].size())
+        print(len(args['token']))
         public_id = Auth.decord_token(args['token'])
         if public_id[0] is None:
             return public_id[1], 200
