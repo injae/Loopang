@@ -22,6 +22,6 @@ class Upload(Resource):
         if file:
             music = Music(name=args['name'], owner=public_id[0].get('sub'))
             if music.save_music(file):
-                return {'status:': 'success', 'message': 'Uploaded' + music.name}, 200
+                return {'status:': 'success', 'message': 'Uploaded ' + music.name}, 200
             else:
-                return {'status:': 'fail', 'message': 'Is Existed file:' + music.name}, 202
+                return {'status:': 'fail', 'message': 'Is Existed file: ' + music.name}, 202
