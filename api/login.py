@@ -13,6 +13,7 @@ class Login(Resource):
 
             email = args['email']
             password = args['password']
+            print(email)
 
             db_user = User.query.filter_by(email=email).first()
             if db_user is None:
