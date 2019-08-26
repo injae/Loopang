@@ -32,6 +32,13 @@ class Login : AppCompatActivity() {
         checkPermission()
         window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
 
+        GlobalScope.launch {
+            val connector = Connector()
+            UserManager.setUser("test@test", "test")
+            val result = connector.process(ResultManager.LOGIN, UserManager.getJson())
+            val code = ResultManager.getCode(result)
+        }
+
         login_button.clicks()
             .subscribe { onLoginButtonClick() }.apply { disposables.add(this) }
         btn_sign_up.clicks()
