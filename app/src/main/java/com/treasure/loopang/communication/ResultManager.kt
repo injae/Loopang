@@ -1,5 +1,7 @@
 package com.treasure.loopang.communication
 
+import android.util.Log
+
 object ResultManager {
     // Case
     val AUTH = 100
