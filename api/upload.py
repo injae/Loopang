@@ -21,7 +21,7 @@ class Upload(Resource):
         file = args['file']
         if file:
             #music = Music(name=args['name'], owner=public_id[0].get('sub'))
-            music = Music(name=args['name'], owner='test')
+            music = Music(name='test', owner='test')
             if music.save_music(file):
                 return {'status:': 'success', 'message': 'Uploaded' + music.name}, 200
             else:
