@@ -2,7 +2,7 @@ from model.database import db, gen_id
 from pathlib import Path
 import os
 
-MUSIC_FOLDER = "../music"
+MUSIC_FOLDER = os.path.expandvars('$HOME/music')
 
 
 class Music(db.Model):
@@ -24,6 +24,7 @@ class Music(db.Model):
 
     def save_music(self, file):
         path = self.path()
+        
         if Path(path).exists():
             return False
         else:
