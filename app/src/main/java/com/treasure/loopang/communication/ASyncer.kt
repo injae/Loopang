@@ -2,6 +2,7 @@ package com.treasure.loopang.communication
 
 import android.content.Intent
 import android.os.AsyncTask
+import com.treasure.loopang.Database.DatabaseManager
 import com.treasure.loopang.Login
 import com.treasure.loopang.R
 import com.treasure.loopang.Recording
@@ -12,7 +13,8 @@ import kotlinx.android.synthetic.main.activity_login.input_id
 import kotlinx.android.synthetic.main.activity_login.input_password
 import kotlinx.android.synthetic.main.activity_register.*
 
-class ASyncer<T>(private val context: T, private var code: Int = 0) : AsyncTask<Unit, Unit, Unit>() {
+class ASyncer<T>(private val context: T, private var code: Int = 0,
+                 private var response: Result = Result()) : AsyncTask<Unit, Unit, Unit>() {
     override fun onPreExecute() {
         super.onPreExecute()
         when(context) {
@@ -34,7 +36,8 @@ class ASyncer<T>(private val context: T, private var code: Int = 0) : AsyncTask<
         when(context) {
             is Login -> {
                 UserManager.setUser(context.input_id.text.toString(), context.input_password.text.toString())
-                code = ResultManager.getCode(connector.process(ResultManager.LOGIN, UserManager.getJson()))
+                response = connector.process(ResultManager.LOGIN, UserManager.getJson())
+                code = ResultManager.getCode(response)
             }
 
             is RegisterActivity -> {
@@ -48,6 +51,7 @@ class ASyncer<T>(private val context: T, private var code: Int = 0) : AsyncTask<
         when(context) {
             is Login -> {
                 if(code == ResultManager.SUCCESS_LOGIN) {
+                    DatabaseManager.insertToken(context, response.refreshToken)
                     context.startActivity(Intent(context, Recording::class.java))
                 }
                 else if(code == ResultManager.UNREG_OR_WRONG) {
