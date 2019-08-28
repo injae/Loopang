@@ -4,21 +4,13 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.util.Log
 import android.view.WindowManager
 import com.jakewharton.rxbinding3.view.clicks
-import com.treasure.loopang.communication.Connector
-import com.treasure.loopang.communication.ResultManager
-import com.treasure.loopang.communication.UserManager
-import com.treasure.loopang.ui.toast
+import com.treasure.loopang.communication.ASyncer
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.coroutines.*
-import java.util.concurrent.atomic.AtomicInteger
 
 class Login : AppCompatActivity() {
-
     protected val disposables by lazy { CompositeDisposable() }
     private var permission_list = arrayOf( // 필요한 권한 입력 후 AndroidManifest.xml에도 추가 해주면됌
         android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -31,13 +23,6 @@ class Login : AppCompatActivity() {
         setContentView(R.layout.activity_login)
         checkPermission()
         window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-
-        GlobalScope.launch {
-            val connector = Connector()
-            UserManager.setUser("test@test", "test")
-            val result = connector.process(ResultManager.LOGIN, UserManager.getJson())
-            val code = ResultManager.getCode(result)
-        }
 
         login_button.clicks()
             .subscribe { onLoginButtonClick() }.apply { disposables.add(this) }
@@ -67,30 +52,7 @@ class Login : AppCompatActivity() {
     }
 
     private fun onLoginButtonClick(){
-        login_button.text = getString(R.string.btn_login_wiat)
-        login_button.isClickable = false
-
-        var code = AtomicInteger(0)
-
-        GlobalScope.launch{
-            code.set(login(input_id.text, input_password.text))
-            Log.d("TESTMAN", "코드값 : ${code}")
-        }
-        while(code.get() == 0) { }
-
-        if(code.get() == ResultManager.SUCCESS_LOGIN){
-            startActivity(Intent(this, Recording::class.java))
-        }
-        else if(code.get() == ResultManager.UNREG_OR_WRONG) {
-            login_button.isClickable = true
-            toast("Login Failed")
-            login_button.text = getString(R.string.btn_sign_in)
-        }
-    }
-
-    private fun login(txtId: Editable?, txtPassword: Editable?): Int {
-        val connector = Connector()
-        UserManager.setUser(txtId.toString(), txtPassword.toString())
-        return ResultManager.getCode(connector.process(ResultManager.LOGIN, UserManager.getJson()))
+        val asyncer = ASyncer(this)
+        asyncer.execute()
     }
 }
