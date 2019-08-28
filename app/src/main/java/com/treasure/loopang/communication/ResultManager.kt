@@ -44,7 +44,7 @@ object ResultManager {
                     "refreshed token" ->    code = SUCCESS_AUTH
                     "login" ->              code = SUCCESS_LOGIN
                     "sign up" ->            code = SUCCESS_SIGN_UP
-                    "Uploaded${result.message.slice(IntRange(8, result.message.length - 1))}" -> code = SUCCESS_UPLOAD
+                    "Uploaded ${result.message.slice(IntRange(9, result.message.length - 1))}" -> code = SUCCESS_UPLOAD
                 }
                 accessToken = result.accessToken    // in case of SUCCESS_SIGN_UP, accessToken == ""
             }
@@ -55,7 +55,7 @@ object ResultManager {
                     "unregistered id or wrong password" ->  code = UNREG_OR_WRONG
                     "duplicate id" ->                       code = DUPLICATED_ID
                     "No File Found" ->                      code = NO_FILE_FOUND
-                    "Is Existed file:${result.message.slice(IntRange(16, result.message.length - 1))}" -> code = IS_EXISTED
+                    "Is Existed file: ${result.message.slice(IntRange(17, result.message.length - 1))}" -> code = IS_EXISTED
                 }
             }
             "error" -> code = ERROR
