@@ -12,6 +12,8 @@ import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_login.input_id
 import kotlinx.android.synthetic.main.activity_login.input_password
 import kotlinx.android.synthetic.main.activity_register.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class ASyncer<T>(private val context: T, private var code: Int = 0,
                  private var response: Result = Result()) : AsyncTask<Unit, Unit, Unit>() {
@@ -62,7 +64,7 @@ class ASyncer<T>(private val context: T, private var code: Int = 0,
                 context.toast("CODE = ${ResultManager.codeToString(code)}")
                 when(code) {
                     ResultManager.SUCCESS_LOGIN -> {
-                        DatabaseManager.insertToken(context, response.refreshToken)
+                        GlobalScope.launch { DatabaseManager.insertToken(context, response.refreshToken) }
                         context.startActivity(Intent(context, Recording::class.java))
                     }
                     ResultManager.UNREG_OR_WRONG -> {
