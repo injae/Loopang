@@ -13,6 +13,7 @@ object ResultManager {
     // Sign Up Part
     val SUCCESS_SIGN_UP     = 50
     val DUPLICATED_ID       = 51
+    val WRONG_FORMAT        = 52
 
     // Login Part
     val SUCCESS_LOGIN       = 60

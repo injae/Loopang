@@ -61,5 +61,3 @@ private fun getUnsafeOkHttpClient(): OkHttpClient {
 private fun getMultiPartBody(fileName: String) = MultipartBody.Part
     .createFormData("file", fileName, RequestBody.create(MediaType.parse("audio/*"),
     File("${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)}/Loopang/${fileName}")))
-
-private fun getBeautifulString(target: String) = RequestBody.create(MediaType.parse("text/plain"), target)
