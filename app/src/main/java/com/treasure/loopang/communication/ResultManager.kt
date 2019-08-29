@@ -67,11 +67,6 @@ object ResultManager {
 
     fun codeToString(code: Int): String {
         when(code) {
-            AUTH ->                 return "AUTH"
-            SIGN_UP ->              return "SIGN_UP"
-            LOGIN ->                return "LOGIN"
-            FILE_UPLOAD ->          return "FILE_UPLOAD"
-            FILE_DOWNLOAD ->        return "FILE_DOWNLOAD"
             SUCCESS_AUTH ->         return "SUCCESS_AUTH"
             SUCCESS_LOGIN ->        return "SUCCESS_LOGIN"
             SUCCESS_SIGN_UP ->      return "SUCCESS_SIGN_UP"
@@ -79,12 +74,13 @@ object ResultManager {
             SUCCESS_DOWNLOAD ->     return "SUCCESS_DOWNLOAD"
             DUPLICATED_ID ->        return "DUPLICATED_ID"
             UNREG_OR_WRONG ->       return "UNREG_OR_WRONG"
+            WRONG_FORMAT ->         return "WRONG_FORMAT"
             EXPIRED_SIGNATURE ->    return "EXPIRED_SIGNATURE"
             INVALID_TOKEN ->        return "INVALID_TOKEN"
             NO_FILE_FOUND ->        return "NO_FILE_FOUND"
             IS_EXISTED ->           return "IS_EXISTED"
             ERROR ->                return "ERROR"
-            else ->                 return ""
+            else ->                 return "This is not code. It may be Case"
         }
     }
 }
