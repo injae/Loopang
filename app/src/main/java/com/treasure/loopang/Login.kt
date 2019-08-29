@@ -46,13 +46,6 @@ class Login : AppCompatActivity() {
             }
         }
     }
-
-    private fun onSignUpButtonClick() {
-        startActivity(Intent(this, RegisterActivity::class.java))
-    }
-
-    private fun onLoginButtonClick(){
-        val asyncer = ASyncer(this)
-        asyncer.execute()
-    }
+    private fun onSignUpButtonClick() { startActivity(Intent(this, RegisterActivity::class.java)) }
+    private fun onLoginButtonClick(){ ASyncer(this).execute() }
 }

@@ -52,13 +52,13 @@
     <string name="btn_info">information of project</string>
     <string name="preview_playback">preview playback</string>
     <string name="file_type">File Type</string>
-    <string name="hint_input_id">ID</string>
+    <string name="hint_input_id">ID(Email)</string>
     <string name="hint_input_password">Password</string>
-    <string name="btn_login_wiat">Wait...</string>
+    <string name="btn_login_wait">Wait...</string>
     <string name="btn_sign_up">No account yet? Create one</string>
     <string name="btn_sign_in">Sign in</string>
     <string name="btn_register_sign_up">Sign up</string>
-    <string name="hint_e_mail">E-MAIL</string>
+    <string name="hint_e_mail">Name</string>
     <string name="manage_preview_dialog_title_example">title_example</string>
 
 </resources>
