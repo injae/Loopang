@@ -1,6 +1,7 @@
 from flask_restful import Resource, reqparse
 from api.auth import Auth
 from model.music import Music
+from tools.request_message import request_message, RequestType
 import werkzeug
 
 
@@ -11,17 +12,15 @@ class Upload(Resource):
         parser.add_argument('name', type=str)
         parser.add_argument('file', type=werkzeug.datastructures.FileStorage, location='files')
         args = parser.parse_args()
-        public_id = Auth.decord_token(args['token'])
-        print(public_id[0].get('sub'))
-        print(args['name'])
-        if public_id[0] is None:
-            return public_id[1], 200
-        if args['file'] == "":
-            return {'status': 'fail', 'message': 'No File Found'}, 202
+        (token, err) = Auth.decord_token(args['token'])
         file = args['file']
-        if file:
-            music = Music(name=args['name'], owner=public_id[0].get('sub'))
+        if token is None:
+            return err, 200
+        if file == "":
+            return request_message('fail', 'No File Found')
+        else:
+            music = Music(name=args['name'], owner=token.get('sub'))
             if music.save_music(file):
-                return {'status:': 'success', 'message': 'Uploaded ' + music.name}, 200
+                return request_message('success', 'Uploaded ' + music.name)
             else:
-                return {'status:': 'fail', 'message': 'Is Existed file: ' + music.name}, 202
+                return request_message('fail', 'Is Existed file: ' + music.name)

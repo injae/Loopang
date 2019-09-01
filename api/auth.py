@@ -47,7 +47,3 @@ class Auth(Resource):
             return (None, {'status': 'fail', 'message': 'expired signature', 'token': ''})
         except jwt.InvalidTokenError:
             return (None, {'status': 'fail', 'message': 'invalid token', 'token': ''})
-        # except jwt.ExpiredSignatureError:
-        #     raise jwt.ExpiredSignatureError
-        # except jwt.InvalidTokenError:
-        #     raise jwt.InvalidTokenError
