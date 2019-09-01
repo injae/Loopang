@@ -61,7 +61,7 @@ class ASyncer<T>(private val context: T, private var code: Int = 0,
         super.onPostExecute(result)
         when(context) {
             is Login -> {
-                context.toast("CODE = ${ResultManager.codeToString(code)}")
+                context.toast("Code = ${ResultManager.codeToString(code)}")
                 when(code) {
                     ResultManager.SUCCESS_LOGIN -> {
                         GlobalScope.launch { DatabaseManager.insertToken(context, response.refreshToken) }
@@ -71,16 +71,24 @@ class ASyncer<T>(private val context: T, private var code: Int = 0,
                         context.login_button.isClickable = true
                         context.login_button.text = context.getString(R.string.btn_sign_in)
                     }
+                    ResultManager.ERROR -> {
+                        context.login_button.isClickable = true
+                        context.login_button.text = context.getString(R.string.btn_sign_in)
+                    }
                 }
             }
 
             is RegisterActivity -> {
-                context.toast("CODE = ${ResultManager.codeToString(code)}")
+                context.toast("Code = ${ResultManager.codeToString(code)}")
                 when(code) {
                     ResultManager.SUCCESS_SIGN_UP -> {
                         context.finish()
                     }
                     ResultManager.WRONG_FORMAT, ResultManager.DUPLICATED_ID -> {
+                        context.sign_up_button.isClickable = true
+                        context.sign_up_button.text = context.getString(R.string.btn_register_sign_up)
+                    }
+                    ResultManager.ERROR -> {
                         context.sign_up_button.isClickable = true
                         context.sign_up_button.text = context.getString(R.string.btn_register_sign_up)
                     }
