@@ -1,7 +1,5 @@
 package com.treasure.loopang.communication
 
-import android.util.Log
-
 object ResultManager {
     // Case
     val AUTH = 100
@@ -79,7 +77,7 @@ object ResultManager {
             INVALID_TOKEN ->        return "INVALID_TOKEN"
             NO_FILE_FOUND ->        return "NO_FILE_FOUND"
             IS_EXISTED ->           return "IS_EXISTED"
-            ERROR ->                return "ERROR"
+            ERROR ->                return "CONNECTION ERROR"
             else ->                 return "This is not code. It may be Case"
         }
     }

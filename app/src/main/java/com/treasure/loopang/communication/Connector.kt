@@ -1,7 +1,6 @@
 package com.treasure.loopang.communication
 
 import android.os.Environment
-import android.util.Log
 import com.treasure.loopang.communication.API.LoopangNetwork
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -18,6 +17,7 @@ import java.security.cert.X509Certificate
 import javax.net.ssl.*
 import com.treasure.loopang.communication.ResultManager.accessToken
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import java.net.ConnectException
 
 class Connector(private val DNS: String = "https://ec2-3-15-172-177.us-east-2.compute.amazonaws.com",
                 private val port: Int = 5000,
@@ -30,12 +30,15 @@ class Connector(private val DNS: String = "https://ec2-3-15-172-177.us-east-2.co
                 private var service: LoopangNetwork = retrofit.create(LoopangNetwork::class.java)) {
     fun process(case: Int, json: JSONObject? = null, fileName: String = ""): Result{
         var call: Call<Result>? = null
+        var result: Result
         when(case) {
             ResultManager.AUTH -> { call = service.receiveTokens() }
             ResultManager.SIGN_UP -> { call = service.sendSignUpInfo(json?.get("email").toString(), json?.get("password").toString(), json?.get("name").toString()) }
             ResultManager.LOGIN -> { call = service.sendLoginInfo(json?.get("email").toString(), json?.get("password").toString()) }
             ResultManager.FILE_UPLOAD -> { call = service.sendFile(accessToken, fileName, getMultiPartBody(fileName)) } }
-        return call?.execute()?.body()!!
+        try { result = call?.execute()?.body()!! }
+        catch (e: ConnectException) { result = getErrorResult() }
+        return result
     }
 }
 
@@ -61,3 +64,9 @@ private fun getUnsafeOkHttpClient(): OkHttpClient {
 private fun getMultiPartBody(fileName: String) = MultipartBody.Part
     .createFormData("file", fileName, RequestBody.create(MediaType.parse("audio/*"),
     File("${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)}/Loopang/${fileName}")))
+
+private fun getErrorResult(): Result {
+    val temp = Result()
+    temp.status = "error"
+    return temp
+}
