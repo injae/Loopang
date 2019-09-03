@@ -262,7 +262,7 @@ class LoopStation {
     }
 
     fun export(loopTitle: String = mLoopTitle,
-               fileType: String = ".pcm",
+               fileType: String = ".wav",
                allDropFlag: Boolean = false,
                mixFlag: Boolean = false): Int {
         if(isEmpty()) {
@@ -271,12 +271,14 @@ class LoopStation {
         }
         if(mFileManager.checkDuplication(loopTitle)) return SAVE_ERROR_DUPLICATE_NAME
         if (mixFlag || getSounds().size == 1){
+            // 사운드 파일로 저장하거나 레이어가 한개일 경우
             val fileLabel = "/$loopTitle.${fileType.toLowerCase()}"
             Sound(mMixer.mixSounds()).save(mDirectoryPath+fileLabel)
         } else {
+            // 프로젝트 파일로 저장할 경우
             val children = mLayerLabelList.map{ LoopMusic(it) }
             children.forEach{ Log.d("export", "Saved Layer Name : ${it.name}") }
-            mMixer.save(LoopMusic(name=loopTitle,type= fileType.toLowerCase(), child=children))
+            mMixer.save(LoopMusic(name=loopTitle,type=fileType.toLowerCase(), child=children))
         }
 
         if(allDropFlag) dropAllLayer(messageFlag = false)
