@@ -12,6 +12,8 @@ services:
       - 5432:5432
     volumes:
       - var/lib/postgresql/data
+    networks:
+      - default
   loopang:
     container_name: loopang
     build:
@@ -24,6 +26,8 @@ services:
       - postgres
     volumes:
       - ./:/app
+    networks:
+      - default
       
 #  pgadmin:
 #    container_name: pgadmin

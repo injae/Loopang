@@ -1,7 +1,7 @@
 from flask_restful import Resource, reqparse
 from api.auth import Auth
 from model.music import Music
-from tools.request_message import request_message, RequestType
+from tools.request_message import request_message
 import werkzeug
 
 
