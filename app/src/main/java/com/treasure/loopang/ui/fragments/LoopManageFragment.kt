@@ -198,11 +198,11 @@ class LoopManageFragment : androidx.fragment.app.Fragment()
                 else { deleteProject(loopMusic) }
             }
             btn_playback.setOnClickListener {
-                mp.start()
                 btn_playback.visibility = View.GONE
                 btn_pause.visibility = View.VISIBLE
                 isPlaying = true
                 CoroutineScope(Dispatchers.Default).launch { updateTask(this@show) }
+                mp.start()
             }
             btn_pause.setOnClickListener {
                 mp.pause()
@@ -232,9 +232,9 @@ class LoopManageFragment : androidx.fragment.app.Fragment()
                     txt_current_time.text = stringForTime(mp.currentPosition)
                 }
                 override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                    mp.pause()
                     previousIsPlaying = isPlaying
                     isPlaying = false
-                    mp.pause()
                 }
                 override fun onStopTrackingTouch(seekBar: SeekBar?) {
                     isPlaying = previousIsPlaying

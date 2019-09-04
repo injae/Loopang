@@ -24,13 +24,18 @@ import com.treasure.loopang.ui.interfaces.IPageFragment
 import com.treasure.loopang.ui.listener.SwipeDismissListViewTouchListener
 import com.treasure.loopang.ui.listener.TouchGestureListener
 import com.treasure.loopang.ui.toast
+import com.treasure.loopang.ui.util.ProgressControl
 import kotlinx.android.synthetic.main.dialog_save_loop.*
 import kotlinx.android.synthetic.main.fragment_record.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class RecordFragment : Fragment(), IPageFragment {
     private val mLayerListAdapter : LayerListAdapter = LayerListAdapter()
     private val mTouchGestureListener = TouchGestureListener()
     val loopStation: LoopStation = LoopStation()
+    private val mProgressControl: ProgressControl = ProgressControl()
 
     init {
         mTouchGestureListener.apply{
@@ -83,6 +88,9 @@ class RecordFragment : Fragment(), IPageFragment {
             Log.d("Metronome test", "stop")
             (activity as Recording).setMetronomeFrag.metronome.cancle()
         }
+        loop_seek_bar.isEnabled = false
+        mProgressControl.setView(loop_seek_bar)
+        mProgressControl.max = 1000
     }
 
     override fun onDestroy() {
@@ -266,6 +274,22 @@ class RecordFragment : Fragment(), IPageFragment {
         override fun onFirstRecord(): Boolean {
             showWhiteNoiseCheckDialog()
             return true
+        }
+        override fun onFirstLayerSaved(sound: Sound, layerLabel: String, duration: Int) {
+            mProgressControl.duration = duration
+        }
+
+        override fun onLoopStart() {
+            CoroutineScope(Dispatchers.Default).launch {
+                while(loopStation.isLooping()) {
+                    mProgressControl.setProgressUsingMs(loopStation.position())
+                    mProgressControl.updateTask()
+                }
+            }
+        }
+
+        override fun onLoopStop() {
+            mProgressControl.progress = 0
         }
     }
 
