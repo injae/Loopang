@@ -26,9 +26,13 @@ import kotlinx.android.synthetic.main.final_storage_.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.animation.Animation.AnimationListener
+import com.treasure.loopang.Database.DatabaseManager
 import com.treasure.loopang.audio.LoopMusic
+import com.treasure.loopang.communication.UserManager
 import com.treasure.loopang.ui.fragments.RecordFragment
 import com.treasure.loopang.ui.fragments.LoopManageFragment
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 class Recording : AppCompatActivity()
@@ -223,8 +227,15 @@ class Recording : AppCompatActivity()
         val tempTime = System.currentTimeMillis()
         val intervalTime = tempTime - backPressedTime
 
-        if (intervalTime in 0..FINISH_INTERVAL_TIME)
+        if (intervalTime in 0..FINISH_INTERVAL_TIME) {
+            GlobalScope.launch {
+                if(UserManager.isLogined && DatabaseManager.getToken(this@Recording) != null) {
+                    DatabaseManager.deleteToken(this@Recording)
+                    UserManager.isLogined = false
+                }
+            }
             finishAffinity()
+        }
         else {
             backPressedTime = tempTime
             Toast.makeText(this, "One More pressed, Turn OFF", Toast.LENGTH_SHORT).show()

@@ -4,6 +4,7 @@ import org.json.JSONObject
 
 object UserManager {
     private val user = User()
+    var isLogined = false
 
     /**
      * Function to use when Login
@@ -31,9 +32,5 @@ object UserManager {
         user.name = ""
     }
 
-    fun getJson() = JSONObject().apply {
-        put("email", user.email)
-        put("password", user.password)
-        put("name", user.name)
-    }
+    fun getUser() = user
 }

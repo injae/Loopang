@@ -38,15 +38,14 @@ class ASyncer<T>(private val context: T, private var code: Int = 0,
         when(context) {
             is Login -> {
                 UserManager.setUser(context.input_id.text.toString(), context.input_password.text.toString())
-                response = connector.process(ResultManager.LOGIN, UserManager.getJson())
-                UserManager.makeEmptyUser()
+                response = connector.process(ResultManager.LOGIN, UserManager.getUser())
                 code = ResultManager.getCode(response)
             }
 
             is RegisterActivity -> {
                 if(context.input_id.text.toString().find { it == '@' } != null) {
                     UserManager.setUser(context.input_id.text.toString(), context.input_password.text.toString(), context.input_name.text.toString())
-                    response = connector.process(ResultManager.SIGN_UP, UserManager.getJson())
+                    response = connector.process(ResultManager.SIGN_UP, UserManager.getUser())
                     UserManager.makeEmptyUser()
                     code = ResultManager.getCode(response)
                 }
@@ -64,14 +63,12 @@ class ASyncer<T>(private val context: T, private var code: Int = 0,
                 context.toast("Code = ${ResultManager.codeToString(code)}")
                 when(code) {
                     ResultManager.SUCCESS_LOGIN -> {
+                        UserManager.isLogined = true
                         GlobalScope.launch { DatabaseManager.insertToken(context, response.refreshToken) }
                         context.startActivity(Intent(context, Recording::class.java))
                     }
-                    ResultManager.UNREG_OR_WRONG -> {
-                        context.login_button.isClickable = true
-                        context.login_button.text = context.getString(R.string.btn_sign_in)
-                    }
-                    ResultManager.ERROR -> {
+                    ResultManager.UNREG_OR_WRONG, ResultManager.ERROR -> {
+                        UserManager.makeEmptyUser()
                         context.login_button.isClickable = true
                         context.login_button.text = context.getString(R.string.btn_sign_in)
                     }
@@ -84,11 +81,7 @@ class ASyncer<T>(private val context: T, private var code: Int = 0,
                     ResultManager.SUCCESS_SIGN_UP -> {
                         context.finish()
                     }
-                    ResultManager.WRONG_FORMAT, ResultManager.DUPLICATED_ID -> {
-                        context.sign_up_button.isClickable = true
-                        context.sign_up_button.text = context.getString(R.string.btn_register_sign_up)
-                    }
-                    ResultManager.ERROR -> {
+                    ResultManager.WRONG_FORMAT, ResultManager.DUPLICATED_ID, ResultManager.ERROR -> {
                         context.sign_up_button.isClickable = true
                         context.sign_up_button.text = context.getString(R.string.btn_register_sign_up)
                     }
