@@ -28,13 +28,13 @@ class Connector(private val DNS: String = "https://ec2-3-15-172-177.us-east-2.co
                     .client(getUnsafeOkHttpClient())
                     .build(),
                 private var service: LoopangNetwork = retrofit.create(LoopangNetwork::class.java)) {
-    fun process(case: Int, json: JSONObject? = null, fileName: String = ""): Result{
+    fun process(case: Int, user: User? = null, fileName: String = ""): Result{
         var call: Call<Result>? = null
         var result: Result
         when(case) {
             ResultManager.AUTH -> { call = service.receiveTokens() }
-            ResultManager.SIGN_UP -> { call = service.sendSignUpInfo(json?.get("email").toString(), json?.get("password").toString(), json?.get("name").toString()) }
-            ResultManager.LOGIN -> { call = service.sendLoginInfo(json?.get("email").toString(), json?.get("password").toString()) }
+            ResultManager.SIGN_UP -> { call = service.sendSignUpInfo(user!!.email, user.password, user.name) }
+            ResultManager.LOGIN -> { call = service.sendLoginInfo(user!!.email, user.password) }
             ResultManager.FILE_UPLOAD -> { call = service.sendFile(accessToken, fileName, getMultiPartBody(fileName)) } }
         try { result = call?.execute()?.body()!! }
         catch (e: ConnectException) { result = getErrorResult() }
