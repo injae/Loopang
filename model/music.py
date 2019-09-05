@@ -11,7 +11,7 @@ class Music(db.Model):
     music_id = db.Column(db.String(36), primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     owner = db.Column(db.String(36), db.ForeignKey('user.public_id'))
-    updated_date = db.Column(db.DateTime(), default=datetime.utcnow())
+    #updated_date = db.Column(db.DateTime(), default=datetime.utcnow())
 
     def __init__(self, name, owner):
         self.music_id = gen_id()

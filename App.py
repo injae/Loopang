@@ -21,7 +21,10 @@ def create_app():
     api.add_resource(Auth, '/auth')
     from api.upload import Upload
     api.add_resource(Upload, '/upload')
+    from api.download import Download
+    api.add_resource(Download, '/download')
     return app
+
 
 if __name__ == '__main__':
     app = create_app()

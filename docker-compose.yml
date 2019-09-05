@@ -20,8 +20,10 @@ services:
       context: .
       dockerfile: ./Dockerfile
     restart: always
+    environment:
+      WAIT_HOSTS: postgres:5432
     ports:
-      - "5000:5000"
+      - 5000:5000
     depends_on:
       - postgres
     volumes:
