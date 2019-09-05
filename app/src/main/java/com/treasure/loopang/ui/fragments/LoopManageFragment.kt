@@ -23,6 +23,7 @@ import com.treasure.loopang.audio.FileManager
 import com.treasure.loopang.audio.LoopMusic
 import com.treasure.loopang.ui.interfaces.IPageFragment
 import com.treasure.loopang.ui.adapter.v2.LoopListAdapter
+import com.treasure.loopang.ui.stringForTime
 import kotlinx.android.synthetic.main.fragment_loop_manage.*
 import kotlinx.android.synthetic.main.fragment_loop_manage.loop_list
 import kotlinx.android.synthetic.main.manage_preview_dialog.*
@@ -197,12 +198,11 @@ class LoopManageFragment : androidx.fragment.app.Fragment()
                 else { deleteProject(loopMusic) }
             }
             btn_playback.setOnClickListener {
-                mp.start()
-                /* button switching */
                 btn_playback.visibility = View.GONE
                 btn_pause.visibility = View.VISIBLE
                 isPlaying = true
                 CoroutineScope(Dispatchers.Default).launch { updateTask(this@show) }
+                mp.start()
             }
             btn_pause.setOnClickListener {
                 mp.pause()
@@ -228,11 +228,13 @@ class LoopManageFragment : androidx.fragment.app.Fragment()
                     seekBar: SeekBar?,
                     progress: Int,
                     fromUser: Boolean
-                ) { }
+                ) {
+                    txt_current_time.text = stringForTime(mp.currentPosition)
+                }
                 override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                    mp.pause()
                     previousIsPlaying = isPlaying
                     isPlaying = false
-                    mp.pause()
                 }
                 override fun onStopTrackingTouch(seekBar: SeekBar?) {
                     isPlaying = previousIsPlaying
@@ -265,6 +267,7 @@ class LoopManageFragment : androidx.fragment.app.Fragment()
                         it.btn_stop.isClickable = true
                         it.btn_pause.isClickable = true
                         it.btn_repeat.isClickable = true
+                        it.txt_whole_time.text = stringForTime(mp.duration)
                     }
                 }
                 setOnCompletionListener {mp ->

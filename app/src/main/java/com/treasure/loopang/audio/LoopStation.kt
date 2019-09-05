@@ -1,13 +1,13 @@
 package com.treasure.loopang.audio
 
 import android.os.Handler
-import android.os.SystemClock
 import android.util.Log
 import android.view.View
 import com.treasure.loopang.ui.view.RealtimeVisualizerView
 import kotlin.math.abs
 
 class LoopStation {
+    private val mDurationCalculator: DurationCalculator = DurationCalculator()
     private var linkedVisualizer: RealtimeVisualizerView? = null
     private val mMixer: Mixer = Mixer()
     private val mRecorder: Recorder = Recorder()
@@ -29,6 +29,16 @@ class LoopStation {
 
     private val mHandler: Handler = Handler()
 
+    var duration: Int = 1   // mSeconds
+    private set
+
+    var position: () -> Int = {
+        mDurationCalculator.calculate(readData, DurationCalculator.BYTE)
+    }    // mSconds
+    private set
+
+    private var readData: Int = 0
+
     companion object{
         const val DEFAULT_LAYER_LABEL = "Layer "
         const val SAVE_SUCCESS = 0
@@ -36,7 +46,10 @@ class LoopStation {
         const val SAVE_ERROR_NONE_LAYER = 3
     }
 
-    init { initRecorder() }
+    init {
+        initRecorder()
+        initMixer()
+    }
 
     fun setLoopStationEventListener(loopStationEventListener: LoopStationEventListener) {
         mLoopStationEventListener = loopStationEventListener
@@ -71,6 +84,10 @@ class LoopStation {
                 it
             }
         }
+    }
+
+    private fun initMixer(){
+        mMixer.onSuccess { readData = 0 }
     }
 
     fun recordStart(firstRecordMessageFlag: Boolean = true) {
@@ -112,10 +129,12 @@ class LoopStation {
     }
 
     fun loopStart(messageFlag: Boolean = true) {
+        if(mMixer.sounds.size == 0) return
         if(isLooping()) {
             mLoopStationMessageListener?.onDuplicateLoopStartError()
             return
         }
+        readData = 0
         mMixer.start()
         mLoopStationEventListener?.onLoopStart()
         if(messageFlag) {
@@ -155,6 +174,16 @@ class LoopStation {
                           layerLabel: String) {
         mMixer.addSound(sound)
         mLayerLabelList.add(layerLabel)
+        if(mMixer.sounds.size == 1) {
+            mDurationCalculator.sampleRate = sound.format.info().sampleRate
+            duration =  mDurationCalculator.calculate(sound.data.size, DurationCalculator.BYTE)
+            sound.addEffector {
+                    readData += it.size
+                    Log.d("LoopStation", "update readData: $readData")
+                    it
+            }
+            mLoopStationEventListener?.onFirstLayerSaved(sound, layerLabel, duration)
+        }
     }
 
     fun muteLayer(position: Int,
@@ -360,6 +389,11 @@ class LoopStation {
         fun onChangeLayerLabel(position: Int, newLayerLabel: String, oldLayerLabel: String) {}
         fun onTitleChanged(newTitle: String, oldTitle: String) {}
         fun onFirstRecord(): Boolean = false
+        fun onFirstLayerSaved(
+            sound: Sound,
+            layerLabel: String,
+            duration: Int
+        ) {}
 
         fun onExport(loopTitle: String) {}
         fun onImport(loopTitle: String, newLoadFlag: Boolean) {}
