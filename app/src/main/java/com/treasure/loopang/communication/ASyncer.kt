@@ -34,7 +34,6 @@ class ASyncer<T>(private val context: T, private var code: Int = 0,
 
     override fun doInBackground(vararg params: Unit?) {
         val connector = Connector()
-
         when(context) {
             is Login -> {
                 UserManager.setUser(context.input_id.text.toString(), context.input_password.text.toString())
@@ -67,7 +66,8 @@ class ASyncer<T>(private val context: T, private var code: Int = 0,
                         GlobalScope.launch { DatabaseManager.insertToken(context, response.refreshToken) }
                         context.startActivity(Intent(context, Recording::class.java))
                     }
-                    ResultManager.UNREG_OR_WRONG, ResultManager.ERROR -> {
+
+                    ResultManager.UNREG_OR_WRONG, ResultManager.CONNECTION_ERROR -> {
                         UserManager.makeEmptyUser()
                         context.login_button.isClickable = true
                         context.login_button.text = context.getString(R.string.btn_sign_in)
@@ -78,10 +78,9 @@ class ASyncer<T>(private val context: T, private var code: Int = 0,
             is RegisterActivity -> {
                 context.toast("Code = ${ResultManager.codeToString(code)}")
                 when(code) {
-                    ResultManager.SUCCESS_SIGN_UP -> {
-                        context.finish()
-                    }
-                    ResultManager.WRONG_FORMAT, ResultManager.DUPLICATED_ID, ResultManager.ERROR -> {
+                    ResultManager.SUCCESS_SIGN_UP -> { context.finish() }
+
+                    ResultManager.WRONG_FORMAT, ResultManager.DUPLICATED_ID, ResultManager.CONNECTION_ERROR -> {
                         context.sign_up_button.isClickable = true
                         context.sign_up_button.text = context.getString(R.string.btn_register_sign_up)
                     }

@@ -7,7 +7,6 @@ import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody
 import okhttp3.logging.HttpLoggingInterceptor
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -17,7 +16,7 @@ import java.security.cert.X509Certificate
 import javax.net.ssl.*
 import com.treasure.loopang.communication.ResultManager.accessToken
 import retrofit2.converter.scalars.ScalarsConverterFactory
-import java.net.ConnectException
+import java.lang.Exception
 
 class Connector(private val DNS: String = "https://ec2-3-15-172-177.us-east-2.compute.amazonaws.com",
                 private val port: Int = 5000,
@@ -37,7 +36,7 @@ class Connector(private val DNS: String = "https://ec2-3-15-172-177.us-east-2.co
             ResultManager.LOGIN -> { call = service.sendLoginInfo(user!!.email, user.password) }
             ResultManager.FILE_UPLOAD -> { call = service.sendFile(accessToken, fileName, getMultiPartBody(fileName)) } }
         try { result = call?.execute()?.body()!! }
-        catch (e: ConnectException) { result = getErrorResult() }
+        catch (e: Exception) { result = getErrorResult() }
         return result
     }
 }
