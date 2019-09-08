@@ -31,7 +31,9 @@ object ResultManager {
     val SUCCESS_DOWNLOAD    = 90
 
     // Error
-    val ERROR = 400
+    val CONNECTION_ERROR    = 400
+    val CANT_FIND_FILE      = 401
+    val CANT_FIND_MUSIC     = 402
 
     var accessToken: String = ""
 
@@ -57,7 +59,13 @@ object ResultManager {
                     "Is Existed file: ${result.message.slice(IntRange(17, result.message.length - 1))}" -> code = IS_EXISTED
                 }
             }
-            "error" -> code = ERROR
+            "error" -> {
+                when(result.message) {
+                    "Can't find file" ->    code = CANT_FIND_FILE
+                    "Can't find music" ->   code = CANT_FIND_MUSIC
+                    else ->                 code = CONNECTION_ERROR
+                }
+            }
             else -> {}
         }
         return code
@@ -77,7 +85,9 @@ object ResultManager {
             INVALID_TOKEN ->        return "INVALID_TOKEN"
             NO_FILE_FOUND ->        return "NO_FILE_FOUND"
             IS_EXISTED ->           return "IS_EXISTED"
-            ERROR ->                return "CONNECTION ERROR"
+            CONNECTION_ERROR ->     return "CONNECTION ERROR"
+            CANT_FIND_FILE ->       return "CANT_FIND_FILE"
+            CANT_FIND_MUSIC ->      return "CANT_FIND_MUSIC"
             else ->                 return "This is not code. It may be Case"
         }
     }

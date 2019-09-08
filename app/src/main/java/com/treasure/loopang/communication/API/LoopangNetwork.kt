@@ -2,7 +2,7 @@ package com.treasure.loopang.communication.API
 
 import com.treasure.loopang.communication.Result
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -26,4 +26,9 @@ interface LoopangNetwork {
     fun sendFile(@Part("token") accessToken: String,
                  @Part("name") fileName: String,
                  @Part file: MultipartBody.Part): Call<Result>
+
+    @FormUrlEncoded
+    @GET("/download")
+    fun receiveFile(@Part("token") accessToken: String,
+                    @Part("name") fileName: String): Call<ResponseBody>
 }
