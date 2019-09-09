@@ -12,10 +12,10 @@ services:
       - db-data:/var/lib/postgresql/data
     ports:
       - 5432
-    networks:
-      services-network:
-        aliases:
-          - db
+#    networks:
+#      services-network:
+#        aliases:
+#          - db
       
   loopang:
     container_name: loopang
@@ -31,14 +31,14 @@ services:
       - db
     links:
       - db
-    networks:
-      services-network:
-        aliases:
-          - web
-networks:
-  services-network:
-    name: services-network
-    driver: bridge
+#    networks:
+#      services-network:
+#        aliases:
+#          - web
+#networks:
+#  services-network:
+#    name: services-network
+#    driver: bridge
 
 volumes:
   db-data:
