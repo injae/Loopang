@@ -6,7 +6,7 @@ from model.music import Music
 
 
 class Download(Resource):
-    def get(self):
+    def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('token', type=str)
         parser.add_argument('name', type=str)
