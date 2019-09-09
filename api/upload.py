@@ -13,9 +13,8 @@ class Upload(Resource):
             parser.add_argument('name', type=str)
             parser.add_argument('file', type=werkzeug.datastructures.FileStorage, location='files')
             args = parser.parse_args()
-            print("hello")
+            return request_message('fail', 'Test')
             (token, err) = Auth.decord_token(args['token'])
-            print("hello1")
             file = args['file']
             if token is None:
                 return err, 200
