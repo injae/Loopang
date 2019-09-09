@@ -9,4 +9,4 @@ def request_message(status, message):
     else:
         status = "error"
         code = 404
-    return {'status:': status, 'message:': message}, code
+    return {'status': status, 'message': message}, code

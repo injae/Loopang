@@ -28,7 +28,7 @@ class Login(Resource):
                     'accessToken': access
                 }, 200
             else:
-                return {'status': 'fail', 'message': 'unregisted id or wrong password'}, 202
+                return request_message('fail', 'unregistered id or wrong password')
 
         except Exception as e:
-            return {'status': 'error', 'message': str(e)}, 404
+            return request_message('error', str(e))
