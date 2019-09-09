@@ -10,8 +10,8 @@ class Upload(Resource):
         try:
             parser = reqparse.RequestParser()
             parser.add_argument('file', type=werkzeug.datastructures.FileStorage, location='files')
-            parser.add_argument('name', type=str)
             parser.add_argument('token', type=str)
+            parser.add_argument('name', type=str)
             args = parser.parse_args()
             print("hello")
             (token, err) = Auth.decord_token(args['token'])
