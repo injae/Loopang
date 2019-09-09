@@ -18,7 +18,6 @@ class Login(Resource):
             db_user = User.query.filter_by(email=email).first()
             if db_user is None:
                 return request_message('fail', 'unregistered id or wrong password')
-                #return {'status': 'fail', 'message': 'unregistered id or wrong password'}, 200
             access = Auth.encord_access_token(db_user.public_id).decode('UTF-8')
             if db_user.check_password(password):
                 return {

@@ -1,8 +1,7 @@
 from flask_restful import Resource, reqparse
 from model.User import User
 from model.database import db, gen_id
-
-secret_key = ""
+from tools.request_message import request_message
 
 
 class SignUp(Resource):
@@ -20,10 +19,10 @@ class SignUp(Resource):
             password = args['password']
             user = User(public_id=public_id, email=email, name=name, password=password)
             if(user.is_duplicate()):
-                return {'status': 'fail', 'message': "duplicate id"}, 202
+                return request_message('fail', 'duplicate id')
             else:
                 db.session.add(user)
                 db.session.commit()
-                return {'status': 'success', 'message': 'sign up'}, 200
+                return request_message('success', 'sing up')
         except Exception as e:
-            return {'status': 'error', 'message': str(e)}, 400
+            return request_message('error', str(e))
