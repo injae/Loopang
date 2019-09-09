@@ -37,7 +37,7 @@ services:
           - web
 networks:
   services-network:
-    name: service-network
+    name: services-network
     driver: bridge
 
 volumes:
