@@ -28,7 +28,7 @@ interface LoopangNetwork {
                  @Part file: MultipartBody.Part): Call<Result>
 
     @FormUrlEncoded
-    @GET("/download")
-    fun receiveFile(@Part("token") accessToken: String,
-                    @Part("name") fileName: String): Call<ResponseBody>
+    @POST("/download")
+    fun receiveFile(@Field("token") accessToken: String,
+                    @Field("name") fileName: String): Call<ResponseBody>
 }

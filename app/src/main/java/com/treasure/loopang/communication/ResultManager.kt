@@ -46,6 +46,7 @@ object ResultManager {
                     "login" ->              code = SUCCESS_LOGIN
                     "sign up" ->            code = SUCCESS_SIGN_UP
                     "Uploaded ${result.message.slice(IntRange(9, result.message.length - 1))}" -> code = SUCCESS_UPLOAD
+                    "file download success" -> code = SUCCESS_DOWNLOAD
                 }
                 accessToken = result.accessToken    // in case of SUCCESS_SIGN_UP, accessToken == ""
             }
