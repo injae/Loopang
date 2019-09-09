@@ -1,6 +1,7 @@
 from flask_restful import Resource, reqparse
 from model.User import User
 from api.auth import Auth
+from tools.request_message import request_message
 
 
 class Login(Resource):
@@ -16,7 +17,8 @@ class Login(Resource):
 
             db_user = User.query.filter_by(email=email).first()
             if db_user is None:
-                return {'status': 'fail', 'message': 'unregistered id or wrong password'}, 200
+                return request_message('fail', 'unregistered id or wrong password')
+                #return {'status': 'fail', 'message': 'unregistered id or wrong password'}, 200
             access = Auth.encord_access_token(db_user.public_id).decode('UTF-8')
             if db_user.check_password(password):
                 return {

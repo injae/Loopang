@@ -4,25 +4,21 @@ services:
     container_name: postgres
     image: postgres:latest
     #restart: always
-    environment:
-      POSTGRES_DB: "test_db"
-      POSTGRES_USER: "loopang"
-      POSTGRES_PASSWORD: "1234"
+    env_file:
+      - ./DockerENV.env
     volumes:
       - db-data:/var/lib/postgresql/data
     ports:
       - 5432
-#    networks:
-#      services-network:
-#        aliases:
-#          - db
       
   loopang:
     container_name: loopang
+    restart: always
+    env_file:
+      - ./DockerENV.env
     build:
       context: .
       dockerfile: ./Dockerfile
-    restart: always
     ports:
       - "5000:5000"
     volumes:
@@ -31,18 +27,11 @@ services:
       - db
     links:
       - db
-#    networks:
-#      services-network:
-#        aliases:
-#          - web
-#networks:
-#  services-network:
-#    name: services-network
-#    driver: bridge
 
 volumes:
   db-data:
     driver: local
+
 #  pgadmin:
 #    container_name: pgadmin
 #    image: dpage/pgadmin4
