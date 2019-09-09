@@ -19,7 +19,7 @@ class Music(db.Model):
         self.owner = owner
 
     def file_name(self):
-        return self.owner+self.id
+        return self.owner+self.music_id
 
     def path(self):
         return os.path.join(MUSIC_FOLDER, self.file_name())
