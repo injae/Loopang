@@ -38,5 +38,5 @@ class Music(db.Model):
         return Music.query.all()
 
     @staticmethod
-    def search(self, name):
+    def search(name):
         return Music.query.filter_by(name=name).first()
