@@ -16,7 +16,7 @@ class Download(Resource):
         if token is None:
             return err, 200
 
-        file_name = Music.search(+ args['name'])
+        file_name = Music.search(args['name'])
         if file_name is not None:
             with open(file_name.path(), 'rb') as buffer:
                 def streaming():
