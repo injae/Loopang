@@ -9,8 +9,8 @@ class Upload(Resource):
     def post(self):
         try:
             parser = reqparse.RequestParser()
-            parser.add_argument('token', type=str)
-            parser.add_argument('name', type=str)
+            #parser.add_argument('token', type=str)
+            #parser.add_argument('name', type=str)
             parser.add_argument('file', type=werkzeug.datastructures.FileStorage, location='files')
             args = parser.parse_args()
             return request_message('fail', 'Test')
