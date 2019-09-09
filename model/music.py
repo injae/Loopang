@@ -11,7 +11,7 @@ class Music(db.Model):
     music_id = db.Column(db.String(36), primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     owner = db.Column(db.String(36), db.ForeignKey('user.public_id'))
-    #updated_date = db.Column(db.DateTime(), default=datetime.utcnow())
+    updated_date = db.Column(db.DateTime(), default=datetime.utcnow())
 
     def __init__(self, name, owner):
         self.music_id = gen_id()
@@ -28,7 +28,6 @@ class Music(db.Model):
         path = self.path()
         if not os.path.exists(MUSIC_FOLDER):
             os.makedirs(MUSIC_FOLDER)
-        
         if Path(path).exists():
             return False
         else:
@@ -41,4 +40,3 @@ class Music(db.Model):
     @staticmethod
     def search(self, name):
         return Music.query.filter_by(name=name).first()
-        
