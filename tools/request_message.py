@@ -1,15 +1,12 @@
-import enum
-
-
 
 
 def request_message(status, message):
     code = 404
-    if type == 'success':
+    if status == "success":
         code = 200
-    elif type == 'fail':
+    elif status == "fail":
         code = 202
     else:
-        status = 'error'
+        status = "error"
         code = 404
     return {'status:': status, 'message:': message}, code
