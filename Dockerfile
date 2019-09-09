@@ -4,7 +4,8 @@ MAINTAINER injae <8687lee@gmail.com>
 RUN apt-get update
 COPY ./ /usr/src/app/
 WORKDIR /usr/src/app
-ENV PYTHONPATH /usr/src/a/pp
+ENV PYTHONPATH /usr/src/app
+RUN /bin/bash -c "source venv/bin/activate"
 RUN pip install -r requirements.txt
 RUN chmod +x startup.sh
 

@@ -9,7 +9,7 @@ import os
 
 user = 'loopang'
 password = '1234'
-host = 'localhost'
+host = 'db'
 port = '5432'
 database = 'test_db'
 

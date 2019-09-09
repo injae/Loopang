@@ -1,36 +1,48 @@
-version: '3'
+version: '3.5'
 services:
-  postgres:
+  db:
     container_name: postgres
     image: postgres:latest
-    restart: always
+    #restart: always
     environment:
+      POSTGRES_DB: "test_db"
       POSTGRES_USER: "loopang"
       POSTGRES_PASSWORD: "1234"
-      POSTGRES_DB: "test_db"
-    ports:
-      - 5432:5432
     volumes:
-      - var/lib/postgresql/data
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - 5432
     networks:
-      - default
+      services-network:
+        aliases:
+          - db
+      
   loopang:
     container_name: loopang
     build:
       context: .
       dockerfile: ./Dockerfile
     restart: always
-    environment:
-      WAIT_HOSTS: postgres:5432
     ports:
-      - 5000:5000
-    depends_on:
-      - postgres
+      - "5000:5000"
     volumes:
       - ./:/app
+    depends_on:
+      - db
+    links:
+      - db
     networks:
-      - default
-      
+      services-network:
+        aliases:
+          - web
+networks:
+  services-network:
+    name: service-network
+    driver: bridge
+
+volumes:
+  db-data:
+    driver: local
 #  pgadmin:
 #    container_name: pgadmin
 #    image: dpage/pgadmin4
