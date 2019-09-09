@@ -9,10 +9,11 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
     ports:
-      - 5432:5432
+      - 5432
       
   loopang:
     container_name: loopang
+    image: loopang:latest
     restart: always
     env_file:
       - ./DockerENV.env
