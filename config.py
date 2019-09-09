@@ -14,5 +14,6 @@ host = 'db'
 port = '5432'
 database = 'test_db'
 
+
 DATABASE_CONNECTION_URI = f'postgresql://{user}:{password}@{host}/{database}'
 #DATABASE_CONNECTION_URI = f'mysql://{user}:{password}@{host}:{port}/{database}?charset=utf8'
