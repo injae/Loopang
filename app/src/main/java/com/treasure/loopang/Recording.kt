@@ -31,8 +31,12 @@ import com.treasure.loopang.audio.LoopMusic
 import com.treasure.loopang.communication.UserManager
 import com.treasure.loopang.ui.fragments.RecordFragment
 import com.treasure.loopang.ui.fragments.LoopManageFragment
+
+import kotlin.system.exitProcess
+
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+
 
 
 class Recording : AppCompatActivity()
@@ -235,8 +239,10 @@ class Recording : AppCompatActivity()
                 }
             }
             finishAffinity()
-        }
-        else {
+            System.runFinalization()
+            exitProcess(0)    
+        } else {
+
             backPressedTime = tempTime
             Toast.makeText(this, "One More pressed, Turn OFF", Toast.LENGTH_SHORT).show()
         }
