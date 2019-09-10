@@ -29,5 +29,10 @@
         <item name="colorControlActivated">#FFFFFF</item>
         <item name="colorControlHighlight">#FFFFFF</item>
     </style>
+    <style name="finalRecordActivityTheme" parent="LoopangAppTheme">
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
 
 </resources>
