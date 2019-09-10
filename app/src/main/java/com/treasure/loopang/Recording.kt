@@ -29,6 +29,7 @@ import android.view.animation.Animation.AnimationListener
 import com.treasure.loopang.audio.LoopMusic
 import com.treasure.loopang.ui.fragments.RecordFragment
 import com.treasure.loopang.ui.fragments.LoopManageFragment
+import kotlin.system.exitProcess
 
 
 class Recording : AppCompatActivity()
@@ -223,9 +224,11 @@ class Recording : AppCompatActivity()
         val tempTime = System.currentTimeMillis()
         val intervalTime = tempTime - backPressedTime
 
-        if (intervalTime in 0..FINISH_INTERVAL_TIME)
+        if (intervalTime in 0..FINISH_INTERVAL_TIME) {
             finishAffinity()
-        else {
+            System.runFinalization()
+            exitProcess(0)    
+        } else {
             backPressedTime = tempTime
             Toast.makeText(this, "One More pressed, Turn OFF", Toast.LENGTH_SHORT).show()
         }
