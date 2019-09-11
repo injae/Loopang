@@ -45,9 +45,6 @@
                 android:background="@android:color/transparent"
                 android:layout_alignParentBottom="true"
                />
-        <include
-                layout = "@layout/final_storage_"
-                />
 
     </RelativeLayout>
     <LinearLayout

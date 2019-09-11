@@ -18,16 +18,8 @@ import com.treasure.loopang.audio.Sound
 import android.widget.ImageButton
 import com.treasure.loopang.ui.interfaces.IPageFragment
 import android.util.DisplayMetrics
-import android.widget.*
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.AdapterView
 import android.widget.Toast
 import com.treasure.loopang.audio.FileManager
-import kotlinx.android.synthetic.main.final_storage_.*
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
-import android.view.animation.Animation.AnimationListener
 
 
 
@@ -78,67 +70,6 @@ class Recording : AppCompatActivity()
 
         val displayMetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(displayMetrics)
-
-        var isPageOpen = false
-        val translateUp : Animation = AnimationUtils.loadAnimation(this, R.anim.translate_up)
-        val translateDown :Animation = AnimationUtils.loadAnimation(this, R.anim.translate_down)
-        final_storage_layout.visibility = View.INVISIBLE
-        btn_open_final_storage.visibility = View.VISIBLE
-
-        translateDown.setAnimationListener(object : AnimationListener {
-            override fun onAnimationStart(ani: Animation) {} override fun onAnimationRepeat(ani: Animation) {}
-            override fun onAnimationEnd(ani: Animation) { //닫기
-                isPageOpen = false
-                //final_storage_layout.setVisibility(View.INVISIBLE);
-                final_storage_layout.visibility = View.INVISIBLE
-                btn_open_final_storage.visibility = View.VISIBLE
-                Log.d("hello","내려가는 애니메이션~")
-            }
-        })
-        translateUp.setAnimationListener(object : AnimationListener {
-            override fun onAnimationStart(ani: Animation) {} override fun onAnimationRepeat(ani: Animation) {}
-            override fun onAnimationEnd(ani: Animation) {
-                isPageOpen = true
-            }
-        }) //  translateUp.setAnimationListener(SlidingAnimationListener())
-        btn_open_final_storage.setOnClickListener{
-            final_storage_layout.visibility = View.VISIBLE
-            final_storage_layout.startAnimation(translateUp);
-            btn_open_final_storage.visibility = View.INVISIBLE
-        }
-        val spinner: Spinner
-        val arrayList: ArrayList<String>  //private val mLoopItemList = arrayListOf<LoopItem>()
-        val arrayAdapter: ArrayAdapter<String>
-        arrayList = ArrayList()
-        for(i in loopList.indices) {
-            arrayList.add(loopList[i].name)
-        }
-        arrayAdapter = ArrayAdapter(
-            applicationContext,
-            android.R.layout.simple_spinner_dropdown_item,
-            arrayList
-        )
-        spinner = findViewById<View>(R.id.final_loop_name_spinner) as Spinner
-        spinner.setAdapter(arrayAdapter)
-        spinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {}
-            override fun onNothingSelected(adapterView: AdapterView<*>) {}
-        })
-        btn_final_play.setOnClickListener {
-            Toast.makeText(applicationContext, "Loop 재생", Toast.LENGTH_SHORT).show()
-            //recordFragment에서 들리는거랑 안들리는 거 구분해서 재생하는 애 여기다가 넣어주기?  Mixer
-        }
-        btn_final_record.setOnClickListener {
-            Toast.makeText(applicationContext, "최종 녹음", Toast.LENGTH_SHORT).show()
-            // slidingDrawer.lock()
-            //녹음기능 여기다가 넣기
-        }
-        btn_final_stop.setOnClickListener {
-            Toast.makeText(applicationContext, "최종 녹음을 저장합니다.", Toast.LENGTH_SHORT).show()
-            //slidingDrawer.unlock()
-            //최종 녹음
-            final_storage_layout.startAnimation(translateDown); //녹음저장하고 닫거나
-        }
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
          //drawerLayout.setPadding(0, statusBarHeight(this), 0, 0) //Padding for transparent status bar

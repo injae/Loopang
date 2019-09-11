@@ -115,7 +115,7 @@ class setMetronome : androidx.fragment.app.Fragment() {
         btn_for_edit_bpm.visibility =View.VISIBLE
         EditBpm.visibility = View.GONE
     }
-    //얘는 그냥 어떤 템포인지 이름 알려주는 앤데 필요없으면 삭제할거임
+
     fun informBpsTempo(metronomeBpm: Long) {
         tempos.reversed()
               .fold("") { acc, tempo -> if(metronomeBpm < tempo.first) tempo.second else acc }

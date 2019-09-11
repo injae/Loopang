@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/effectorlist_background"
+        android:id="@+id/myPageLoginX"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+>
+    <ImageView
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/icon_mypage"
+            android:id="@+id/login_icon" android:layout_weight="1"/>
+    <FrameLayout
+            android:layout_width="150dp"
+            android:layout_height="22dp"
+            android:layout_toRightOf="@id/login_icon"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:id="@+id/idframe"
+    >
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="ID(email): "
+                android:textSize="18dp"
+                android:textColor="#FFFFFF"
+                android:id="@+id/login_id_textView" />
+
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="18dp"
+                android:textColor="#FFFFFF"
+                android:id="@+id/edit_id"/>
+    </FrameLayout>
+
+    <FrameLayout
+            android:layout_width="150dp"
+            android:layout_height="22dp"
+            android:layout_below="@id/idframe"
+            android:layout_marginEnd="30dp"
+            android:layout_marginTop="20dp"
+            android:layout_toRightOf="@id/login_icon"
+            android:id="@+id/passwordFrame"
+            android:layout_marginStart="20dp"
+    >
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="PW: "
+                android:textSize="18dp"
+                android:textColor="#FFFFFF"
+                android:id="@+id/login_pw_textview"
+        />
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/edit_password"
+                android:textSize="18dp"
+                android:textColor="#FFFFFF"
+                android:text=" "
+                android:layout_toRightOf="@id/login_pw_textview"
+                android:layout_below="@id/edit_id"/>
+    </FrameLayout>
+    <Button
+            android:layout_width="250dp"
+            android:layout_height="39dp"
+            android:layout_below="@id/passwordFrame"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="20dp"
+            android:layout_centerInParent="true"
+            android:background="@color/my_page_sign_in"
+            android:text="sign in"
+            android:textSize="18dp"
+            android:textColor="#FFFFFF"
+            android:id="@+id/BtnmyPageLogIn"
+    />
+</RelativeLayout>

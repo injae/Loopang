@@ -11,4 +11,8 @@
 
     <color name="metronome_tik">#EA1C11</color>
     <color name="metronome_default">#CCE4E1E1</color>
+    <color name="settingItem">#1ACA3F3F</color>
+    <color name="my_page_sign_in">#4DFFFFFF</color>
+    <color name="set_visualizer_background">#1ACA3F3F</color>
+    <color name="shared_comunity_bottom_button">#939393</color>
 </resources>

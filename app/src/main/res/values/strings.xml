@@ -45,4 +45,6 @@
     <string name="toast_drop_all_of_layer_error_empty">No layer</string>
     <string name="toast_drop_all_of_layer_error_recording">To drop during recoding is unavailable</string>
 
+    <string name="setting_notice_item_update_info">Update 0.1.1</string>
+
 </resources>
