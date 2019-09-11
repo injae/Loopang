@@ -15,7 +15,7 @@ class MixerSound(var _sound: Sound) {
     fun load(path: String) = _sound.load(path)
 }
 
-class Mixer(val sounds: MutableList<MixerSound> = mutableListOf()) : SoundFlow<Mixer>(), IPlayable {
+class Mixer(val sounds: MutableList<MixerSound> = mutableListOf()) : SoundFlow<Mixer>() {
     var isLooping = AtomicBoolean(false)
 
     fun addSound(sound: Sound) {
@@ -27,13 +27,13 @@ class Mixer(val sounds: MutableList<MixerSound> = mutableListOf()) : SoundFlow<M
 
     fun setMute(index: Int, isMute: Boolean) { sounds[index].isMute = isMute}
 
-    override fun start() {
+    fun start() {
         isLooping.set(true)
         callStart(this)
         launch { while(isLooping.get()) { sounds.map { async { it.play() } }.forEach{ it.await() }; callSuccess(this@Mixer) } }.start()
     }
 
-    override fun stop() {
+    fun stop() {
         isLooping.set(false)
         callStop(this)
         sounds.forEach { it.stop() }
@@ -51,4 +51,20 @@ class Mixer(val sounds: MutableList<MixerSound> = mutableListOf()) : SoundFlow<M
               .filterIndexed{ index, _ -> index != filteredIndex }
               .fold(MutableList<Short>(sounds[0].data.size) {0}) {
                     acc, it -> acc.zip(it){ a, b -> (a + b).toShort() }.toMutableList() }
+
+    fun load(config: LoopMusic) {
+        config.child?.forEach { music ->
+            addSound(Sound().apply { load(music.path) })
+        }
+    }
+
+    fun save(config: LoopMusic) {
+        if(config.child?.count() != sounds.count()){}
+        config.save()
+        (0 until sounds.count()).forEach {
+            sounds[it].save(config.child!![it].path)
+            Log.d("Mixer", "sound.save(config.child!![it].path: ${config.child!![it].path})")
+        }
+        Sound(mixSounds()).save(config.path)
+    }
 }

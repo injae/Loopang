@@ -12,8 +12,18 @@
         <item>Remove This</item>
     </string-array>
 
+    <string-array name="project_more_dialog_menu_array_kr">
+        <item>Load Project</item>
+        <item>Add Project to current Project</item>
+        <item>Remove This Project</item>
+    </string-array>
+
+    <string-array name="sound_more_dialog_menu_array_kr">
+        <item>Add Loop Sound as Layer</item>
+        <item>Remove</item>
+    </string-array>
+
     <string-array name="spinner_file_type_kr">
-        <item>PCM</item>
         <item>WAV</item>
         <item>AAC</item>
     </string-array>

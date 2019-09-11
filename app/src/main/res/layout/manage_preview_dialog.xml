@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="171dp">
+
+    <TextView
+            android:text="@string/manage_preview_dialog_title_example"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/txt_title" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="13dp" android:textSize="21sp" android:fontFamily="@font/roboto_medium"
+    />
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" android:layout_marginEnd="10dp">
+        <ImageButton
+                android:layout_width="26dp"
+                android:layout_height="26dp" app:srcCompat="@drawable/baseline_playlist_add_white_24dp"
+                android:id="@+id/btn_add" android:layout_weight="1" android:scaleType="centerCrop"
+                android:background="@android:color/transparent" android:tint="#FF656565"
+                android:backgroundTint="#656565"/>
+        <ImageButton
+                android:layout_width="26dp"
+                android:layout_height="26dp" app:srcCompat="@drawable/outline_info_white_24dp"
+                android:layout_marginLeft="6dp"
+                android:id="@+id/btn_info" android:layout_weight="1" android:scaleType="centerInside"
+                android:background="@android:color/transparent" android:tint="#FF656565"/>
+        <ImageButton
+                android:layout_width="26dp"
+                android:layout_height="26dp" app:srcCompat="@drawable/delete_forever_icon"
+                android:layout_marginLeft="6dp"
+                android:id="@+id/btn_drop" android:layout_weight="1" android:scaleType="centerInside"
+                android:background="@android:color/transparent" android:tint="#FF656565"/>
+    </LinearLayout>
+    <SeekBar
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" android:id="@+id/seekBar"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginEnd="10dp" android:layout_marginTop="73dp"
+            android:layout_marginStart="10dp"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_current_time" app:layout_constraintStart_toStartOf="@+id/seekBar"
+            android:layout_marginStart="8dp" android:layout_marginTop="4dp"
+            app:layout_constraintTop_toBottomOf="@+id/seekBar" android:text="00:10"/>
+    <TextView
+            android:text="01:00"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/txt_whole_time"
+            app:layout_constraintEnd_toEndOf="@+id/seekBar" android:layout_marginEnd="8dp"
+            android:layout_marginTop="4dp" app:layout_constraintTop_toBottomOf="@+id/seekBar"/>
+
+    <ImageButton
+            android:id="@+id/btn_repeat"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="8dp"
+            android:background="@android:color/transparent"
+            android:scaleType="centerInside"
+            android:tint="#FF656565"
+            app:layout_constraintBottom_toBottomOf="@+id/frame_btn_playback"
+            app:layout_constraintEnd_toStartOf="@+id/frame_btn_playback"
+            app:layout_constraintTop_toTopOf="@+id/frame_btn_playback"
+            app:srcCompat="@drawable/round_repeat_white_24dp" />
+    <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp" app:srcCompat="@drawable/round_stop_white_24dp"
+            android:id="@+id/btn_stop"
+            android:tint="#FF656565" android:background="@android:color/transparent"
+            app:layout_constraintStart_toEndOf="@+id/frame_btn_playback" android:layout_marginStart="8dp"
+            app:layout_constraintTop_toTopOf="@+id/frame_btn_playback"
+            app:layout_constraintBottom_toBottomOf="@+id/frame_btn_playback"/>
+
+    <FrameLayout
+            android:id="@+id/frame_btn_playback"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/seekBar">
+
+        <ImageButton
+                android:id="@+id/btn_playback"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@android:color/transparent"
+                android:scaleType="center"
+                android:tint="#FF656565"
+                app:srcCompat="@drawable/baseline_play_arrow_white_24dp" />
+
+        <ImageButton
+                android:id="@+id/btn_pause"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@android:color/transparent"
+                android:scaleType="centerInside"
+                android:tint="#FF656565"
+                android:visibility="gone"
+                app:srcCompat="@drawable/round_pause_white_48dp" />
+    </FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

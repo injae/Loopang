@@ -35,10 +35,11 @@ class NotSupportFormat : IFormat {
     override fun info() = FormatInfo()
 }
 
+
 fun formatFactory(path: String) : IFormat {
     return when (path.substringAfter('.',"")) {
         "pcm" -> Pcm16()
-        "wav"-> Wave()
+        "wav" -> Wave()
         "aac" -> AAC()
         else  -> NotSupportFormat()
     }

@@ -15,14 +15,21 @@ import com.treasure.loopang.ui.statusBarHeight
 import kotlinx.android.synthetic.main.activity_recording.*
 import kotlinx.android.synthetic.main.drawer.*
 import com.treasure.loopang.audio.Sound
-import android.widget.ImageButton
 import com.treasure.loopang.ui.interfaces.IPageFragment
 import android.util.DisplayMetrics
-import android.widget.Toast
+import android.widget.ImageButton
 import com.treasure.loopang.audio.FileManager
+import android.widget.Toast
+import com.treasure.loopang.Database.DatabaseManager
+import com.treasure.loopang.audio.LoopMusic
+import com.treasure.loopang.communication.UserManager
+import com.treasure.loopang.ui.fragments.RecordFragment
+import com.treasure.loopang.ui.fragments.LoopManageFragment
 
+import kotlin.system.exitProcess
 
-
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class Recording : AppCompatActivity()
     , LoopManageFragment.OnLoopManageListener {
@@ -42,7 +49,7 @@ class Recording : AppCompatActivity()
     lateinit var setting : setting
 
     val fileManager : FileManager =FileManager()
-    val loopList = fileManager.SoundList()
+    val loopList = fileManager.soundList()
 
     private val pagerAdapter by lazy { LoopStationPagerAdapter(supportFragmentManager) }
 
@@ -155,9 +162,18 @@ class Recording : AppCompatActivity()
         val tempTime = System.currentTimeMillis()
         val intervalTime = tempTime - backPressedTime
 
-        if (intervalTime in 0..FINISH_INTERVAL_TIME)
+        if (intervalTime in 0..FINISH_INTERVAL_TIME) {
+            GlobalScope.launch {
+                if(UserManager.isLogined && DatabaseManager.getToken(this@Recording) != null) {
+                    DatabaseManager.deleteToken(this@Recording)
+                    UserManager.isLogined = false
+                }
+            }
             finishAffinity()
-        else {
+            System.runFinalization()
+            exitProcess(0)
+        } else {
+
             backPressedTime = tempTime
             Toast.makeText(this, "One More pressed, Turn OFF", Toast.LENGTH_SHORT).show()
         }
@@ -208,14 +224,13 @@ class Recording : AppCompatActivity()
         }
     }
 
-    override fun onAddLoop(sound: Sound) {
+    override fun onImport(project: LoopMusic, newLoadFlag: Boolean) {
         val recordFragment = pagerAdapter.getItem(0) as RecordFragment
-        recordFragment.addSoundToLayerList(sound)
+        recordFragment.loopStation.import(project, newLoadFlag, messageFlag = false)
     }
 
     override fun onClear() {
         val recordFragment = pagerAdapter.getItem(0) as RecordFragment
-        recordFragment.dropAllLayer()
+        recordFragment.loopStation.dropAllLayer(messageFlag = false)
     }
 }
-

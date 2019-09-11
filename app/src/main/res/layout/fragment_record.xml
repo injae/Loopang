@@ -8,7 +8,7 @@
         android:layout_height="match_parent"
         android:background="@drawable/view_pager_background"
         android:animateLayoutChanges="true"
-        tools:context=".RecordFragment">
+        tools:context=".ui.fragments.v1.RecordFragment">
     <TextView
             android:text="@string/title_activity_recording"
             android:textSize="24sp"
@@ -33,26 +33,29 @@
                 android:id="@+id/realtime_visualizer_view"
                 android:visibility="gone"/>
     </FrameLayout>
+
     <FrameLayout
+            android:id="@+id/layer_list_frame"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="67dp"
+            android:layout_above="@id/loop_seek_bar"
+            android:layout_below="@id/realtime_visualizer_view_frame"
+            android:layout_centerHorizontal="true"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/realtime_visualizer_view_frame"
-            android:id="@+id/layer_list_frame">
+            android:layout_marginBottom="5dp">
+
         <ListView
+                android:id="@+id/layer_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
-                android:transcriptMode="normal"
+                android:background="@android:color/transparent"
                 android:divider="@android:color/transparent"
                 android:dividerHeight="5dp"
                 android:listSelector="@drawable/layer_listview_selector"
-                android:background="@android:color/transparent"
-                android:id="@+id/layer_list"/>
+                android:transcriptMode="normal" />
     </FrameLayout>
     <com.treasure.loopang.ui.view.MetronomeView
             android:layout_width="@dimen/record_fragment_icon_width"
@@ -71,4 +74,14 @@
             android:layout_marginEnd="15dp"
             android:layout_marginTop="21dp"
             android:background="@android:color/transparent" android:tint="#00FFFFFF" android:scaleType="fitCenter"/>
+
+    <SeekBar
+            android:id="@+id/loop_seek_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/layer_list_frame"
+            android:layout_alignRight="@id/layer_list_frame"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="52dp" />
 </RelativeLayout>

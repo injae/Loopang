@@ -3,7 +3,9 @@
     <string name="splash_logo_image">Splash Logo Image</string>
 
     <!-- 로그인 액티비티용 스트링 리소스 -->
-    <string name="guest_login_string"><u>INFO</u></string>
+    <string name="guest_login_string">
+        <u>Get in as Guest</u>
+    </string>
     <string name="login_string">Start Loopstation</string>
 
     <!-- 레코딩 액티비티, 프래그먼트 용 스트링 리소스 -->
@@ -33,6 +35,7 @@
     <string name="toast_playback_stop_error">You can\'t stop Looper during recording.</string>
     <string name="toast_playback_stop">PlayBack Stop!</string>
     <string name="toast_playback_start">PlayBack!</string>
+    <string name="toast_playback_start_error">No Layer!</string>
     <string name="toast_record_start">Record New Layer!!</string>
     <string name="toast_record_start_error_without_playback">You can start record only loop is playing!</string>
     <string name="toast_record_stop">Recording Stop!</string>
@@ -44,6 +47,19 @@
     <string name="toast_drop_all_of_layer">Drop all of Layers</string>
     <string name="toast_drop_all_of_layer_error_empty">No layer</string>
     <string name="toast_drop_all_of_layer_error_recording">To drop during recoding is unavailable</string>
+
+    <string name="btn_more">more</string>
+    <string name="btn_info">information of project</string>
+    <string name="preview_playback">preview playback</string>
+    <string name="file_type">File Type</string>
+    <string name="hint_input_id">ID(Email)</string>
+    <string name="hint_input_password">Password</string>
+    <string name="btn_login_wait">Wait...</string>
+    <string name="btn_sign_up">No account yet? Create one</string>
+    <string name="btn_sign_in">Sign in</string>
+    <string name="btn_register_sign_up">Sign up</string>
+    <string name="hint_e_mail">Name</string>
+    <string name="manage_preview_dialog_title_example">title_example</string>
 
     <string name="setting_notice_item_update_info">Update 0.1.1</string>
 
