@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:id="@+id/settingVisualizer">
+
+    <LinearLayout android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <TextView
+            android:layout_marginTop="40dp"
+            android:text=" choose your design "
+            android:textSize="18dp"
+            android:textColor="#FFFFFF"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"/>
+    <FrameLayout
+            android:layout_marginTop="20dp"
+            android:layout_width="296dp"
+            android:layout_height="126dp"
+            android:layout_gravity="center_horizontal"
+    >
+        <TextView
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="25dp"
+                android:text="ver.1"
+                android:textSize="14dp"
+                android:textColor="#FFFFFF"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView10"/>
+        <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:descendantFocusability="blocksDescendants"
+                android:background="@drawable/layerview_background"
+                android:layout_marginTop="10dp">
+
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" app:srcCompat="@drawable/visualizer_design_ver1"
+                    android:id="@+id/imageView3"
+
+                    />
+        </FrameLayout>
+        <Button
+                android:background="@color/set_visualizer_background"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" android:id="@+id/btn_visualizer_ver1"/>
+    </FrameLayout>
+    <FrameLayout
+            android:layout_marginTop="30dp"
+            android:layout_width="294dp"
+            android:layout_height="126dp"
+            android:layout_gravity="center_horizontal">
+
+        <TextView
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="25dp"
+                android:text="ver.2"
+                android:textSize="14dp"
+                android:textColor="#FFFFFF"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView11"/>
+
+        <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:descendantFocusability="blocksDescendants"
+                android:background="@drawable/layerview_background"
+                android:layout_marginTop="10dp">
+
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/visualizer_design_ver2"
+                    android:id="@+id/imageView9"/>
+        </FrameLayout>
+        <Button
+                android:background="@color/set_visualizer_background"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" android:id="@+id/btn_visualizer_ver2"/>
+
+    </FrameLayout>
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center_horizontal">
+            <TextView
+                    android:text="Applied ver. "
+                    android:textSize="20dp"
+                    android:textColor="#FFFFFF"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+            <TextView
+                    android:text="1"
+                    android:textSize="20dp"
+                    android:textColor="#FFFFFF"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/visualizer_applied_info"/>
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

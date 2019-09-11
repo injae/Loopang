@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+              android:id="@+id/settingPcm">
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+           >
+
+        <Button
+                android:text="16"
+                android:textSize="20dp"
+                android:textColor="#FFFFFF"
+                android:layout_width="295dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="150dp"
+                android:layout_gravity="center"
+                android:id="@+id/btn_pcm16"
+                android:background="@color/settingItem"
+        />
+            <Button
+                    android:text="32"
+                    android:textSize="20dp"
+                    android:textColor="#FFFFFF"
+                    android:layout_width="295dp"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_gravity="center"
+                    android:id="@+id/btn_pcm32"
+                    android:background="@color/settingItem"/>
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="80dp"
+                android:layout_gravity="center_horizontal">
+            <TextView
+                    android:text="Applied Pcm "
+                    android:textSize="20dp"
+                    android:textColor="#FFFFFF"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+            <TextView
+                    android:text="16"
+                    android:textSize="20dp"
+                    android:textColor="#FFFFFF"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/pcm_applied_info"/>
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>
