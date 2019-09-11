@@ -4,7 +4,11 @@ from config import DATABASE_CONNECTION_URI
 from api.auth import secret_key
 
 
+app = None
+
 def create_app():
+    global app
+    if app is not None: return app
     app = Flask('Loopang')
     app.config['SECRET_KEY'] = secret_key
     app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_CONNECTION_URI
@@ -27,8 +31,6 @@ def create_app():
     return app
 
 
-app = create_app()
-
-
 if __name__ == '__main__':
+    app = create_app()
     app.run(host='0.0.0.0', debug=True, ssl_context=('cert.pem', "key.pem"))
