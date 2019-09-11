@@ -1,5 +1,6 @@
 from flask_jwt import jwt
 from flask_restful import Resource, reqparse
+from tools.request_message import request_message
 import datetime
 
 
@@ -20,7 +21,7 @@ class Auth(Resource):
             else:
                 return pub_id[1], 202
         except Exception as e:
-            return {'status': 'error', 'message': str(e)}, 404
+            return request_message('error', str(e))
 
     @staticmethod
     def encord_token(pub_id: str, exp: datetime):

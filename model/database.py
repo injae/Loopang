@@ -1,5 +1,4 @@
 from flask_sqlalchemy import SQLAlchemy
-from App import create_app
 import uuid
 
 
