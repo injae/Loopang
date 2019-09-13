@@ -15,8 +15,8 @@ class Login(Resource):
 
             email = args['email']
             password = args['password']
-            logger().debug('[sign-up] email: %s', email)
-            logger().debug('[sign-up] password: %s', password)
+            logger().debug('[login] email: %s', email)
+            logger().debug('[login] password: %s', password)
 
             db_user = User.query.filter_by(email=email).first()
             if db_user is None:
