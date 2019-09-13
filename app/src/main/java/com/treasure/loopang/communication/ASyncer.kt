@@ -67,7 +67,7 @@ class ASyncer<T>(private val context: T, private var code: Int = 0,
                         context.startActivity(Intent(context, Recording::class.java))
                     }
 
-                    ResultManager.UNREG_OR_WRONG, ResultManager.CONNECTION_ERROR -> {
+                    else -> {
                         UserManager.makeEmptyUser()
                         context.login_button.isClickable = true
                         context.login_button.text = context.getString(R.string.btn_sign_in)
@@ -80,7 +80,7 @@ class ASyncer<T>(private val context: T, private var code: Int = 0,
                 when(code) {
                     ResultManager.SUCCESS_SIGN_UP -> { context.finish() }
 
-                    ResultManager.WRONG_FORMAT, ResultManager.DUPLICATED_ID, ResultManager.CONNECTION_ERROR -> {
+                    else -> {
                         context.sign_up_button.isClickable = true
                         context.sign_up_button.text = context.getString(R.string.btn_register_sign_up)
                     }
