@@ -3,7 +3,7 @@ from flask import Response, stream_with_context
 from tools.request_message import request_message
 from api.auth import Auth
 from model.music import Music
-from App import app
+from App import logger
 
 
 class Download(Resource):
@@ -12,7 +12,7 @@ class Download(Resource):
         parser.add_argument('token', type=str)
         parser.add_argument('name', type=str)
         args = parser.parse_args()
-        app.logger.info('%s download file name', args['name'])
+        logger().debug('[download] file: %s', args['name'])
 
         (token, err) = Auth.decord_token(args['token'])
         if token is None:

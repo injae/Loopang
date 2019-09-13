@@ -2,6 +2,7 @@ from flask_restful import Resource, reqparse
 from model.User import User
 from api.auth import Auth
 from tools.request_message import request_message
+from App import logger
 
 
 class Login(Resource):
@@ -14,6 +15,8 @@ class Login(Resource):
 
             email = args['email']
             password = args['password']
+            logger().debug('[sign-up] email: %s', email)
+            logger().debug('[sign-up] password: %s', password)
 
             db_user = User.query.filter_by(email=email).first()
             if db_user is None:
