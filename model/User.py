@@ -25,7 +25,7 @@ class User(db.Model):
             return True
 
     def is_duplicate_name(self) -> bool:
-        if User.query.filter_by(email=self.email).first() is None:
+        if User.query.filter_by(name=self.name).first() is None:
             return False
         else:
             return True
