@@ -2,6 +2,7 @@ package com.treasure.loopang.ui.fragments
 
 
 import android.content.Context
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -9,9 +10,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
 import com.afollestad.materialdialogs.LayoutMode
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
+import com.afollestad.materialdialogs.callbacks.onDismiss
+import com.afollestad.materialdialogs.callbacks.onShow
 import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.list.listItems
 import com.treasure.loopang.R
@@ -19,11 +23,16 @@ import com.treasure.loopang.audio.FileManager
 import com.treasure.loopang.audio.LoopMusic
 import com.treasure.loopang.ui.interfaces.IPageFragment
 import com.treasure.loopang.ui.adapter.v2.LoopListAdapter
+import com.treasure.loopang.ui.stringForTime
 import kotlinx.android.synthetic.main.fragment_loop_manage.*
 import kotlinx.android.synthetic.main.fragment_loop_manage.loop_list
 import kotlinx.android.synthetic.main.manage_preview_dialog.*
 import kotlinx.android.synthetic.main.manager_detail_information_dialog_layout.*
 import kotlinx.android.synthetic.main.manager_detail_information_dialog_layout.txt_title
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.lang.IllegalStateException
 import kotlin.RuntimeException
 
 
@@ -159,9 +168,23 @@ class LoopManageFragment : androidx.fragment.app.Fragment()
 
     private fun showPreviewPlayDialog(loopMusic: LoopMusic) {
         val projectTitle = loopMusic.name
+        var isPlaying = false
+        var mpCanceled = false
+        var previousIsPlaying = false
+        val mp = MediaPlayer()
+        val updateTask = { dialog: MaterialDialog ->
+            while(isPlaying){
+                dialog.seekBar.progress = (1000 * mp.currentPosition / mp.duration)
+            }
+        }
         MaterialDialog(activity!!, BottomSheet(LayoutMode.WRAP_CONTENT)).show {
             customView(R.layout.manage_preview_dialog)
+            cornerRadius(16f)
+
+            /* start content setting */
             txt_title.text = projectTitle
+
+            /* button setting*/
             btn_add.setOnClickListener {
                 this.dismiss()
                 showMoreDialog(loopMusic)
@@ -171,10 +194,96 @@ class LoopManageFragment : androidx.fragment.app.Fragment()
             }
             btn_drop.setOnClickListener {
                 this.dismiss()
-                if(loopMusic.child == null){ deleteSound(loopMusic) }
+                if (loopMusic.child == null) { deleteSound(loopMusic) }
                 else { deleteProject(loopMusic) }
             }
-            cornerRadius(16f)
+            btn_playback.setOnClickListener {
+                btn_playback.visibility = View.GONE
+                btn_pause.visibility = View.VISIBLE
+                isPlaying = true
+                CoroutineScope(Dispatchers.Default).launch { updateTask(this@show) }
+                mp.start()
+            }
+            btn_pause.setOnClickListener {
+                mp.pause()
+                /* button switching */
+                btn_playback.visibility = View.VISIBLE
+                btn_pause.visibility = View.GONE
+                isPlaying = false
+            }
+            btn_repeat.setOnClickListener {
+                mp.isLooping = !(mp.isLooping)
+            }
+            btn_stop.setOnClickListener {
+                mp.pause()
+                mp.seekTo(0)
+                /* button switching */
+                btn_playback.visibility = View.VISIBLE
+                btn_pause.visibility = View.GONE
+                isPlaying = false
+            }
+            seekBar.max = 1000
+            seekBar.setOnSeekBarChangeListener(object:SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(
+                    seekBar: SeekBar?,
+                    progress: Int,
+                    fromUser: Boolean
+                ) {
+                    txt_current_time.text = stringForTime(mp.currentPosition)
+                }
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                    mp.pause()
+                    previousIsPlaying = isPlaying
+                    isPlaying = false
+                }
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                    isPlaying = previousIsPlaying
+                    mp.seekTo((mp.duration * seekBar!!.progress) / 1000)
+                }
+            })
+            onDismiss {
+                try {
+                    isPlaying = false
+                    mp.stop()
+                    mp.release()
+                } catch (e : IllegalStateException) {
+                    mpCanceled = true
+                }
+            }
+            btn_playback.isClickable = false
+            btn_stop.isClickable = false
+            btn_pause.isClickable = false
+            btn_repeat.isClickable = false
+        }.onShow {
+            mp.apply{
+                setDataSource(loopMusic.path)
+                setOnPreparedListener{mp ->
+                    if (mpCanceled) {
+                        mp.release()
+                        mpCanceled = false
+                    } else {
+                        /* button setting */
+                        it.btn_playback.isClickable = true
+                        it.btn_stop.isClickable = true
+                        it.btn_pause.isClickable = true
+                        it.btn_repeat.isClickable = true
+                        it.txt_whole_time.text = stringForTime(mp.duration)
+                    }
+                }
+                setOnCompletionListener {mp ->
+                    /* button switching */
+                    it.btn_playback.visibility = View.VISIBLE
+                    it.btn_pause.visibility = View.GONE
+                    isPlaying = false
+                }
+                setOnSeekCompleteListener {mp ->
+                    if(isPlaying){
+                        it.seekBar.progress = (1000 * mp.currentPosition / mp.duration)
+                        CoroutineScope(Dispatchers.Default).launch { updateTask(it) }
+                        mp.start()
+                    }
+                }
+            }.prepareAsync()
         }
     }
 
