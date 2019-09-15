@@ -3,7 +3,7 @@ from api.auth import Auth
 from model.music import Music
 from tools.request_message import request_message
 from App import logger
-from model import db
+from model.database import db
 import werkzeug
 
 
