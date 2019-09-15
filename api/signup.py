@@ -30,4 +30,5 @@ class SignUp(Resource):
                 db.session.commit()
                 return request_message('success', 'sing up')
         except Exception as e:
+            logger().error(str(e))
             return request_message('error', str(e))

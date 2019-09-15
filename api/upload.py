@@ -3,6 +3,7 @@ from api.auth import Auth
 from model.music import Music
 from tools.request_message import request_message
 from App import logger
+from model import db
 import werkzeug
 
 
@@ -36,4 +37,5 @@ class Upload(Resource):
                 else:
                     return request_message('fail', 'Is Existed file: ' + music.name)
         except Exception as e:
+            logger().error(str(e))
             return request_message('error', str(e))
