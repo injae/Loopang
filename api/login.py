@@ -33,4 +33,5 @@ class Login(Resource):
                 return request_message('fail', 'unregistered id or wrong password')
 
         except Exception as e:
+            logger().error(str(e))
             return request_message('error', str(e))
