@@ -21,7 +21,8 @@ class Download(Resource):
 
             file_name = Music.search(args['name'])
             if file_name is not None:
-                with open(file_name.path(), 'rb') as buffer:
+                if(os.pat.exists(file_name.path())):
+                    buffer = open(file_name.path(), 'rb')
                     def streaming():
                         for line in buffer:
                             yield line
