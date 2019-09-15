@@ -22,7 +22,7 @@ class Download(Resource):
 
             file_name = Music.search(args['name'])
             if file_name is not None:
-                if(os.pat.exists(file_name.path())):
+                if(os.path.exists(file_name.path())):
                     buffer = open(file_name.path(), 'rb')
                     def streaming():
                         for line in buffer:
