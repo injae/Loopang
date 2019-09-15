@@ -30,6 +30,8 @@ class Upload(Resource):
             else:
                 music = Music(name=name, owner=owner)
                 if music.save_music(file):
+                    db.session.add(music)
+                    db.session.commit()
                     return request_message('success', 'Uploaded ' + music.name)
                 else:
                     return request_message('fail', 'Is Existed file: ' + music.name)
