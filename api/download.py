@@ -4,6 +4,7 @@ from tools.request_message import request_message
 from api.auth import Auth
 from model.music import Music
 from App import logger
+import os
 
 
 class Download(Resource):
