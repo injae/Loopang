@@ -20,6 +20,8 @@ class Login : AppCompatActivity() {
         android.Manifest.permission.RECORD_AUDIO,
         android.Manifest.permission.INTERNET
     )
+    val isAutoLoginChecked: () -> Boolean = { cb_auto_login.isChecked }
+    val isIdSaveChecked: () -> Boolean = { cb_save_id.isChecked}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
