@@ -339,16 +339,16 @@ class LoopStation {
                     val baseFileName = "${title}_loop"
                     val fileLabelList = mutableListOf<String>()
                     if(splitFlag){
-                        mLayerLabelList.map{ fileLabelList.add("/${baseFileName}_$it.${fileType.toLowerCase()}") }
-                    } else fileLabelList.add("/$baseFileName.${fileType.toLowerCase()}")
+                        mLayerLabelList.map{ fileLabelList.add("${baseFileName}_$it.${fileType.toLowerCase()}") }
+                    } else fileLabelList.add("$baseFileName.${fileType.toLowerCase()}")
 
                     if(!overwriteFlag)
                         fileLabelList.forEach { if(mFileManager.checkSoundDuplication(it)){ return SAVE_ERROR_DUPLICATE_NAME } }
 
                     if(splitFlag){
-                        mMixer.sounds.forEachIndexed { index, mixerSound -> mixerSound.save(mDirectoryPath + fileLabelList[index]) }
+                        mMixer.sounds.forEachIndexed { index, mixerSound -> mixerSound.save(mDirectoryPath + "/${fileLabelList[index]}") }
                     } else {
-                        Sound(mMixer.mixSounds()).save(mDirectoryPath+fileLabelList[0]) }
+                        Sound(mMixer.mixSounds()).save(mDirectoryPath+"/${fileLabelList[0]}") }
                 }
 
                 "Project" -> {
