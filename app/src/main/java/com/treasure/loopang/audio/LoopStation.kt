@@ -169,7 +169,7 @@ class LoopStation {
 
     fun addLayer(sound: Sound,
                  layerLabel: String = this.makeNotDuplicatedLabel(DEFAULT_LAYER_LABEL + mLastLayerNum++),
-                 autoLoopStartFlag: Boolean = true,
+                 autoLoopStartFlag: Boolean = false,
                  loopStartMessageFlag: Boolean = false,
                  addLayerMessageFlag: Boolean = true) {
         this._addLayer(sound, layerLabel)
