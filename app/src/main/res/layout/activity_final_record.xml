@@ -9,7 +9,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/record_control_panel"
             android:layout_width="104dp"
-            android:layout_height="359dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/record_toolbox_panel"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -27,7 +28,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/record_toolbox_panel"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="53dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/record_control_panel"
             tools:layout_editor_absoluteX="296dp">

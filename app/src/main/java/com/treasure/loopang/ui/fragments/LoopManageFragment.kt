@@ -31,6 +31,7 @@ import kotlinx.android.synthetic.main.manager_detail_information_dialog_layout.*
 import kotlinx.android.synthetic.main.manager_detail_information_dialog_layout.txt_title
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.lang.IllegalStateException
 import kotlin.RuntimeException
@@ -279,7 +280,7 @@ class LoopManageFragment : androidx.fragment.app.Fragment()
                 setOnSeekCompleteListener {mp ->
                     if(isPlaying){
                         it.seekBar.progress = (1000 * mp.currentPosition / mp.duration)
-                        CoroutineScope(Dispatchers.Default).launch { updateTask(it) }
+                        async { updateTask(it) }
                         mp.start()
                     }
                 }

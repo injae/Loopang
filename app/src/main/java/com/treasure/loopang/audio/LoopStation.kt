@@ -4,6 +4,11 @@ import android.os.Handler
 import android.util.Log
 import android.view.View
 import com.treasure.loopang.ui.view.RealtimeVisualizerView
+import kotlinx.coroutines.*
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import java.util.concurrent.atomic.AtomicInteger
+import kotlin.coroutines.CoroutineContext
 import kotlin.math.abs
 
 class LoopStation {
@@ -28,22 +33,25 @@ class LoopStation {
     private var mLastLayerNum: Int = 1
 
     private val mHandler: Handler = Handler()
+    private val positionMutex: Mutex = Mutex(false)
+    val positionContext: CoroutineContext = newSingleThreadContext("PositionContext")
 
     var duration: Int = 1   // mSeconds
-    private set
+        private set
 
-    var position: () -> Int = {
-        mDurationCalculator.calculate(readData, DurationCalculator.BYTE)
-    }    // mSconds
-    private set
+    var position: Int = 0
+        private set
 
-    private var readData: Int = 0
+    private var readDataSize: AtomicInteger = AtomicInteger(0)
+
+    var loopMusic: LoopMusic? = null
 
     companion object{
         const val DEFAULT_LAYER_LABEL = "Layer "
         const val SAVE_SUCCESS = 0
         const val SAVE_ERROR_DUPLICATE_NAME = 2
         const val SAVE_ERROR_NONE_LAYER = 3
+        private const val LIMIT_OF_DIFFERENCE_READ_DATA_SIZE = 100
     }
 
     init {
@@ -87,22 +95,26 @@ class LoopStation {
     }
 
     private fun initMixer(){
-        mMixer.onSuccess { readData = 0 }
+        mMixer.onSuccess {
+            readDataSize.set(0)
+            position = 0
+            mLoopStationEventListener?.onPositionChanged(0)
+        }
     }
 
     fun recordStart(firstRecordMessageFlag: Boolean = true) {
-        if(isFirstRecord()){
+        /*if(isFirstRecord()){
             if(firstRecordMessageFlag) mLoopStationMessageListener?.onFirstRecord()
             mLoopStationEventListener?.onFirstRecord()
             firstRecordFlag = false
         } else if (!whiteNoiseCheckFlag) {
             mLoopStationEventListener?.onFirstRecord()
-        } else{
+        } else{*/
             when {
-                (!isLooping() && !isEmpty()) -> {
+                /*(!isLooping() && !isEmpty()) -> {
                     mLoopStationMessageListener?.onRecordWithoutLoopingError()
                     return
-                }
+                }*/
 
                 isRecording() -> {
                     mLoopStationMessageListener?.onDuplicateRecordStartError()
@@ -115,7 +127,7 @@ class LoopStation {
             showVisualizer()
             mLoopStationEventListener?.onRecordStart()
             mLoopStationMessageListener?.onRecordStart()
-        }
+        //}
     }
 
     fun recordStop(messageFlag: Boolean = true) {
@@ -134,7 +146,7 @@ class LoopStation {
             mLoopStationMessageListener?.onDuplicateLoopStartError()
             return
         }
-        readData = 0
+        readDataSize.set(0)
         mMixer.start()
         mLoopStationEventListener?.onLoopStart()
         if(messageFlag) {
@@ -178,8 +190,7 @@ class LoopStation {
             mDurationCalculator.sampleRate = sound.format.info().sampleRate
             duration =  mDurationCalculator.calculate(sound.data.size, DurationCalculator.BYTE)
             sound.addEffector {
-                    readData += it.size
-                    Log.d("LoopStation", "update readData: $readData")
+                    updateReadDataSize(it.size)
                     it
             }
             mLoopStationEventListener?.onFirstLayerSaved(sound, layerLabel, duration)
@@ -315,6 +326,45 @@ class LoopStation {
         return SAVE_SUCCESS
     }
 
+    fun export(newFlag: Boolean,
+               saveType: String ="Project",
+               title: String = loopMusic?.name ?: "",
+               fileType: String = ".wav",
+               splitFlag: Boolean = false,
+               clearFlag: Boolean = false,
+               overwriteFlag: Boolean = false ): Int{
+        if(newFlag) {
+            when(saveType){
+                "Loop" -> {
+                    val baseFileName = "${title}_loop"
+                    val fileLabelList = mutableListOf<String>()
+                    if(splitFlag){
+                        mLayerLabelList.map{ fileLabelList.add("/${baseFileName}_$it.${fileType.toLowerCase()}") }
+                    } else fileLabelList.add("/$baseFileName.${fileType.toLowerCase()}")
+
+                    if(!overwriteFlag)
+                        fileLabelList.forEach { if(mFileManager.checkSoundDuplication(it)){ return SAVE_ERROR_DUPLICATE_NAME } }
+
+                    if(splitFlag){
+                        mMixer.sounds.forEachIndexed { index, mixerSound -> mixerSound.save(mDirectoryPath + fileLabelList[index]) }
+                    } else {
+                        Sound(mMixer.mixSounds()).save(mDirectoryPath+fileLabelList[0]) }
+                }
+
+                "Project" -> {
+                    val children = mLayerLabelList.map{ LoopMusic(it) }
+                    val tempLoopMusic = LoopMusic(name=title,type=fileType.toLowerCase(), child=children)
+                    if(!overwriteFlag)
+                        if(mFileManager.checkProjectDuplication(tempLoopMusic)) { return SAVE_ERROR_DUPLICATE_NAME }
+                    mMixer.save(tempLoopMusic)
+                    loopMusic = tempLoopMusic
+                }
+            }
+        } else { mMixer.save(loopMusic!!) }
+        if(clearFlag) dropAllLayer(false)
+        return SAVE_SUCCESS
+    }
+
     fun checkWhiteNoise(): Boolean {
         whiteNoiseCheckFlag = true
         return true
@@ -368,6 +418,34 @@ class LoopStation {
         return (label in mLayerLabelList)
     }
 
+    private fun updateReadDataSize(size: Int) {
+        /*var temp = size
+        while(temp < LIMIT_OF_DIFFERENCE_READ_DATA_SIZE) {
+            temp -= LIMIT_OF_DIFFERENCE_READ_DATA_SIZE
+            position.set(mDurationCalculator.calculate(readDataSize.addAndGet(LIMIT_OF_DIFFERENCE_READ_DATA_SIZE), DurationCalculator.BYTE))
+            Log.d("LoopStation", "update readDataSize: $readDataSize")
+        }
+        if(temp != 0) {
+            readDataSize.getAndAdd(temp)
+            position.set(mDurationCalculator.calculate(readDataSize.addAndGet(LIMIT_OF_DIFFERENCE_READ_DATA_SIZE), DurationCalculator.BYTE))
+        }*/
+        /*CoroutineScope(Dispatchers.Default).launch {
+            positionMutex.withLock{
+                position = (mDurationCalculator.calculate(readDataSize.addAndGet(size), DurationCalculator.BYTE))
+            }
+        }*/
+        /*CoroutineScope(positionContext).run {
+            position = (mDurationCalculator.calculate(readDataSize.addAndGet(size), DurationCalculator.BYTE))
+        }*/
+        var temp = size
+        while(temp < LIMIT_OF_DIFFERENCE_READ_DATA_SIZE) {
+            temp -= LIMIT_OF_DIFFERENCE_READ_DATA_SIZE
+            position = (mDurationCalculator.calculate(readDataSize.addAndGet(size), DurationCalculator.BYTE))
+            mLoopStationEventListener?.onPositionChanged(position)
+            // Log.d("LoopStation", "update readDataSize: $readDataSize")
+        }
+    }
+
     fun getMixer() : Mixer = mMixer
     fun getRecorder(): Recorder = mRecorder
     fun getSounds() : MutableList<MixerSound> = mMixer.sounds
@@ -397,6 +475,7 @@ class LoopStation {
 
         fun onExport(loopTitle: String) {}
         fun onImport(loopTitle: String, newLoadFlag: Boolean) {}
+        fun onPositionChanged(position: Int) {}
     }
 
     interface LoopStationMessageListener {
