@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@drawable/gradient_background">
+
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+    </FrameLayout>
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true">
+        <ImageButton
+                android:text="Button"
+                android:layout_width="130dp"
+                android:layout_height="match_parent"
+                android:id="@+id/button"
+                android:background="@color/shared_comunity_bottom_button"
+        />
+        <Button
+                android:text="Button"
+                android:layout_width="137dp"
+                android:layout_height="match_parent"
+                android:id="@+id/button2"
+                android:background="@color/shared_comunity_bottom_button"
+        />
+        <Button
+                android:text="Button"
+                android:layout_width="141dp"
+                android:layout_height="match_parent"
+                android:id="@+id/button3"
+                android:background="@color/shared_comunity_bottom_button"
+        />
+    </LinearLayout>
+</RelativeLayout>

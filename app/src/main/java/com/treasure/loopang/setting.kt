@@ -11,12 +11,9 @@ import com.treasure.loopang.adapter.SettingAdapter
 import com.treasure.loopang.listitem.SettingItem
 import kotlinx.android.synthetic.main.setting_frame.*
 import android.text.Editable
-import android.R.id.edit
 import android.content.Intent
-import android.widget.AdapterView
-import androidx.fragment.app.FragmentManager
 import com.treasure.loopang.ui.toast
-import kotlinx.android.synthetic.*
+
 
 class setting : androidx.fragment.app.Fragment() {
 
@@ -30,11 +27,11 @@ class setting : androidx.fragment.app.Fragment() {
         adapter = SettingAdapter()
         settingListView.adapter = adapter
 
-        adapter.addItem(ContextCompat.getDrawable(context!!, R.drawable.icon_setting_help)!!,"공지사항")
-        adapter.addItem(ContextCompat.getDrawable(context!!, R.drawable.icon_setting_visualizer)!!,"비주얼라이저")
-        adapter.addItem(ContextCompat.getDrawable(context!!, R.drawable.icon_setting_pcm)!!,"pcm")
+        adapter.addItem(ContextCompat.getDrawable(context!!, R.drawable.icon_setting_help)!!,"Notice")
+        adapter.addItem(ContextCompat.getDrawable(context!!, R.drawable.icon_setting_visualizer)!!,"Visualizer")
+        adapter.addItem(ContextCompat.getDrawable(context!!, R.drawable.icon_setting_pcm)!!,"Pcm")
         adapter.addItem(ContextCompat.getDrawable(context!!, R.drawable.icon_setting_help)!!,"도움말")
-
+        adapter.addItem(ContextCompat.getDrawable(context!!, R.drawable.icon_setting_help)!!,"My Music")
 
         var editTextFilter : EditText? =null
         editTextFilter = editText
@@ -53,21 +50,28 @@ class setting : androidx.fragment.app.Fragment() {
             editText.setText("")
         }
 
+     //   val itemFragment = settingItemFragment()
+   //     var bundle : Bundle
+
+        //val intent = Intent(context, settingItemActivity::class.java)
+
+
         settingListView.setOnItemClickListener { parent, view, position, id ->
             // get item
             val item = parent.getItemAtPosition(position) as SettingItem
             val title = item.title
             val icon = item.icon
-            //to do
-                toast(title + " click")
-         when(title){
-             "공지사항" -> toast(title + " click")
-             "비주얼라이저" ->  toast(title + " click")
-             "pcm" -> toast(title + " click")
-             "도움말" -> toast(title + " click")
-         }
+            var isPageOpen = false
+
+            toast(title + " click")
+
+            val intent1 = Intent(activity, settingItemActivity::class.java)
+            intent1.putExtra("title",title)
+            startActivity(intent1)
         }
-
-
     }
+    /*
+    public interface  itemTitleSetListener{
+        fun itemTitleSet(title :String, listItemNum :  Int)
+    }*/
 }

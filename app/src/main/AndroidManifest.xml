@@ -16,9 +16,13 @@
         <activity android:name=".FinalRecordActivity" android:theme="@style/finalRecordActivityTheme">
 
         </activity>
+
         <activity android:name=".RegisterActivity"></activity>
         <activity android:name=".Login"></activity>
         <activity android:name=".Recording"></activity>
+
+        <activity android:name=".settingItemActivity"></activity>
+
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

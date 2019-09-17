@@ -61,4 +61,6 @@
     <string name="hint_e_mail">Name</string>
     <string name="manage_preview_dialog_title_example">title_example</string>
 
+    <string name="setting_notice_item_update_info">Update 0.1.1</string>
+
 </resources>
