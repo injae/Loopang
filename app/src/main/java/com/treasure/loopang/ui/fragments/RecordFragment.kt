@@ -2,6 +2,8 @@ package com.treasure.loopang.ui.fragments
 
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.SystemClock
 import android.util.Log
 import android.view.GestureDetector
 import androidx.fragment.app.Fragment
@@ -27,9 +29,7 @@ import com.treasure.loopang.ui.toast
 import com.treasure.loopang.ui.util.ProgressControl
 import kotlinx.android.synthetic.main.dialog_save_loop.*
 import kotlinx.android.synthetic.main.fragment_record.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class RecordFragment : Fragment(), IPageFragment {
     private val mLayerListAdapter : LayerListAdapter = LayerListAdapter()
@@ -47,11 +47,11 @@ class RecordFragment : Fragment(), IPageFragment {
     }
 
     override fun onSelected() {
-        Log.d("RecordFragment", "RecordFragment.onSelected()")
+        // Log.d("RecordFragment", "RecordFragment.onSelected()")
     }
 
     override fun onUnselected() {
-        Log.d("RecordFragment", "RecordFragment.onUnselected()")
+        // Log.d("RecordFragment", "RecordFragment.onUnselected()")
     }
 
     override fun onCreateView(
@@ -90,18 +90,18 @@ class RecordFragment : Fragment(), IPageFragment {
         }
         loop_seek_bar.isEnabled = false
         mProgressControl.setView(loop_seek_bar)
-        mProgressControl.max = 1000
+        mProgressControl.max = 100000
     }
 
     override fun onDestroy() {
         loopStation.stopAll()
         super.onDestroy()
-        Log.d("RecordFragment", "RecordFragment Destroyed!")
+        // Log.d("RecordFragment", "RecordFragment Destroyed!")
     }
 
     override fun onPause() {
         super.onPause()
-        Log.d("RecordFragment", "RecordFragment Paused!")
+        // Log.d("RecordFragment", "RecordFragment Paused!")
     }
 
     private fun onThisSingleTap(): Boolean {
@@ -156,7 +156,7 @@ class RecordFragment : Fragment(), IPageFragment {
                     val fileType = spinner.selectedItem.toString()
                     val isSplitChecked = check_split.isChecked
                     val isDropChecked = check_drop.isChecked
-                    Log.d("SaveDialog", "\nloopTitle: $loopTitle, \nfileType: $fileType, \nisSaveChecked: $isSplitChecked")
+                    // Log.d("SaveDialog", "\nloopTitle: $loopTitle, \nfileType: $fileType, \nisSaveChecked: $isSplitChecked")
 
                     when (loopStation.export(loopTitle, fileType, allDropFlag = isDropChecked, mixFlag = !isSplitChecked)){
                         LoopStation.SAVE_SUCCESS -> toast(getString(R.string.toast_save))
@@ -279,13 +279,24 @@ class RecordFragment : Fragment(), IPageFragment {
             mProgressControl.duration = duration
         }
 
-        override fun onLoopStart() {
-            CoroutineScope(Dispatchers.Default).launch {
-                while(loopStation.isLooping()) {
-                    mProgressControl.setProgressUsingMs(loopStation.position())
-                    mProgressControl.updateTask()
+        override fun onLoopStart() {}
+
+        override fun onPositionChanged(position: Int) {
+            updateLoopSeekBar(position)
+        }
+
+        private fun updateLoopSeekBar(position: Int) {
+            /*CoroutineScope(Dispatchers.Default).launch {
+                while (loopStation.isLooping()) {
+                    CoroutineScope(Dispatchers.Main).run {
+                        mProgressControl.setProgressUsingMs(loopStation.position)
+                        mProgressControl.updateTask()
+                    }
+                    SystemClock.sleep(100)
                 }
-            }
+            }*/
+            mProgressControl.setProgressUsingMs(position)
+            mProgressControl.updateTask()
         }
 
         override fun onLoopStop() {

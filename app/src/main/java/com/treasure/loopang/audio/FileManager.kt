@@ -44,4 +44,12 @@ class FileManager {
        looperSoundDir.listFiles().forEach { it.delete() }
        looperProjectDir.listFiles().forEach{ it.delete() }
    }
+
+    fun checkSoundDuplication(fileName: String): Boolean {
+        return false
+    }
+
+    fun checkProjectDuplication(loopMusic: LoopMusic): Boolean {
+        return false
+    }
 }

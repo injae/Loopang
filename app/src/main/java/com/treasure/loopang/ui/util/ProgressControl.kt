@@ -1,5 +1,6 @@
 package com.treasure.loopang.ui.util
 
+import android.os.SystemClock
 import android.util.Log
 import android.widget.SeekBar
 import android.widget.TextView
@@ -35,11 +36,12 @@ class ProgressControl {
     fun updateTask() {
         mSeekBar?.progress = progress
         mCurrentPosTimeText?.text = stringForTime(position)
-        Log.d("progressControl"," update ms: $position , duration: $duration, progress: $progress, seekBar is null: ${mSeekBar == null}")
+        Log.d("seekBarUpdate"," update ms: $position , duration: $duration, progress: $progress, seekBar is null: ${mSeekBar == null}")
     }
 
     fun setProgressUsingMs(ms: Int) {
         position = ms
         progress = DurationCalculator.convertMsToProgress(position, duration, this.max)
+        Log.d("seekBarUpdate","setProgressUsingMs(ms: $ms), progress: $progress")
     }
 }
