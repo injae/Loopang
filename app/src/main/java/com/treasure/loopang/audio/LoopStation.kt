@@ -450,6 +450,7 @@ class LoopStation {
     fun getRecorder(): Recorder = mRecorder
     fun getSounds() : MutableList<MixerSound> = mMixer.sounds
     fun getLayerLabels() : MutableList<String> = mLayerLabelList
+    fun hasSingleLayer(): Boolean = (mMixer.sounds.size == 1)
 
     interface LoopStationEventListener {
         fun onRecordStart() {}

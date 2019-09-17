@@ -62,5 +62,8 @@
     <string name="manage_preview_dialog_title_example">title_example</string>
 
     <string name="setting_notice_item_update_info">Update 0.1.1</string>
-
+    <string name="title_overwrite">Overwrite</string>
+    <string name="message_overwrite">same name file is already exist.  Do you want to overwrite file?</string>
+    <string name="btn_overwrite">Overwrite</string>
+    <string name="title_save_project">Save Project</string>
 </resources>
