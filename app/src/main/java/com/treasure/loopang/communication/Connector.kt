@@ -42,7 +42,7 @@ class Connector(private val DNS: String = "https://ec2-3-15-172-177.us-east-2.co
                 result = call.execute().body()!!
             else {
                 file = fileCall?.execute()?.body()?.bytes()
-                val tempFile = File("${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)}/Loopang/tt.aac")
+                val tempFile = File("${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)}/Loopang/${fileName}")
                 val fos = FileOutputStream(tempFile)
                 fos.write(file)
                 result = getSuccessFileReceive()
