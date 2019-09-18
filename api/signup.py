@@ -28,7 +28,7 @@ class SignUp(Resource):
             else:
                 db.session.add(user)
                 db.session.commit()
-                return request_message('success', 'sing up')
+                return request_message('success', 'sign up')
         except Exception as e:
             logger().error(str(e))
             return request_message('error', str(e))
