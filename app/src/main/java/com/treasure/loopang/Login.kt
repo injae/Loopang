@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.SpannableStringBuilder
+import android.util.Log
 import android.view.WindowManager
 import com.jakewharton.rxbinding3.view.clicks
 import com.treasure.loopang.Database.DatabaseManager
@@ -30,10 +31,7 @@ class Login : AppCompatActivity() {
         GlobalScope.launch {
             DatabaseManager.deleteToken(this@Login)
             if(DatabaseManager.getPassword(this@Login) != null) {
-                UserManager.setUser(
-                    DatabaseManager.getEmail(this@Login)!!, decodeBase64(
-                        DatabaseManager.getPassword(this@Login)!!)
-                )
+                UserManager.setUser(DatabaseManager.getEmail(this@Login)!!, decodeYuni(DatabaseManager.getPassword(this@Login)!!))
                 cb_auto_login.isChecked = true
                 val cnt = Connector()
                 val res = cnt.process(ResultManager.LOGIN, UserManager.getUser())

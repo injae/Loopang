@@ -36,7 +36,7 @@ class ASyncer<T>(private val context: T, private var code: Int = 0,
         val connector = Connector()
         when(context) {
             is Login -> {
-                UserManager.setEncodedPassword(encodeBase64(context.input_password.text.toString()))
+                UserManager.setEncodedPassword(encodeYuni(context.input_password.text.toString()))
                 UserManager.setUser(context.input_id.text.toString(), context.input_password.text.toString())
                 response = connector.process(ResultManager.LOGIN, UserManager.getUser())
                 code = ResultManager.getCode(response)
