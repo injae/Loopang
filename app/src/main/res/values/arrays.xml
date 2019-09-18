@@ -27,4 +27,14 @@
         <item>WAV</item>
         <item>AAC</item>
     </string-array>
+
+    <string-array name="save_project_menu">
+        <item>save</item>
+        <item>save as new file</item>
+    </string-array>
+
+    <string-array name="save_type_spinner">
+        <item>Project</item>
+        <item>Loop</item>
+    </string-array>
 </resources>

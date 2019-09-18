@@ -2,6 +2,8 @@ package com.treasure.loopang.ui.fragments
 
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.SystemClock
 import android.util.Log
 import android.view.GestureDetector
 import androidx.fragment.app.Fragment
@@ -15,6 +17,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
+import com.afollestad.materialdialogs.list.listItems
 import com.treasure.loopang.R
 import com.treasure.loopang.Recording
 import com.treasure.loopang.audio.LoopStation
@@ -26,16 +29,20 @@ import com.treasure.loopang.ui.listener.TouchGestureListener
 import com.treasure.loopang.ui.toast
 import com.treasure.loopang.ui.util.ProgressControl
 import kotlinx.android.synthetic.main.dialog_save_loop.*
+import kotlinx.android.synthetic.main.dialog_save_loop.check_drop
+import kotlinx.android.synthetic.main.dialog_save_loop.check_split
+import kotlinx.android.synthetic.main.dialog_save_loop.edit_loop_title
+import kotlinx.android.synthetic.main.dialog_save_loop.spinner
+import kotlinx.android.synthetic.main.dialog_save_new.*
 import kotlinx.android.synthetic.main.fragment_record.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class RecordFragment : Fragment(), IPageFragment {
     private val mLayerListAdapter : LayerListAdapter = LayerListAdapter()
     private val mTouchGestureListener = TouchGestureListener()
     val loopStation: LoopStation = LoopStation()
     private val mProgressControl: ProgressControl = ProgressControl()
+    private var mSaveDialog: MaterialDialog? = null
 
     init {
         mTouchGestureListener.apply{
@@ -47,11 +54,11 @@ class RecordFragment : Fragment(), IPageFragment {
     }
 
     override fun onSelected() {
-        Log.d("RecordFragment", "RecordFragment.onSelected()")
+        // Log.d("RecordFragment", "RecordFragment.onSelected()")
     }
 
     override fun onUnselected() {
-        Log.d("RecordFragment", "RecordFragment.onUnselected()")
+        // Log.d("RecordFragment", "RecordFragment.onUnselected()")
     }
 
     override fun onCreateView(
@@ -90,18 +97,18 @@ class RecordFragment : Fragment(), IPageFragment {
         }
         loop_seek_bar.isEnabled = false
         mProgressControl.setView(loop_seek_bar)
-        mProgressControl.max = 1000
+        mProgressControl.max = 100000
     }
 
     override fun onDestroy() {
         loopStation.stopAll()
         super.onDestroy()
-        Log.d("RecordFragment", "RecordFragment Destroyed!")
+        // Log.d("RecordFragment", "RecordFragment Destroyed!")
     }
 
     override fun onPause() {
         super.onPause()
-        Log.d("RecordFragment", "RecordFragment Paused!")
+        // Log.d("RecordFragment", "RecordFragment Paused!")
     }
 
     private fun onThisSingleTap(): Boolean {
@@ -156,7 +163,7 @@ class RecordFragment : Fragment(), IPageFragment {
                     val fileType = spinner.selectedItem.toString()
                     val isSplitChecked = check_split.isChecked
                     val isDropChecked = check_drop.isChecked
-                    Log.d("SaveDialog", "\nloopTitle: $loopTitle, \nfileType: $fileType, \nisSaveChecked: $isSplitChecked")
+                    // Log.d("SaveDialog", "\nloopTitle: $loopTitle, \nfileType: $fileType, \nisSaveChecked: $isSplitChecked")
 
                     when (loopStation.export(loopTitle, fileType, allDropFlag = isDropChecked, mixFlag = !isSplitChecked)){
                         LoopStation.SAVE_SUCCESS -> toast(getString(R.string.toast_save))
@@ -172,6 +179,119 @@ class RecordFragment : Fragment(), IPageFragment {
                 it.dismiss()
             }
             lifecycleOwner(activity)
+        }
+    }
+
+    private fun showSaveDialog(){
+        if(loopStation.loopMusic == null){ showNewSaveDialog() }
+        else { showProjectSaveDialog() }
+    }
+
+    private fun showProjectSaveDialog() {
+        MaterialDialog(activity!!).show {
+            title(R.string.title_save_project)
+            listItems(R.array.save_project_menu) { dialog, index, _ ->
+                when(index){
+                    0 -> {
+                        loopStation.export(newFlag = false)
+                        dialog.dismiss()
+                    }
+                    1 -> {
+                        showNewSaveDialog()
+                        dialog.dismiss()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun showNewSaveDialog() {
+        MaterialDialog(activity!!, BottomSheet(LayoutMode.WRAP_CONTENT)).show {
+            noAutoDismiss()
+            title(R.string.title_save_loop)
+            cornerRadius(16f)
+            cancelable(false)
+            customView(R.layout.dialog_save_new, horizontalPadding = true)
+
+            if(loopStation.hasSingleLayer()) {
+                this.check_split.visibility = View.GONE
+                this.spinner_save_type.setSelection(1) //Sound 로 세팅.
+            }
+            this.spinner_save_type.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    when(position){
+                        0 -> { // project
+                            this@show.check_split.visibility = View.GONE
+                            this@show.txt_title.text = "Project Title"
+                        }
+                        1 -> {
+                            this@show.check_split.visibility = View.VISIBLE
+                            this@show.txt_title.text = "Loop Title"
+                        }
+                    }
+                }
+            }
+
+            positiveButton(R.string.btn_save) {
+                // callback on positive button click
+                val loopTitle = it.edit_loop_title.text.toString()
+                if(loopTitle == ""){
+                    toast(R.string.toast_save_error_without_title)
+                } else {
+                    val newFlag = true
+                    val saveType = spinner_save_type.selectedItem.toString()
+                    val fileType = spinner.selectedItem.toString()
+                    val splitFlag = check_split.isChecked
+                    val clearFlag = check_drop.isChecked
+                    val overwriteFlag = false
+
+                    val result =  loopStation.export(newFlag, saveType, loopTitle, fileType, splitFlag, clearFlag, overwriteFlag)
+
+                    when (result){
+                        LoopStation.SAVE_SUCCESS -> toast(getString(R.string.toast_save))
+                        LoopStation.SAVE_ERROR_DUPLICATE_NAME -> {
+                            mSaveDialog = it
+                            showOverwriteDialog()
+                        }
+                        LoopStation.SAVE_ERROR_NONE_LAYER -> toast("None Layer")
+                        else -> toast("Save Failed")
+                    }
+
+                    it.dismiss()
+                }
+            }
+            negativeButton(R.string.btn_cancel) {
+                it.dismiss()
+            }
+            lifecycleOwner(activity)
+        }
+    }
+
+    private fun showOverwriteDialog() {
+        MaterialDialog(activity!!).show {
+            title(R.string.title_overwrite)
+            message(R.string.message_overwrite)
+            positiveButton(R.string.btn_overwrite) {
+                val newFlag = true
+                val saveType = mSaveDialog!!.spinner_save_type.selectedItem.toString()
+                val loopTitle = it.edit_loop_title.text.toString()
+                val fileType = mSaveDialog!!.spinner.selectedItem.toString()
+                val splitFlag = mSaveDialog!!.check_split.isChecked
+                val clearFlag = mSaveDialog!!.check_drop.isChecked
+                val overwriteFlag = true
+                loopStation.export(newFlag, saveType, loopTitle, fileType, splitFlag, clearFlag, overwriteFlag)
+                it.dismiss()
+            }
+            negativeButton(R.string.btn_cancel) {
+                mSaveDialog?.show()
+                it.dismiss()
+            }
         }
     }
 
@@ -279,13 +399,24 @@ class RecordFragment : Fragment(), IPageFragment {
             mProgressControl.duration = duration
         }
 
-        override fun onLoopStart() {
-            CoroutineScope(Dispatchers.Default).launch {
-                while(loopStation.isLooping()) {
-                    mProgressControl.setProgressUsingMs(loopStation.position())
-                    mProgressControl.updateTask()
+        override fun onLoopStart() {}
+
+        override fun onPositionChanged(position: Int) {
+            updateLoopSeekBar(position)
+        }
+
+        private fun updateLoopSeekBar(position: Int) {
+            /*CoroutineScope(Dispatchers.Default).launch {
+                while (loopStation.isLooping()) {
+                    CoroutineScope(Dispatchers.Main).run {
+                        mProgressControl.setProgressUsingMs(loopStation.position)
+                        mProgressControl.updateTask()
+                    }
+                    SystemClock.sleep(100)
                 }
-            }
+            }*/
+            mProgressControl.setProgressUsingMs(position)
+            mProgressControl.updateTask()
         }
 
         override fun onLoopStop() {

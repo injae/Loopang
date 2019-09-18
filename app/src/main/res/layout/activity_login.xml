@@ -60,23 +60,53 @@
                   android:textColor="@android:color/white" android:textColorHint="@android:color/white"
                   android:backgroundTint="#FFFFFFFF"/>
     </com.google.android.material.textfield.TextInputLayout>
+
     <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/login_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:background="#F1BBBA"
             android:text="@string/btn_sign_in"
-            android:id="@+id/login_button"
+            android:textColor="@android:color/white"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" android:layout_marginTop="16dp"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout" android:layout_marginStart="32dp"
-            android:layout_marginEnd="32dp" android:background="#F1BBBA" android:textColor="@android:color/white"/>
+            app:layout_constraintTop_toBottomOf="@+id/box_cbs" />
     <ImageView
             android:contentDescription="logo_image"
             android:layout_width="200dp"
             android:layout_height="100dp"
-            app:srcCompat="@drawable/loopang_horizential_logo"
+            app:srcCompat="@drawable/loopang_horizontial_icon"
             android:id="@+id/imageView"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.26"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="32dp"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="32dp"/>
+
+    <LinearLayout
+            android:id="@+id/box_cbs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout">
+
+        <CheckBox
+                android:id="@+id/cb_auto_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="자동 로그인"
+                android:textColor="@android:color/white" />
+
+        <CheckBox
+                android:id="@+id/cb_save_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="아이디 저장"
+                android:textColor="@android:color/white" />
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

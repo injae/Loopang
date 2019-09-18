@@ -27,7 +27,7 @@ class Connector(private val DNS: String = "https://ec2-3-15-172-177.us-east-2.co
                     .build(),
                 private var service: LoopangNetwork = retrofit.create(LoopangNetwork::class.java),
                 private var file: ByteArray? = null) {
-    fun process(case: Int, user: User? = null, fileName: String = ""): Result{
+    fun process(case: Int, user: User? = null, fileName: String? = null): Result{
         var call: Call<Result>? = null
         var fileCall: Call<ResponseBody>? = null
         var result: Result
@@ -35,14 +35,14 @@ class Connector(private val DNS: String = "https://ec2-3-15-172-177.us-east-2.co
             ResultManager.AUTH -> { call = service.receiveTokens() }
             ResultManager.SIGN_UP -> { call = service.sendSignUpInfo(user!!.email, user.password, user.name) }
             ResultManager.LOGIN -> { call = service.sendLoginInfo(user!!.email, user.password) }
-            ResultManager.FILE_UPLOAD -> { call = service.sendFile(accessToken, fileName, getMultiPartBody(fileName)) }
-            ResultManager.FILE_DOWNLOAD -> { fileCall = service.receiveFile(accessToken, fileName) } }
+            ResultManager.FILE_UPLOAD -> { call = service.sendFile(accessToken, fileName!!, getMultiPartBody(fileName)) }
+            ResultManager.FILE_DOWNLOAD -> { fileCall = service.receiveFile(accessToken, fileName!!) } }
         try {
             if(call != null)    // 파일 다운로드가 아닌경우
                 result = call.execute().body()!!
             else {
                 file = fileCall?.execute()?.body()?.bytes()
-                val tempFile = File("${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)}/Loopang/tt.aac")
+                val tempFile = File("${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)}/Loopang/${fileName}")
                 val fos = FileOutputStream(tempFile)
                 fos.write(file)
                 result = getSuccessFileReceive()
