@@ -4,14 +4,14 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.SpannableStringBuilder
 import android.view.WindowManager
 import com.jakewharton.rxbinding3.view.clicks
 import com.treasure.loopang.Database.DatabaseManager
-import com.treasure.loopang.communication.ASyncer
+import com.treasure.loopang.communication.*
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class Login : AppCompatActivity() {
     protected val disposables by lazy { CompositeDisposable() }
@@ -20,17 +20,42 @@ class Login : AppCompatActivity() {
         android.Manifest.permission.RECORD_AUDIO,
         android.Manifest.permission.INTERNET
     )
-    val isAutoLoginChecked: () -> Boolean = { cb_auto_login.isChecked }
-    val isIdSaveChecked: () -> Boolean = { cb_save_id.isChecked}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        GlobalScope.launch { DatabaseManager.deleteToken(this@Login) }
-
         setContentView(R.layout.activity_login)
         checkPermission()
         window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+
+        GlobalScope.launch {
+            DatabaseManager.deletePassword(this@Login)
+
+            DatabaseManager.deleteToken(this@Login)
+            if(DatabaseManager.getPassword(this@Login) != null) {
+                UserManager.setUser(
+                    DatabaseManager.getEmail(this@Login)!!, decodeBase64(
+                        DatabaseManager.getPassword(this@Login)!!)
+                )
+                cb_auto_login.isChecked = true
+                val cnt = Connector()
+                val res = cnt.process(ResultManager.LOGIN, UserManager.getUser())
+                if(ResultManager.getCode(res) == ResultManager.SUCCESS_LOGIN) {
+                    UserManager.isLogined = true
+                    DatabaseManager.insertToken(this@Login, res.refreshToken)
+                    startActivity(Intent(this@Login, Recording::class.java))
+                    finish()
+                }
+            }
+            else {
+                val email = DatabaseManager.getEmail(this@Login)
+                if(email != null) {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        cb_save_id.isChecked = true
+                        input_id.text = SpannableStringBuilder(email)
+                    }
+                }
+            }
+        }
 
         login_button.clicks()
             .subscribe { onLoginButtonClick() }.apply { disposables.add(this) }
