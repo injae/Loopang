@@ -28,8 +28,6 @@ class Login : AppCompatActivity() {
         window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
 
         GlobalScope.launch {
-            DatabaseManager.deletePassword(this@Login)
-
             DatabaseManager.deleteToken(this@Login)
             if(DatabaseManager.getPassword(this@Login) != null) {
                 UserManager.setUser(
