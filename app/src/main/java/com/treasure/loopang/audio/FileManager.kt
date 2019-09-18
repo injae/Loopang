@@ -60,11 +60,23 @@ class FileManager {
         //사운드 디렉토리에 저장될 사운드의 이름과 같은 파일이 있는지 확인
         //있으면 각각 true리턴 없으면 false 리턴
         val file = File(loopMusic.path)
-        if (file.exists()){ return true}
+        if (file.exists()){ return true }
         loopMusic.child?.forEach{
             if(File(it.path).exists()) { return true }
         }
 
         return false
+    }
+
+    fun clearExistingProject(loopMusic: LoopMusic) {
+        val soundFileList: MutableList<File> = mutableListOf()
+
+        soundFileList.add(File(loopMusic.path))
+        loopMusic.child?.forEach {
+            soundFileList.add(File(it.path))
+        }
+        soundFileList.forEach{
+            if(it.exists()) it.delete()
+        }
     }
 }
