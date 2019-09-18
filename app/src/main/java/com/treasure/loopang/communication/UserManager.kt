@@ -1,7 +1,5 @@
 package com.treasure.loopang.communication
 
-import org.json.JSONObject
-
 object UserManager {
     private val user = User()
     var isLogined = false
@@ -22,6 +20,8 @@ object UserManager {
         user.name = name
         user.password = makeSHA256(password)
     }
+
+    fun setEncodedPassword(encodedPassword: String) { user.encodedPassword = encodedPassword }
 
     /**
      * Function that must be called at the end of Sign-Up
