@@ -244,6 +244,7 @@ class LoopStation {
         mLayerLabelList.clear()
         mLastLayerNum = 1
         mLoopStationEventListener?.onLayerAllDrop()
+        loopMusic = null
         if(messageFlag) mLoopStationMessageListener?.onLayerAllDrop()
     }
 
@@ -277,11 +278,12 @@ class LoopStation {
                messageFlag: Boolean = false){
         // 기존 레이어들을 모두 드롭하고 새 프로젝트를 로드할지 결정하는 분기문.
         if(newLoadFlag) {
-            mLoopTitle = project.name
-            mLoopStationEventListener?.onTitleChanged(mLoopTitle, "")
+            if(project.child != null) {
+                mLoopTitle = project.name
+                loopMusic = project
+                mLoopStationEventListener?.onTitleChanged(mLoopTitle, "")
+            }
             dropAllLayer(messageFlag = false)
-        } else {
-            if(getSounds().isEmpty()) return
         }
         // 프로젝트 파일 혹은 사운드 파일 여부에 따라 분기함.
         project.child?.let {
@@ -301,66 +303,41 @@ class LoopStation {
         if(messageFlag) mLoopStationMessageListener?.onImport(mLoopTitle, newLoadFlag)
     }
 
-    fun export(loopTitle: String = mLoopTitle,
-               fileType: String = ".wav",
-               allDropFlag: Boolean = false,
-               mixFlag: Boolean = false): Int {
-        if(isEmpty()) {
-            mLoopStationMessageListener?.onSaveNoneLayerError()
-            return SAVE_ERROR_NONE_LAYER
-        }
-        if(mFileManager.checkDuplication(loopTitle)) return SAVE_ERROR_DUPLICATE_NAME
-        if (mixFlag || getSounds().size == 1){
-            // 사운드 파일로 저장하거나 레이어가 한개일 경우
-            val fileLabel = "/$loopTitle.${fileType.toLowerCase()}"
-            Sound(mMixer.mixSounds()).save(mDirectoryPath+fileLabel)
-        } else {
-            // 프로젝트 파일로 저장할 경우
-            val children = mLayerLabelList.map{ LoopMusic(it) }
-            children.forEach{ Log.d("export", "Saved Layer Name : ${it.name}") }
-            mMixer.save(LoopMusic(name=loopTitle,type=fileType.toLowerCase(), child=children))
-        }
-
-        if(allDropFlag) dropAllLayer(messageFlag = false)
-
-        return SAVE_SUCCESS
-    }
-
     fun export(newFlag: Boolean,
                saveType: String ="Project",
                title: String = loopMusic?.name ?: "",
-               fileType: String = ".wav",
+               fileType: String = loopMusic?.type ?: ".wav",
                splitFlag: Boolean = false,
                clearFlag: Boolean = false,
                overwriteFlag: Boolean = false ): Int{
-        if(newFlag) {
-            when(saveType){
-                "Loop" -> {
-                    val baseFileName = "${title}_loop"
-                    val fileLabelList = mutableListOf<String>()
-                    if(splitFlag){
-                        mLayerLabelList.map{ fileLabelList.add("${baseFileName}_$it.${fileType.toLowerCase()}") }
-                    } else fileLabelList.add("$baseFileName.${fileType.toLowerCase()}")
+        when(saveType){
+            "Loop" -> {
+                val baseFileName = "${title}_loop"
+                val fileLabelList = mutableListOf<String>()
+                if(splitFlag){
+                    mLayerLabelList.map{ fileLabelList.add("${baseFileName}_$it.${fileType.toLowerCase()}") }
+                } else fileLabelList.add("$baseFileName.${fileType.toLowerCase()}")
 
-                    if(!overwriteFlag)
-                        fileLabelList.forEach { if(mFileManager.checkSoundDuplication(it)){ return SAVE_ERROR_DUPLICATE_NAME } }
+                if(!overwriteFlag)
+                    fileLabelList.forEach { if(mFileManager.checkSoundDuplication(it)){ return SAVE_ERROR_DUPLICATE_NAME } }
 
-                    if(splitFlag){
-                        mMixer.sounds.forEachIndexed { index, mixerSound -> mixerSound.save(mDirectoryPath + "/${fileLabelList[index]}") }
-                    } else {
-                        Sound(mMixer.mixSounds()).save(mDirectoryPath+"/${fileLabelList[0]}") }
-                }
-
-                "Project" -> {
-                    val children = mLayerLabelList.map{ LoopMusic(it) }
-                    val tempLoopMusic = LoopMusic(name=title,type=fileType.toLowerCase(), child=children)
-                    if(!overwriteFlag)
-                        if(mFileManager.checkProjectDuplication(tempLoopMusic)) { return SAVE_ERROR_DUPLICATE_NAME }
-                    mMixer.save(tempLoopMusic)
-                    loopMusic = tempLoopMusic
-                }
+                if(splitFlag){
+                    mMixer.sounds.forEachIndexed { index, mixerSound -> mixerSound.save(mDirectoryPath + "/${fileLabelList[index]}") }
+                } else {
+                    Sound(mMixer.mixSounds()).save(mDirectoryPath+"/${fileLabelList[0]}") }
             }
-        } else { mMixer.save(loopMusic!!) }
+
+            "Project" -> {
+                val children = mLayerLabelList.map{ LoopMusic(it) }
+                val tempLoopMusic = LoopMusic(name=title,type=fileType.toLowerCase(), child=children)
+                if(!newFlag) { loopMusic?.let{ mFileManager.clearExistingProject(it) } }
+                if(!overwriteFlag)
+                    if(mFileManager.checkProjectDuplication(tempLoopMusic)) { return SAVE_ERROR_DUPLICATE_NAME }
+                Log.d("SaveTest","Mixer Sound 수: ${mMixer.sounds.size}, config child 수: ${tempLoopMusic.child?.size ?: 0} ")
+                mMixer.save(tempLoopMusic)
+                loopMusic = tempLoopMusic
+            }
+        }
         if(clearFlag) dropAllLayer(false)
         return SAVE_SUCCESS
     }
