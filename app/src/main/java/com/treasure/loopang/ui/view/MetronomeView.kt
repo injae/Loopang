@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
+import android.os.Handler
 import android.os.SystemClock
 import android.util.AttributeSet
 import android.util.Log
@@ -18,11 +19,10 @@ class MetronomeView @JvmOverloads constructor(
 
     private var mIsTik: Boolean = false
 
-    private val mTikDrawable: Drawable = resources.getDrawable(R.drawable.metronome_tik)
-    private val mDefaultDrawable: Drawable = resources.getDrawable(R.drawable.metronome_default)
-
     private val mDefaultPaint: Paint = Paint()
     private val mTikPaint: Paint = Paint()
+
+    var bpm: Int = 0
 
     var onStart: () -> Unit = {}
     var onStop: () -> Unit = {}
@@ -51,6 +51,7 @@ class MetronomeView @JvmOverloads constructor(
     fun tik(){
         mIsTik = true
         invalidate()
+        Handler().postDelayed({invalidate()}, ((30/bpm)*1000).toLong())
     }
     fun clear(){
         mIsTik = false
