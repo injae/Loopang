@@ -86,9 +86,10 @@ class RecordFragment : Fragment(), IPageFragment {
         loopStation.linkVisualizer(realtime_visualizer_view)
         metronome_view.onStart = {
             toast("metronome start!")
-            (activity as Recording).setMetronomeFrag.metronome.excute()
-            //metronome_view.tik()    //tik
-            metronome_view.clear() //default
+            val metronome = (activity as Recording).setMetronomeFrag.metronome
+            metronome.task = { metronome_view.tik() }
+            metronome_view.bpm =  metronome.bpm.toInt()
+            metronome.excute()
         }
         metronome_view.onStop = {
             toast("metronome stop!")
