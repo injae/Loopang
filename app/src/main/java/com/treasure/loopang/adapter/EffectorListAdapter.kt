@@ -61,8 +61,6 @@ class EffectorListAdapter : BaseAdapter() {
             effectorViewHolder.playbackBtnView!!.setImageResource(com.treasure.loopang.R.drawable.icon_play__musical_instrument)
         }
 
-
-
         view.findViewById<View>(com.treasure.loopang.R.id.btn_playback).setOnClickListener{
 
             if(listViewItemList[position].isPlayingMusic == true) {

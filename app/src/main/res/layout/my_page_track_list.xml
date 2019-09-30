@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:background="@color/my_page_list">
+
+    <RelativeLayout
+            android:layout_marginStart="15dp"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="15dp">
+        <TextView
+                android:layout_marginStart="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/myPageSongName"
+                android:text="Song Name"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp" />
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/myPageSongName"
+                android:layout_below="@id/myPageSongName"
+                android:text="2019.09.20"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:id="@+id/myPageProductionDate"/>
+    <ImageButton
+            android:layout_width="25dp"
+            android:layout_height="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            app:srcCompat="@drawable/icon_btn_share"
+            android:background="@android:color/transparent"
+            android:layout_marginEnd="10dp"
+            android:id="@+id/myPageBtnShare"
+        />
+    </RelativeLayout>
+</RelativeLayout>

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:textColor="#FFFFFF"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@android:color/transparent"/>
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            >
+        <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                >
+            <LinearLayout
+                    android:layout_marginTop="0dp"
+                    android:layout_marginBottom="0dp"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:id="@+id/artistinfo"
+                    android:layout_marginStart="20dp"
+                    >
+                <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        app:srcCompat="@drawable/icon_mypage"
+                        android:layout_marginTop="15dp"
+                        android:id="@+id/artistImage"
+                        android:layout_gravity="center_horizontal" />
+                <TextView
+                        android:text="Artist Name"
+                        android:textColor="#939393"
+                        android:textSize="18dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="15dp"
+                        android:id="@+id/userNickname"/>
+            </LinearLayout>
+            <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_toRightOf="@id/artistinfo"
+                    android:layout_marginStart="60dp"
+                    android:id="@+id/tracknum"
+                    android:layout_centerVertical="true"
+
+                    >
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text ="4"
+                        android:textSize="15dp"
+                        android:textColor="#000000"
+                        android:id="@+id/tracknumber"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="3dp"/>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text ="Track"
+                        android:textSize="13dp"
+                        android:textColor="#8F8F8F"/>
+            </LinearLayout>
+            <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/tracknum"
+                    android:layout_marginStart="40dp"
+                    android:orientation="vertical"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="70dp"
+                    >
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/likenumber"
+                        android:text ="5"
+                        android:textSize="15dp"
+                        android:textColor="#000000"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="3dp"/>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text ="Liked"
+                        android:textSize="13dp"
+                        android:textColor="#8F8F8F"/>
+            </LinearLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginEnd="0dp"
+            android:layout_marginTop="15dp">
+
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#FFFFFF"
+                android:gravity="center"
+                android:text="Track"
+                android:textColor="#737373"
+                android:textSize="18dp"
+                android:id="@+id/userPageTrackBtn"/>
+        <Button
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:text="Liked"
+                android:textColor="#FFFFFF"
+                android:textSize="18dp"
+                android:id="@+id/userPageLikedBtn"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="391dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="60dp"
+            android:orientation="vertical">
+
+        <ListView
+                android:id="@+id/userpageListView"
+                android:layout_width="match_parent"
+                android:layout_height="270dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"/>
+
+        <ImageButton
+                android:id="@+id/addTrackButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="end"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="40dp"
+                app:srcCompat="@drawable/userpage_btn_add_track"/>
+    </LinearLayout>
+</LinearLayout>

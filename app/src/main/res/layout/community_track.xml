@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_alignParentTop="true"
+            android:id="@+id/trackNameFrame"
+            android:background="#FFFFFF">
+        <ImageButton
+               android:layout_gravity="center_vertical"
+                android:layout_marginStart="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                app:srcCompat="@drawable/trackicon_btn_back"
+                android:background="@android:color/transparent"
+                android:id="@+id/track_btn_back"/>
+        <TextView
+                android:id="@+id/Track_trackName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Track Name"
+                android:textColor="#969696"
+                android:textSize="18dp"
+                android:layout_gravity="center"
+                />
+    </FrameLayout>
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:layout_below="@id/trackNameFrame"
+            android:id="@+id/trackPlayLayout">
+        <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/track_btn_replay"
+                android:background="@android:color/transparent"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="15dp"
+                android:id="@+id/TrackBtnReplay"
+                android:visibility="invisible"/>
+        <ImageButton
+                android:id="@+id/Track_btn_play"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/trackicon_play"
+                android:background="@android:color/transparent"
+                android:layout_centerInParent="true"/>
+
+        <ImageView
+                android:layout_marginStart="10dp"
+                android:id="@+id/playNum"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                app:srcCompat="@drawable/trackicon_playnum"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="10dp"
+                />
+        <TextView
+                android:id="@+id/playNumText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="512"
+                android:layout_marginStart="3dp"
+                android:layout_alignBottom ="@id/playNum"
+                android:layout_toRightOf="@id/playNum"/>
+
+        <ImageView
+                android:layout_marginStart="10dp"
+                android:id="@+id/heartView"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                app:srcCompat="@drawable/trackicon_heart"
+                android:layout_toRightOf="@id/playNumText"
+                android:layout_alignBottom ="@id/playNum"/>
+
+        <TextView
+                android:id="@+id/trackHeartClikedNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="71"
+                android:layout_marginStart="3dp"
+                android:layout_toRightOf="@id/heartView"
+                android:layout_alignBottom ="@id/playNum"/>
+    </RelativeLayout>
+
+    <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/trackPlayLayout"
+            android:id="@+id/justframe"
+            >
+        <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="76dp"
+                android:orientation="horizontal"
+
+                android:id="@+id/buttonFrame">
+
+            <ImageButton
+                    android:id="@+id/heartButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/trackicon_heart"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="50dp"
+                    android:background="@android:color/transparent"/>
+
+            <ImageButton
+                    android:id="@+id/downloadButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/trackicon_download"
+                    android:layout_toRightOf="@id/heartButton"
+                    android:layout_alignBottom ="@id/heartButton"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginEnd="50dp"
+                    android:background="@android:color/transparent"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="76dp"
+                android:orientation="horizontal"
+                android:layout_alignTop="@id/buttonFrame"
+                android:layout_toRightOf="@id/buttonFrame"
+                android:layout_marginStart="10dp"
+                >
+
+            <TextView
+                    android:id="@+id/Track_artistName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Artist Name"
+                    android:textSize="20dp"
+                    android:textColor="#8B8B8B"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="35dp"
+                    android:layout_marginEnd="35dp"/>
+
+        </RelativeLayout>
+    </LinearLayout>
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_below="@id/justframe"
+            android:background="#FFFFFF"
+            android:id="@+id/trackinfoFrame">
+
+        <TextView
+                android:id="@+id/TrackInfoTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Track Info"
+                android:layout_centerHorizontal ="true"
+                android:gravity="center"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+
+                />
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_below="@id/TrackInfoTextView">
+            <TextView
+                    android:id="@+id/trackInfoDate"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:text="2019.09.09"
+                    android:layout_marginTop="20dp"
+                    android:layout_gravity="center_horizontal"/>
+
+            <TextView
+                    android:id="@+id/trackInfoText"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:text="사용박자: 4/4\n 곡 설명: 다장조의 코드를 이용한 피아노와 기타의 음을 쌓아 만든 창작곡이다."
+                    android:layout_marginTop="10dp"
+                    android:layout_gravity="center_horizontal"/>
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

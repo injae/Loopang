@@ -1,5 +1,6 @@
 package com.treasure.loopang
 
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -44,10 +45,10 @@ class Recording : AppCompatActivity()
     private var backPressedTime: Long = 0
     private var currentPage: Int = 0
 
-    lateinit var setEffectorFrag : setEffector
+   // lateinit var setEffectorFrag : setEffector
     lateinit var setMetronomeFrag : setMetronome
     lateinit var setting : setting
-
+    lateinit var myPage: MyPage
     val fileManager : FileManager =FileManager()
     val loopList = fileManager.soundList()
 
@@ -55,9 +56,10 @@ class Recording : AppCompatActivity()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setEffectorFrag = setEffector()
+        //setEffectorFrag = setEffector()
         setMetronomeFrag = setMetronome()
         setting = setting()
+        myPage = MyPage()
 
         // 화면을 세로로 고정
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -86,20 +88,30 @@ class Recording : AppCompatActivity()
             .setCustomAnimations( R.anim.fade_in, 0, 0, R.anim.fade_out).replace(R.id.fragContainer, setMetronome()).commit()
 
         btn_setMetronome.setOnClickListener {
-            checkPresentFragAndReplaceFrag(btn_setMetronome)
+            getSupportFragmentManager().beginTransaction().setCustomAnimations( R.anim.fade_in, 0, 0, R.anim.fade_out).replace(R.id.fragContainer, setMetronomeFrag).commit()
+            //checkPresentFragAndReplaceFrag(btn_setMetronome)
         }
-        btn_setEffector.setOnClickListener{
+       /* btn_setEffector.setOnClickListener{
             checkPresentFragAndReplaceFrag(btn_setEffector)
         }
-        btn_setting.setOnClickListener {
-            checkPresentFragAndReplaceFrag(btn_setting)
+        */
+        btn_myPage.setOnClickListener {
+            getSupportFragmentManager().beginTransaction().setCustomAnimations( R.anim.fade_in, 0, 0, R.anim.fade_out).replace(R.id.FrameForMyPage, myPage).commit()
         }
-
+        btn_setting.setOnClickListener {
+            getSupportFragmentManager().beginTransaction().setCustomAnimations( R.anim.fade_in, 0, 0, R.anim.fade_out).replace(R.id.fragContainer, setting).commit()
+            // checkPresentFragAndReplaceFrag(btn_setting)
+        }
+        btn_community.setOnClickListener {
+            val intentToCommunity = Intent(this, CommunityActivity::class.java)
+            //intentToCommunity.putExtra()
+            startActivity(intentToCommunity)
+        }
         pager.adapter = pagerAdapter
         pager.addOnPageChangeListener(PageChangeListener())
         pager.setOnTouchListener { _, _ -> false}
     }
-
+/*
     fun checkPresentFragAndReplaceFrag(fragBtn : ImageButton){
         for (fragment in supportFragmentManager.fragments) {
             if (fragment.isVisible) {
@@ -117,8 +129,7 @@ class Recording : AppCompatActivity()
                         .beginTransaction()
                         .setCustomAnimations(R.anim.fade_in, 0, 0, R.anim.fade_out)
                         .replace(R.id.fragContainer, setEffectorFrag )
-                        .commit()
-                }
+                        .commit()}
                     btn_setting -> if(fragment is setMetronome || fragment is setEffector) {
                         getSupportFragmentManager()
                             .beginTransaction()
@@ -130,7 +141,7 @@ class Recording : AppCompatActivity()
                 }
             }
         }
-    }
+    }*/
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         if( hasFocus ) {
@@ -141,7 +152,7 @@ class Recording : AppCompatActivity()
     internal var myDrawerListener: DrawerLayout.DrawerListener = object : DrawerLayout.DrawerListener {
 
         override fun onDrawerClosed(drawerView: View) {
-                setEffectorFrag.adapter.positionMusicStop()
+                //setEffectorFrag.adapter.positionMusicStop()
         }
         override fun onDrawerOpened(drawerView: View) {}
         override fun onDrawerSlide(drawerView: View, slideOffset: Float) {

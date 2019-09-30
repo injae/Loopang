@@ -15,4 +15,10 @@
     <color name="my_page_sign_in">#4DFFFFFF</color>
     <color name="set_visualizer_background">#1ACA3F3F</color>
     <color name="shared_comunity_bottom_button">#939393</color>
+    <color name="my_page_list">#33EB5050</color>
+    <color name="notice_list">#80FFFFFF</color>
+    <color name="selected_search_btn">#33E02020</color>
+    <color name="twenty_per_white">#33FFFFFF</color>
+    <color name="feed_item">#59FFFFFF</color>
+    <color name="track_item">#B3FFFFFF</color>
 </resources>
