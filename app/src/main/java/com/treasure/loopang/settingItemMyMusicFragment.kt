@@ -9,6 +9,7 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import kotlinx.android.synthetic.main.setting_my_music.*
 import kotlinx.android.synthetic.main.setting_my_music_login_o.*
+import kotlinx.android.synthetic.main.setting_my_music_login_o.view.*
 import kotlinx.android.synthetic.main.setting_my_music_login_x.*
 import java.util.zip.Inflater
 
@@ -19,25 +20,28 @@ class settingItemMyMusicFragment :androidx.fragment.app.Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         var checkLogin : Boolean = false
-        var userNickname : String = "user name"
-        user_nickname.text = userNickname
+        var userNickname : String = "user name" //변수 바꿔라 ~!!~!~!~!~!
+        var useridEmail : String = " 000000@gmail.com"
+        my_music_user_nickname.text = userNickname
 
         when(checkLogin){
             false -> {
-                myPageLoginX.visibility = View.VISIBLE
-                myPageLoginO.visibility =View.INVISIBLE
                 layoutInflater.inflate(R.layout.setting_my_music_login_x, null)
+
+                my_music_user_nickname.setText(userNickname)
+                myMusicUserEmail.setText(useridEmail)
+
             }
             true -> {
-                myPageLoginX.visibility = View.INVISIBLE
-                myPageLoginO.visibility =View.VISIBLE
                 layoutInflater.inflate(R.layout.setting_my_music_login_o, null)
-
-                BtnmyPageLogIn.setOnClickListener {
-                    //로그인 버튼
-                }
+                //로그인 기능 여기다 추가
+/*
+                my_music_login_button.setOnClickListener {
+                  //  onLoginButtonClick()
+                }*/
             }
         }
+
 
 
     }

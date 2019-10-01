@@ -29,7 +29,7 @@ class MyPage : androidx.fragment.app.Fragment() {
         }
         mypagebtback.setOnClickListener{
             //fragment종료시키기 ^^,, 근데 휴대폰이 안떠서 잘 뜨는지도 모르겠어 ㅠㅠㅠㅠㅠㅠㅠ 몰라 뮨우ㅠㅁㄴ으ㅠㅠㅠ
-            //finish()
+
         }
 
         MyPageListView.adapter =adapter

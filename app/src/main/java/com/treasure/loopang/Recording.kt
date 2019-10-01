@@ -1,5 +1,6 @@
 package com.treasure.loopang
 
+import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
@@ -34,6 +35,7 @@ import kotlinx.coroutines.launch
 
 class Recording : AppCompatActivity()
     , LoopManageFragment.OnLoopManageListener {
+
     companion object {
         private const val FINISH_INTERVAL_TIME = 2000
         private const val RECORD_FRAGMENT = 0
@@ -95,7 +97,9 @@ class Recording : AppCompatActivity()
             checkPresentFragAndReplaceFrag(btn_setEffector)
         }
         */
+        FrameForMyPage.visibility= View.GONE
         btn_myPage.setOnClickListener {
+            FrameForMyPage.visibility= View.VISIBLE
             getSupportFragmentManager().beginTransaction().setCustomAnimations( R.anim.fade_in, 0, 0, R.anim.fade_out).replace(R.id.FrameForMyPage, myPage).commit()
         }
         btn_setting.setOnClickListener {
@@ -103,8 +107,10 @@ class Recording : AppCompatActivity()
             // checkPresentFragAndReplaceFrag(btn_setting)
         }
         btn_community.setOnClickListener {
+            var userId : String? = null
             val intentToCommunity = Intent(this, CommunityActivity::class.java)
-            //intentToCommunity.putExtra()
+
+            intentToCommunity.putExtra("userId",userId)
             startActivity(intentToCommunity)
         }
         pager.adapter = pagerAdapter

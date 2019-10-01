@@ -1,6 +1,7 @@
 package com.treasure.loopang
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,8 +17,6 @@ import kotlinx.android.synthetic.main.community_user_page.*
 import kotlinx.android.synthetic.main.setting_notice.*
 
 class CommunityUserPageFragment : androidx.fragment.app.Fragment() {
-
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.community_user_page,container,false);
     }
@@ -62,8 +61,8 @@ class CommunityUserPageFragment : androidx.fragment.app.Fragment() {
         }
 
         //userNickname.setText() 닉네임 변수 넣어주기
-        tracknumber.setText((activity as CommunityActivity).userSharedTrackNum)
-        likenumber.setText((activity as CommunityActivity).likedSongNum)  //(activity as CommunityActivity).likedSongNum
+       // userSharedTrackNumber.setText((activity as CommunityActivity).userSharedTrackNum)
+       // likenumber.setText((activity as CommunityActivity).likedSongNum)  //(activity as CommunityActivity).likedSongNum
 
         addTrackButton.setOnClickListener {
             //myPage Track List 나오게해야하나? 이거 아직 고민중임 ㅇㅇ

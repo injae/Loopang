@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
         android:orientation="vertical"
         android:layout_gravity="center_horizontal"
         android:id="@+id/settingMyMusic"
@@ -11,14 +12,16 @@
     <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent"
     android:layout_marginTop="10dp">
     <include layout="@layout/setting_my_music_login_o"
-             android:visibility="invisible"/>
+             android:visibility="gone"/>
     <include layout="@layout/setting_my_music_login_x"
-             android:visibility="invisible"/>
+             android:visibility="visible"/>
     </FrameLayout>
 
     <ListView
-            android:layout_marginTop="30dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="bottom"
+            android:id="@+id/myMusicListView"/>
 
 </LinearLayout>

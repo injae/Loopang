@@ -74,6 +74,7 @@
     <FrameLayout
             android:id="@+id/FrameForMyPage"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:visibility="gone"/>
 
 </androidx.drawerlayout.widget.DrawerLayout>

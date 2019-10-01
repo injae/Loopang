@@ -30,16 +30,17 @@
                     android:text="User Nickname "
                     android:textSize="25dp"
                     android:textColor="#FFFFFF"
-                    android:id="@+id/user_nickname" />
+                    android:id="@+id/my_music_user_nickname" />
     <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/user_nickname"
+            android:layout_below="@id/my_music_user_nickname"
             android:text="abcdefg@icloud.com"
             android:textSize="15dp"
             android:textColor="#FFFFFF"
             android:layout_marginEnd="30dp"
             android:gravity="center_vertical"
             android:layout_alignBottom="@id/login_icon"
-            android:layout_alignLeft="@id/user_nickname"/>
+            android:layout_alignLeft="@id/my_music_user_nickname"
+            android:id="@+id/myMusicUserEmail"/>
     </RelativeLayout>

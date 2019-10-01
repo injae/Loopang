@@ -4,6 +4,7 @@ import android.content.Intent.getIntent
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_community.*
 
 class CommunityActivity : AppCompatActivity() {
@@ -24,10 +25,11 @@ class CommunityActivity : AppCompatActivity() {
         window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
 
         val intent = getIntent()
-
+        val userId = intent.extras!!.getString("userId")
         communityFeedFrag = CommunityFeedFragment()
         communitySearchFrag = CommunitySearchFragment()
         communityUserPageFrag = CommunityUserPageFragment( )
+        var presentFragment : Int= 1
 
         btn_feed.setOnClickListener { getSupportFragmentManager()
             .beginTransaction()
@@ -37,26 +39,45 @@ class CommunityActivity : AppCompatActivity() {
           //btn_feed.setImageDrawable()
             //btn_feed.setBackgroundColor()
 
+            presentFragment = 1
+
         }
         btn_community_search.setOnClickListener { getSupportFragmentManager()
             .beginTransaction()
             .setCustomAnimations(R.anim.fade_in, 0, 0, R.anim.fade_out)
             .replace(R.id.CommunityContainer, communitySearchFrag )
             .commit()
-            //btn_community_search.setImageDrawable()
-            //btn_community_search.setBackgroundColor()
+            presentFragment =2
 
         }
-        btn_userpage.setOnClickListener { getSupportFragmentManager()
-            .beginTransaction()
+        btn_userpage.setOnClickListener { getSupportFragmentManager().beginTransaction()
             .setCustomAnimations(R.anim.fade_in, 0, 0, R.anim.fade_out)
             .replace(R.id.CommunityContainer, communityUserPageFrag )
             .commit()
+            presentFragment =3
+
 
             //btn_userpage.setImageDrawable(community_userpagebtn)
           //  btn_userpage.setBackgroundColor()
+        }
 
-
+        if (presentFragment == 1){
+            btn_community_search.setImageResource(R.drawable.icon_search)
+            btn_community_search.setBackgroundColor(resources.getColor(android.R.color.white))
+            btn_userpage.setBackgroundColor(resources.getColor(android.R.color.white))
+            btn_userpage.setImageResource(R.drawable.community_userpagebtn_ver_gray)
+        }
+        else if (presentFragment ==2 ){
+            btn_feed.setImageResource(R.drawable.community_feedbtn_ver_gray)
+            btn_feed.setBackgroundColor(resources.getColor(android.R.color.white))
+            btn_userpage.setBackgroundColor(resources.getColor(android.R.color.white))
+            btn_userpage.setImageResource(R.drawable.community_userpagebtn_ver_gray)
+        }
+        else if(presentFragment ==3){
+            btn_feed.setImageResource(R.drawable.community_feedbtn_ver_gray)
+            btn_feed.setBackgroundColor(resources.getColor(android.R.color.white))
+            btn_community_search.setImageResource(R.drawable.icon_search)
+            btn_community_search.setBackgroundColor(resources.getColor(android.R.color.white))
         }
     }
 
@@ -71,4 +92,5 @@ class CommunityActivity : AppCompatActivity() {
             getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, 0, 0, R.anim.fade_out).replace(R.id.CommunityContainer, CommunityTrackFragment()).commit();
         }
     }
+
 }

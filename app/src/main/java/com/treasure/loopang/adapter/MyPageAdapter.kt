@@ -24,6 +24,7 @@ class MyPageAdapter : BaseAdapter() {
 
         if (convertView == null) {
             view = LayoutInflater.from(context).inflate(com.treasure.loopang.R.layout.my_page_track_list, null)
+
             myTrackViewHolder = ViewHolder()
             myTrackViewHolder.songNameTextView = view.findViewById(com.treasure.loopang.R.id.myPageSongName) as TextView
             myTrackViewHolder.productionDateTextView = view.findViewById(com.treasure.loopang.R.id.myPageProductionDate) as TextView

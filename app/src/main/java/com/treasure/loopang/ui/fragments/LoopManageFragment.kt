@@ -328,8 +328,8 @@ class LoopManageFragment : androidx.fragment.app.Fragment()
         }
     }
 
-
     interface OnLoopManageListener{
+
         fun onClear()
         fun onImport(project: LoopMusic, newLoadFlag: Boolean)
     }
