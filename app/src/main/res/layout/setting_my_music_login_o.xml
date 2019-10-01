@@ -3,7 +3,7 @@
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
             android:layout_gravity="center_horizontal"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/effectorlist_background"
             android:id="@+id/myPageLoginO"
@@ -19,17 +19,28 @@
                 android:layout_weight="1"
                 android:layout_marginBottom="30dp"
         />
-
             <TextView
-                    android:layout_width="150dp"
-                    android:layout_height="22dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_toRightOf="@id/login_icon"
-                    android:layout_marginTop="40dp"
+                    android:layout_alignTop="@id/login_icon"
+                    android:layout_marginTop="5dp"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="30dp"
                     android:text="User Nickname "
-                    android:textSize="18dp"
+                    android:textSize="25dp"
                     android:textColor="#FFFFFF"
-                    android:id="@+id/user_nickname" />
-
+                    android:id="@+id/my_music_user_nickname" />
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/my_music_user_nickname"
+            android:text="abcdefg@icloud.com"
+            android:textSize="15dp"
+            android:textColor="#FFFFFF"
+            android:layout_marginEnd="30dp"
+            android:gravity="center_vertical"
+            android:layout_alignBottom="@id/login_icon"
+            android:layout_alignLeft="@id/my_music_user_nickname"
+            android:id="@+id/myMusicUserEmail"/>
     </RelativeLayout>

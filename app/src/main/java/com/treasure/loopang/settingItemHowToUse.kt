@@ -12,6 +12,5 @@ class settingItemHowToUse :androidx.fragment.app.Fragment(){
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("확인","안녕나는 HowtoUse프래그먼트야")
     }
 }

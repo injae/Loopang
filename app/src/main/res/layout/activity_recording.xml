@@ -10,7 +10,6 @@
         tools:openDrawer="start"
         tools:context=".Recording"
 >
-
     <RelativeLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
@@ -25,11 +24,12 @@
                 android:layout_marginBottom="55dp"
                 android:layout_marginLeft="14dp"
                 android:layout_marginRight="14dp">
+
             <androidx.viewpager.widget.ViewPager
                     android:id="@+id/pager"
-                    android:layout_height="match_parent"
                     android:layout_width="match_parent"
-                    android:layout_alignStart="@+id/fragment_frame"/>
+                    android:layout_height="match_parent"
+                    android:layout_alignStart="@+id/fragment_frame" />
         </FrameLayout>
 
         <ImageView
@@ -50,9 +50,10 @@
                />
 
     </RelativeLayout>
+
     <LinearLayout
             android:orientation="horizontal"
-            android:layout_width="365dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="start"
             android:id="@+id/linear_drawer"
@@ -60,14 +61,20 @@
             android:fitsSystemWindows="true">
         <include
                 layout = "@layout/drawer"/>
-
         <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/fragContainer"
                 android:background="@drawable/drawer_background"
                 android:clickable="true"
-                android:focusable="true" >
+                android:focusable="true"
+                android:layout_marginEnd="-64dp">
         </FrameLayout>
     </LinearLayout>
+    <FrameLayout
+            android:id="@+id/FrameForMyPage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"/>
+
 </androidx.drawerlayout.widget.DrawerLayout>

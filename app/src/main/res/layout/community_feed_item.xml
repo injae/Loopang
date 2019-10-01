@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:background="@color/feed_item">
+
+        <TextView
+                android:layout_marginStart="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/FeedSongName"
+                android:text="Song Name"
+                android:textColor="#5F5F5F"
+                android:textSize="20sp" />
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/FeedSongName"
+                android:layout_below="@id/FeedSongName"
+                android:text="Artist Name"
+                android:textColor="#5F5F5F"
+                android:textSize="14sp"
+                android:id="@+id/FeedUserNickName"/>
+
+    <ImageView
+            android:id="@+id/playImageView"
+            android:layout_width="20.88dp"
+            android:layout_height="16.77dp"
+            app:srcCompat="@drawable/trackicon_playnum"
+            android:layout_toLeftOf="@id/playedNumTextView"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="5dp"/>
+
+    <TextView
+            android:id="@+id/playedNumTextView"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:text="10"
+            android:layout_toLeftOf="@id/heartImageView"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="15dp" />
+
+    <ImageView
+            android:id="@+id/heartImageView"
+            android:layout_width="17.88dp"
+            android:layout_height="14.77dp"
+            app:srcCompat="@drawable/trackicon_heart_clicked"
+            android:layout_toLeftOf="@id/heartNumTextView"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="5dp" />
+
+    <TextView
+            android:id="@+id/heartNumTextView"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:text="10"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="20dp"/>
+</RelativeLayout>

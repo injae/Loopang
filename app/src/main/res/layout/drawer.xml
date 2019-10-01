@@ -26,9 +26,8 @@
                     android:gravity="center"
                     android:layout_gravity="center"
                     android:layout_marginTop="30dp"
-                    android:layout_marginBottom="0dp"
-                    android:id="@+id/btn_setEffector"
-                    android:background="@drawable/icon_effector"
+                    android:id="@+id/btn_myPage"
+                    android:background="@drawable/icon_drawer_mypage"
                     />
 
         <ImageButton
@@ -37,9 +36,17 @@
                 android:gravity="center"
                 android:layout_gravity="center"
                 android:layout_marginTop="30dp"
-                android:layout_marginBottom="0dp"
                 android:id="@+id/btn_setting"
                 android:src="@drawable/icon_setting"
                 android:background="@drawable/rounded"
         />
+        <ImageButton
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:layout_marginTop="30dp"
+                android:id="@+id/btn_community"
+                android:background="@drawable/icon_community"
+                />
     </LinearLayout>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/gradient_background"
+        android:id="@+id/community_layout">
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="60dp"
+            android:layout_alignParentStart="true"
+            android:id="@+id/CommunityContainer"/>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true">
+        <ImageButton
+                android:id="@+id/btn_feed"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/community_feedbtn"
+                android:background= "#939393"/>
+        <ImageButton
+                android:id="@+id/btn_community_search"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/icon_search_white"
+                android:background=  "#939393"/>
+        <ImageButton
+                android:id="@+id/btn_userpage"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/community_userpagebtn"
+                android:background=  "#939393" />
+    </LinearLayout>
+</RelativeLayout>

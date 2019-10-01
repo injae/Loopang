@@ -66,7 +66,7 @@ class setMetronome : androidx.fragment.app.Fragment() {
         btn_for_edit_bpm.setOnClickListener{
             StateEditTempo()
         }
-        EditBpm.addTextChangedListener(object : TextWatcher {
+       /* EditBpm.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
             }
 
@@ -80,7 +80,7 @@ class setMetronome : androidx.fragment.app.Fragment() {
                 metronome.bpm = EditBpm.text.toString().toLong()
                 informBpsTempo(metronome.bpm) //알려줌 ㅇㅇ
             }
-        })
+        })*/
 
         //n분음표 -> 2,4,8,16,32,64,128 7개
         var NumOfClick = 0

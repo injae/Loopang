@@ -3,16 +3,18 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="vertical"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_marginStart="20dp"
+        android:layout_gravity="left"
         android:id="@+id/settingFrame">
 
 
     <LinearLayout
             android:orientation="vertical"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="center">
+            >
 
         <TextView
                 android:text="Setting"
@@ -82,7 +84,8 @@
         <ListView
                 android:layout_marginTop="10dp"
                 android:layout_width="230dp"
-                android:layout_height="348dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="50dp"
                 android:layout_gravity="center"
                 android:id="@+id/settingListView"
                 android:dividerHeight="9dp"

@@ -22,7 +22,7 @@
         <activity android:name=".Recording"></activity>
 
         <activity android:name=".settingItemActivity"></activity>
-
+        <activity android:name=".CommunityActivity"></activity>
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
