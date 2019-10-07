@@ -49,10 +49,6 @@
                     layout="@layout/setting_notice"
                     android:visibility="invisible"
                     android:id="@+id/visibilityNotice"/>
-            <include
-                    layout="@layout/setting_my_music"
-                    android:visibility="invisible"
-                    android:id="@+id/visibilityMymusic"/>
             <include layout="@layout/setting_visualizer"
                      android:visibility="invisible"
                      android:id="@+id/visibilityVisualizer"/>

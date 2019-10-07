@@ -1,21 +1,15 @@
 package com.treasure.loopang.adapter
 
-import android.content.Context
-import android.graphics.drawable.Drawable
-import android.media.MediaPlayer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import com.treasure.loopang.listitem.CommunityFeedItem
-import com.treasure.loopang.listitem.EffectorListItem
-import com.treasure.loopang.listitem.SettingItem
-import java.io.IOException
+import com.treasure.loopang.listitem.CommunitySongItem
 import java.util.ArrayList
 
 
 class CommunityFeedItemAdapter : BaseAdapter(){
-    private var listViewItemList = ArrayList<CommunityFeedItem>()
+    private var listViewItemList = ArrayList<CommunitySongItem>()
     override fun getCount(): Int {
         return listViewItemList.size
     }
@@ -32,7 +26,7 @@ class CommunityFeedItemAdapter : BaseAdapter(){
             feedViewHolder.userNickNameTextView = view.findViewById(com.treasure.loopang.R.id.FeedUserNickName) as TextView
             feedViewHolder.songNameTextView = view.findViewById(com.treasure.loopang.R.id.FeedSongName) as TextView
             feedViewHolder.likedNumTextView = view.findViewById(com.treasure.loopang.R.id.heartNumTextView) as TextView
-            feedViewHolder.playedNumTextView = view.findViewById(com.treasure.loopang.R.id.playedNumTextView) as TextView
+            feedViewHolder.downloadNumTextView = view.findViewById(com.treasure.loopang.R.id.playedNumTextView) as TextView
 
             view.tag = feedViewHolder
         }else{
@@ -41,8 +35,8 @@ class CommunityFeedItemAdapter : BaseAdapter(){
         }
         feedViewHolder.userNickNameTextView?.setText(listViewItemList.get(position).userNickName)
         feedViewHolder.songNameTextView?.setText(listViewItemList.get(position).songName)
-        feedViewHolder.likedNumTextView?.setText(listViewItemList.get(position).likedNum)
-        feedViewHolder.playedNumTextView?.setText(listViewItemList.get(position).playedNum)
+        feedViewHolder.likedNumTextView?.setText(listViewItemList.get(position).likedNum.toString())
+        feedViewHolder.downloadNumTextView?.setText(listViewItemList.get(position).downloadNum.toString())
 
         val listViewItem = listViewItemList[position]
 
@@ -57,21 +51,20 @@ class CommunityFeedItemAdapter : BaseAdapter(){
         return listViewItemList[position]
     }
 
-    fun addItem(userNickName: String, songName: String,  likedNum : String, playedNum : String) {
-        val item = CommunityFeedItem()
+    fun addItem(userNickName: String, songName: String,  likedNum : Int, downloadNum :Int) {
+        val item = CommunitySongItem()
 
         item.userNickName= userNickName
         item.songName = songName
+        item.downloadNum = downloadNum
         item.likedNum = likedNum
-        item.playedNum = playedNum
-
         listViewItemList.add(item)
     }
 
     private  class ViewHolder{
         var userNickNameTextView : TextView ? = null
         var songNameTextView :  TextView ? = null
-        var likedNumTextView :  TextView ? = null
-        var playedNumTextView : TextView ? = null
+        var downloadNumTextView : TextView? = null
+         var likedNumTextView : TextView? = null
     }
 }

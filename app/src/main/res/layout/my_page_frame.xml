@@ -5,48 +5,42 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/myPage"
         android:background="@drawable/drawer_background">
+
     <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="30dp"
-            android:layout_centerHorizontal ="true">
-        <Button
-                android:id="@+id/mypagebtback"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#FFFFFF"
-                android:textSize="20dp"
-                android:background= "@android:color/transparent"
-                android:layout_toLeftOf="@id/myPageTextView"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="20dp"
-                android:gravity="bottom"/>
+            android:layout_height="match_parent">
 
         <TextView
+                android:id="@+id/myPageTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="My Page"
-                android:textSize="20dp"
-                android:textColor="#FFFFFF"
-                android:layout_marginTop="20dp"
-                android:layout_centerHorizontal ="true"
-                android:layout_alignBottom="@id/mypagebtback"
-                android:id="@+id/myPageTextView"/>
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="40dp"
+                android:text=" My Page"
+                android:textColor="#ffffff"
+                android:textSize="35dp" />
+
         <FrameLayout
-                android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:layout_below = "@id/mypagebtback"
-                android:layout_marginTop="10dp"
                 android:id="@+id/LoginInfo"
-                android:layout_centerHorizontal ="true">
-            <include layout="@layout/setting_my_music_login_o"
-                    android:visibility="invisible"
-                    android:id="@+id/login_o"/>
-            <include layout="@layout/setting_my_music_login_x"
-                    android:visibility="invisible"
-                    android:id="@+id/login_x"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/myPageTextView"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp">
+
+            <include
+                    android:id="@+id/login_o"
+                    layout="@layout/setting_my_music_login_o"
+                    android:visibility="visible" />
+
+            <include
+                    android:id="@+id/login_x"
+                    layout="@layout/setting_my_music_login_x"
+                    android:visibility="gone" />
         </FrameLayout>
 
         <ListView
+                android:id="@+id/MyPageListView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/LoginInfo"
@@ -57,17 +51,17 @@
                 android:layout_marginRight="-2dp"
                 android:layout_marginBottom="20dp"
                 android:divider="#00000000"
-                android:dividerHeight="9dp"
-                android:id="@+id/MyPageListView"></ListView>
+                android:dividerHeight="9dp"></ListView>
 
     </RelativeLayout>
     <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:id="@+id/checkView"
             >
         <include layout = "@layout/my_page_sharing_item_check"
                 android:visibility="invisible"
-                android:id="@+id/checkView"/>
+                android:id="@+id/checklayout"/>
     </FrameLayout>
 </RelativeLayout>

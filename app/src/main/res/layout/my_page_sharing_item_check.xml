@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/askShareView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
@@ -15,7 +16,6 @@
             android:textColor="#515151"
             android:id="@+id/songNameTextView"
             android:layout_marginStart="20dp"
-
             />
     <TextView
             android:layout_width="wrap_content"
@@ -41,7 +41,7 @@
             />
 
     <Button
-            android:id="@+id/btn_cancel"
+            android:id="@+id/shareViewBtn_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="CANCEL"
@@ -49,18 +49,18 @@
             android:textColor="#848484"
             android:background="@android:color/transparent"
             android:layout_marginTop="20dp"
-            android:layout_toLeftOf="@id/btn_ok"
+            android:layout_toLeftOf="@id/shareViewBtn_ok"
             android:layout_below="@id/SharingToCommunityText"/>
 
     <Button
-            android:id="@+id/btn_ok"
+            android:id="@+id/shareViewBtn_ok"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="OK"
             android:textSize="15dp"
             android:textColor="#FAACA3"
             android:background="@android:color/transparent"
-            android:layout_alignTop="@id/btn_cancel"
+            android:layout_alignTop="@id/shareViewBtn_cancel"
             android:layout_alignParentRight="true"
             android:layout_marginBottom="10dp"
             />

@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ListView
 import com.treasure.loopang.adapter.CommunityFeedItemAdapter
-import com.treasure.loopang.adapter.settingItemNoticeListAdapter
-import com.treasure.loopang.listitem.CommunityFeedItem
-import com.treasure.loopang.listitem.settingItemNoticeListItem
+import com.treasure.loopang.listitem.CommunitySongItem
 import kotlinx.android.synthetic.main.community_feed.*
-import kotlinx.android.synthetic.main.setting_notice.*
+import android.widget.FrameLayout
+import kotlinx.android.synthetic.main.activity_community.*
+
 
 class CommunityFeedFragment : androidx.fragment.app.Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -26,17 +26,20 @@ class CommunityFeedFragment : androidx.fragment.app.Fragment() {
         // 전체 리스트 가져와서 add item >> (activity as CommunityActivity)  >> 전체 공유ㄴ된 음원 큐 아직 안만듬
 //        FeedAdapter.addItem(
 
+        FeedAdapter.addItem("userName","songName",0,0)
+        FeedAdapter.addItem("userName2","songName2",1,1)
 
         FeedListView.onItemClickListener = AdapterView.OnItemClickListener { parent, v, position, id ->
             // get item
-            val item = parent.getItemAtPosition(position) as CommunityFeedItem
+            val item = parent.getItemAtPosition(position) as CommunitySongItem
 
             val songName = item.songName
             val userNickName = item.userNickName
+            val downloadNum = item.downloadNum
             val likedNum = item.likedNum
-            val  playedNum = item.playedNum
 
-            (activity as CommunityActivity).onFragmentChanged(1,songName,userNickName)
+            activity!!.TrackFrame.visibility = View.VISIBLE
+            (activity as CommunityActivity).onFragmentChanged(songName,userNickName ,0, 0) //likednum,downloadnum 넣어주기 ㅇㅇ
         }
     }
     fun addTrackItem(){

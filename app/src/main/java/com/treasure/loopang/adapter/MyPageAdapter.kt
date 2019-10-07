@@ -1,6 +1,7 @@
 package com.treasure.loopang.adapter
 
 import android.content.Context
+import android.media.Image
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,9 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.treasure.loopang.listitem.MyPageItem
+import android.R
+import android.animation.ObjectAnimator
+
 
 class MyPageAdapter : BaseAdapter() {
 
@@ -28,6 +32,7 @@ class MyPageAdapter : BaseAdapter() {
             myTrackViewHolder = ViewHolder()
             myTrackViewHolder.songNameTextView = view.findViewById(com.treasure.loopang.R.id.myPageSongName) as TextView
             myTrackViewHolder.productionDateTextView = view.findViewById(com.treasure.loopang.R.id.myPageProductionDate) as TextView
+          //  myTrackViewHolder.btnShareView= view.findViewById(com.treasure.loopang.R.id.myPageBtnShare) as ImageButton
             view.tag = myTrackViewHolder
         }else{
             myTrackViewHolder = convertView.tag as ViewHolder //viewHolder = convertView!!.getTag() as ViewHolder
@@ -36,20 +41,16 @@ class MyPageAdapter : BaseAdapter() {
         myTrackViewHolder.songNameTextView?.setText(listViewItemList.get(position).songName)
         myTrackViewHolder.productionDateTextView?.setText(listViewItemList.get(position).productionDate)
 
-        view.findViewById<View>(com.treasure.loopang.R.id.checkView).visibility=View.INVISIBLE
+       // view.findViewById<View>(com.treasure.loopang.R.id.checkView).visibility=View.INVISIBLE
         // Data Set(listViewItemList)에서 position에 위치한 데이터 참조 획득
         val listViewItem = listViewItemList[position]
-        view.findViewById<View>(com.treasure.loopang.R.id.myPageBtnShare).setOnClickListener{
+
+//        view.findViewById<View>(com.treasure.loopang.R.id.checkView).visibility=View.GONE
+
+
+        /*view.findViewById<View>(com.treasure.loopang.R.id.myPageBtnShare).setOnClickListener{
             view.findViewById<View>(com.treasure.loopang.R.id.checkView).visibility=View.VISIBLE  //공유하시겠습니까? 뷰 나오게 하기 ㅇㅇ
-            view.findViewById<View>(com.treasure.loopang.R.id.btn_ok).setOnClickListener {
-                //yes / no 버튼 클릭 > yes > community my page 공유되게 ㅇㅇ...,.,.
-            }
-            view.findViewById<View>(com.treasure.loopang.R.id.btn_cancel).setOnClickListener {
-                //yes / no 버튼 클릭 > yes > community my page 공유되게 ㅇㅇ...,.,.
-            }
-
-
-        }
+        }*/
         // view.findViewById<View>(com.treasure.loopang.R.id.btn_ok).setOnClickListener {  }
         //            view.findViewById<View>(com.treasure.loopang.R.id.btn_cancel).setOnClickListener {  }
         return view
@@ -69,13 +70,15 @@ class MyPageAdapter : BaseAdapter() {
         val item = MyPageItem()
         item.songName = songName
         item.productionDate = productionDate
-
+        //item.btnShare = btnShare
         listViewItemList.add(item)
     }
 
     private  class ViewHolder{
         var songNameTextView : TextView? =null
         var productionDateTextView : TextView? = null
+     //   var btnShareView : ImageButton? = null
     }
+
 }
 

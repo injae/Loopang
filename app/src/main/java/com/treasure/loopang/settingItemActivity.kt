@@ -44,7 +44,6 @@ class settingItemActivity : AppCompatActivity() {
                 visibilityNotice.visibility = View.INVISIBLE
                 visibilityVisualizer.visibility= View.VISIBLE
                 visibilityPcm.visibility= View.INVISIBLE
-                visibilityMymusic.visibility =View.INVISIBLE
                 inflater.inflate(R.layout.setting_visualizer, null)
                 var visualizerVersionNum : Int = 1
                 btn_visualizer_ver1.setOnClickListener {
@@ -59,7 +58,6 @@ class settingItemActivity : AppCompatActivity() {
                 visibilityNotice.visibility = View.INVISIBLE
                visibilityVisualizer.visibility= View.INVISIBLE
                 visibilityPcm.visibility= View.VISIBLE
-                visibilityMymusic.visibility =View.INVISIBLE
 
                 inflater.inflate(R.layout.setting_pcm, null)
                 var pcm : Int = 16
@@ -83,6 +81,9 @@ class settingItemActivity : AppCompatActivity() {
                     .setCustomAnimations(R.anim.fade_in, 0, 0, R.anim.fade_out)
                     .replace(R.id.settingItemContainer, settingItemNoticeFrag)
                     .commit()
+            }
+            "open source license" ->{
+
             }
         }
         go_back.setOnClickListener { finish() }

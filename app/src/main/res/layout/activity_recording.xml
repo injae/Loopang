@@ -68,13 +68,9 @@
                 android:background="@drawable/drawer_background"
                 android:clickable="true"
                 android:focusable="true"
-                android:layout_marginEnd="-64dp">
+                >
         </FrameLayout>
     </LinearLayout>
-    <FrameLayout
-            android:id="@+id/FrameForMyPage"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone"/>
+
 
 </androidx.drawerlayout.widget.DrawerLayout>

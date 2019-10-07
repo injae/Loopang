@@ -1,46 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <RelativeLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
-            android:layout_gravity="center_horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/effectorlist_background"
-            android:id="@+id/myPageLoginO"
-    >
-        <ImageView
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="30dp"
-                android:layout_marginStart="30dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/icon_mypage"
-                android:id="@+id/login_icon"
-                android:layout_weight="1"
-                android:layout_marginBottom="30dp"
-        />
-            <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/login_icon"
-                    android:layout_alignTop="@id/login_icon"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="30dp"
-                    android:text="User Nickname "
-                    android:textSize="25dp"
-                    android:textColor="#FFFFFF"
-                    android:id="@+id/my_music_user_nickname" />
+
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/myPageLoginO"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:background="#1ACA3F3F"
+        >
     <TextView
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+        android:id="@+id/my_music_user_nickname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+            android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:text="User Nickname "
+            android:layout_weight="1"
+        android:textColor="#FFFFFF"
+        android:textSize="14dp" />
+    <TextView
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:id="@+id/my_music_user_id_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/my_music_user_nickname"
-            android:text="abcdefg@icloud.com"
-            android:textSize="15dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="5dp"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:text="000000@google.com "
             android:textColor="#FFFFFF"
-            android:layout_marginEnd="30dp"
-            android:gravity="center_vertical"
-            android:layout_alignBottom="@id/login_icon"
-            android:layout_alignLeft="@id/my_music_user_nickname"
-            android:id="@+id/myMusicUserEmail"/>
-    </RelativeLayout>
+            android:textSize="14dp" />
+</LinearLayout>

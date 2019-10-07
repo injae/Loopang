@@ -81,9 +81,10 @@ class Recording : AppCompatActivity()
 
         val displayMetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(displayMetrics)
-
+        drawer_logout_btn.setOnClickListener {
+            //logout func
+        }
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
-         //drawerLayout.setPadding(0, statusBarHeight(this), 0, 0) //Padding for transparent status bar
         drawerLayout.addDrawerListener(myDrawerListener)
 
         getSupportFragmentManager().beginTransaction()
@@ -93,14 +94,9 @@ class Recording : AppCompatActivity()
             getSupportFragmentManager().beginTransaction().setCustomAnimations( R.anim.fade_in, 0, 0, R.anim.fade_out).replace(R.id.fragContainer, setMetronomeFrag).commit()
             //checkPresentFragAndReplaceFrag(btn_setMetronome)
         }
-       /* btn_setEffector.setOnClickListener{
-            checkPresentFragAndReplaceFrag(btn_setEffector)
-        }
-        */
-        FrameForMyPage.visibility= View.GONE
+
         btn_myPage.setOnClickListener {
-            FrameForMyPage.visibility= View.VISIBLE
-            getSupportFragmentManager().beginTransaction().setCustomAnimations( R.anim.fade_in, 0, 0, R.anim.fade_out).replace(R.id.FrameForMyPage, myPage).commit()
+            getSupportFragmentManager().beginTransaction().setCustomAnimations( R.anim.fade_in, 0, 0, R.anim.fade_out).replace(R.id.fragContainer, myPage).commit()
         }
         btn_setting.setOnClickListener {
             getSupportFragmentManager().beginTransaction().setCustomAnimations( R.anim.fade_in, 0, 0, R.anim.fade_out).replace(R.id.fragContainer, setting).commit()
