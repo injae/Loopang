@@ -22,6 +22,8 @@
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="80dp"
-            android:id="@+id/communityFeedListView"/>
+            android:id="@+id/communityFeedListView"
+            android:dividerHeight="7dp"
+            android:divider="#00000000"/>
 
 </LinearLayout>

@@ -1,11 +1,13 @@
 package com.treasure.loopang
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.FrameLayout
 import android.widget.ListView
 import com.treasure.loopang.adapter.CommunityFeedItemAdapter
 import com.treasure.loopang.adapter.CommunityUserPageAdapter
@@ -28,41 +30,49 @@ class CommunityUserPageFragment : androidx.fragment.app.Fragment() {
 
         userPageListView.adapter = userPageItemAdapter
 
+        //이거 track liked 따라서  additem달라지니까 함수로 구현해야함
+        userPageItemAdapter.addItem("userName","songName1")
+        userPageItemAdapter.addItem("userName","songName1")
+        userPageItemAdapter.addItem("userName","songName1")
+        userPageItemAdapter.addItem("userName","songName1")
+
+
         userPageTrackBtn.setOnClickListener {
-            /*
-             userPageTrackBtn.setBackgroundColor(FFFFFF)
-            userPageLikedBtn.setBackgroundColor("@android:color/transparent")
-            userPageLikedBtn.setTextColor()  FFFFFF
-            userPageTrackBtn.setTextColor() "#737373"
-            내가 공유한 음원들 리스트로 add item 만들어주기
-            userPageItemAdapter.addItem()
-            */
+            Log.d("Track Btn","Track Btn Cliked")
+            userPageTrackBtn.setTextColor(Color.argb(200,115,115,115))
+            userPageTrackBtn.setBackgroundColor(Color.WHITE)
+            userPageLikedBtn.setBackgroundColor(Color.argb(0,0,0,0))
+            userPageLikedBtn.setTextColor(Color.WHITE)
+            //내가 공유한 음원들 리스트로 add item 만들어주기
+            //userPageItemAdapter.addItem()
         }
         userPageLikedBtn.setOnClickListener{
-           /*
-           색깔 하기 넘 귀찮당 userPageTrackBtn.setBackgroundColor("@android:color/transparent")
-            userPageLikedBtn.setBackgroundColor(FFFFFF)
-            userPageLikedBtn.setTextColor()"#737373"
-            userPageTrackBtn.setTextColor() FFFFFF
-            liked 누른 음원들 리스트로 add item 만들어주기
-            userPageItemAdapter.addItem()
-            */
-
+            Log.d("Liked btn","Liked Btn Cliked")
+            userPageLikedBtn.setTextColor(Color.argb(200,115,115,115))
+            userPageLikedBtn.setBackgroundColor(Color.WHITE)
+            userPageTrackBtn.setBackgroundColor(Color.argb(0,0,0,0))
+            userPageTrackBtn.setTextColor(Color.WHITE)
+            // liked 누른 음원들 리스트로 add item 만들어주기
+          //  userPageItemAdapter.addItem()
         }
+        //addTrackButton.setOnClickListener {  나중에 넣어 ^^}
         userPageListView.onItemClickListener = AdapterView.OnItemClickListener { parent, v, position, id ->
             // get item
             val item = parent.getItemAtPosition(position) as CommunitySongItem
 
-            val userNickname = item.userNickName
             val songName = item.songName
+            val userNickName = item.userNickName
+            val downloadNum = item.downloadNum
+            val likedNum = item.likedNum
 
-            // Track Item 클릭 시 아이템의 Track Fragment로 이동
-            (activity as CommunityActivity).onFragmentChanged(3,songName,userNickname)
+            var trackFrame : FrameLayout = activity!!.TrackFrame
+            trackFrame.visibility = View.VISIBLE
+            (activity as CommunityActivity).onFragmentChanged(songName,userNickName ,0, 0) //likednum,downloadnum 넣어주기 ㅇㅇ
         }
 
         //userNickname.setText() 닉네임 변수 넣어주기
-       // userSharedTrackNumber.setText((activity as CommunityActivity).userSharedTrackNum)
-       // likenumber.setText((activity as CommunityActivity).likedSongNum)  //(activity as CommunityActivity).likedSongNum
+        //userSharedTrackNumber.setText((activity as CommunityActivity).userSharedTrackNum)
+        //likenumber.setText((activity as CommunityActivity).likedSongNum)  //(activity as CommunityActivity).likedSongNum
 
         addTrackButton.setOnClickListener {
             //myPage Track List 나오게해야하나? 이거 아직 고민중임 ㅇㅇ

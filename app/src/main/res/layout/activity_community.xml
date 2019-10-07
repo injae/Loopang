@@ -7,17 +7,22 @@
         android:layout_height="match_parent"
         android:background="@drawable/gradient_background"
         android:id="@+id/community_layout">
-    <FrameLayout
+
+    <androidx.viewpager.widget.ViewPager
+            android:id="@+id/CommunityContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="60dp"
             android:layout_alignParentStart="true"
-            android:id="@+id/CommunityContainer"/>
+            android:layout_marginStart="4dp"
+            android:layout_marginBottom="60dp" />
+
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_alignParentBottom="true">
+            android:layout_alignParentBottom="true"
+            android:id="@+id/tabLayout">
+
         <ImageButton
                 android:id="@+id/btn_feed"
                 android:layout_width="wrap_content"
@@ -40,4 +45,12 @@
                 app:srcCompat="@drawable/community_userpagebtn"
                 android:background=  "#939393" />
     </LinearLayout>
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/TrackFrame"
+            android:background="@drawable/gradient_background"
+            android:visibility="gone">
+    </FrameLayout>
+
 </RelativeLayout>

@@ -12,6 +12,8 @@
               android:layout_gravity="center">
 
     <ListView
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/noticeListView"

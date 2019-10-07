@@ -4,7 +4,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:background="@color/my_page_list">
+        android:background="@drawable/effectorlist_background">
 
     <RelativeLayout
             android:layout_marginStart="15dp"

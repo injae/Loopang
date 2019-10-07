@@ -58,10 +58,10 @@
 
         <ImageView
                 android:layout_marginStart="10dp"
-                android:id="@+id/playNum"
+                android:id="@+id/downloadNum"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
-                app:srcCompat="@drawable/trackicon_playnum"
+                app:srcCompat="@drawable/trackicon_download"
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="10dp"
                 />
@@ -69,10 +69,11 @@
                 android:id="@+id/playNumText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="512"
+                android:text="0"
+                android:inputType="number"
                 android:layout_marginStart="3dp"
-                android:layout_alignBottom ="@id/playNum"
-                android:layout_toRightOf="@id/playNum"/>
+                android:layout_alignBottom ="@id/downloadNum"
+                android:layout_toRightOf="@id/downloadNum"/>
 
         <ImageView
                 android:layout_marginStart="10dp"
@@ -81,62 +82,67 @@
                 android:layout_height="15dp"
                 app:srcCompat="@drawable/trackicon_heart"
                 android:layout_toRightOf="@id/playNumText"
-                android:layout_alignBottom ="@id/playNum"/>
+                android:layout_alignBottom ="@id/downloadNum"/>
 
         <TextView
                 android:id="@+id/trackHeartClikedNum"
+                android:inputType="number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="71"
+                android:text="0"
                 android:layout_marginStart="3dp"
                 android:layout_toRightOf="@id/heartView"
-                android:layout_alignBottom ="@id/playNum"/>
+                android:layout_alignBottom ="@id/downloadNum"/>
     </RelativeLayout>
 
     <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_below="@id/trackPlayLayout"
             android:id="@+id/justframe"
             >
-        <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="76dp"
-                android:orientation="horizontal"
 
-                android:id="@+id/buttonFrame">
+        <RelativeLayout
+                android:id="@+id/buttonFrame"
+                android:layout_width="match_parent"
+                android:layout_height="76dp"
+                android:layout_weight="1"
+                android:background="#FFFFFF"
+                android:orientation="horizontal">
 
             <ImageButton
                     android:id="@+id/heartButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/trackicon_heart"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="50dp"
-                    android:background="@android:color/transparent"/>
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    app:srcCompat="@drawable/trackicon_heart" />
 
             <ImageButton
                     android:id="@+id/downloadButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/trackicon_download"
-                    android:layout_toRightOf="@id/heartButton"
-                    android:layout_alignBottom ="@id/heartButton"
+                    android:layout_alignBottom="@id/heartButton"
                     android:layout_marginStart="25dp"
                     android:layout_marginEnd="50dp"
-                    android:background="@android:color/transparent"/>
+                    android:layout_toRightOf="@id/heartButton"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    app:srcCompat="@drawable/trackicon_download" />
         </RelativeLayout>
 
         <RelativeLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="76dp"
+                android:layout_weight="1"
                 android:orientation="horizontal"
                 android:layout_alignTop="@id/buttonFrame"
                 android:layout_toRightOf="@id/buttonFrame"
                 android:layout_marginStart="10dp"
+                android:background="#FFFFFF"
                 >
 
             <TextView
@@ -154,6 +160,7 @@
         </RelativeLayout>
     </LinearLayout>
     <RelativeLayout
+            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -177,7 +184,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:layout_below="@id/TrackInfoTextView">
+                android:layout_below="@id/TrackInfoTextView"
+                android:background="#33DAADB8">
             <TextView
                     android:id="@+id/trackInfoDate"
                     android:layout_width="300dp"
@@ -185,14 +193,14 @@
                     android:text="2019.09.09"
                     android:layout_marginTop="20dp"
                     android:layout_gravity="center_horizontal"/>
+                <EditText
+                        android:id="@+id/trackInfoTextEdit"
+                        android:layout_width="300dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_gravity="center_horizontal"
+                        android:text="사용박자: 4/4\n 곡 설명: 다장조의 코드를 이용한 피아노와 기타의 음을 쌓아 만든 창작곡이다." />
 
-            <TextView
-                    android:id="@+id/trackInfoText"
-                    android:layout_width="300dp"
-                    android:layout_height="wrap_content"
-                    android:text="사용박자: 4/4\n 곡 설명: 다장조의 코드를 이용한 피아노와 기타의 음을 쌓아 만든 창작곡이다."
-                    android:layout_marginTop="10dp"
-                    android:layout_gravity="center_horizontal"/>
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>

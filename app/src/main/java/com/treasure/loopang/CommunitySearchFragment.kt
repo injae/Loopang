@@ -15,7 +15,10 @@ import kotlinx.android.synthetic.main.setting_notice.*
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
+import android.widget.FrameLayout
+import com.treasure.loopang.adapter.CommunitySearchitemAdapter
 import com.treasure.loopang.adapter.SettingAdapter
+import kotlinx.android.synthetic.main.activity_community.*
 import kotlinx.android.synthetic.main.community_search_ing.*
 import kotlinx.android.synthetic.main.community_search_result.*
 import kotlinx.android.synthetic.main.setting_frame.*
@@ -36,11 +39,16 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
         val CommunitySearchview: ListView = community_search_ing_listview
         val CommunitySearchResultView : ListView = community_search_result_listview
 
-     /*  val CommunitySearchAdapter: CommunitySearchitemAdapter = CommunitySearchitemAdapter()
+       val CommunitySearchAdapter: CommunitySearchitemAdapter = CommunitySearchitemAdapter()
+     ////   CommunitySearchAdapter.addItem("userName","songName") >> isNowSearching 넘겨줘야함
 
         CommunitySearchResultView.adapter = CommunitySearchAdapter
         //전체 리스트에서 add item 시키고 여기서 찾게 하면 됨 ㅇㅇ
         //CommunitySearchAdapter.additem()
+        CommunitySearchAdapter.addItem("AKMU","고래")
+        CommunitySearchAdapter.addItem("폴킴","눈")
+        CommunitySearchAdapter.addItem("펀치","가끔이러다")
+        CommunitySearchAdapter.addItem("심규선","화조도")
 
         community_search_ing_list.visibility=View.INVISIBLE
         community_search_result_list.visibility=View.INVISIBLE
@@ -62,8 +70,6 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
                     val filterText : String = edit.toString()
                     (CommunitySearchResultView.getAdapter() as CommunitySearchitemAdapter).getFilter().filter(filterText)
                 }
-
-
             }
         })
 
@@ -75,10 +81,16 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
         CommunitySearchview.onItemClickListener = AdapterView.OnItemClickListener { parent, v, position, id ->
             // get item
             val item = parent.getItemAtPosition(position) as CommunitySongItem
-            val userNickname = item.userNickName
-            val songName = item.songName
 
-            (activity as CommunityActivity).onFragmentChanged(2,songName,userNickname)
+            val songName = item.songName
+            val userNickName = item.userNickName
+            val downloadNum = item.downloadNum
+            val likedNum = item.likedNum
+
+            var trackFrame : FrameLayout = activity!!.TrackFrame
+            trackFrame.visibility = View.VISIBLE
+            (activity as CommunityActivity).onFragmentChanged(songName,userNickName ,0, 0) //likednum,downloadnum 넣어주기 ㅇㅇ
+
         }
 
         SearcgSongBtn.setOnClickListener {
@@ -86,6 +98,6 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
         }
         SearchArtistBtn.setOnClickListener {
             btnSortState="Artist"
-        }*/
+        }
     }
 }

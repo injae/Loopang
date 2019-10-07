@@ -23,14 +23,7 @@ class setEffector : androidx.fragment.app.Fragment() {
         //아이템 추가
        //music = MediaPlayer.create(context, com.treasure.loopang.R.raw.soap)
        //        music.setLooping(true)
-/*
-       adapter.addItem("생방송", MediaPlayer.create(context, com.treasure.loopang.R.raw.live_broadcast),false)
-       adapter.addItem("니소식",MediaPlayer.create(context, com.treasure.loopang.R.raw.your_news),false)
-       adapter.addItem("soap",MediaPlayer.create(context, com.treasure.loopang.R.raw.soap),false)
-       adapter.addItem("연인",MediaPlayer.create(context, com.treasure.loopang.R.raw.lover),false)
-       adapter.addItem("야생화",MediaPlayer.create(context, com.treasure.loopang.R.raw.a_wild_flower),false)
-       adapter.addItem("초록빛",MediaPlayer.create(context, com.treasure.loopang.R.raw.green_color),false)
-*/
+
         // 위에서 생성한 listview에 클릭 이벤트 핸들러 정의.
         effectorListView.setOnItemClickListener { parent, view, position, id ->
             // get item
