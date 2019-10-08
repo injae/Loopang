@@ -24,6 +24,7 @@ import com.treasure.loopang.audio.FileManager
 import android.widget.Toast
 import com.treasure.loopang.Database.DatabaseManager
 import com.treasure.loopang.audio.LoopMusic
+import com.treasure.loopang.communication.ASyncer
 import com.treasure.loopang.communication.UserManager
 import com.treasure.loopang.ui.fragments.RecordFragment
 import com.treasure.loopang.ui.fragments.LoopManageFragment
@@ -58,6 +59,8 @@ class Recording : AppCompatActivity()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        ASyncer(this).execute()
+
         //setEffectorFrag = setEffector()
         setMetronomeFrag = setMetronome()
         setting = setting()
@@ -82,7 +85,8 @@ class Recording : AppCompatActivity()
         val displayMetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(displayMetrics)
         drawer_logout_btn.setOnClickListener {
-            //logout func
+            GlobalScope.launch { DatabaseManager.deletePassword(this@Recording) }
+            // 여기에 로그인화면으로 돌아가는 코드 넣어야함
         }
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         drawerLayout.addDrawerListener(myDrawerListener)

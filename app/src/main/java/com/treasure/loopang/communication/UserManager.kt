@@ -21,6 +21,12 @@ object UserManager {
         user.password = makeSHA256(password)
     }
 
+    fun setInfo(nickName: String, trackList: List<String>?, likedList: List<String>?) {
+        user.name = nickName
+        user.trackList = trackList
+        user.likedList = likedList
+    }
+
     fun setEncodedPassword(encodedPassword: String) { user.encodedPassword = encodedPassword }
 
     /**
@@ -30,6 +36,8 @@ object UserManager {
         user.email = ""
         user.password = ""
         user.name = ""
+        user.trackList = null
+        user.likedList = null
     }
 
     fun getUser() = user

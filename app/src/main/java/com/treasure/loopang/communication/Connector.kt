@@ -30,22 +30,29 @@ class Connector(private val DNS: String = "https://ec2-3-15-172-177.us-east-2.co
     fun process(case: Int, user: User? = null, fileName: String? = null): Result{
         var call: Call<Result>? = null
         var fileCall: Call<ResponseBody>? = null
-        var result: Result
+        var infoCall: Call<ForUserInfo>? = null
+        var result = Result()
         when(case) {
             ResultManager.AUTH -> { call = service.receiveTokens() }
             ResultManager.SIGN_UP -> { call = service.sendSignUpInfo(user!!.email, user.password, user.name) }
             ResultManager.LOGIN -> { call = service.sendLoginInfo(user!!.email, user.password) }
             ResultManager.FILE_UPLOAD -> { call = service.sendFile(accessToken, fileName!!, getMultiPartBody(fileName)) }
-            ResultManager.FILE_DOWNLOAD -> { fileCall = service.receiveFile(accessToken, fileName!!) } }
+            ResultManager.FILE_DOWNLOAD -> { fileCall = service.receiveFile(accessToken, fileName!!) }
+            ResultManager.INFO_REQUEST -> { infoCall = service.receiveUserInfo(user!!.email) } }
         try {
-            if(call != null)    // 파일 다운로드가 아닌경우
+            if(call != null) { // 파일다운로드, 유저인포 요청이 아닐경우
                 result = call.execute().body()!!
-            else {
-                file = fileCall?.execute()?.body()?.bytes()
+            }
+            else if(fileCall != null) { // 파일다운로드 일경우
+                file = fileCall.execute().body()?.bytes()
                 val tempFile = File("${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)}/Loopang/${fileName}")
                 val fos = FileOutputStream(tempFile)
                 fos.write(file)
                 result = getSuccessFileReceive()
+            }
+            else if(infoCall != null) { // 유저인포 요청일경우
+                val infoTemp = infoCall.execute().body()
+                result = getInfoRequest(infoTemp!!)
             }
         }
         catch (e: Exception) {
@@ -91,5 +98,13 @@ private fun getSuccessFileReceive(): Result {
     val temp = Result()
     temp.status = "success"
     temp.message = "file download success"
+    return temp
+}
+
+private fun getInfoRequest(userInfo: ForUserInfo): Result {
+    val temp = Result()
+    if(userInfo.status == "success") { UserManager.setInfo(userInfo.nickName, userInfo.trackList, userInfo.likedList) }
+    temp.status = userInfo.status
+    temp.message = userInfo.message
     return temp
 }
