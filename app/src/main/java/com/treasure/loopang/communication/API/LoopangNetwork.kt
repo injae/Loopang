@@ -1,5 +1,6 @@
 package com.treasure.loopang.communication.API
 
+import com.treasure.loopang.communication.ForUserInfo
 import com.treasure.loopang.communication.Result
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
@@ -17,6 +18,10 @@ interface LoopangNetwork {
     @POST("/login")
     fun sendLoginInfo(@Field("email") email: String,
                       @Field("password") password: String): Call<Result>
+
+    @FormUrlEncoded
+    @POST("/user-info")
+    fun receiveUserInfo(@Field("email") email: String): Call<ForUserInfo>
 
     @GET("/auth")
     fun receiveTokens(): Call<Result>

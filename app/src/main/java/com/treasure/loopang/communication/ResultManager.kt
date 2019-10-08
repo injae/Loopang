@@ -7,6 +7,11 @@ object ResultManager {
     val LOGIN = 102
     val FILE_UPLOAD = 103
     val FILE_DOWNLOAD = 104
+    val INFO_REQUEST = 105
+
+    // Info Request Part
+    val SUCCESS_INFO_REQUEST = 40
+    val FAIL_INFO_REQUEST = 41
 
     // Sign Up Part
     val SUCCESS_SIGN_UP     = 50
@@ -46,6 +51,7 @@ object ResultManager {
                     "sign up" ->            code = SUCCESS_SIGN_UP
                     "Uploaded ${result.message.slice(IntRange(9, result.message.length - 1))}" -> code = SUCCESS_UPLOAD
                     "file download success" -> code = SUCCESS_DOWNLOAD
+                    "successd login info request" -> code = SUCCESS_INFO_REQUEST
                 }
                 accessToken = result.accessToken    // in case of SUCCESS_SIGN_UP, accessToken == ""
             }
@@ -58,6 +64,7 @@ object ResultManager {
                     "duplicate name" ->                     code = DUPLICATED_NAME
                     "No File Found" ->                      code = NO_FILE_FOUND
                     "Is Existed file: ${result.message.slice(IntRange(17, result.message.length - 1))}" -> code = IS_EXISTED
+                    "failed login info request" ->          code = FAIL_INFO_REQUEST
                 }
             }
             "error" -> { code = CONNECTION_ERROR }
@@ -81,6 +88,8 @@ object ResultManager {
             NO_FILE_FOUND ->        return "NO_FILE_FOUND"
             IS_EXISTED ->           return "IS_EXISTED"
             CONNECTION_ERROR ->     return "CONNECTION ERROR"
+            SUCCESS_INFO_REQUEST -> return "SUCCESS_INFO_REQUEST"
+            FAIL_INFO_REQUEST ->    return "FAIL_INFO_REQUEST"
             else ->                 return "This is not code. It may be Case"
         }
     }

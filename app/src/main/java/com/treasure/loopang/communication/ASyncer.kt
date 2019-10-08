@@ -29,6 +29,10 @@ class ASyncer<T>(private val context: T, private var code: Int = 0,
                 context.sign_up_button.text = context.getString(R.string.btn_login_wait)
                 context.sign_up_button.isClickable = false
             }
+
+            is Recording -> { // 유저 인포 요청시
+                // 전동작...
+            }
         }
     }
 
@@ -51,6 +55,13 @@ class ASyncer<T>(private val context: T, private var code: Int = 0,
                 }
                 else {
                     code = ResultManager.WRONG_FORMAT
+                }
+            }
+
+            is Recording -> {
+                if(UserManager.isLogined && UserManager.getUser().name == "") {
+                    response = connector.process(ResultManager.INFO_REQUEST, UserManager.getUser())
+                    code = ResultManager.getCode(response)
                 }
             }
         }
@@ -93,6 +104,16 @@ class ASyncer<T>(private val context: T, private var code: Int = 0,
                     else -> {
                         context.sign_up_button.isClickable = true
                         context.sign_up_button.text = context.getString(R.string.btn_register_sign_up)
+                    }
+                }
+            }
+
+            is Recording -> {
+                context.toast("Code = ${ResultManager.codeToString(code)}")
+                when(code) {
+                    ResultManager.SUCCESS_INFO_REQUEST -> {  }
+                    ResultManager.FAIL_INFO_REQUEST -> {
+                        UserManager.setInfo("FAIL", null, null)
                     }
                 }
             }
