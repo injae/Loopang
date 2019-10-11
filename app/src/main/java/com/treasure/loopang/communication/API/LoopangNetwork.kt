@@ -1,7 +1,9 @@
 package com.treasure.loopang.communication.API
 
+import com.treasure.loopang.communication.FeedResult
 import com.treasure.loopang.communication.ForUserInfo
 import com.treasure.loopang.communication.Result
+import com.treasure.loopang.communication.SearchResult
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -22,6 +24,14 @@ interface LoopangNetwork {
     @FormUrlEncoded
     @POST("/user-info")
     fun receiveUserInfo(@Field("email") email: String): Call<ForUserInfo>
+
+    @FormUrlEncoded
+    @POST("/feed")
+    fun receiveFeed(): Call<FeedResult>
+
+    @FormUrlEncoded
+    @POST("/search")
+    fun receiveSearch(@Field("parameter") parameter: String): Call<SearchResult>
 
     @GET("/auth")
     fun receiveTokens(): Call<Result>

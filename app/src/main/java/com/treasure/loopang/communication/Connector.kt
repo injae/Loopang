@@ -26,11 +26,13 @@ class Connector(private val DNS: String = "https://ec2-3-15-172-177.us-east-2.co
                     .client(getUnsafeOkHttpClient())
                     .build(),
                 private var service: LoopangNetwork = retrofit.create(LoopangNetwork::class.java),
-                private var file: ByteArray? = null) {
-    fun process(case: Int, user: User? = null, fileName: String? = null): Result{
+                private var file: ByteArray? = null, var feedResult: FeedResult? = null, var searchResult: SearchResult? = null) {
+    fun process(case: Int, user: User? = null, fileName: String? = null, searchData: String? = null): Result{ // 제네릭으로 바꾸기
         var call: Call<Result>? = null
         var fileCall: Call<ResponseBody>? = null
         var infoCall: Call<ForUserInfo>? = null
+        var feedCall: Call<FeedResult>? = null
+        var searchCall: Call<SearchResult>? = null
         var result = Result()
         when(case) {
             ResultManager.AUTH -> { call = service.receiveTokens() }
@@ -38,7 +40,9 @@ class Connector(private val DNS: String = "https://ec2-3-15-172-177.us-east-2.co
             ResultManager.LOGIN -> { call = service.sendLoginInfo(user!!.email, user.password) }
             ResultManager.FILE_UPLOAD -> { call = service.sendFile(accessToken, fileName!!, getMultiPartBody(fileName)) }
             ResultManager.FILE_DOWNLOAD -> { fileCall = service.receiveFile(accessToken, fileName!!) }
-            ResultManager.INFO_REQUEST -> { infoCall = service.receiveUserInfo(user!!.email) } }
+            ResultManager.INFO_REQUEST -> { infoCall = service.receiveUserInfo(user!!.email) }
+            ResultManager.FEED_REQUEST -> { feedCall = service.receiveFeed() }
+            ResultManager.SEARCH_REQUEST -> { searchCall = service.receiveSearch(searchData!!) }}
         try {
             if(call != null) { // 파일다운로드, 유저인포 요청이 아닐경우
                 result = call.execute().body()!!
@@ -53,6 +57,14 @@ class Connector(private val DNS: String = "https://ec2-3-15-172-177.us-east-2.co
             else if(infoCall != null) { // 유저인포 요청일경우
                 val infoTemp = infoCall.execute().body()
                 result = getInfoRequest(infoTemp!!)
+            }
+            else if(feedCall != null) { // 피드 요청인경우
+                feedResult = feedCall.execute().body()
+                result = getFeedRequest(feedResult!!)
+            }
+            else if(searchCall != null) { // 검색 요청인경우
+                searchResult = searchCall.execute().body()
+                result = getSearchRequest(searchResult!!)
             }
         }
         catch (e: Exception) {
@@ -106,5 +118,19 @@ private fun getInfoRequest(userInfo: ForUserInfo): Result {
     if(userInfo.status == "success") { UserManager.setInfo(userInfo.nickName, userInfo.trackList, userInfo.likedList) }
     temp.status = userInfo.status
     temp.message = userInfo.message
+    return temp
+}
+
+private fun getFeedRequest(feedResult: FeedResult): Result {
+    val temp = Result()
+    temp.status = feedResult.status
+    temp.message = feedResult.message
+    return temp
+}
+
+private fun getSearchRequest(searchResult: SearchResult): Result {
+    val temp = Result()
+    temp.status = searchResult.status
+    temp.message = searchResult.message
     return temp
 }
