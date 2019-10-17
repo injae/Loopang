@@ -22,14 +22,14 @@ class Upload(Resource):
 
             name = args['name']
             file = args['file']
-            owner = token.get('sub')
-            logger().debug('[upload] owner: %s', owner)
+            user_id = token.get('sub')
+            logger().debug('[upload] owner: %s', user_id)
             logger().debug('[upload] file: %s', name)
 
             if file == "":
                 return request_message('fail', 'No File Found')
             else:
-                music = Music(name=name, owner=owner)
+                music = Music(name=name, user_id=user_id)
                 if music.save_music(file):
                     db.session.add(music)
                     db.session.commit()

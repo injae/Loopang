@@ -8,6 +8,7 @@ import logging
 
 app = None
 
+
 def App():
     global app
     if app is not None: return app
@@ -31,6 +32,10 @@ def App():
     api.add_resource(Upload, '/upload')
     from api.download import Download
     api.add_resource(Download, '/download')
+    from api.user_info import UserInfo
+    api.add_resource(UserInfo, '/user-info')
+    from api.search_music import MusicSearch
+    api.add_resource(MusicSearch, '/music-search')
 
     return app
 

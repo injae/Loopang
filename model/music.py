@@ -10,16 +10,19 @@ class Music(db.Model):
     __table_name__ = 'music'
     music_id = db.Column(db.String(36), primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    owner = db.Column(db.String(36), db.ForeignKey('user.public_id'))
+    user_id = db.Column(db.String(36), db.ForeignKey('user.public_id'))
+    owner = db.relationship("User", backref=db.backref("public_id", lazy='dynamic'))
     updated_date = db.Column(db.DateTime(), default=datetime.utcnow())
+    downloads = db.Column(db.Integer)
 
-    def __init__(self, name, owner):
+    def __init__(self, name, user_id):
         self.music_id = gen_id()
         self.name = name
-        self.owner = owner
+        self.user_id = user_id 
+        self.downloads = 0
 
     def file_name(self):
-        return self.owner+self.music_id
+        return self.user_id+self.music_id
 
     def path(self):
         return os.path.join(MUSIC_FOLDER, self.file_name())
@@ -34,8 +37,17 @@ class Music(db.Model):
             file.save(path)
             return True
 
+
     def music_list(self):
         return Music.query.all()
+
+    def public_data(self):
+        return { 'name': self.name, 'owner': self.user.name
+               , 'updated_date': self.updated_date, 'downloads': self.downloads }
+
+    @staticmethod
+    def track_list(user_id):
+        return Music.query.filter_by(user_id=user_id)
 
     @staticmethod
     def search(name):

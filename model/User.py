@@ -29,3 +29,10 @@ class User(db.Model):
             return False
         else:
             return True
+
+    def public_data(self):
+        return {"name": self.name}
+
+    @staticmethod
+    def search(public_id):
+        return User.query.filter_by(public_id=public_id).first()
