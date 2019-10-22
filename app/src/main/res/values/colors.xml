@@ -15,4 +15,10 @@
     <color name="my_page_sign_in">#4DFFFFFF</color>
     <color name="set_visualizer_background">#1ACA3F3F</color>
     <color name="shared_comunity_bottom_button">#939393</color>
+
+    <color name="block_color1">#F0C3FF</color>
+    <color name="block_color2">#D7FFC3</color>
+    <color name="block_color3">#B2DF96</color>
+    <color name="block_color4">#FFC3C3</color>
+    <color name="record_progress_line_color">#EA1C11</color>
 </resources>
