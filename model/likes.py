@@ -1,11 +1,13 @@
 from model.database import db
+from model.User import User
+from model.Music import Music
 
 
 class Likes(db.Model):
     __table_name__ = 'likes'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.String(36), db.ForeignKey('user.public_id'))
-    user = db.relationship("User", backref=db.backref("user", lazy='dynamic'))
+    owner = db.relationship("User", backref=db.backref("user", lazy='dynamic'))
     music_id = db.Column(db.String(36), db.ForeignKey('music.music_id'))
     music = db.relationship("Music", backref=db.backref("music", lazy='dynamic'))
 
@@ -38,4 +40,4 @@ class Likes(db.Model):
 
     @staticmethod 
     def user_list(music_id):
-        return list(map(lambda l: l.user.public_data(), Likes.query.filter_by(music_id=music_id)))
+        return list(map(lambda l: l.owner.public_data(), Likes.query.filter_by(music_id=music_id)))
