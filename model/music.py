@@ -10,7 +10,7 @@ class Music(db.Model):
     __table_name__ = 'music'
     music_id = db.Column(db.String(36), primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    user_id = db.Column(db.String(36), db.ForeignKey('user.public_id'))
+    user_id = db.Column(db.String(36), db.ForeignKey('user.public_id'), nullable=False)
     owner = db.relationship("User", backref=db.backref("musics", lazy='dynamic', foreign_keys=[user_id]))
     updated_date = db.Column(db.DateTime(), default=datetime.utcnow())
     downloads = db.Column(db.Integer)

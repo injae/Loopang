@@ -4,10 +4,10 @@ from model.database import db
 class Like(db.Model):
     __table_name__ = 'like'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.String(36), db.ForeignKey('user.public_id'))
+    user_id = db.Column(db.String(36), db.ForeignKey('user.public_id'), nullable=False)
     owner = db.relationship("User", backref=db.backref("user_likes", lazy='dynamic', foreign_keys=[user_id]))
-    music_id = db.Column(db.String(36), db.ForeignKey('music.music_id'))
-    music = db.relationship("Music", backref=db.backref("user_likes", lazy='dynamic', foreign_keys=[music_id]))
+    music_id = db.Column(db.String(36), db.ForeignKey('music.music_id'), nullable=False)
+    music = db.relationship("Music", backref=db.backref("music_likes", lazy='dynamic', foreign_keys=[music_id]))
 
     def __init__(self, user_id, music_id):
         self.user_id = user_id
