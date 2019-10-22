@@ -1,29 +1,20 @@
 package com.treasure.loopang
 
-import android.animation.Animator
-import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
 import android.content.Context
 import android.content.pm.ActivityInfo
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.renderscript.Sampler
 import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
-import android.view.animation.Animation
 import android.widget.*
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
-import com.treasure.loopang.ui.adapter.BlockLayerListAdapter
 import com.treasure.loopang.ui.dpToPx
-import com.treasure.loopang.ui.toast
 import com.treasure.loopang.ui.util.TimeWrapper
 import com.treasure.loopang.ui.util.WidthPerTime
 import com.treasure.loopang.ui.view.BlockLayerView
-import com.treasure.loopang.ui.view.BlockView
 import kotlinx.android.synthetic.main.activity_final_record.*
 
 class FinalRecordActivity : AppCompatActivity() {
