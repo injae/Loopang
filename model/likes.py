@@ -1,6 +1,6 @@
 from model.database import db
 from model.User import User
-from model.Music import Music
+from model.music import Music
 
 
 class Likes(db.Model):
