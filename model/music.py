@@ -11,7 +11,7 @@ class Music(db.Model):
     music_id = db.Column(db.String(36), primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     user_id = db.Column(db.String(36), db.ForeignKey('user.public_id'))
-    owner = db.relationship("User", backref=db.backref("user.public_id", lazy='dynamic'))
+    owner = db.relationship("User", backref=db.backref("user", lazy='dynamic'))
     updated_date = db.Column(db.DateTime(), default=datetime.utcnow())
     downloads = db.Column(db.Integer)
 
@@ -36,7 +36,6 @@ class Music(db.Model):
         else:
             file.save(path)
             return True
-
 
     def music_list(self):
         return Music.query.all()
