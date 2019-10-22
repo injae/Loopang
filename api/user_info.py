@@ -1,6 +1,6 @@
 from flask_restful import Resource, reqparse
 from model.User import User
-from model.likes import Likes
+from model.likes import Like
 from model.music import Music
 from api.auth import Auth
 from tools.request_message import request_message
@@ -23,7 +23,7 @@ class UserInfo(Resource):
                 'message': 'user-info',
                 'nickName': user.name,
                 'trackList': Music.track_list(user.public_id),
-                'likedList': Likes.music_list(user.public_id)
+                'likedList': Like.music_list(user.public_id)
             }, 200
 
         except Exception as e:
