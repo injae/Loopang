@@ -40,7 +40,7 @@ class Connector(private val DNS: String = "https://ec2-3-15-172-177.us-east-2.co
             ResultManager.LOGIN -> { call = service.sendLoginInfo(user!!.email, user.password) }
             ResultManager.FILE_UPLOAD -> { call = service.sendFile(accessToken, fileName!!, getMultiPartBody(fileName)) }
             ResultManager.FILE_DOWNLOAD -> { fileCall = service.receiveFile(accessToken, fileName!!) }
-            ResultManager.INFO_REQUEST -> { infoCall = service.receiveUserInfo(user!!.email) }
+            ResultManager.INFO_REQUEST -> { infoCall = service.receiveUserInfo(accessToken) }
             ResultManager.FEED_REQUEST -> { feedCall = service.receiveFeed() }
             ResultManager.SEARCH_REQUEST -> { searchCall = service.receiveSearch(searchData!!) }}
         try {
