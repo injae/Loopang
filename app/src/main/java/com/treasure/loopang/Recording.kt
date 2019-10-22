@@ -86,7 +86,8 @@ class Recording : AppCompatActivity()
         windowManager.defaultDisplay.getMetrics(displayMetrics)
         drawer_logout_btn.setOnClickListener {
             GlobalScope.launch { DatabaseManager.deletePassword(this@Recording) }
-            // 여기에 로그인화면으로 돌아가는 코드 넣어야함
+            startActivity(Intent(this, Login::class.java))
+            finishAffinity()
         }
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         drawerLayout.addDrawerListener(myDrawerListener)

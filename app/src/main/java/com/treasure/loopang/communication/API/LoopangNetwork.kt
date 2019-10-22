@@ -23,14 +23,14 @@ interface LoopangNetwork {
 
     @FormUrlEncoded
     @POST("/user-info")
-    fun receiveUserInfo(@Field("email") email: String): Call<ForUserInfo>
+    fun receiveUserInfo(@Field("token") accessToken: String): Call<ForUserInfo>
 
     @FormUrlEncoded
     @POST("/feed")
     fun receiveFeed(): Call<FeedResult>
 
     @FormUrlEncoded
-    @POST("/search")
+    @POST("/search-music")
     fun receiveSearch(@Field("parameter") parameter: String): Call<SearchResult>
 
     @GET("/auth")
