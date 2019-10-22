@@ -7,7 +7,7 @@ services:
     env_file:
       - ./DockerENV.env
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - /var/lib/postgresql/data:/var/lib/postgresql/data
     ports:
       - 5432:5432
       
@@ -29,9 +29,9 @@ services:
     links:
       - db
 
-volumes:
-  db-data:
-    driver: local
+#volumes:
+#  db-data:
+#    driver: local
 
 #  pgadmin:
 #    container_name: pgadmin
