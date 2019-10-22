@@ -5,9 +5,9 @@ class Like(db.Model):
     __table_name__ = 'like'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.String(36), db.ForeignKey('user.public_id'))
-    owner = db.relationship("User", backref=db.backref("likes", lazy='dynamic'), foreign_keys=[user_id])
+    owner = db.relationship("User", backref=db.backref("likes", lazy='dynamic', foreign_keys=[user_id]))
     music_id = db.Column(db.String(36), db.ForeignKey('music.music_id'))
-    music = db.relationship("Music", backref=db.backref("likes", lazy='dynamic'), foreign_keys=[music_id])
+    music = db.relationship("Music", backref=db.backref("likes", lazy='dynamic', foreign_keys=[music_id]))
 
     def __init__(self, user_id, music_id):
         self.user_id = user_id
