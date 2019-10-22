@@ -3,6 +3,7 @@ package com.treasure.loopang.ui
 import android.app.Activity
 import android.content.Context
 import android.text.format.Formatter
+import android.util.TypedValue
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 
@@ -57,4 +58,22 @@ fun statusBarHeight(context: Context): Int {
 
     return if (resourceId > 0) context.resources.getDimensionPixelSize(resourceId)
     else 0
+}
+
+fun dpToPx(context: Context, dp: Float) = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.resources.displayMetrics)
+fun pxToDp(context: Context, px: Float): Float {
+    var density: Float = context.resources.displayMetrics.density
+    when (density) {
+        1.0f -> {
+            density *= 4.0f
+        }
+        1.5f -> {
+            density *= (8f / 3f)
+        }
+        2.0f -> {
+            density *= 2.0f
+        }
+    }
+
+    return px / density
 }
