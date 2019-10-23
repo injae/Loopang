@@ -41,7 +41,7 @@ class Music(db.Model):
         return list(map(lambda l: l.public_data(), Music.query.all()))
 
     def public_data(self):
-        return { 'name': self.name, 'owner': self.user.name
+        return { 'name': self.name, 'owner': self.owner.name
                , 'updated_date': self.updated_date, 'downloads': self.downloads }
 
     @staticmethod
@@ -50,4 +50,4 @@ class Music(db.Model):
 
     @staticmethod
     def search(name):
-        return Music.query.filter_by(name=name).first()
+        return list(map(lambda l: l.public_data(), Music.query.filter_by(name=name)))

@@ -21,7 +21,7 @@ class MusicSearch(Resource):
             return {
                 'status': 'success',
                 'message': 'user-info',
-                'searchResult': json.dumps(list(map(lambda music: music.public_data(), Music.search(args['parameter']))))
+                'searchResult': json.dumps(Music.search(args['parameter']))
             }, 200
 
         except Exception as e:
