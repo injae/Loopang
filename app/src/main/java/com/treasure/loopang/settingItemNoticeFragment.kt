@@ -36,7 +36,6 @@ class settingItemNoticeFragment :androidx.fragment.app.Fragment(){
             val title = item.noticeTitle
             val date = item.date
             val Content = item.noticeContent
-
             // TODO : use item data.
         }
     }

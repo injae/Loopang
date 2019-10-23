@@ -39,7 +39,6 @@ class setMetronome : androidx.fragment.app.Fragment() {
         , 219 to "Prestissimo")
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
         return inflater.inflate(com.treasure.loopang.R.layout.set_metronome_frame, container, false)
     }
 
@@ -60,27 +59,6 @@ class setMetronome : androidx.fragment.app.Fragment() {
                 informBpsTempo(metronome.bpm)
             }
         }
-
-        StateNonEditTempo()
-
-        btn_for_edit_bpm.setOnClickListener{
-            StateEditTempo()
-        }
-        EditBpm.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                //텍스트에 변화가 있을때
-            }
-
-            override fun afterTextChanged(s: Editable) {
-                //                //텍스트 변화가 끝났을때
-                metronomeBpmText.text = EditBpm.text//텍스트 뷰를 바꿈
-                metronome.bpm = EditBpm.text.toString().toLong()
-                informBpsTempo(metronome.bpm) //알려줌 ㅇㅇ
-            }
-        })
 
         //n분음표 -> 2,4,8,16,32,64,128 7개
         var NumOfClick = 0
@@ -103,17 +81,6 @@ class setMetronome : androidx.fragment.app.Fragment() {
                     metronome.note.parent = 2 }
             }
         }
-    }
-    //버그있음 수정하렴 근데 얘가 문제는 아니지 ㅋㅋ 저위에 적어ㅜ
-    fun StateEditTempo(){
-        metronomeBpmText.visibility = View.INVISIBLE
-        btn_for_edit_bpm.visibility =View.INVISIBLE
-        EditBpm.visibility = View.VISIBLE
-    }
-    fun StateNonEditTempo(){
-        metronomeBpmText.visibility = View.VISIBLE
-        btn_for_edit_bpm.visibility =View.VISIBLE
-        EditBpm.visibility = View.GONE
     }
 
     fun informBpsTempo(metronomeBpm: Long) {

@@ -1,5 +1,6 @@
 package com.treasure.loopang
 
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,19 +10,17 @@ import android.view.WindowManager
 import androidx.viewpager.widget.ViewPager
 import com.treasure.loopang.ui.adapter.LoopStationPagerAdapter
 import androidx.drawerlayout.widget.DrawerLayout
-import com.treasure.loopang.listitem.setEffector
 import com.treasure.loopang.listitem.setMetronome
 import com.treasure.loopang.ui.statusBarHeight
 import kotlinx.android.synthetic.main.activity_recording.*
 import kotlinx.android.synthetic.main.drawer.*
-import com.treasure.loopang.audio.Sound
 import com.treasure.loopang.ui.interfaces.IPageFragment
 import android.util.DisplayMetrics
-import android.widget.ImageButton
 import com.treasure.loopang.audio.FileManager
 import android.widget.Toast
 import com.treasure.loopang.Database.DatabaseManager
 import com.treasure.loopang.audio.LoopMusic
+import com.treasure.loopang.communication.ASyncer
 import com.treasure.loopang.communication.UserManager
 import com.treasure.loopang.ui.fragments.RecordFragment
 import com.treasure.loopang.ui.fragments.LoopManageFragment
@@ -33,6 +32,7 @@ import kotlinx.coroutines.launch
 
 class Recording : AppCompatActivity()
     , LoopManageFragment.OnLoopManageListener {
+
     companion object {
         private const val FINISH_INTERVAL_TIME = 2000
         private const val RECORD_FRAGMENT = 0
@@ -44,10 +44,10 @@ class Recording : AppCompatActivity()
     private var backPressedTime: Long = 0
     private var currentPage: Int = 0
 
-    lateinit var setEffectorFrag : setEffector
+   // lateinit var setEffectorFrag : setEffector
     lateinit var setMetronomeFrag : setMetronome
     lateinit var setting : setting
-
+    lateinit var myPage: MyPage
     val fileManager : FileManager =FileManager()
     val loopList = fileManager.soundList()
 
@@ -55,9 +55,12 @@ class Recording : AppCompatActivity()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setEffectorFrag = setEffector()
+        ASyncer(this).execute()
+
+        //setEffectorFrag = setEffector()
         setMetronomeFrag = setMetronome()
         setting = setting()
+        myPage = MyPage()
 
         // 화면을 세로로 고정
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -77,29 +80,41 @@ class Recording : AppCompatActivity()
 
         val displayMetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(displayMetrics)
-
+        drawer_logout_btn.setOnClickListener {
+            GlobalScope.launch { DatabaseManager.deletePassword(this@Recording) }
+            startActivity(Intent(this, Login::class.java))
+            finishAffinity()
+        }
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
-         //drawerLayout.setPadding(0, statusBarHeight(this), 0, 0) //Padding for transparent status bar
         drawerLayout.addDrawerListener(myDrawerListener)
 
         getSupportFragmentManager().beginTransaction()
             .setCustomAnimations( R.anim.fade_in, 0, 0, R.anim.fade_out).replace(R.id.fragContainer, setMetronome()).commit()
 
         btn_setMetronome.setOnClickListener {
-            checkPresentFragAndReplaceFrag(btn_setMetronome)
-        }
-        btn_setEffector.setOnClickListener{
-            checkPresentFragAndReplaceFrag(btn_setEffector)
-        }
-        btn_setting.setOnClickListener {
-            checkPresentFragAndReplaceFrag(btn_setting)
+            getSupportFragmentManager().beginTransaction().setCustomAnimations( R.anim.fade_in, 0, 0, R.anim.fade_out).replace(R.id.fragContainer, setMetronomeFrag).commit()
+            //checkPresentFragAndReplaceFrag(btn_setMetronome)
         }
 
+        btn_myPage.setOnClickListener {
+            getSupportFragmentManager().beginTransaction().setCustomAnimations( R.anim.fade_in, 0, 0, R.anim.fade_out).replace(R.id.fragContainer, myPage).commit()
+        }
+        btn_setting.setOnClickListener {
+            getSupportFragmentManager().beginTransaction().setCustomAnimations( R.anim.fade_in, 0, 0, R.anim.fade_out).replace(R.id.fragContainer, setting).commit()
+            // checkPresentFragAndReplaceFrag(btn_setting)
+        }
+        btn_community.setOnClickListener {
+            var userId : String? = null
+            val intentToCommunity = Intent(this, CommunityActivity::class.java)
+
+            intentToCommunity.putExtra("userId",userId)
+            startActivity(intentToCommunity)
+        }
         pager.adapter = pagerAdapter
         pager.addOnPageChangeListener(PageChangeListener())
         pager.setOnTouchListener { _, _ -> false}
     }
-
+/*
     fun checkPresentFragAndReplaceFrag(fragBtn : ImageButton){
         for (fragment in supportFragmentManager.fragments) {
             if (fragment.isVisible) {
@@ -117,8 +132,7 @@ class Recording : AppCompatActivity()
                         .beginTransaction()
                         .setCustomAnimations(R.anim.fade_in, 0, 0, R.anim.fade_out)
                         .replace(R.id.fragContainer, setEffectorFrag )
-                        .commit()
-                }
+                        .commit()}
                     btn_setting -> if(fragment is setMetronome || fragment is setEffector) {
                         getSupportFragmentManager()
                             .beginTransaction()
@@ -130,7 +144,7 @@ class Recording : AppCompatActivity()
                 }
             }
         }
-    }
+    }*/
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         if( hasFocus ) {
@@ -141,7 +155,7 @@ class Recording : AppCompatActivity()
     internal var myDrawerListener: DrawerLayout.DrawerListener = object : DrawerLayout.DrawerListener {
 
         override fun onDrawerClosed(drawerView: View) {
-                setEffectorFrag.adapter.positionMusicStop()
+                //setEffectorFrag.adapter.positionMusicStop()
         }
         override fun onDrawerOpened(drawerView: View) {}
         override fun onDrawerSlide(drawerView: View, slideOffset: Float) {

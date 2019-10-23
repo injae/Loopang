@@ -29,25 +29,25 @@ class SettingAdapter : BaseAdapter(),Filterable{
             val results = FilterResults()
 
             if (constraint == null || constraint.length == 0) {
-                results.values = listViewItemList
-                results.count = listViewItemList.size
-            } else {
-                var itemList = ArrayList<SettingItem>()
+                      results.values = listViewItemList
+            results.count = listViewItemList.size
+        } else {
+            var itemList = ArrayList<SettingItem>()
 
-                for (item in listViewItemList) {
-                    if (item.title!!.toUpperCase().contains(constraint.toString().toUpperCase()))
-                        itemList.add(item)
-                }
-
-                results.values = itemList
-                results.count = itemList.size
+            for (item in listViewItemList) {
+                if (item.title!!.toUpperCase().contains(constraint.toString().toUpperCase()))
+                    itemList.add(item)
             }
-            return results
+
+            results.values = itemList
+            results.count = itemList.size
         }
-        //protected
-        override fun publishResults(constraint: CharSequence, results: FilterResults) {
-            // update listview by filtered data list.
-            filteredItemList = results.values as ArrayList<SettingItem>
+        return results
+    }
+    //protected
+    override fun publishResults(constraint: CharSequence, results: FilterResults) {
+        // update listview by filtered data list.
+        filteredItemList = results.values as ArrayList<SettingItem>
 
             if (results.count > 0) {
                 notifyDataSetChanged()

@@ -3,16 +3,17 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="vertical"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_gravity="center"
         android:id="@+id/settingFrame">
 
 
     <LinearLayout
             android:orientation="vertical"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="center">
+            >
 
         <TextView
                 android:text="Setting"
@@ -54,6 +55,7 @@
                     android:layout_alignParentStart="true"
                     android:maxLength="10"
                     android:hint="설정 검색"
+                    android:textColorHint="#FFFFFF"
                     android:singleLine="true"
                     android:imeOptions="actionSearch"/>
             <Button
@@ -82,7 +84,8 @@
         <ListView
                 android:layout_marginTop="10dp"
                 android:layout_width="230dp"
-                android:layout_height="348dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="50dp"
                 android:layout_gravity="center"
                 android:id="@+id/settingListView"
                 android:dividerHeight="9dp"

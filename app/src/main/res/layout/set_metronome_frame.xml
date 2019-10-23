@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
-
         <LinearLayout
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:orientation="vertical"
-                android:layout_width="236dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:id="@+id/setMetronomeFrame"
-        >
-
+                android:id="@+id/setMetronomeFrame">
             <TextView
                     android:text=" Metronome"
                     android:layout_width="match_parent"
@@ -56,23 +51,6 @@
                         android:layout_gravity="center"
                         android:id ="@+id/frameeeeeela">
 
-                    <EditText
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:background = "@android:color/transparent"
-                            android:text="60"
-                            android:id = "@+id/EditBpm"
-                            android:textSize="35dp"
-                            android:textColor="#ffffff"
-                            android:maxLength="3"
-                            android:inputType = "number"
-                            android:singleLine="true"
-                            android:imeOptions="actionNext"
-                            android:visibility="invisible"
-                            android:layout_alignParentTop="true"
-                            android:layout_alignParentStart="true"
-                    />
                     <TextView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -121,7 +99,6 @@
                     android:textSize="24dp"
                     android:textColor="#ffffff"
             />
-
             <ImageButton
                     android:layout_width="213dp"
                     android:layout_height="79dp"
@@ -132,9 +109,6 @@
                     android:src = "@drawable/note_4"
                     android:textSize ="35dp"
                     android:textColor="#ffffff"/>
-
-
-
     <TextView
                     android:text="VOLUME"
                     android:layout_width="wrap_content"
@@ -149,9 +123,7 @@
                     android:layout_gravity="center"
                     android:layout_width="210dp"
                     android:layout_height="25dp"
-                    android:background="@drawable/rounded"
-                   >
-
+                    android:background="@drawable/rounded">
                 <SeekBar
                         android:id="@+id/seekBar_setVolume"
                         android:layout_width="237dp"
@@ -162,8 +134,6 @@
                         android:thumbTintMode="multiply"
                         android:thumb="@android:color/transparent"
                         android:max="100"
-
-
                 />
             </FrameLayout>
         </LinearLayout>

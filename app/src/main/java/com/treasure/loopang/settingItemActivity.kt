@@ -24,7 +24,6 @@ import java.util.zip.Inflater
 
 class settingItemActivity : AppCompatActivity() {
     lateinit var settingItemNoticeFrag : settingItemNoticeFragment
-    lateinit var settingItemMyMusicFrag : settingItemMyMusicFragment
     lateinit var settingItemHowToUse: settingItemHowToUse
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,23 +33,17 @@ class settingItemActivity : AppCompatActivity() {
         val intent = getIntent()//데이터 수신
         val title = intent.extras!!.getString("title")
         settingItemNoticeFrag = settingItemNoticeFragment()
-        settingItemMyMusicFrag = settingItemMyMusicFragment()
         settingItemHowToUse = settingItemHowToUse()
-        //var itemInflater : LayoutInflater = (LayoutInflater.from(context).inflate(R.layout.setting_notice,null,false))
-
-       // var setiingItemFrameLayout: FrameLayout = findViewById(R.id.settingItemFrameLayout)
 
         val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
         settingItemNameText.text = title
 
         when(title) {
-
             "Visualizer" -> {
                 visibilityNotice.visibility = View.INVISIBLE
                 visibilityVisualizer.visibility= View.VISIBLE
                 visibilityPcm.visibility= View.INVISIBLE
-                visibilityMymusic.visibility =View.INVISIBLE
                 inflater.inflate(R.layout.setting_visualizer, null)
                 var visualizerVersionNum : Int = 1
                 btn_visualizer_ver1.setOnClickListener {
@@ -65,7 +58,6 @@ class settingItemActivity : AppCompatActivity() {
                 visibilityNotice.visibility = View.INVISIBLE
                visibilityVisualizer.visibility= View.INVISIBLE
                 visibilityPcm.visibility= View.VISIBLE
-                visibilityMymusic.visibility =View.INVISIBLE
 
                 inflater.inflate(R.layout.setting_pcm, null)
                 var pcm : Int = 16
@@ -82,12 +74,6 @@ class settingItemActivity : AppCompatActivity() {
                     .replace(R.id.settingItemContainer, settingItemHowToUse)
                     .commit()
             }
-            "My Music" ->{
-                getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(R.anim.fade_in, 0, 0, R.anim.fade_out)
-                    .replace(R.id.settingItemContainer, settingItemMyMusicFrag)
-                    .commit()
-            }
             "Notice" -> {
                 settingItemNameText.text = "Notice"
                 getSupportFragmentManager()
@@ -96,38 +82,10 @@ class settingItemActivity : AppCompatActivity() {
                     .replace(R.id.settingItemContainer, settingItemNoticeFrag)
                     .commit()
             }
-        }
+            "open source license" ->{
 
-        go_back.setOnClickListener { finish() }
-    }
-   /* fun checkFragment(){
-        for (fragment in supportFragmentManager.fragments) {
-            if (fragment.isVisible) {
-                when (title) {
-                    "도움말" ->if( fragment is settingItemNoticeFragment || fragment is settingItemMyMusicFragment) {
-                        getSupportFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.anim.fade_in, 0, 0, R.anim.fade_out)
-                            .replace(R.id.fragContainer, settingItemHowToUse)
-                            .commit()
-                    }
-                    "My Music" ->  if( fragment is settingItemNoticeFragment || fragment is settingItemHowToUse){
-                        //  settingItemView = inflater.inflate(R.layout.setting_my_music, null)
-                        getSupportFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.anim.fade_in, 0, 0, R.anim.fade_out)
-                            .replace(R.id.fragContainer, settingItemMyMusicFrag)
-                            .commit()
-                    }
-                    "Notice" -> if( fragment is settingItemHowToUse || fragment is settingItemMyMusicFragment){
-                        //  settingItemView = inflater.inflate(R.layout.setting_notice, null)
-                        settingItemNameText.text = "Notice"
-                        getSupportFragmentManager()
-                            .beginTransaction()
-                            .setCustomAnimations(R.anim.fade_in, 0, 0, R.anim.fade_out)
-                            .replace(R.id.fragContainer, settingItemNoticeFrag)
-                            .commit()
-                    }
-                }
             }
         }
-    }*/
+        go_back.setOnClickListener { finish() }
+    }
 }

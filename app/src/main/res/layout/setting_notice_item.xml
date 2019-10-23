@@ -5,10 +5,10 @@
         android:layout_width="match_parent"
         android:layout_height="82dp"
         android:descendantFocusability="blocksDescendants"
-        android:background="@drawable/layerview_background">
+        android:background="@color/notice_list">
     <TextView
             android:text="@string/song_item_date_example"
-            android:textColor="#ffffff"
+            android:textColor="#838383"
             android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -18,7 +18,7 @@
             app:layout_constraintStart_toStartOf="parent"/>
     <TextView
             android:text="@string/setting_notice_item_update_info"
-            android:textColor="#ffffff"
+            android:textColor="#838383"
             android:layout_below="@+id/notice_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

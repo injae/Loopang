@@ -86,9 +86,10 @@ class RecordFragment : Fragment(), IPageFragment {
         loopStation.linkVisualizer(realtime_visualizer_view)
         metronome_view.onStart = {
             toast("metronome start!")
-            (activity as Recording).setMetronomeFrag.metronome.excute()
-            //metronome_view.tik()    //tik
-            metronome_view.clear() //default
+            val metronome = (activity as Recording).setMetronomeFrag.metronome
+            metronome.task = { metronome_view.tik() }
+            metronome_view.bpm =  metronome.bpm.toInt()
+            metronome.excute()
         }
         metronome_view.onStop = {
             toast("metronome stop!")
@@ -133,7 +134,7 @@ class RecordFragment : Fragment(), IPageFragment {
             return true
         }
         if(loopStation.isLooping()) loopStation.loopStop(messageFlag = false)
-        showSaveLoopDialog()
+        showSaveDialog()
         return true
     }
 
@@ -143,42 +144,6 @@ class RecordFragment : Fragment(), IPageFragment {
             mLayerListAdapter.setLayerMuteState(position,view, muteState)
         } else {
             loopStation.playLayer(position)
-        }
-    }
-
-    private fun showSaveLoopDialog() {
-        MaterialDialog(activity!!, BottomSheet(LayoutMode.WRAP_CONTENT)).show {
-            noAutoDismiss()
-            title(R.string.title_save_loop)
-            customView(R.layout.dialog_save_loop, horizontalPadding = true)
-            if(loopStation.getSounds().size == 1) this.check_split.visibility = View.GONE
-            cornerRadius(16f)
-            cancelable(false)
-            positiveButton(R.string.btn_save) {
-                // callback on positive button click
-                val loopTitle = it.edit_loop_title.text.toString()
-                if(loopTitle == ""){
-                    toast(R.string.toast_save_error_without_title)
-                } else {
-                    val fileType = spinner.selectedItem.toString()
-                    val isSplitChecked = check_split.isChecked
-                    val isDropChecked = check_drop.isChecked
-                    // Log.d("SaveDialog", "\nloopTitle: $loopTitle, \nfileType: $fileType, \nisSaveChecked: $isSplitChecked")
-
-                    when (loopStation.export(loopTitle, fileType, allDropFlag = isDropChecked, mixFlag = !isSplitChecked)){
-                        LoopStation.SAVE_SUCCESS -> toast(getString(R.string.toast_save))
-                        LoopStation.SAVE_ERROR_DUPLICATE_NAME -> toast("Name Duplication")
-                        LoopStation.SAVE_ERROR_NONE_LAYER -> toast("None Layer")
-                        else -> toast("Save Failed")
-                    }
-
-                    it.dismiss()
-                }
-            }
-            negativeButton(R.string.btn_cancel) {
-                it.dismiss()
-            }
-            lifecycleOwner(activity)
         }
     }
 
@@ -252,7 +217,6 @@ class RecordFragment : Fragment(), IPageFragment {
                     val overwriteFlag = false
 
                     val result =  loopStation.export(newFlag, saveType, loopTitle, fileType, splitFlag, clearFlag, overwriteFlag)
-
                     when (result){
                         LoopStation.SAVE_SUCCESS -> toast(getString(R.string.toast_save))
                         LoopStation.SAVE_ERROR_DUPLICATE_NAME -> {
@@ -367,7 +331,10 @@ class RecordFragment : Fragment(), IPageFragment {
         }
 
         override fun onLayerAllDrop() {
-            activity?.runOnUiThread { mLayerListAdapter.dropAllLayer() }
+            activity?.runOnUiThread {
+                mLayerListAdapter.dropAllLayer()
+                loop_title_label.text = getString(R.string.title_activity_recording)
+            }
         }
         override fun onImport(loopTitle: String, newLoadFlag: Boolean) {
             activity?.runOnUiThread {

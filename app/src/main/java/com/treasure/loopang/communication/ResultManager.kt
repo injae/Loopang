@@ -2,11 +2,18 @@ package com.treasure.loopang.communication
 
 object ResultManager {
     // Case
-    val AUTH = 100
-    val SIGN_UP = 101
-    val LOGIN = 102
-    val FILE_UPLOAD = 103
-    val FILE_DOWNLOAD = 104
+    val AUTH            = 1000
+    val SIGN_UP         = 1001
+    val LOGIN           = 1002
+    val FILE_UPLOAD     = 1003
+    val FILE_DOWNLOAD   = 1004
+    val INFO_REQUEST    = 1005
+    val FEED_REQUEST    = 1006
+    val SEARCH_REQUEST  = 1007
+
+    // Info Request Part
+    val SUCCESS_INFO_REQUEST = 40
+    val FAIL_INFO_REQUEST = 41
 
     // Sign Up Part
     val SUCCESS_SIGN_UP     = 50
@@ -31,6 +38,14 @@ object ResultManager {
     // File Download Part
     val SUCCESS_DOWNLOAD    = 90
 
+    // Feed Part
+    val SUCCESS_FEED_REQUEST = 100
+    val FAIL_FEED_REQUEST    = 101
+
+    // Search PART
+    val SUCCESS_SEARCH  = 110
+    val FAIL_SEARCH     = 111
+
     // Error
     val CONNECTION_ERROR    = 400
 
@@ -46,6 +61,9 @@ object ResultManager {
                     "sign up" ->            code = SUCCESS_SIGN_UP
                     "Uploaded ${result.message.slice(IntRange(9, result.message.length - 1))}" -> code = SUCCESS_UPLOAD
                     "file download success" -> code = SUCCESS_DOWNLOAD
+                    "user-info" -> code = SUCCESS_INFO_REQUEST
+                    "success feed request" -> code = SUCCESS_FEED_REQUEST
+                    "success search" -> code = SUCCESS_SEARCH
                 }
                 accessToken = result.accessToken    // in case of SUCCESS_SIGN_UP, accessToken == ""
             }
@@ -58,6 +76,9 @@ object ResultManager {
                     "duplicate name" ->                     code = DUPLICATED_NAME
                     "No File Found" ->                      code = NO_FILE_FOUND
                     "Is Existed file: ${result.message.slice(IntRange(17, result.message.length - 1))}" -> code = IS_EXISTED
+                    "failed login info request" ->          code = FAIL_INFO_REQUEST
+                    "failed feed request" ->                code = FAIL_FEED_REQUEST
+                    "failed search" ->                      code = FAIL_SEARCH
                 }
             }
             "error" -> { code = CONNECTION_ERROR }
@@ -81,6 +102,12 @@ object ResultManager {
             NO_FILE_FOUND ->        return "NO_FILE_FOUND"
             IS_EXISTED ->           return "IS_EXISTED"
             CONNECTION_ERROR ->     return "CONNECTION ERROR"
+            SUCCESS_INFO_REQUEST -> return "SUCCESS_INFO_REQUEST"
+            FAIL_INFO_REQUEST ->    return "FAIL_INFO_REQUEST"
+            SUCCESS_FEED_REQUEST -> return "SUCCESS_FEED_REQUEST"
+            FAIL_FEED_REQUEST ->    return "FAIL_FEED_REQUEST"
+            SUCCESS_SEARCH ->       return "SUCCESS_SEARCH"
+            FAIL_SEARCH ->          return "FAIL_SEARCH"
             else ->                 return "This is not code. It may be Case"
         }
     }

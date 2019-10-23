@@ -1,35 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <RelativeLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
-            android:layout_gravity="center_horizontal"
-            android:layout_width="wrap_content"
+
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/myPageLoginO"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:background="#1ACA3F3F"
+        >
+    <TextView
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+        android:id="@+id/my_music_user_nickname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+            android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:text="User Nickname "
+            android:layout_weight="1"
+        android:textColor="#FFFFFF"
+        android:textSize="14dp" />
+    <TextView
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:id="@+id/my_music_user_id_email"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/effectorlist_background"
-            android:id="@+id/myPageLoginO"
-    >
-        <ImageView
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="30dp"
-                android:layout_marginStart="30dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/icon_mypage"
-                android:id="@+id/login_icon"
-                android:layout_weight="1"
-                android:layout_marginBottom="30dp"
-        />
-
-            <TextView
-                    android:layout_width="150dp"
-                    android:layout_height="22dp"
-                    android:layout_toRightOf="@id/login_icon"
-                    android:layout_marginTop="40dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="30dp"
-                    android:text="User Nickname "
-                    android:textSize="18dp"
-                    android:textColor="#FFFFFF"
-                    android:id="@+id/user_nickname" />
-
-    </RelativeLayout>
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="5dp"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:text="000000@google.com "
+            android:textColor="#FFFFFF"
+            android:textSize="14dp" />
+</LinearLayout>
