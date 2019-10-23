@@ -3,6 +3,7 @@ from model.music import Music
 from api.auth import Auth
 from tools.request_message import request_message
 from App import logger
+import json
 
 
 class MusicSearch(Resource):
@@ -20,7 +21,7 @@ class MusicSearch(Resource):
             return {
                 'status': 'success',
                 'message': 'user-info',
-                'searchResult': list(map(lambda music: music.public_data(), Music.search(args['parameter'])))
+                'searchResult': json.dumps(list(map(lambda music: music.public_data(), Music.search(args['parameter']))))
             }, 200
 
         except Exception as e:

@@ -5,6 +5,7 @@ from model.music import Music
 from api.auth import Auth
 from tools.request_message import request_message
 from App import logger
+import json
 
 
 class UserInfo(Resource):
@@ -22,8 +23,8 @@ class UserInfo(Resource):
                 'status': 'success',
                 'message': 'user-info',
                 'nickName': user.name,
-                'trackList': Music.track_list(user.public_id),
-                'likedList': Like.music_list(user.public_id)
+                'trackList': json.dumps(Music.track_list(user.public_id)),
+                'likedList': json.dumps(Like.music_list(user.public_id))
             }, 200
 
         except Exception as e:
