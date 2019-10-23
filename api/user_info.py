@@ -23,8 +23,8 @@ class UserInfo(Resource):
                 'status': 'success',
                 'message': 'user-info',
                 'nickName': user.name,
-                'trackList': json.dumps(Music.track_list(user.public_id)),
-                'likedList': json.dumps(Like.music_list(user.public_id))
+                'trackList': Music.track_list(user.public_id),
+                'likedList': Like.music_list(user.public_id)
             }, 200
 
         except Exception as e:

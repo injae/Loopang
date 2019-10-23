@@ -32,7 +32,7 @@ class User(db.Model):
             return True
 
     def public_data(self):
-        return json.dumps({"name": self.name})
+        return {"name": self.name}
 
     @staticmethod
     def search(public_id):
