@@ -38,7 +38,7 @@ class Music(db.Model):
             return True
 
     def music_list(self):
-        return Music.query.all()
+        return list(map(lambda l: l.public_data(), Music.query.all()))
 
     def public_data(self):
         return { 'name': self.name, 'owner': self.user.name
