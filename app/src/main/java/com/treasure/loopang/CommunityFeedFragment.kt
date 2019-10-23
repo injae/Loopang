@@ -40,6 +40,7 @@ class CommunityFeedFragment : androidx.fragment.app.Fragment() {
 
             activity!!.TrackFrame.visibility = View.VISIBLE
             (activity as CommunityActivity).onFragmentChanged(songName,userNickName ,0, 0) //likednum,downloadnum 넣어주기 ㅇㅇ
+
         }
     }
     fun addTrackItem(){
