@@ -46,7 +46,7 @@ class Music(db.Model):
 
     @staticmethod
     def track_list(user_id):
-        return Music.query.filter_by(user_id=user_id)
+        return list(map(lambda l: l.public_data(), Music.query.filter_by(user_id=user_id)))
 
     @staticmethod
     def search(name):
