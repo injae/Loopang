@@ -7,7 +7,9 @@
         android:background="@drawable/drawer_background">
 
     <RelativeLayout
-            android:layout_width="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent">
 
         <TextView
@@ -31,12 +33,12 @@
             <include
                     android:id="@+id/login_o"
                     layout="@layout/setting_my_music_login_o"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
 
             <include
                     android:id="@+id/login_x"
                     layout="@layout/setting_my_music_login_x"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
         </FrameLayout>
 
         <ListView
@@ -60,8 +62,6 @@
             android:layout_alignParentBottom="true"
             android:id="@+id/checkView"
             >
-        <include layout = "@layout/my_page_sharing_item_check"
-                android:visibility="invisible"
-                android:id="@+id/checklayout"/>
+
     </FrameLayout>
 </RelativeLayout>

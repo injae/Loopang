@@ -80,6 +80,12 @@ class Recording : AppCompatActivity()
 
         val displayMetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(displayMetrics)
+
+        if(com.treasure.loopang.communication.UserManager.isLogined ==false)
+            drawer_logout_btn.visibility=View.GONE
+        else
+            drawer_logout_btn.visibility=View.VISIBLE
+
         drawer_logout_btn.setOnClickListener {
             GlobalScope.launch { DatabaseManager.deletePassword(this@Recording) }
             startActivity(Intent(this, Login::class.java))

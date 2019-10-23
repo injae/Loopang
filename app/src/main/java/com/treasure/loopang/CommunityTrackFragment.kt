@@ -1,5 +1,6 @@
 package com.treasure.loopang
 
+import android.app.Activity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -16,8 +17,7 @@ import kotlinx.android.synthetic.main.community_track.view.*
 import kotlinx.android.synthetic.main.setting_item_back.view.*
 
 class CommunityTrackFragment: androidx.fragment.app.Fragment() {
-    var downloadNum : Int = 0
-    var heartClikedNum : Int = 0
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(com.treasure.loopang.R.layout.community_track,container,false);
@@ -35,7 +35,8 @@ class CommunityTrackFragment: androidx.fragment.app.Fragment() {
         trackInfoDate.setText(songInfoDate)
 
         TrackInfoTextView.isEnabled = false
-        trackHeartClikedNum.setText(heartClikedNum.toString())
+        trackHeartClikedNum.setText((activity as CommunityActivity).heartClikedNum.toString())
+
 
 
         var songMasteruserNickName : String = "UserName" //변수들 나중에 다 change
@@ -58,21 +59,23 @@ class CommunityTrackFragment: androidx.fragment.app.Fragment() {
         heartButton.setOnClickListener {
             if(heartState == false) {
                 heartState = true
-                heartClikedNum += 1
+                (activity as CommunityActivity).heartClikedNum += 1
                 heartButton.setImageDrawable(getResources().getDrawable(R.drawable.trackicon_heart_clicked))
+                trackHeartClikedNum.setText((activity as CommunityActivity).heartClikedNum.toString())
             }
             else {
                 heartState = false
-                heartClikedNum -=1
+                (activity as CommunityActivity).heartClikedNum -=1
                 heartButton.setImageDrawable(getResources().getDrawable(R.drawable.trackicon_heart))
+                trackHeartClikedNum.setText((activity as CommunityActivity).heartClikedNum.toString())
             }
         }
 
         downloadButton.setOnClickListener {
             //사용자의 recording item으로 song이 들어가게 하는 기능 추가
             Log.d("download","download")
-            playNumText.setText(downloadNum.toString())
-            downloadNum++
+            (activity as CommunityActivity).downloadNum+=1
+            playNumText.setText((activity as CommunityActivity).downloadNum.toString())
         }
 
         Track_btn_play.setOnClickListener {
@@ -95,11 +98,11 @@ class CommunityTrackFragment: androidx.fragment.app.Fragment() {
             Log.d("replay Btn" , "replay btn")
         }
 
-        track_btn_back.setOnClickListener {
-            activity!!.TrackFrame.visibility = View.GONE
+        track_btn_back.setOnClickListener {   activity!!.TrackFrame.visibility = View.GONE
             val fragmentManager = activity!!.supportFragmentManager
             fragmentManager.beginTransaction().remove(this).commit()
             fragmentManager.popBackStack()
-        }
+            (activity as CommunityActivity).isTrackFragOpen = false }
+
     }
 }

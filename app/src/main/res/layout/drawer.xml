@@ -55,16 +55,15 @@
                 android:background="@drawable/icon_community"
                 />
 
-
     </LinearLayout>
     <Button
-
-    android:id="@+id/drawer_logout_btn"
-    android:layout_width="match_parent"
-    android:layout_height="60dp"
-    android:background="#1AFFFFFF"
-    android:text="Logout"
-            android:textColor="#BFFFFFFF"
-            android:layout_alignParentBottom="true"/>
+            android:id="@+id/drawer_logout_btn"
+            android:layout_width="41dp"
+            android:layout_height="41dp"
+            android:background="@drawable/btn_logout"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            />
 
 </RelativeLayout>
