@@ -21,7 +21,7 @@ object UserManager {
         user.password = makeSHA256(password)
     }
 
-    fun setInfo(nickName: String, trackList: List<MusicListClass>?, likedList: List<MusicListClass>?) {
+    fun setInfo(nickName: String, trackList: List<MusicListClass>, likedList: List<MusicListClass>) {
         user.name = nickName
         user.trackList = trackList
         user.likedList = likedList
@@ -36,8 +36,8 @@ object UserManager {
         user.email = ""
         user.password = ""
         user.name = ""
-        user.trackList = null
-        user.likedList = null
+        user.trackList = List<MusicListClass>(0, {MusicListClass()})
+        user.likedList = List<MusicListClass>(0, {MusicListClass()})
     }
 
     fun getUser() = user
