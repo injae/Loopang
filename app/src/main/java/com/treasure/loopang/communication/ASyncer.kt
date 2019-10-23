@@ -60,7 +60,7 @@ class ASyncer<T>(private val context: T, private var code: Int = 0,
 
             is Recording -> {
                 if(UserManager.isLogined && UserManager.getUser().name == "") {
-                    response = connector.process(ResultManager.INFO_REQUEST, UserManager.getUser())
+                    response = connector.process(ResultManager.INFO_REQUEST)
                     code = ResultManager.getCode(response)
                 }
             }
