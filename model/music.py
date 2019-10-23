@@ -42,7 +42,7 @@ class Music(db.Model):
 
     def public_data(self):
         return { 'name': self.name, 'owner': self.owner.name
-               , 'updated_date': self.updated_date, 'downloads': self.downloads }
+               , 'updated_date': str(self.updated_date), 'downloads': self.downloads }
 
     @staticmethod
     def track_list(user_id):
