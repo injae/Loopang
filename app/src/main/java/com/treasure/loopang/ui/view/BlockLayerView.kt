@@ -146,11 +146,13 @@ class BlockLayerView(context: Context, attrs: AttributeSet? = null, defStyleAttr
             if(recordFlag) {
                 stopExpandBlock()
                 currentBlock = null
+                Log.d("animation","[Running MUTE]Layer ID : $layerId")
             }
         } else {
             if(recordFlag) {
                 addBlock(blockId = blockViewList.size, start = pos, duration = 0)
                 expandBlock()
+                Log.d("animation","[Running UN_MUTE]Layer ID : $layerId")
             }
         }
     }

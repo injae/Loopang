@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintSet
@@ -160,6 +161,11 @@ class FinalRecordActivity : AppCompatActivity() {
                 basicWidth = record_timeline_panel_scroll.width
                 basicHeight = dpToPx(this@FinalRecordActivity, 56f).toInt()
 
+                //레이어를 담는 리니어 레이아웃 너비 초기화
+                val param = layerListLinear!!.layoutParams as FrameLayout.LayoutParams
+                param.width = basicWidth
+                layerListLinear?.layoutParams = param
+
                 //레이어뷰, 뮤트버튼 리스트에 초기화.
                 initLayerList(5)
 
@@ -184,18 +190,7 @@ class FinalRecordActivity : AppCompatActivity() {
             blockLayerView.layerId = x
             blockLayerView.wpt = wpt
             blockLayerView.blockColor = blockColorList[x%blockColorList.size]
-            blockLayerView.layerEventListener = object: BlockLayerView.LayerEventListener{
-                override fun onBlockExpand(blockLayerView: BlockLayerView, lastPosition: Int) {
-                    if((layerListLinear!!.width * 0.8 < lastPosition) && !expandFlag) {
-                        expandFlag = true
-                        blockLayerViewList.forEach {
-                            it.expandSize()
-                        }
-                        expandFlag = false
-                    }
-                }
-            }
-            layer_list_linear.addView(blockLayerView, LinearLayout.LayoutParams(basicWidth, basicHeight))
+            layerListLinear!!.addView(blockLayerView, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, basicHeight))
             blockLayerViewList.add(blockLayerView)
 
             //muteButton 초기화
@@ -253,6 +248,16 @@ class FinalRecordActivity : AppCompatActivity() {
         }
     }
 
+    private fun expandLayerLinear() {
+        val param = layerListLinear!!.layoutParams as LinearLayout.LayoutParams
+        param.width = param.width + basicWidth
+        layerListLinear!!.layoutParams = param
+    }
+
+    private fun expandRecordSeekMax() {
+        recordSeekBarButton!!.max += wpt.getTime(basicWidth)
+    }
+
 
     //open view
     private fun openVolumeControlDrawer() {}
@@ -279,6 +284,12 @@ class FinalRecordActivity : AppCompatActivity() {
     //update view
     val updateRunnable: Runnable = Runnable {
         recordSeekBarButton!!.progress = recordCurrentPosition.ms
+        if (recordFlag){
+            if(recordSeekBarButton!!.progress >= recordSeekBarButton!!.max * 0.8f) {
+                expandRecordSeekMax()
+                expandLayerLinear()
+            }
+        }
     }
 }
 
@@ -313,8 +324,8 @@ class MuteButtonBuilder(val context: Context) {
             text = label
             isChecked = this@MuteButtonBuilder.isChecked
             setOnClickListener{
-                if (this.isChecked) onMuteEvent()
-                else onUnMuteEvent()
+                if (this.isChecked) onUnMuteEvent()
+                else onMuteEvent()
             }
             Log.d("muteButtonBuild", "lable: $label, height: $height")
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, basicHeight)
