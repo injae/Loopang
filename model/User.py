@@ -1,5 +1,6 @@
 from model.database import db
 import flask_bcrypt
+import json
 
 
 class User(db.Model):
@@ -31,7 +32,7 @@ class User(db.Model):
             return True
 
     def public_data(self):
-        return {"name": self.name}
+        return json.dumps({"name": self.name})
 
     @staticmethod
     def search(public_id):
