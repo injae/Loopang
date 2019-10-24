@@ -5,33 +5,28 @@ import io.github.junyuecao.soundtouch.SoundTouch
 class SoundEffector(private var channel: Int = 1, private var sampleRate: Int = 44100,
                     private var tempo: Double = 1.0, private var pitch: Double = 1.0,
                     private val st: SoundTouch = SoundTouch()) {
-    fun setChannel(cn: Int): SoundEffector {
-        st.setChannels(cn)
-        return this
+    init {
+        preSetting()
     }
 
-    fun setSampleRate(sr: Int): SoundEffector {
-        st.setSampleRate(sr)
-        return this
-    }
-
-    fun preSetting(): SoundEffector {
+    private fun preSetting() {
         st.setChannels(channel)
         st.setSampleRate(sampleRate)
-        return this
+        st.setTempo(tempo)
     }
 
-    fun setTempo(tp: Double): SoundEffector {
-        st.setTempo(tp)
-        return this
-    }
+    private fun setChannel(cn: Int) { st.setChannels(cn) }
+    private fun setSampleRate(sr: Int) { st.setSampleRate(sr) }
+    private fun setTempo(tp: Double) { st.setTempo(tp) }
+    private fun setPitch(pt: Double) { st.setPitch(pt) }
 
-    fun setPitch(pt: Double): SoundEffector {
-        st.setPitch(pt)
-        return this
-    }
-
-    fun process(sourceData: ByteArray): ByteArray {
+    fun process(sourceData: ByteArray, preset: EffectorPresets): ByteArray {
+        when(preset) {
+            EffectorPresets.SCARY -> { setPitch(0.5) }
+            EffectorPresets.SINKING -> { setPitch(0.8) }
+            EffectorPresets.EXCITING -> { setPitch(1.2) }
+            EffectorPresets.FANTASTIC -> { setPitch(1.4) }
+        }
         st.putSamples(sourceData, sourceData.size)
 
         val result = MutableList<Byte>(0, {0})
@@ -47,8 +42,11 @@ class SoundEffector(private var channel: Int = 1, private var sampleRate: Int = 
             }
         } while(bufferSize != 0)
 
+        st.release()    // 만약 음원소스 여러개 이펙팅 할때 에러나면 이걸 st = SoundTouch()로 바꾸기
         return result.toByteArray()
     }
 
     fun release() { st.release() }
 }
+
+enum class EffectorPresets { SCARY, SINKING, EXCITING, FANTASTIC }
