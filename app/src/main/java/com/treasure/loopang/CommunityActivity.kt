@@ -1,27 +1,19 @@
 package com.treasure.loopang
 
-import android.content.Intent.getIntent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
-import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_community.*
 import androidx.viewpager.widget.ViewPager
-import com.google.android.material.tabs.TabLayout
 import com.treasure.loopang.adapter.CommunityPagerAdapter
-import com.treasure.loopang.audio.LoopMusic
-import com.treasure.loopang.ui.fragments.RecordFragment
-import com.treasure.loopang.ui.interfaces.IPageFragment
-import kotlinx.android.synthetic.main.activity_recording.*
 
 
 class CommunityActivity : AppCompatActivity() {
- /*   private val communityViewPager: ViewPager = CommunityContainer
-    var adapter = CommunityPagerAdapter(supportFragmentManager)
-*/
+    var isTrackFragOpen : Boolean = false
+
+    val transaction = supportFragmentManager.beginTransaction()
     //리스트 세개 필요함 1.전체 공유 큐,  2. 내가 좋아요 누른 곡 리스트, 3. 내가 공유한 곡 리스트
     var likedSongNum : Int = 0 //위에 리스트 만들면 리스트에 들어있는 아이템 개수로 변수 대체 가능
     // var likedSongList
@@ -29,9 +21,13 @@ class CommunityActivity : AppCompatActivity() {
     var userSharedTrackNum : Int = 0
     // var userSharedList
 
+    var downloadNum : Int = 0
+    var heartClikedNum : Int = 0
+
     private var currentPage: Int = 0
 
      private val pagerAdapter by lazy { CommunityPagerAdapter(supportFragmentManager) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_community)
@@ -43,11 +39,16 @@ class CommunityActivity : AppCompatActivity() {
         CommunityContainer.adapter = pagerAdapter
         CommunityContainer.addOnPageChangeListener(PageChangeListener())
         CommunityContainer.setOnTouchListener { _, _ -> false}
-
+        /*var songlist : List<CommunitySongItem> = listOf(dasdsa)
+        for ((index, value) in songlist.withIndex()){
+        //  $index is $value")
+            songlist[index].item
+        }*/
     }
 
     fun onFragmentChanged(songName: String?, userNickName: String?, i: Int, i1: Int) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.TrackFrame, CommunityTrackFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.TrackFrame, CommunityTrackFragment()).commit()
+        isTrackFragOpen = true
     }
 
     inner class PageChangeListener: ViewPager.OnPageChangeListener {
@@ -89,11 +90,23 @@ class CommunityActivity : AppCompatActivity() {
         private fun onPageChanged() {
             this@CommunityActivity.currentPage = selectedPage
         }
-        private fun onFragmentChanged( songName: String, userName: String, likedNum: Int, downloadNum : Int){
-            getSupportFragmentManager().beginTransaction().replace(R.id.TrackFrame, CommunityTrackFragment()).commit();
-        }
-
+      /*  private fun onFragmentChanged( songName: String, userName: String, likedNum: Int, downloadNum : Int){
+            transaction.replace(R.id.TrackFrame, CommunityTrackFragment())
+            transaction.addToBackStack(null)
+            transaction.commit()
+            isTrackFragOpen = true
+            //  getSupportFragmentManager().beginTransaction().replace(R.id.TrackFrame, CommunityTrackFragment()).commit();
+        }*/
     }
-
-
+    override fun onBackPressed(){
+        if(isTrackFragOpen == true){
+            TrackFrame.visibility = View.GONE
+            val fragmentManager = supportFragmentManager
+            fragmentManager.beginTransaction().remove(CommunityTrackFragment()).commit()
+            fragmentManager.popBackStack()
+            isTrackFragOpen = false
+        }
+        else
+            super.onBackPressed()
+    }
 }

@@ -1,8 +1,9 @@
 package com.treasure.loopang.communication
 
-data class User( var email: String = "", var password: String = "",
-                 var name: String = "", var encodedPassword: String = "",
-                 var trackList: List<MusicListClass>? = null, var likedList: List<MusicListClass>? = null)
+data class User(var email: String = "", var password: String = "",
+                var name: String = "", var encodedPassword: String = "",
+                var trackList: List<MusicListClass> = List<MusicListClass>(0, { MusicListClass() }),
+                var likedList: List<MusicListClass> = List<MusicListClass>(0, { MusicListClass() }))
 
 sealed class defaultFrame(var status: String, var message: String)
 
