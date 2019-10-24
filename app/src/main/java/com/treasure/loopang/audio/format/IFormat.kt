@@ -12,6 +12,7 @@ interface IFormat {
 
 data class FormatInfo(
     val sampleRate : Int = 44100,
+    val msSampleRate: Int = sampleRate / 10,
     val audioFormat: Int = AudioFormat.ENCODING_PCM_16BIT,
 
     val inputChannel :Int = AudioFormat.CHANNEL_IN_MONO,
