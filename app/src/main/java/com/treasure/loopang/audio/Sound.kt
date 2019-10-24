@@ -12,10 +12,11 @@ open class Sound (var data: MutableList<Short> = mutableListOf(),
                   var format: IFormat = Pcm16(),
                   var info: FormatInfo = format.info(),
                   var isPlaying: AtomicBoolean = AtomicBoolean(false),
-                  var isMute: AtomicBoolean = AtomicBoolean(false)) : SoundFlow<Sound>() {
+                  var isMute: AtomicBoolean = AtomicBoolean(false)
+) : SoundFlow<Sound>() {
 
     // millisecond
-    fun playTime(): Int { return data.size / info.msSampleRate }
+    fun duration(): Int { return data.size / info.tenMsSampleRate }
 
     fun play(start: Int? = null) {
         if(!isPlaying.get()) {
@@ -24,8 +25,7 @@ open class Sound (var data: MutableList<Short> = mutableListOf(),
             callStart(this)
             if(isPlaying.get()) {
                 run exit@{
-                    var playData: MutableList<Short>
-                    playData = if(start != null) data.subList(start, data.size) else data
+                    var playData = if(start != null) data.subList(start, data.size) else data
                     playData.chunked(info.sampleRate)
                         .map { timeEffect(it.toShortArray()).toList() }
                         .forEach {
