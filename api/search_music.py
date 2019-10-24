@@ -11,17 +11,17 @@ class MusicSearch(Resource):
         try:
             parser = reqparse.RequestParser()
             parser.add_argument('token', type=str)
-            parser.add_argument('parameter', type=str)
+            parser.add_argument('target', type=str)
             args = parser.parse_args()
             (token, err) = Auth.decord_token(args['token'])
             if token is None: return err, 200
             user = token.get('sub')
             logger().debug('[upload] user_name: %s', user)
-            logger().debug('[upload] parameter: %s', args['parameter'])
+            logger().debug('[upload] parameter: %s', args['target'])
             return {
                 'status': 'success',
                 'message': 'user-info',
-                'searchResult': Music.search(args['parameter'])
+                'searchResult': Music.search(args['target'])
             }, 200
 
         except Exception as e:

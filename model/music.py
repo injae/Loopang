@@ -42,7 +42,7 @@ class Music(db.Model):
         return list(map(lambda l: l.public_data(), Music.query.all()))
 
     def public_data(self):
-        return { 'name': self.name, 'owner': self.owner.name
+        return {'id': self.music_id, 'name': self.name, 'owner': self.owner.name 
                , 'updated_date': str(self.updated_date), 'downloads': self.downloads }
 
     @staticmethod
