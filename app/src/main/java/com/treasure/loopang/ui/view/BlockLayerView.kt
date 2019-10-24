@@ -59,10 +59,10 @@ class BlockLayerView(context: Context, attrs: AttributeSet? = null, defStyleAttr
     }
 
     private fun addBlock(blockView: BlockView, listener: BlockView.BlockControlListener? = null) {
-        val start = blockView.startTime.thms
-        val duration = blockView.duration.thms
-        val param = LayoutParams(duration * wpt.getWidth(graduationUnit), LayoutParams.MATCH_PARENT)
-        param.leftMargin = start * wpt.getWidth(graduationUnit)
+        val start = blockView.startTime.ohms
+        val duration = blockView.duration.ohms
+        val param = LayoutParams(duration * wpt.width, LayoutParams.MATCH_PARENT)
+        param.leftMargin = start * wpt.width
         blockView.wpt = wpt
         blockView.layoutParams = param
         blockView.amplitudeDrawable = amplitudesDrawable

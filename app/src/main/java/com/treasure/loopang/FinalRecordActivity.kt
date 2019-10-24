@@ -13,13 +13,15 @@ import android.view.ViewTreeObserver
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintSet
 import com.treasure.loopang.ui.dpToPx
+import com.treasure.loopang.ui.toast
 import com.treasure.loopang.ui.util.TimeWrapper
 import com.treasure.loopang.ui.util.WidthPerTime
 import com.treasure.loopang.ui.view.BlockLayerView
+import com.treasure.loopang.ui.view.BlockView
 import kotlinx.android.synthetic.main.activity_final_record.*
 
 class FinalRecordActivity : AppCompatActivity() {
-    private val wpt: WidthPerTime = WidthPerTime(width=40, ms=200)
+    private val wpt: WidthPerTime = WidthPerTime(width=5, ms=100)
     val recordDuration: TimeWrapper = TimeWrapper()
     val recordCurrentPosition: TimeWrapper = TimeWrapper()
     val loopDuration: TimeWrapper = TimeWrapper()
@@ -155,10 +157,12 @@ class FinalRecordActivity : AppCompatActivity() {
     private fun initAfterInflation(){
         recordTimelineScrollView?.viewTreeObserver?.addOnGlobalLayoutListener (object: ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
+                var temp = 0
                 recordTimelineScrollView!!.viewTreeObserver.removeOnGlobalLayoutListener(this)
 
                 //레이어뷰 기본 너비/높이 지정.
-                basicWidth = record_timeline_panel_scroll.width
+                temp = record_timeline_panel_scroll.width
+                basicWidth = temp - (temp % wpt.width) + wpt.width
                 basicHeight = dpToPx(this@FinalRecordActivity, 56f).toInt()
 
                 //레이어를 담는 리니어 레이아웃 너비 초기화
@@ -170,7 +174,7 @@ class FinalRecordActivity : AppCompatActivity() {
                 initLayerList(5)
 
                 //전체 시크바 MAX 초기화.
-                recordSeekBarButton?.max = wpt.getTime(basicWidth)
+                recordSeekBarButton?.max = (basicWidth / wpt.width) * wpt.ms
             }
         })
     }
@@ -222,13 +226,14 @@ class FinalRecordActivity : AppCompatActivity() {
 
     private fun refreshView(){
         // todo: 여기에 블록들을 가시화하는 코드를 작성.
-        /*blockLayerViewList[0].addBlock(0, 1000,1000)
+        blockLayerViewList[0].addBlock(0, 1000,1000)
         blockLayerViewList[2].addBlock(0, 1500,2000)
         blockLayerViewList[3].addBlock(0, 4000, 1200, object: BlockView.BlockControlListener{
             override fun onClickListener(layerId: Int, blockId: Int) {
                 toast("lid: $layerId, bid: $blockId")
             }
-        })*/
+        })
+        recordSeekBarButton!!.progress = 1000
     }
 
     private fun expandBlock(){
@@ -255,7 +260,7 @@ class FinalRecordActivity : AppCompatActivity() {
     }
 
     private fun expandRecordSeekMax() {
-        recordSeekBarButton!!.max += wpt.getTime(basicWidth)
+        recordSeekBarButton!!.max += ((basicWidth / wpt.width) * wpt.ms)
     }
 
 
