@@ -20,7 +20,8 @@
                 android:id="@+id/myPageSongName"
                 android:text="Song Name"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:maxLines="1"/>
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -29,16 +30,8 @@
                 android:text="2019.09.20"
                 android:textColor="#FFFFFF"
                 android:textSize="14sp"
-                android:id="@+id/myPageProductionDate"/>
-    <ImageButton
-            android:layout_width="25dp"
-            android:layout_height="10dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            app:srcCompat="@drawable/icon_btn_share"
-            android:background="@android:color/transparent"
-            android:layout_marginEnd="10dp"
-            android:id="@+id/myPageBtnShare"
-        />
+                android:id="@+id/myPageProductionDate"
+                android:maxLines="1"/>
+
     </RelativeLayout>
 </RelativeLayout>

@@ -61,7 +61,7 @@ object ResultManager {
                     "sign up" ->            code = SUCCESS_SIGN_UP
                     "Uploaded ${result.message.slice(IntRange(9, result.message.length - 1))}" -> code = SUCCESS_UPLOAD
                     "file download success" -> code = SUCCESS_DOWNLOAD
-                    "successd login info request" -> code = SUCCESS_INFO_REQUEST
+                    "user-info" -> code = SUCCESS_INFO_REQUEST
                     "success feed request" -> code = SUCCESS_FEED_REQUEST
                     "success search" -> code = SUCCESS_SEARCH
                 }

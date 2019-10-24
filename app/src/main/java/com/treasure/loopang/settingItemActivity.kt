@@ -82,7 +82,7 @@ class settingItemActivity : AppCompatActivity() {
                     .replace(R.id.settingItemContainer, settingItemNoticeFrag)
                     .commit()
             }
-            "open source license" ->{
+            "오픈소스 라이선스" ->{
 
             }
         }

@@ -60,7 +60,7 @@ class ASyncer<T>(private val context: T, private var code: Int = 0,
 
             is Recording -> {
                 if(UserManager.isLogined && UserManager.getUser().name == "") {
-                    response = connector.process(ResultManager.INFO_REQUEST, UserManager.getUser())
+                    response = connector.process(ResultManager.INFO_REQUEST)
                     code = ResultManager.getCode(response)
                 }
             }
@@ -113,7 +113,7 @@ class ASyncer<T>(private val context: T, private var code: Int = 0,
                 when(code) {
                     ResultManager.SUCCESS_INFO_REQUEST -> {  }
                     ResultManager.FAIL_INFO_REQUEST -> {
-                        UserManager.setInfo("FAIL", null, null)
+                        UserManager.setInfo("FAIL_NICKNAME", List<MusicListClass>(0,{ MusicListClass() }), List<MusicListClass>(0,{MusicListClass()}))
                     }
                 }
             }

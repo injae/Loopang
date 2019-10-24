@@ -1,6 +1,5 @@
 package com.treasure.loopang
 
-import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
@@ -11,15 +10,12 @@ import android.view.WindowManager
 import androidx.viewpager.widget.ViewPager
 import com.treasure.loopang.ui.adapter.LoopStationPagerAdapter
 import androidx.drawerlayout.widget.DrawerLayout
-import com.treasure.loopang.listitem.setEffector
 import com.treasure.loopang.listitem.setMetronome
 import com.treasure.loopang.ui.statusBarHeight
 import kotlinx.android.synthetic.main.activity_recording.*
 import kotlinx.android.synthetic.main.drawer.*
-import com.treasure.loopang.audio.Sound
 import com.treasure.loopang.ui.interfaces.IPageFragment
 import android.util.DisplayMetrics
-import android.widget.ImageButton
 import com.treasure.loopang.audio.FileManager
 import android.widget.Toast
 import com.treasure.loopang.Database.DatabaseManager
@@ -84,6 +80,12 @@ class Recording : AppCompatActivity()
 
         val displayMetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(displayMetrics)
+
+        if(com.treasure.loopang.communication.UserManager.isLogined ==false)
+            drawer_logout_btn.visibility=View.GONE
+        else
+            drawer_logout_btn.visibility=View.VISIBLE
+
         drawer_logout_btn.setOnClickListener {
             GlobalScope.launch { DatabaseManager.deletePassword(this@Recording) }
             startActivity(Intent(this, Login::class.java))

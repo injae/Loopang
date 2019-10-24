@@ -12,7 +12,7 @@
     <TextView
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-        android:id="@+id/my_music_user_nickname"
+        android:id="@+id/my_page_user_nickname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
@@ -25,7 +25,7 @@
     <TextView
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:id="@+id/my_music_user_id_email"
+            android:id="@+id/my_page_user_id_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"

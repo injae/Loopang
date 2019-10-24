@@ -31,7 +31,7 @@ class setting : androidx.fragment.app.Fragment() {
         adapter.addItem(ContextCompat.getDrawable(context!!, R.drawable.icon_setting_visualizer)!!,"Visualizer")
         adapter.addItem(ContextCompat.getDrawable(context!!, R.drawable.icon_setting_pcm)!!,"Pcm")
         adapter.addItem(ContextCompat.getDrawable(context!!, R.drawable.icon_setting_help)!!,"도움말")
-
+        adapter.addItem(ContextCompat.getDrawable(context!!, R.drawable.icon_setting_help)!!,"오픈소스 라이선스")
         var editTextFilter : EditText? =null
         editTextFilter = editText
 

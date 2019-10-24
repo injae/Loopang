@@ -8,12 +8,13 @@
 
     <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="70dp"
             android:layout_alignParentTop="true"
             android:id="@+id/trackNameFrame"
             android:background="#FFFFFF">
         <ImageButton
                android:layout_gravity="center_vertical"
+                android:layout_marginTop="10dp"
                 android:layout_marginStart="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -28,6 +29,7 @@
                 android:text="Track Name"
                 android:textColor="#969696"
                 android:textSize="18dp"
+                android:layout_marginTop="10dp"
                 android:layout_gravity="center"
                 />
     </FrameLayout>
