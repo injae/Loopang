@@ -124,10 +124,11 @@ class CommunitySearchitemAdapter : BaseAdapter(), Filterable {
         return filteredItemList[position]
     }
 
-    fun addItem(userNickName: String, songName: String) {
+    fun addItem(userNickName: String, songName: String,songId : String) {
         val item = CommunitySongItem()
         item.userNickName = userNickName
         item.songName = songName
+        item.songId = songId
         listViewItemList.add(item)
     }
     private  class ViewHolder{

@@ -34,17 +34,26 @@
                 android:background="@color/twenty_per_white"/>
     </LinearLayout>
 
-    <ListView
-            android:layout_below="@id/searchSort"
+    <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            android:dividerHeight="10dp"
-            android:divider=  "@android:color/transparent"
-            android:id="@+id/community_search_result_listview"
-            />
-
+            android:layout_marginBottom="20dp">
+        <ListView
+                android:layout_below="@id/searchSort"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:dividerHeight="10dp"
+                android:divider=  "@android:color/transparent"
+                android:id="@+id/community_search_result_song_listview" />
+        <ListView
+                android:layout_below="@id/searchSort"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:dividerHeight="10dp"
+                android:divider=  "@android:color/transparent"
+                android:id="@+id/community_search_result_artist_listview" />
+    </FrameLayout>
 </LinearLayout>
