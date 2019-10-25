@@ -1,4 +1,4 @@
-from flask_restful import Resource, reqparse
+from flask_restful import Resource, reqparse, inputs
 from model.music import Music
 from model.likes import Like
 from api.auth import Auth
@@ -12,7 +12,7 @@ class LikeMusic(Resource):
             parser = reqparse.RequestParser()
             parser.add_argument('token', type=str)
             parser.add_argument('music_id', type=str)
-            parser.add_argument('like', type=bool)
+            parser.add_argument('like', type=inputs.boolean)
             args = parser.parse_args()
             (token, err) = Auth.decord_token(args['token'])
             if token is None: return err, 200
