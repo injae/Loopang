@@ -32,8 +32,7 @@ class Like(db.Model):
             return False
 
     def public_data(self):
-        return music.public_data()
-
+        return self.music.public_data()
 
     @staticmethod 
     def music_list(user_id):
