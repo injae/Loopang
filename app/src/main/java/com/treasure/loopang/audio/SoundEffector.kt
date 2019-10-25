@@ -4,7 +4,8 @@ import io.github.junyuecao.soundtouch.SoundTouch
 
 class SoundEffector(private var channel: Int = 1, private var sampleRate: Int = 44100,
                     private var tempo: Double = 1.0, private var pitch: Double = 1.0,
-                    private var st: SoundTouch? = null, private var sourceBackup: MutableList<Pair<ByteArray, ByteArray>>) {
+                    private var st: SoundTouch? = null,
+                    private var sourceBackup: MutableList<Pair<ByteArray, ByteArray>> = MutableList<Pair<ByteArray, ByteArray>>(0, { Pair(ByteArray(0, {0}), ByteArray(0, {0})) })) {
     private fun preSetting() {
         st = SoundTouch()
         st?.setChannels(channel)
@@ -26,6 +27,7 @@ class SoundEffector(private var channel: Int = 1, private var sampleRate: Int = 
             EffectorPresets.FANTASTIC -> { setPitch(1.4) }
             EffectorPresets.NONE -> {
                 return getSourceData(targetSource)
+
             }
         }
         st?.putSamples(targetSource, targetSource.size)
@@ -47,14 +49,14 @@ class SoundEffector(private var channel: Int = 1, private var sampleRate: Int = 
         st = null
         st = SoundTouch()
 
-        sourceBackup.add(Pair(targetSource, result.toByteArray().copyOfRange(0, (result.size / 4))))
+        sourceBackup?.add(Pair(targetSource, result.toByteArray().copyOfRange(0, (result.size / 4))))
         return result.toByteArray()
     }
 
     private fun getSourceData(processedData: ByteArray): ByteArray {
         var flag: Boolean
         var index = 0
-        for(i in 0 until sourceBackup.size) {
+        for(i in 0 until sourceBackup!!.size) {
             flag = true
             for(j in 0 until (processedData.size / 4)) {
                 if(sourceBackup[i].second[j] != processedData[j]) flag = false
