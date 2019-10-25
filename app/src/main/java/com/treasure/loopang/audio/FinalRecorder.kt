@@ -45,6 +45,7 @@ class FinalRecorder : IFinalRecorder {
 
     override fun export(title: String, soundFormat: String): Boolean {
         mixer.save(title+soundFormat)
+        return true
     }
 
     override fun onPlayStart(recordPosition: Int) {
