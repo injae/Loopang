@@ -2,19 +2,75 @@ package com.treasure.loopang.ui.dialogs
 
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.media.effect.Effect
+import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.view.Window
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.ListView
+import android.widget.SeekBar
+import com.fasterxml.jackson.databind.util.EnumValues
 import com.google.android.material.tabs.TabLayout
-import com.treasure.loopang.audio.Effector
-import kotlinx.android.synthetic.main.block_control_dialog.*
+import com.treasure.loopang.R
+import com.treasure.loopang.audio.EffectorPresets
 
-class BlockControlDialog(context: Context, effectorPresets: EffectorPresets) : Dialog(context) {
+import kotlinx.android.synthetic.main.block_control_dialog.*
+import kotlinx.android.synthetic.main.block_effect_control_tab.*
+import kotlinx.android.synthetic.main.block_volume_tab.*
+import kotlinx.android.synthetic.main.effect_item.*
+
+class BlockControlDialog(context: Context) : Dialog(context)
+    , TabLayout.OnTabSelectedListener
+    , SeekBar.OnSeekBarChangeListener
+    , AdapterView.OnItemClickListener {
+
     private val blockControlTab by lazy { block_control_tab }
     private val volumeTab by lazy { volume_tab }
     private val effectTab by lazy { effect_tab }
-    private val effectorList: List<EffectorPresets> = effectorPresets.getList
+    private val volumeSeekBar by lazy { block_volume_seekbar }
+    private val effectListView by lazy { block_effect_listview }
+
+    private val effectors = EffectorPresets.values()
+
+    var layerId: Int = 0
+    var blockId: Int = 0
 
     var volume_max: Int = 100
     var volume: Int = 0
+    var effect: EffectorPresets = EffectorPresets.EXCITING
+
+    var blockControlListener : BlockControlListener? = null
+
+    init {
+        requestWindowFeature(Window.FEATURE_NO_TITLE)
+        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        setContentView(R.layout.block_control_dialog)
+
+        effectListView.adapter = ListAdapter(context, effectors)
+        volumeSeekBar.setOnSeekBarChangeListener(this)
+        blockControlTab.setOnTabSelectedListener(this)
+        effectListView.onItemClickListener = this
+    }
+
+    fun show(layerId: Int, blockId: Int, volume:Int, effect: EffectorPresets) {
+        Log.d("BlockControlDialog", "show(layerId: $layerId, blockId: $blockId, volume: $volume, effect: ${effect.name})")
+        this.layerId = layerId
+        this.blockId = blockId
+        this.volume = volume
+        this.effect = effect
+        this.show()
+    }
+
+    fun show(layerId: Int, blockId: Int) {
+        this.layerId = layerId
+        this.blockId = blockId
+        this.show()
+    }
 
     private fun showVolumeTab () {
         volumeTab.visibility = View.VISIBLE
@@ -26,8 +82,65 @@ class BlockControlDialog(context: Context, effectorPresets: EffectorPresets) : D
         effectTab.visibility = View.VISIBLE
     }
 
-    interfaece BlockControlListener() {
+    /* 탭 스위칭 리스너 구현 */
+    // 이미 선택된 상태의 tab이 사용자에 의해 다시 선택됨.
+    override fun onTabReselected(p0: TabLayout.Tab?) {}
+
+    // tab의 상태가 선택 상태에서 선택되지 않음으로 변경됨.
+    override fun onTabUnselected(p0: TabLayout.Tab?) {}
+
+    // tab의 상태가 선택되지 않음에서 선택 상태로 변경됨.
+    override fun onTabSelected(p0: TabLayout.Tab?) {
+        p0?.let{
+            when (it.tag) {
+                context.resources.getString(R.string.volume_tab_str) -> showVolumeTab()
+                context.resources.getString(R.string.effect_tab_str) -> showEffectTab()
+            }
+        }
+    }
+
+    /* 시크바 이벤트 리스너 구현 */
+    // 시크바를 움직이고 있을 때
+    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {}
+    // 시크바를 클릭했을 때
+    override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+    // 시크바를 놓았을 때
+    override fun onStopTrackingTouch(seekBar: SeekBar?) {
+        seekBar?.let{
+            blockControlListener?.onVolumeChanged(it.progress, it.max, layerId, blockId)
+        }
+    }
+
+    override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        effect = effectors[position]
+        blockControlListener?.onEffectChanged(effect, layerId, blockId)
+    }
+
+    /* 블록 컨트롤 다이얼로그 콜백 */
+    interface BlockControlListener {
         fun onVolumeChanged(progress: Int, max: Int, layerId: Int, blockId: Int)
         fun onEffectChanged(effect: EffectorPresets, layerId: Int, blockId: Int)
+    }
+
+    private inner class ListAdapter(
+        context: Context,
+        effectList: Array<EffectorPresets>
+    ) : ArrayAdapter<EffectorPresets>(context, 0,effectList) {
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+            var view: View? = convertView
+            val effect: EffectorPresets? = getItem(position)
+
+            if (view == null){
+                view = LayoutInflater.from(context).inflate(R.layout.effect_item, parent, false)
+            }
+
+            effect_label.text = effect?.name ?: "effect"
+
+            if (effect == this@BlockControlDialog.effect)
+                view!!.background= (context.resources.getDrawable(R.drawable.block_effect_item_background_s))
+            else view!!.background= (context.resources.getDrawable(R.drawable.block_effect_item_background))
+
+            return view
+        }
     }
 }
