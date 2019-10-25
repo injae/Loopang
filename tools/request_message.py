@@ -10,3 +10,6 @@ def request_message(status, message):
         status = "error"
         code = 404
     return {'status': status, 'message': message}, code
+
+def make_data(data):
+    return list(map(lambda l: l.public_data(), data))

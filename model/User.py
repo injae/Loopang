@@ -1,6 +1,5 @@
 from model.database import db
 import flask_bcrypt
-import json
 
 
 class User(db.Model):

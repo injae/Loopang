@@ -36,6 +36,8 @@ def App():
     api.add_resource(UserInfo, '/user-info')
     from api.search_music import MusicSearch
     api.add_resource(MusicSearch, '/music-search')
+    from api.like import LikeMusic
+    api.add_resource(LikeMusic, '/request-like')
 
     return app
 

@@ -2,7 +2,6 @@ from model.database import db, gen_id
 from datetime import datetime
 from pathlib import Path
 import os
-import json
 
 MUSIC_FOLDER = os.path.expandvars('$HOME/music')
 
@@ -42,8 +41,9 @@ class Music(db.Model):
         return list(map(lambda l: l.public_data(), Music.query.all()))
 
     def public_data(self):
-        return {'id': self.music_id, 'name': self.name, 'owner': self.owner.name 
-               , 'updated_date': str(self.updated_date), 'downloads': self.downloads }
+        return {  'id': self.music_id, 'name': self.name, 'owner': self.owner.name 
+                , 'updated_date': str(self.updated_date), 'downloads': self.downloads
+                , 'likes': len(self.likes)}
 
     @staticmethod
     def track_list(user_id):
