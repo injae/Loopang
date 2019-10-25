@@ -1,8 +1,6 @@
 package com.treasure.loopang.ui.interfaces
 
-import com.treasure.loopang.audio.Sound
-
-interface FinalRecorder {
+interface IFinalRecorder {
     fun getRecordDuration(): Int    // 녹음 총 길이 반환
     fun getLoopDuration(): Int  // 루프(반주) 총 길이 반환
     fun getRecordPosition(): Int    // 현재 녹음(재생) 위치
@@ -36,7 +34,4 @@ interface FinalRecorder {
     fun getEffectList(): List<Any>
     fun getBlockList(): List<List<Any>>
 
-    fun getLayerNameList(): List<String>
-    fun getLayerNum():Int
-    fun getLayerSounds(): List<Sound>
 }

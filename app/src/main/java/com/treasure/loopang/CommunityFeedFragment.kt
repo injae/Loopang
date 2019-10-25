@@ -11,9 +11,11 @@ import com.treasure.loopang.listitem.CommunitySongItem
 import kotlinx.android.synthetic.main.community_feed.*
 import android.widget.FrameLayout
 import kotlinx.android.synthetic.main.activity_community.*
-
+import java.util.*
+import kotlin.collections.ArrayList
 
 class CommunityFeedFragment : androidx.fragment.app.Fragment() {
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(com.treasure.loopang.R.layout.community_feed,container,false);
     }
@@ -26,8 +28,8 @@ class CommunityFeedFragment : androidx.fragment.app.Fragment() {
         // 전체 리스트 가져와서 add item >> (activity as CommunityActivity)  >> 전체 공유ㄴ된 음원 큐 아직 안만듬
 //        FeedAdapter.addItem(
 
-        FeedAdapter.addItem("userName","songName",0,0)
-        FeedAdapter.addItem("userName2","songName2",1,1)
+        FeedAdapter.addItem("userName","songName",0,0,"")
+        FeedAdapter.addItem("userName2","songName2",1,1,"")
 
         FeedListView.onItemClickListener = AdapterView.OnItemClickListener { parent, v, position, id ->
             // get item
@@ -37,6 +39,7 @@ class CommunityFeedFragment : androidx.fragment.app.Fragment() {
             val userNickName = item.userNickName
             val downloadNum = item.downloadNum
             val likedNum = item.likedNum
+            val songId = item.songId
 
             activity!!.TrackFrame.visibility = View.VISIBLE
             (activity as CommunityActivity).onFragmentChanged(songName,userNickName ,0, 0) //likednum,downloadnum 넣어주기 ㅇㅇ

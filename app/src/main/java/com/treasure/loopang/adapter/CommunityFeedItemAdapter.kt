@@ -51,13 +51,14 @@ class CommunityFeedItemAdapter : BaseAdapter(){
         return listViewItemList[position]
     }
 
-    fun addItem(userNickName: String, songName: String,  likedNum : Int, downloadNum :Int) {
+    fun addItem(userNickName: String, songName: String,  likedNum : Int, downloadNum :Int,songId : String) {
         val item = CommunitySongItem()
 
         item.userNickName= userNickName
         item.songName = songName
         item.downloadNum = downloadNum
         item.likedNum = likedNum
+        item.songId = songId
         listViewItemList.add(item)
     }
 

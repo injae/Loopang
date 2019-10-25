@@ -12,7 +12,7 @@ class Recorder(var format: IFormat  = Pcm16(),
                var info: FormatInfo =format.info(),
                var data: MutableList<Short> = mutableListOf(),
                var isRecording: AtomicBoolean = AtomicBoolean(false)) : SoundFlow<Recorder>() {
-    lateinit var routine : Deferred<Unit>;
+    lateinit var routine : Deferred<Unit>
 
     fun start(maxSize: Int? = null) {
         Stabilizer.stabilizeAudio(info.inputAudio)

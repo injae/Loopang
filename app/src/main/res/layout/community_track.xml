@@ -177,6 +177,7 @@
                 android:text="Track Info"
                 android:layout_centerHorizontal ="true"
                 android:gravity="center"
+                android:textColor="#7E7E7E"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"
 
@@ -196,6 +197,7 @@
                     android:layout_marginTop="20dp"
                     android:layout_gravity="center_horizontal"/>
                 <EditText
+                        android:textColor="#7E7E7E"
                         android:id="@+id/trackInfoTextEdit"
                         android:layout_width="300dp"
                         android:layout_height="wrap_content"

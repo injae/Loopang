@@ -45,10 +45,10 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
         CommunitySearchResultView.adapter = CommunitySearchAdapter
         //전체 리스트에서 add item 시키고 여기서 찾게 하면 됨 ㅇㅇ
         //CommunitySearchAdapter.additem()
-        CommunitySearchAdapter.addItem("AKMU","고래")
-        CommunitySearchAdapter.addItem("폴킴","눈")
-        CommunitySearchAdapter.addItem("펀치","가끔이러다")
-        CommunitySearchAdapter.addItem("심규선","화조도")
+        CommunitySearchAdapter.addItem("AKMU","고래","")
+        CommunitySearchAdapter.addItem("폴킴","눈","")
+        CommunitySearchAdapter.addItem("펀치","가끔이러다","")
+        CommunitySearchAdapter.addItem("심규선","화조도","")
 
         community_search_ing_list.visibility=View.INVISIBLE
         community_search_result_list.visibility=View.INVISIBLE
@@ -86,6 +86,7 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
             val userNickName = item.userNickName
             val downloadNum = item.downloadNum
             val likedNum = item.likedNum
+            val songId = item.songId
 
             var trackFrame : FrameLayout = activity!!.TrackFrame
             trackFrame.visibility = View.VISIBLE

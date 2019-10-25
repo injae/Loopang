@@ -1,14 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout
+<RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#1ACA3F3F"
+        >
+    <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginStart="30dp"
+            android:layout_centerVertical="true"
+            android:id="@+id/myPageImageView"
+            app:srcCompat="@drawable/icon_mypage"/>
+<LinearLayout
         android:id="@+id/myPageLoginO"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:background="#1ACA3F3F"
+        android:layout_toRightOf= "@id/myPageImageView"
         >
+
     <TextView
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
@@ -17,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
             android:layout_marginTop="5dp"
-        android:gravity="center"
+        android:gravity="left"
         android:text="User Nickname "
             android:layout_weight="1"
         android:textColor="#FFFFFF"
@@ -30,9 +44,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginBottom="5dp"
-            android:gravity="center"
+            android:gravity="left"
             android:layout_weight="1"
             android:text="000000@google.com "
             android:textColor="#FFFFFF"
             android:textSize="14dp" />
 </LinearLayout>
+</RelativeLayout>
