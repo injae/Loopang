@@ -33,12 +33,8 @@
             <include
                     android:id="@+id/login_o"
                     layout="@layout/setting_my_music_login_o"
-                    android:visibility="gone" />
-
-            <include
-                    android:id="@+id/login_x"
-                    layout="@layout/setting_my_music_login_x"
                     android:visibility="visible" />
+
         </FrameLayout>
 
         <ListView
@@ -62,6 +58,5 @@
             android:layout_alignParentBottom="true"
             android:id="@+id/checkView"
             >
-
     </FrameLayout>
 </RelativeLayout>

@@ -25,37 +25,55 @@ class CommunityUserPageFragment : androidx.fragment.app.Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        userNickname.setText(com.treasure.loopang.communication.UserManager.getUser().name)
+        userSharedTrackNumber.setText((com.treasure.loopang.communication.UserManager.getUser().trackList.size).toString())
+        likenumber.setText((com.treasure.loopang.communication.UserManager.getUser().likedList.size).toString())
+
+        var isButtonStateTrack = true
         val userPageListView: ListView = userpageListView
+        val userPageLikedListView : ListView = userpageLikedListView
         val userPageItemAdapter: CommunityUserPageAdapter = CommunityUserPageAdapter()
 
-        userPageListView.adapter = userPageItemAdapter
-
-        //이거 track liked 따라서  additem달라지니까 함수로 구현해야함
-        userPageItemAdapter.addItem("userName","songName1")
-        userPageItemAdapter.addItem("userName","songName1")
-        userPageItemAdapter.addItem("userName","songName1")
-        userPageItemAdapter.addItem("userName","songName1")
-
+        if (isButtonStateTrack == true) {
+            userPageListView.adapter = userPageItemAdapter
+            for (i in 0..com.treasure.loopang.communication.UserManager.getUser().trackList.size - 1) {
+                userPageItemAdapter.addItem(
+                    com.treasure.loopang.communication.UserManager.getUser().trackList[i].owner,
+                    com.treasure.loopang.communication.UserManager.getUser().trackList[i].name,
+                    com.treasure.loopang.communication.UserManager.getUser().trackList[i].id
+                )
+            }
+        }else {
+            userPageLikedListView.adapter = userPageItemAdapter
+            for (i in 0..com.treasure.loopang.communication.UserManager.getUser().likedList.size-1) {
+                userPageItemAdapter.addItem(
+                    com.treasure.loopang.communication.UserManager.getUser().likedList[i].owner,
+                    com.treasure.loopang.communication.UserManager.getUser().likedList[i].name,
+                    com.treasure.loopang.communication.UserManager.getUser().likedList[i].id
+                )
+            }
+        }
 
         userPageTrackBtn.setOnClickListener {
+            userPageListView.visibility = View.VISIBLE
+            userPageLikedListView.visibility = View.GONE
             Log.d("Track Btn","Track Btn Cliked")
             userPageTrackBtn.setTextColor(Color.argb(200,115,115,115))
             userPageTrackBtn.setBackgroundColor(Color.WHITE)
             userPageLikedBtn.setBackgroundColor(Color.argb(0,0,0,0))
             userPageLikedBtn.setTextColor(Color.WHITE)
-            //내가 공유한 음원들 리스트로 add item 만들어주기
-            //userPageItemAdapter.addItem()
+            isButtonStateTrack = true
         }
         userPageLikedBtn.setOnClickListener{
+            userPageListView.visibility = View.GONE
+            userPageLikedListView.visibility = View.VISIBLE
             Log.d("Liked btn","Liked Btn Cliked")
             userPageLikedBtn.setTextColor(Color.argb(200,115,115,115))
             userPageLikedBtn.setBackgroundColor(Color.WHITE)
             userPageTrackBtn.setBackgroundColor(Color.argb(0,0,0,0))
             userPageTrackBtn.setTextColor(Color.WHITE)
-            // liked 누른 음원들 리스트로 add item 만들어주기
-          //  userPageItemAdapter.addItem()
+            isButtonStateTrack = false
         }
-        //addTrackButton.setOnClickListener {  나중에 넣어 ^^}
         userPageListView.onItemClickListener = AdapterView.OnItemClickListener { parent, v, position, id ->
             // get item
             val item = parent.getItemAtPosition(position) as CommunitySongItem
@@ -64,18 +82,16 @@ class CommunityUserPageFragment : androidx.fragment.app.Fragment() {
             val userNickName = item.userNickName
             val downloadNum = item.downloadNum
             val likedNum = item.likedNum
+            val songId = item.songId
 
             var trackFrame : FrameLayout = activity!!.TrackFrame
             trackFrame.visibility = View.VISIBLE
             (activity as CommunityActivity).onFragmentChanged(songName,userNickName ,0, 0) //likednum,downloadnum 넣어주기 ㅇㅇ
         }
 
-        //userNickname.setText() 닉네임 변수 넣어주기
-        //userSharedTrackNumber.setText((activity as CommunityActivity).userSharedTrackNum)
-        //likenumber.setText((activity as CommunityActivity).likedSongNum)  //(activity as CommunityActivity).likedSongNum
 
         addTrackButton.setOnClickListener {
-            //myPage Track List 나오게해야하나? 이거 아직 고민중임 ㅇㅇ
         }
     }
+
 }
