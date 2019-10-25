@@ -4,15 +4,19 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Environment
 import android.text.SpannableStringBuilder
 import android.util.Log
 import android.view.WindowManager
 import com.jakewharton.rxbinding3.view.clicks
 import com.treasure.loopang.Database.DatabaseManager
+import com.treasure.loopang.audio.SoundEffector
 import com.treasure.loopang.communication.*
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.coroutines.*
+import java.io.File
+import java.io.FileOutputStream
 
 class Login : AppCompatActivity() {
     protected val disposables by lazy { CompositeDisposable() }
