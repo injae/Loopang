@@ -20,7 +20,7 @@ class Like(db.Model):
     def off(self):
         is_find = Like.query.filter_by(user_id=self.user_id, music_id=self.music_id).first()
         if is_find is not None:
-            db.session.delete(self)
+            db.session.delete(is_find)
             db.session.commit()
 
     def on(self):
