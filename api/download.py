@@ -5,7 +5,7 @@ from api.auth import Auth
 from model.music import Music
 from App import logger
 import os
-from database import update
+from model.database import update
 
 
 class Download(Resource):
