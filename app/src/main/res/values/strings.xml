@@ -66,6 +66,8 @@
     <string name="message_overwrite">same name file is already exist.  Do you want to overwrite file?</string>
     <string name="btn_overwrite">Overwrite</string>
     <string name="title_save_project">Save Project</string>
+    <string name="volume_tab_str">VOLUME</string>
+    <string name="effect_tab_str">EFFECT</string>
 
 
 </resources>
