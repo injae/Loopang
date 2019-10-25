@@ -56,14 +56,27 @@
                 />
 
     </LinearLayout>
+    <LinearLayout
+            android:id="@+id/btnDrawerLogInOut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:orientation="vertical"
+            android:layout_marginBottom="20dp"
+           >
     <Button
             android:id="@+id/drawer_logout_btn"
             android:layout_width="41dp"
             android:layout_height="41dp"
-            android:background="@drawable/btn_logout"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="20dp"
-            />
+            android:background="@drawable/btn_logout" />
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Logout"
+            android:textColor="#FFFFFF"
+            android:textSize="13dp"
+            android:layout_marginBottom="10dp"/>
+    </LinearLayout>
 
 </RelativeLayout>

@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.my_page_frame.*
 import android.view.animation.Animation
 import android.widget.EditText
 import android.widget.TextView
-import kotlinx.android.synthetic.main.setting_my_music_login_x.*
+import kotlinx.android.synthetic.main.setting_my_music_login_o.*
 
 class MyPage : androidx.fragment.app.Fragment() {
 
@@ -21,31 +21,11 @@ class MyPage : androidx.fragment.app.Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        my_page_user_nickname.setText(com.treasure.loopang.communication.UserManager.getUser().name)
+        my_page_user_id_email.setText(com.treasure.loopang.communication.UserManager.getUser().email)
 
-        var userNickname : TextView = view.findViewById(com.treasure.loopang.R.id.my_page_user_nickname)
-        var useridEmail : TextView = view.findViewById(com.treasure.loopang.R.id.my_page_user_id_email)
-
-        if( com.treasure.loopang.communication.UserManager.isLogined == true) {
-            login_o.visibility=View.VISIBLE
-            login_x.visibility=View.GONE
-            //my_page_sign_in_button.setOnClickLister{
-            var loginEmailView : EditText = view.findViewById(com.treasure.loopang.R.id.edit_login_id)
-            var loginPasswordView : EditText = view.findViewById(com.treasure.loopang.R.id.edit_login_password)
-            my_page_sign_in_button.setOnClickListener {
-
-            }
-            my_page_sign_up_button.setOnClickListener {
-
-            }
-        }else{
-            login_o.visibility = View.GONE
-            login_x.visibility = View.VISIBLE
-           userNickname.setText( com.treasure.loopang.communication.UserManager.getUser().name)
-            useridEmail.setText(com.treasure.loopang.communication.UserManager.getUser().email)
-        }
-
-     /*   com.treasure.loopang.communication.UserManager.getUser().email
-        com.treasure.loopang.communication.UserManager.getUser().name*/
+        if( com.treasure.loopang.communication.UserManager.isLogined == true) { login_o.visibility=View.VISIBLE }
+        else{ login_o.visibility = View.GONE }
 
         MyPageListView.adapter =adapter
 
