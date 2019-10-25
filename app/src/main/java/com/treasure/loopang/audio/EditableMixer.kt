@@ -2,6 +2,7 @@ package com.treasure.loopang.audio
 
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.util.concurrent.atomic.AtomicBoolean
 
 
@@ -116,6 +117,28 @@ class EditableSound {
     fun stop() {
         if(!isMute) sound.stop()
     }
+
+    fun makeSound(): Sound {
+        var maxLength = playedRange.endIndex()
+        seek(0)
+        var export = Sound()
+        var isFinish = false
+        sound.isMute.set(true)
+        var save_effector = sound.addEffector {
+            playedRange.expand(it.size)
+            var diff = playedRange.endIndex() - maxLength
+            if(diff > 0)  {
+                for((index, data) in it.withIndex()) { if(index > it.size - diff) it[index] = 0 }
+                sound.stop()
+            }
+            sound.data.addAll(it.toMutableList())
+            it
+        }
+        while(sound.isPlaying.get()) { sound.play() }
+        sound.removeEffector(save_effector)
+        seek(maxLength)
+        return export
+    }
 }
 
 
@@ -155,6 +178,11 @@ class EditableMixer(var sounds: MutableList<EditableSound> = mutableListOf()) : 
         }
     }
 
+    fun currentPositioin(): Int {
+        return sounds[0].playedRange.endDuration()
+    }
+
+
     fun duration(): Int {
         var duration = 0
         sounds.map{ it.blocks.last().endDuration() }.forEach {
@@ -164,4 +192,16 @@ class EditableMixer(var sounds: MutableList<EditableSound> = mutableListOf()) : 
     }
 
     fun stop(index: Int) { sounds[index].stop() }
+
+    fun mixSounds(): MutableList<Short> {
+        var musics = sounds.map{ async { it.makeSound() } }
+                           .map{ runBlocking {  it.await() } }
+        return musics.map { it.data }
+                     .fold(MutableList<Short>(musics[0].data.size) {0}) { acc, it ->
+                         acc.zip(it){ a, b -> (a + b).toShort() }.toMutableList() }
+    }
+
+    fun save(path: String) {
+       Sound(mixSounds()).save(path)
+    }
 }
