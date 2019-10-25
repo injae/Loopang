@@ -5,6 +5,7 @@ from api.auth import Auth
 from model.music import Music
 from App import logger
 import os
+from database import update
 
 
 class Download(Resource):
@@ -24,6 +25,8 @@ class Download(Resource):
             if file_name is not None:
                 if(os.path.exists(file_name.path())):
                     buffer = open(file_name.path(), 'rb')
+                    file_name.downloads += 1
+                    update()
                     def streaming():
                         for line in buffer:
                             yield line

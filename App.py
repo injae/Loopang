@@ -38,6 +38,8 @@ def App():
     api.add_resource(MusicSearch, '/music-search')
     from api.like import LikeMusic
     api.add_resource(LikeMusic, '/request-like')
+    from api.feed import Feed
+    api.add_resource(Feed, '/feed')
 
     return app
 
