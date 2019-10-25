@@ -17,8 +17,8 @@ class LikeMusic(Resource):
             (token, err) = Auth.decord_token(args['token'])
             if token is None: return err, 200
             user_id = token.get('sub')
-            logger().debug('[upload] user_name: %s', user_id)
-            music = Music.query().filter_by(music_id=args['music_id']).first()
+            logger().debug('[request-like] user_id: %s', user_id)
+            music = Music.query.filter_by(music_id=args['music_id']).first()
             if music is None: return request_message("error", "can't find music")
             like = Like(user_id, music.music_id)
             if args['like']:
