@@ -15,7 +15,7 @@ class Like(db.Model):
 
     def can_likes(self):
         is_find = Like.query.filter_by(user_id=self.user_id, music_id=self.music_id).first()
-        return True if is_find is not None else False
+        return False if is_find is not None else True
 
     def off(self):
         is_find = Like.query.filter_by(user_id=self.user_id, music_id=self.music_id).first()
