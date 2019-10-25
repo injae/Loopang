@@ -14,7 +14,7 @@ class FinalRecorder : IFinalRecorder {
     }
 
     override fun getRecordPosition(): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return mixer.currentPositioin()
     }
 
     override fun getLoopPosition(): Int {
@@ -44,7 +44,7 @@ class FinalRecorder : IFinalRecorder {
     }
 
     override fun export(title: String, soundFormat: String): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        mixer.save(title+soundFormat)
     }
 
     override fun onPlayStart(recordPosition: Int) {
