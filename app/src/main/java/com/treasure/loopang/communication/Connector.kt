@@ -55,8 +55,8 @@ class Connector(private val DNS: String = "https://ec2-3-15-172-177.us-east-2.co
                 }
                 else {  // 좋아요 요청일때는 비동기로 처리
                     call.enqueue(object : Callback<Result>{
-                        override fun onResponse(call: Call<Result>, response: Response<Result>) { TODO("Just Request") }
-                        override fun onFailure(call: Call<Result>, t: Throwable) { TODO("Just Request") }
+                        override fun onResponse(call: Call<Result>, response: Response<Result>) { }
+                        override fun onFailure(call: Call<Result>, t: Throwable) { }
                     })
                 }
             }
