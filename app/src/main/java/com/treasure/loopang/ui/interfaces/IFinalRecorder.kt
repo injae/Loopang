@@ -18,10 +18,10 @@ interface IFinalRecorder {
     fun recordStop()                // 녹음 정지
     fun export(title: String, soundFormat: String): Boolean         // 저장(파일이름, 저장형식), 성공여부 반환
 
-    fun onPlayStart(recordPosition: Int)              // 재생시작일 때
-    fun onPlayStop(recordPosition: Int)                 // 재생정지일 때
-    fun onRecordStart(recordPosition: Int)              // 녹음시작일 때
-    fun onRecordStop(recordPosition: Int)               // 녹음 정지일 때
+    fun onPlayStart()              // 재생시작일 때
+    fun onPlayStop()                 // 재생정지일 때
+    fun onRecordStart()              // 녹음시작일 때
+    fun onRecordStop()               // 녹음 정지일 때
 
     fun isRecording(): Boolean          // 녹음 중인가?
     fun isPlaying(): Boolean            // 재생 중
