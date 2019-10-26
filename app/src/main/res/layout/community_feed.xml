@@ -8,22 +8,33 @@
 
     <TextView
             android:id="@+id/FeedTextView"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_marginStart="30dp"
             android:layout_height="50dp"
-            android:gravity="center"
+            android:gravity="left"
             android:layout_marginTop="50dp"
             android:layout_marginBottom="10dp"
             android:text="Feed"
-            android:textSize="18dp"
+            android:textSize="36dp"
             android:textColor="#FFFFFF"/>
-    <ListView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="80dp"
-            android:id="@+id/communityFeedListView"
-            android:dividerHeight="7dp"
-            android:divider="#00000000"/>
-
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp">
+        <ListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/communityFeedCategoryListView"
+                android:dividerHeight="10dp"
+                android:divider="#00000000"
+                android:visibility="visible"/>
+        <ListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/communityFeedListView"
+                android:dividerHeight="10dp"
+                android:divider="#00000000"
+                android:visibility="gone"/>
+    </FrameLayout>
 </LinearLayout>

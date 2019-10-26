@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical" android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight="1"
         >
-
     <LinearLayout
             android:layout_marginTop="20dp"
             android:layout_below="@id/searchBar"
@@ -14,7 +14,7 @@
 
 
         <Button
-                android:id="@+id/SearcgSongBtn"
+                android:id="@+id/SearchSongBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -28,10 +28,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Atrist"
+                android:text="User"
                 android:textSize="18dp"
                 android:textColor="#FFFFFF"
-                android:background="@color/twenty_per_white"/>
+                android:background="@android:color/transparent"/>
     </LinearLayout>
 
     <FrameLayout
@@ -41,19 +41,22 @@
             android:layout_marginEnd="20dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp">
+
         <ListView
                 android:layout_below="@id/searchSort"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:dividerHeight="10dp"
                 android:divider=  "@android:color/transparent"
-                android:id="@+id/community_search_result_song_listview" />
-        <ListView
-                android:layout_below="@id/searchSort"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:dividerHeight="10dp"
-                android:divider=  "@android:color/transparent"
-                android:id="@+id/community_search_result_artist_listview" />
+                android:id="@+id/community_search_result_artist_listview"/>
+
+            <ListView
+                    android:id="@+id/community_search_result_song_listview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/searchSort"
+                    android:divider="@android:color/transparent"
+                    android:dividerHeight="10dp" />
+
     </FrameLayout>
 </LinearLayout>

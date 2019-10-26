@@ -1,5 +1,6 @@
 package com.treasure.loopang
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -9,14 +10,11 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.FrameLayout
 import android.widget.ListView
-import com.treasure.loopang.adapter.CommunityFeedItemAdapter
 import com.treasure.loopang.adapter.CommunityUserPageAdapter
-import com.treasure.loopang.adapter.settingItemNoticeListAdapter
 import com.treasure.loopang.listitem.CommunitySongItem
-import com.treasure.loopang.listitem.settingItemNoticeListItem
 import kotlinx.android.synthetic.main.activity_community.*
 import kotlinx.android.synthetic.main.community_user_page.*
-import kotlinx.android.synthetic.main.setting_notice.*
+import kotlinx.android.synthetic.main.loop_item.*
 
 class CommunityUserPageFragment : androidx.fragment.app.Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -86,11 +84,12 @@ class CommunityUserPageFragment : androidx.fragment.app.Fragment() {
 
             var trackFrame : FrameLayout = activity!!.TrackFrame
             trackFrame.visibility = View.VISIBLE
-            (activity as CommunityActivity).onFragmentChanged(songName,userNickName ,0, 0) //likednum,downloadnum 넣어주기 ㅇㅇ
+            (activity as CommunityActivity).onFragmentChangedtoTrack(songId) //likednum,downloadnum 넣어주기 ㅇㅇ
         }
 
-
         addTrackButton.setOnClickListener {
+            val intent = Intent(activity, CommunityShareActivity::class.java)  //intent.putExtra()
+            startActivity(intent)
         }
     }
 

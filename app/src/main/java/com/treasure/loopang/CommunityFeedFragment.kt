@@ -1,6 +1,7 @@
 package com.treasure.loopang
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,8 @@ import com.treasure.loopang.adapter.CommunityFeedItemAdapter
 import com.treasure.loopang.listitem.CommunitySongItem
 import kotlinx.android.synthetic.main.community_feed.*
 import android.widget.FrameLayout
+import com.treasure.loopang.adapter.CommunityFeedCategoryAdapter
+import com.treasure.loopang.listitem.CommunityFeedCategoryItem
 import kotlinx.android.synthetic.main.activity_community.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -21,32 +24,63 @@ class CommunityFeedFragment : androidx.fragment.app.Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val FeedListView: ListView = communityFeedListView
-        val FeedAdapter: CommunityFeedItemAdapter = CommunityFeedItemAdapter()
 
-        FeedListView.adapter = FeedAdapter
-        // 전체 리스트 가져와서 add item >> (activity as CommunityActivity)  >> 전체 공유ㄴ된 음원 큐 아직 안만듬
-//        FeedAdapter.addItem(
+        if((activity as CommunityActivity).isTrackFragOpen == false && (activity as CommunityActivity).isCategorySelected == false) {
+            communityFeedListView.visibility = View.GONE
+            communityFeedCategoryListView.visibility = View.VISIBLE
+            Log.d("aaaaaaaaaaaaaaaaaaaa","Category는"+(activity as CommunityActivity).isCategorySelected +"Track은"+(activity as CommunityActivity).isTrackFragOpen)
+        }
+        else if((activity as CommunityActivity).isTrackFragOpen == false && (activity as CommunityActivity).isCategorySelected == true){
+            Log.d("bbbbbbbbbbbbbb","Category는"+(activity as CommunityActivity).isCategorySelected +"Track은"+(activity as CommunityActivity).isTrackFragOpen)
+        }
 
-        FeedAdapter.addItem("userName","songName",0,0,"")
-        FeedAdapter.addItem("userName2","songName2",1,1,"")
+        val CategoryAdapter: CommunityFeedCategoryAdapter = CommunityFeedCategoryAdapter()
 
-        FeedListView.onItemClickListener = AdapterView.OnItemClickListener { parent, v, position, id ->
-            // get item
+        communityFeedCategoryListView.adapter = CategoryAdapter
+
+        CategoryAdapter.addItem("The Newest 5")
+        CategoryAdapter.addItem("Liked Top 5")
+        CategoryAdapter.addItem("Download Top 5")
+
+
+        communityFeedCategoryListView.onItemClickListener = AdapterView.OnItemClickListener { parent, v, position, id ->
+            val item = parent.getItemAtPosition(position) as CommunityFeedCategoryItem
+            (activity as CommunityActivity).isCategorySelected = true
+
+            communityFeedListView.visibility = View.VISIBLE
+            communityFeedCategoryListView.visibility = View.GONE
+
+            val FeedAdapter : CommunityFeedItemAdapter = CommunityFeedItemAdapter()
+            communityFeedListView.adapter = FeedAdapter
+
+            if(item.categoryName == "The Newest 5") {
+                FeedAdapter.addItem("1","2",0,1,"dd")
+                FeedAdapter.addItem("ㅇㅁ나어","ㄷㅈㄷ2",0,1,"dㄴd")
+                FeedAdapter.addItem("1ㄴㅁ","2ㅂㅂ",1,4,"dㅇd")
+                FeedAdapter.addItem("12323","2ㅇㅁㄴㅇㅁ",5,6,"ddㅁ")
+                FeedAdapter.addItem("14324","2ㄴㅁㅇㅇ",6,8,"ddㅂ")
+                /*for (i in 0..com.treasure.loopang.communication.UserManager.getUser().likedList.size-1) {
+            FeedAdapter.addItem(
+                com.treasure.loopang.communication.UserManager.getUser().likedList[i].owner,
+                com.treasure.loopang.communication.UserManager.getUser().likedList[i].name,
+                com.treasure.loopang.communication.UserManager.getUser().likedList[i].id
+            )}*/
+            }
+            else if(item.categoryName== "Liked Top 5"){
+            }
+            else if(item.categoryName == "Download Top 5"){
+            }
+        }
+
+
+
+
+
+        communityFeedListView.onItemClickListener = AdapterView.OnItemClickListener { parent, v, position, id ->
             val item = parent.getItemAtPosition(position) as CommunitySongItem
 
-            val songName = item.songName
-            val userNickName = item.userNickName
-            val downloadNum = item.downloadNum
-            val likedNum = item.likedNum
-            val songId = item.songId
-
             activity!!.TrackFrame.visibility = View.VISIBLE
-            (activity as CommunityActivity).onFragmentChanged(songName,userNickName ,0, 0) //likednum,downloadnum 넣어주기 ㅇㅇ
-
+            (activity as CommunityActivity).onFragmentChangedtoTrack(item.songId)
         }
-    }
-    fun addTrackItem(){
-        //최신 공유된 track들 자동 additem 되도록 함수 만들기
     }
 }

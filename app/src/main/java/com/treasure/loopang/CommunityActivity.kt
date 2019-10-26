@@ -8,8 +8,10 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_community.*
 import androidx.viewpager.widget.ViewPager
 import com.treasure.loopang.adapter.CommunityPagerAdapter
+import kotlinx.android.synthetic.main.community_feed.*
 
 class CommunityActivity : AppCompatActivity() {
+    var TrackFragmentsongId = ""
     var isTrackFragOpen : Boolean = false
     val transaction = supportFragmentManager.beginTransaction()
     //리스트 세개 필요함 1.전체 공유 큐,  2. 내가 좋아요 누른 곡 리스트, 3. 내가 공유한 곡 리스트
@@ -19,6 +21,7 @@ class CommunityActivity : AppCompatActivity() {
     // var userSharedList
     var downloadNum : Int = 0
     var heartClikedNum : Int = 0
+    var isCategorySelected :Boolean = false
 
     private var currentPage: Int = 0
 
@@ -29,22 +32,21 @@ class CommunityActivity : AppCompatActivity() {
         setContentView(R.layout.activity_community)
         window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
 
-        val intent = getIntent()
-        val userId = intent.extras!!.getString("userId")
+       // val intent = getIntent()
+        //val userId = intent.extras!!.getString("userId")
 
         CommunityContainer.adapter = pagerAdapter
         CommunityContainer.addOnPageChangeListener(PageChangeListener())
         CommunityContainer.setOnTouchListener { _, _ -> false}
-        /*var songlist : List<CommunitySongItem> = listOf(dasdsa)
-        for ((index, value) in songlist.withIndex()){
-        //  $index is $value")
-            songlist[index].item
-        }*/
     }
 
-    fun onFragmentChanged(songName: String?, userNickName: String?, i: Int, i1: Int) {
-        getSupportFragmentManager().beginTransaction().replace(R.id.TrackFrame, CommunityTrackFragment()).commit()
-        isTrackFragOpen = true
+    fun onFragmentChangedtoTrack(songId : String) {
+        if(songId!=null) {
+            TrackFragmentsongId = songId
+            getSupportFragmentManager().beginTransaction()
+                .replace(R.id.TrackFrame, CommunityTrackFragment()).commit()
+            isTrackFragOpen = true
+        }
     }
 
     inner class PageChangeListener: ViewPager.OnPageChangeListener {
@@ -94,15 +96,21 @@ class CommunityActivity : AppCompatActivity() {
             //  getSupportFragmentManager().beginTransaction().replace(R.id.TrackFrame, CommunityTrackFragment()).commit();
         }*/
     }
-    override fun onBackPressed(){
-        if(isTrackFragOpen == true){
+    override fun onBackPressed() {
+        if (isTrackFragOpen == true) {
             TrackFrame.visibility = View.GONE
             val fragmentManager = supportFragmentManager
             fragmentManager.beginTransaction().remove(CommunityTrackFragment()).commit()
             fragmentManager.popBackStack()
             isTrackFragOpen = false
         }
-        else
-            super.onBackPressed()
+        else if(isTrackFragOpen == false && isCategorySelected == true){
+            communityFeedListView.visibility = View.VISIBLE
+            communityFeedCategoryListView.visibility = View.GONE
+            isCategorySelected = false
+        }
+        else {
+             super.onBackPressed()
+        }
     }
 }

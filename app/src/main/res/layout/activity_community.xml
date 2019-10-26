@@ -13,7 +13,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="4dp"
             android:layout_marginBottom="60dp" />
 
     <LinearLayout
@@ -52,5 +51,4 @@
             android:background="@drawable/gradient_background"
             android:visibility="gone">
     </FrameLayout>
-
 </RelativeLayout>
