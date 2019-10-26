@@ -108,7 +108,12 @@ class FinalRecordActivity : AppCompatActivity() {
         window?.setLayout((size.x * 0.8).toInt(), size.y)
 
         recordButton!!.setOnClickListener {
-            if ((it as ToggleButton).isChecked) {
+            val btn = it as ToggleButton
+            if(playFlag && !recordFlag) {
+                Log.d("FRA, 재생중", "녹음 중 녹음 버튼 조작을 막습니다.")
+                btn.isChecked = !btn.isChecked
+            }
+            if (btn.isChecked) {
                 muteButtonList.forEachIndexed { index, toggle ->
                     if (toggle.isChecked){
                         recordFlag = true
@@ -128,12 +133,18 @@ class FinalRecordActivity : AppCompatActivity() {
         toStartButton!!.setOnClickListener { recordSeekBarButton!!.progress = 0 }
         toEndButton!!.setOnClickListener { recordSeekBarButton!!.progress = wpt.getWidth(500) * recordDuration.hs}
         playButton!!.setOnClickListener {
-            if ((it as ToggleButton).isChecked) {
-                //todo: 재생시 동작
-                clear()
+            if(recordFlag) {
+                Log.d("FRA, 녹음중", "녹음 중 재생 버튼 조작을 막습니다.")
+                (it as ToggleButton).isChecked = !(it.isChecked)
             } else {
-                //todo: 재생 정지시 동작
-
+                if ((it as ToggleButton).isChecked) {
+                    playFlag = true
+                    //todo: 재생시 동작
+                    clear()
+                } else {
+                    playFlag = false
+                    //todo: 재생 정지시 동작
+                }
             }
         }
 
@@ -151,6 +162,7 @@ class FinalRecordActivity : AppCompatActivity() {
                         setMargin(recordSeekBarLine!!.id, ConstraintSet.START, leftMargin)
                     }.applyTo(record_timeline_panel)
                 }
+                // time stamp 변경
                 timeStampTxt!!.text = progress.toString()
             }
 
@@ -162,16 +174,31 @@ class FinalRecordActivity : AppCompatActivity() {
                 // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
         })
+        toStartButton!!.setOnClickListener{
+            if(!recordFlag && !playFlag){
+                recordSeekBarButton!!.progress = 0
+                Log.d("FRA, 녹음중 혹은 재생중", "toStart 버튼 클릭")
+            } else {
+                Log.d("FRA, 녹음중 혹은 재생중", "녹음 혹은 재생 중 toStart 버튼 조작을 막습니다.")
+            }
+        }
+        toEndButton!!.setOnClickListener{
+            if(!recordFlag && !playFlag){
+                recordSeekBarButton!!.progress = recordDuration.ms
+                Log.d("FRA, 녹음중 혹은 재생중", "toEnd 버튼 클릭")
+            } else {
+                Log.d("FRA, 녹음중 혹은 재생중", "녹음 혹은 재생 중 toEnd 버튼 조작을 막습니다.")
+            }
+        }
     }
 
     private fun initAfterInflation(){
         recordTimelineScrollView?.viewTreeObserver?.addOnGlobalLayoutListener (object: ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
-                var temp = 0
                 recordTimelineScrollView!!.viewTreeObserver.removeOnGlobalLayoutListener(this)
 
                 //레이어뷰 기본 너비/높이 지정.
-                temp = record_timeline_panel_scroll.width
+                val temp = record_timeline_panel_scroll.width
                 basicWidth = temp - (temp % wpt.width) + wpt.width
                 basicHeight = dpToPx(this@FinalRecordActivity, 56f).toInt()
 
@@ -241,9 +268,11 @@ class FinalRecordActivity : AppCompatActivity() {
         blockLayerViewList[3].addBlock(0, 4000, 1200, object: BlockView.BlockControlListener{
             override fun onClickListener(layerId: Int, blockId: Int) {
                 toast("lid: $layerId, bid: $blockId")
+                showBlockControlDialog(layerId, blockId)
             }
         })
-        recordSeekBarButton!!.progress = 1000
+
+        Log.d("FRA, 타임라인컨트롤", "refreshView()")
     }
 
     private fun stopBlock(){
@@ -256,20 +285,25 @@ class FinalRecordActivity : AppCompatActivity() {
         blockLayerViewList.forEach {
             it.clear()
         }
+        Log.d("FRA, 타임라인컨트롤", "clear()")
     }
 
     private fun expandLayerLinear() {
         val param = layerListLinear!!.layoutParams as LinearLayout.LayoutParams
         param.width = param.width + basicWidth
         layerListLinear!!.layoutParams = param
+        Log.d("FRA, 타임라인컨트롤", "expandLayerLinear(new width: ${param.width}, basicwidth: $basicWidth)")
     }
 
     private fun expandRecordSeekMax() {
-        recordSeekBarButton!!.max += ((basicWidth / wpt.width) * wpt.ms)
+        val prev = recordSeekBarButton!!.max
+        recordSeekBarButton!!.max = prev + ((basicWidth / wpt.width) * wpt.ms)
+        Log.d("FRA, 타임라인컨트롤", "expandRecordSeekMax(prev: $prev, new max: ${recordSeekBarButton!!.max})")
     }
 
     private fun showBlockControlDialog(layerId:Int, blockId: Int) {
         blockControlDialog.show(layerId, blockId)
+        Log.d("FRA, 블록컨트롤", "showBlockControlDialog(layerId: $layerId, blockId: $blockId)")
     }
 
     //open view
