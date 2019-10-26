@@ -28,6 +28,13 @@ class CommunityTrackFragment: androidx.fragment.app.Fragment() {
         var heartState : Boolean = false
         var StatePlaying : Boolean = false
 
+        //var trackName = com.treasure.loopang.communication.UserManager.getUser().trackList[]
+            //[(activity as CommunityActivity).TrackFragmentsongId]
+        // com.treasure.loopang.communication.UserManager.getUser().likedList[i].owner
+
+      //  com.treasure.loopang.communication.UserManager.getUser().trackList[].indexOf(id = (activity as CommunityActivity).TrackFragmentsongId)
+     //   (activity as CommunityActivity).TrackFragmentsongId
+
         var trackName : String = "TrackName" //변수들 나중에 다 change
         Track_trackName.setText(trackName)
 
