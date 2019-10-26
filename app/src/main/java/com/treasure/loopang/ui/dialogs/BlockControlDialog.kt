@@ -5,10 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.Window
+import android.view.*
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.SeekBar
@@ -21,7 +18,7 @@ import kotlinx.android.synthetic.main.block_effect_control_tab.*
 import kotlinx.android.synthetic.main.block_volume_tab.*
 import kotlinx.android.synthetic.main.effect_item.*
 
-class BlockControlDialog(context: Context) : Dialog(context)
+class BlockControlDialog(context: Context, listener: BlockControlListener) : Dialog(context)
     , TabLayout.OnTabSelectedListener
     , SeekBar.OnSeekBarChangeListener
     , AdapterView.OnItemClickListener {
@@ -38,8 +35,15 @@ class BlockControlDialog(context: Context) : Dialog(context)
     var blockId: Int = 0
 
     var volumeMax: Int = 100
-    var volume: Int = 0
-    var effect: EffectorPresets = EffectorPresets.EXCITING
+    var volume: Int = volumeMax / 2
+        set(value) {
+            field = if (value > volumeMax) {
+                volumeMax
+            } else {
+                value
+            }
+        }
+    var effect: EffectorPresets = EffectorPresets.NONE
 
     var blockControlListener : BlockControlListener? = null
 
@@ -48,6 +52,7 @@ class BlockControlDialog(context: Context) : Dialog(context)
     init {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        window?.setGravity(Gravity.END)
         setContentView(R.layout.block_control_dialog)
 
         effectListView.adapter = ListAdapter(context, effectors)
@@ -55,6 +60,9 @@ class BlockControlDialog(context: Context) : Dialog(context)
         volumeSeekBar.setOnSeekBarChangeListener(this)
         blockControlTab.setOnTabSelectedListener(this)
         effectListView.onItemClickListener = this
+        blockControlListener = listener
+
+        Log.d("BlockControlDialog", "BlockControlDialog.init()")
     }
 
     fun show(layerId: Int, blockId: Int, volume:Int, effect: EffectorPresets) {
@@ -74,11 +82,13 @@ class BlockControlDialog(context: Context) : Dialog(context)
     }
 
     private fun showVolumeTab () {
+        Log.d("BlockControlDialog", "BlockControlDialog.showVolumeTab()")
         volumeTab.visibility = View.VISIBLE
         effectTab.visibility = View.GONE
     }
 
     private fun showEffectTab() {
+        Log.d("BlockControlDialog", "BlockControlDialog.showEffectTab()")
         volumeTab.visibility = View.GONE
         effectTab.visibility = View.VISIBLE
     }

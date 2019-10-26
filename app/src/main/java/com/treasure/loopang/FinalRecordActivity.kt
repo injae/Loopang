@@ -3,6 +3,7 @@ package com.treasure.loopang
 import android.content.Context
 import android.content.pm.ActivityInfo
 import android.graphics.Canvas
+import android.graphics.Point
 import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -12,6 +13,8 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintSet
+import com.treasure.loopang.audio.EffectorPresets
+import com.treasure.loopang.ui.dialogs.BlockControlDialog
 import com.treasure.loopang.ui.dpToPx
 import com.treasure.loopang.ui.toast
 import com.treasure.loopang.ui.util.TimeWrapper
@@ -76,6 +79,7 @@ class FinalRecordActivity : AppCompatActivity() {
     var layerListLinear: LinearLayout? = null
 
     //dialog
+    private val blockControlDialog: BlockControlDialog by lazy { BlockControlDialog(this, BCDListener()) }
     // val volumeControlDialog: VolumeControlDialog =  VolumeControlDialog()
     // val blockControlDialog: BlockControlDialog = BlockControlDialog()
     // val saveDialog: FinalSaveDialog = FinalSaveDialog()
@@ -97,6 +101,12 @@ class FinalRecordActivity : AppCompatActivity() {
     private fun initModule() {}
 
     private fun initView(){
+        val display = windowManager.defaultDisplay
+        val size = Point()
+        display.getSize(size)
+        val window = blockControlDialog.window
+        window?.setLayout((size.x * 0.8).toInt(), size.y)
+
         recordButton!!.setOnClickListener {
             if ((it as ToggleButton).isChecked) {
                 muteButtonList.forEachIndexed { index, toggle ->
@@ -236,11 +246,6 @@ class FinalRecordActivity : AppCompatActivity() {
         recordSeekBarButton!!.progress = 1000
     }
 
-    private fun expandBlock(){
-        blockLayerViewList.forEach{
-            it.expandBlock()
-        }
-    }
     private fun stopBlock(){
         blockLayerViewList.forEach{
             it.stopExpandBlock()
@@ -263,6 +268,9 @@ class FinalRecordActivity : AppCompatActivity() {
         recordSeekBarButton!!.max += ((basicWidth / wpt.width) * wpt.ms)
     }
 
+    private fun showBlockControlDialog(layerId:Int, blockId: Int) {
+        blockControlDialog.show(layerId, blockId)
+    }
 
     //open view
     private fun openVolumeControlDrawer() {}
@@ -294,6 +302,18 @@ class FinalRecordActivity : AppCompatActivity() {
                 expandRecordSeekMax()
                 expandLayerLinear()
             }
+        }
+    }
+
+    inner class BCDListener : BlockControlDialog.BlockControlListener {
+        override fun onVolumeChanged(progress: Int, max: Int, layerId: Int, blockId: Int) {
+            Log.d("FRA, BlockControl", "BCDListener.onVolumeChanged(progress: $progress, max: $max, layerId: $layerId, blockId: $blockId)")
+            // TODO("블록 볼륨 바꾸기") //To change body of created functions use File | Settings | File Templates.
+        }
+
+        override fun onEffectChanged(effect: EffectorPresets, layerId: Int, blockId: Int) {
+            Log.d("FRA, BlockControl", "BCDListener.onEffectChanged(effect: $effect.name, layerId: $layerId, blockId: $blockId)")
+            // TODO("이펙트 바꾸기") //To change body of created functions use File | Settings | File Templates.
         }
     }
 }
