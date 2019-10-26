@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.block_control_dialog.*
 import kotlinx.android.synthetic.main.block_effect_control_tab.*
 import kotlinx.android.synthetic.main.block_volume_tab.*
 import kotlinx.android.synthetic.main.effect_item.*
+import kotlinx.android.synthetic.main.effect_item.view.*
 
 class BlockControlDialog(context: Context, listener: BlockControlListener) : Dialog(context)
     , TabLayout.OnTabSelectedListener
@@ -51,7 +52,7 @@ class BlockControlDialog(context: Context, listener: BlockControlListener) : Dia
 
     init {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
-        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        // window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         window?.setGravity(Gravity.END)
         setContentView(R.layout.block_control_dialog)
 
@@ -152,12 +153,11 @@ class BlockControlDialog(context: Context, listener: BlockControlListener) : Dia
             if (view == null){
                 view = LayoutInflater.from(context).inflate(R.layout.effect_item, parent, false)
             }
-
-            effect_label.text = effect?.name ?: "effect"
+            view!!.effect_label.text = effect?.name ?: "effect"
 
             if (effect == this@BlockControlDialog.effect)
-                view!!.background= (context.resources.getDrawable(R.drawable.block_effect_item_background_s))
-            else view!!.background= (context.resources.getDrawable(R.drawable.block_effect_item_background))
+                view.background= (context.resources.getDrawable(R.drawable.block_effect_item_background_s))
+            else view.background= (context.resources.getDrawable(R.drawable.block_effect_item_background))
 
             return view
         }
