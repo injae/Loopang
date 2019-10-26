@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.media.effect.Effect
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,9 +11,7 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.ListView
 import android.widget.SeekBar
-import com.fasterxml.jackson.databind.util.EnumValues
 import com.google.android.material.tabs.TabLayout
 import com.treasure.loopang.R
 import com.treasure.loopang.audio.EffectorPresets
@@ -40,11 +37,13 @@ class BlockControlDialog(context: Context) : Dialog(context)
     var layerId: Int = 0
     var blockId: Int = 0
 
-    var volume_max: Int = 100
+    var volumeMax: Int = 100
     var volume: Int = 0
     var effect: EffectorPresets = EffectorPresets.EXCITING
 
     var blockControlListener : BlockControlListener? = null
+
+
 
     init {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -52,13 +51,14 @@ class BlockControlDialog(context: Context) : Dialog(context)
         setContentView(R.layout.block_control_dialog)
 
         effectListView.adapter = ListAdapter(context, effectors)
+        volumeSeekBar.max = volumeMax
         volumeSeekBar.setOnSeekBarChangeListener(this)
         blockControlTab.setOnTabSelectedListener(this)
         effectListView.onItemClickListener = this
     }
 
     fun show(layerId: Int, blockId: Int, volume:Int, effect: EffectorPresets) {
-        Log.d("BlockControlDialog", "show(layerId: $layerId, blockId: $blockId, volume: $volume, effect: ${effect.name})")
+        Log.d("BlockControlDialog", "BlockControlDialog.show(layerId: $layerId, blockId: $blockId, volume: $volume, effect: ${effect.name})")
         this.layerId = layerId
         this.blockId = blockId
         this.volume = volume
@@ -67,6 +67,7 @@ class BlockControlDialog(context: Context) : Dialog(context)
     }
 
     fun show(layerId: Int, blockId: Int) {
+        Log.d("BlockControlDialog", "BlockControlDialog.show(layerId: $layerId, blockId: $blockId)")
         this.layerId = layerId
         this.blockId = blockId
         this.show()
@@ -92,7 +93,8 @@ class BlockControlDialog(context: Context) : Dialog(context)
     // tab의 상태가 선택되지 않음에서 선택 상태로 변경됨.
     override fun onTabSelected(p0: TabLayout.Tab?) {
         p0?.let{
-            when (it.tag) {
+            Log.d("BlockControlDialog", "BlockControlDialog.onTabSelected(layerId: $layerId, blockId: $blockId, tagText: ${it.text})")
+            when (it.text) {
                 context.resources.getString(R.string.volume_tab_str) -> showVolumeTab()
                 context.resources.getString(R.string.effect_tab_str) -> showEffectTab()
             }
@@ -107,13 +109,20 @@ class BlockControlDialog(context: Context) : Dialog(context)
     // 시크바를 놓았을 때
     override fun onStopTrackingTouch(seekBar: SeekBar?) {
         seekBar?.let{
+            Log.d("BlockControlDialog", "BlockControlDialog.onStopTrackingTouch(layerId: $layerId, blockId: $blockId, voluemax: ${it.max}, volume: ${it.progress})")
             blockControlListener?.onVolumeChanged(it.progress, it.max, layerId, blockId)
         }
     }
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        effect = effectors[position]
-        blockControlListener?.onEffectChanged(effect, layerId, blockId)
+        val temp = effectors[position]
+        if(temp == EffectorPresets.NONE && effect == EffectorPresets.NONE) {
+            Log.d("BlockControlDialog", "BlockControlDialog.onItemClick(기존 이펙트가 NONE 이어서 NONE 처리를 받지 않음)")
+        } else {
+            effect = effectors[position]
+            blockControlListener?.onEffectChanged(effect, layerId, blockId)
+        }
+        Log.d("BlockControlDialog", "BlockControlDialog.onItemClick(layerId: $layerId, blockId: $blockId, preEffect: $effect, nextEffect: $temp)")
     }
 
     /* 블록 컨트롤 다이얼로그 콜백 */

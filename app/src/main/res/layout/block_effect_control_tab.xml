@@ -9,5 +9,7 @@
             android:id="@+id/block_effect_listview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="30dp" />
+            android:layout_margin="30dp"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="10dp"/>
 </LinearLayout>
