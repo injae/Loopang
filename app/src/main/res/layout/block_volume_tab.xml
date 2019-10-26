@@ -5,13 +5,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <SeekBar
+    <com.treasure.loopang.ui.view.VerticalSeekBar
             android:id="@+id/block_volume_seekbar"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="22dp"
-            android:layout_marginBottom="22dp"
-            android:rotation="-90"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:progressDrawable="@drawable/block_volume_seekbar"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

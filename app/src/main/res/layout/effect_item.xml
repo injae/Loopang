@@ -1,19 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="90dp"
-        android:layout_height="90dp"
-        android:id="@+id/block_effect_item"
-        android:background="@drawable/block_effect_item_background">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <TextView
-            android:id="@+id/effect_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            android:textAlignment="center"
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/block_effect_item"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:background="@drawable/block_effect_item_background"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+                android:id="@+id/effect_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textAlignment="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

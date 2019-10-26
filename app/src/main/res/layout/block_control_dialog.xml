@@ -26,24 +26,24 @@
     </com.google.android.material.tabs.TabLayout>
 
     <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/block_control_tab">
+
         <include
-            android:id="@+id/volume_tab"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            layout="@layout/block_volume_tab"
-            />
+                android:id="@+id/volume_tab"
+                layout="@layout/block_volume_tab"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
         <include
-            android:id="@+id/effect_tab"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone"
-            layout="@layout/block_effect_control_tab"
-            />
+                android:id="@+id/effect_tab"
+                layout="@layout/block_effect_control_tab"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
     </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

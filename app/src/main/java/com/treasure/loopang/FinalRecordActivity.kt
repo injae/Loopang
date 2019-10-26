@@ -105,7 +105,7 @@ class FinalRecordActivity : AppCompatActivity() {
         val size = Point()
         display.getSize(size)
         val window = blockControlDialog.window
-        window?.setLayout((size.x * 0.8).toInt(), size.y)
+        window?.setLayout((size.x * 0.25).toInt(), size.y)
 
         recordButton!!.setOnClickListener {
             val btn = it as ToggleButton
@@ -114,16 +114,15 @@ class FinalRecordActivity : AppCompatActivity() {
                 btn.isChecked = !btn.isChecked
             }
             if (btn.isChecked) {
+                recordFlag = true
                 muteButtonList.forEachIndexed { index, toggle ->
                     if (toggle.isChecked){
-                        recordFlag = true
                         blockLayerViewList[index].addBlock(start = recordCurrentPosition.ms, duration = 0)
                         blockLayerViewList[index].expandBlock()
-                    } else {
-                        recordFlag = false
                     }
                 }
             } else {
+                recordFlag = false
                 stopBlock()
                 refreshView()
             }
@@ -265,12 +264,7 @@ class FinalRecordActivity : AppCompatActivity() {
         // todo: 여기에 블록들을 가시화하는 코드를 작성.
         blockLayerViewList[0].addBlock(0, 1000,1000)
         blockLayerViewList[2].addBlock(0, 1500,2000)
-        blockLayerViewList[3].addBlock(0, 4000, 1200, object: BlockView.BlockControlListener{
-            override fun onClickListener(layerId: Int, blockId: Int) {
-                toast("lid: $layerId, bid: $blockId")
-                showBlockControlDialog(layerId, blockId)
-            }
-        })
+        blockLayerViewList[3].addBlock(0, 4000, 1200, BCListener())
 
         Log.d("FRA, 타임라인컨트롤", "refreshView()")
     }
@@ -341,13 +335,32 @@ class FinalRecordActivity : AppCompatActivity() {
 
     inner class BCDListener : BlockControlDialog.BlockControlListener {
         override fun onVolumeChanged(progress: Int, max: Int, layerId: Int, blockId: Int) {
-            Log.d("FRA, BlockControl", "BCDListener.onVolumeChanged(progress: $progress, max: $max, layerId: $layerId, blockId: $blockId)")
-            // TODO("블록 볼륨 바꾸기") //To change body of created functions use File | Settings | File Templates.
+            if(recordFlag || playFlag) {
+                Log.d("FRA, BlockControl", "BCDListener.onVolumeChanged(재생 혹은 녹음 중이어서 이벤트를 받지 않음.)")
+            } else {
+                Log.d("FRA, BlockControl", "BCDListener.onVolumeChanged(progress: $progress, max: $max, layerId: $layerId, blockId: $blockId)")
+                // TODO("블록 볼륨 바꾸기") //To change body of created functions use File | Settings | File Templates.
+            }
         }
 
         override fun onEffectChanged(effect: EffectorPresets, layerId: Int, blockId: Int) {
-            Log.d("FRA, BlockControl", "BCDListener.onEffectChanged(effect: $effect.name, layerId: $layerId, blockId: $blockId)")
-            // TODO("이펙트 바꾸기") //To change body of created functions use File | Settings | File Templates.
+            if(recordFlag || playFlag) {
+                Log.d("FRA, BlockControl", "BCDListener.onEffectChanged(재생 혹은 녹음 중이어서 이벤트를 받지 않음.)")
+            } else {
+                Log.d("FRA, BlockControl", "BCDListener.onEffectChanged(effect: $effect.name, layerId: $layerId, blockId: $blockId)")
+                // TODO("이펙트 바꾸기") //To change body of created functions use File | Settings | File Templates.
+            }
+        }
+    }
+
+    inner class BCListener: BlockView.BlockControlListener {
+        override fun onClickListener(layerId: Int, blockId: Int) {
+            if (recordFlag || playFlag) {
+                Log.d("FRA, BlockControl", "BCListener.onClickListener(블록이 재생중 혹은 녹음 중이어서 이벤트를 받지 않습니다.)")
+            } else {
+                showBlockControlDialog(layerId, blockId)
+                Log.d("FRA, BlockControl", "BCListener.onClickListener(layerId: $layerId, blockId: $blockId)")
+            }
         }
     }
 }

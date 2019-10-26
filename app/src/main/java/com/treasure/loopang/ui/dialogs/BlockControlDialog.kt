@@ -132,6 +132,7 @@ class BlockControlDialog(context: Context, listener: BlockControlListener) : Dia
         } else {
             effect = effectors[position]
             blockControlListener?.onEffectChanged(effect, layerId, blockId)
+            (parent?.adapter as ListAdapter).notifyDataSetChanged()
         }
         Log.d("BlockControlDialog", "BlockControlDialog.onItemClick(layerId: $layerId, blockId: $blockId, preEffect: $effect, nextEffect: $temp)")
     }
@@ -156,8 +157,8 @@ class BlockControlDialog(context: Context, listener: BlockControlListener) : Dia
             view!!.effect_label.text = effect?.name ?: "effect"
 
             if (effect == this@BlockControlDialog.effect)
-                view.background= (context.resources.getDrawable(R.drawable.block_effect_item_background_s))
-            else view.background= (context.resources.getDrawable(R.drawable.block_effect_item_background))
+                view.block_effect_item.background= (context.resources.getDrawable(R.drawable.block_effect_item_background_s))
+            else view.block_effect_item.background= (context.resources.getDrawable(R.drawable.block_effect_item_background))
 
             return view
         }
