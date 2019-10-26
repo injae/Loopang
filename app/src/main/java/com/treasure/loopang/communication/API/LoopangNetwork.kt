@@ -27,7 +27,7 @@ interface LoopangNetwork {
 
     @FormUrlEncoded
     @POST("/feed")
-    fun receiveFeed(): Call<FeedResult>
+    fun receiveFeed(@Field("token") token: String): Call<FeedResult>
 
     @FormUrlEncoded
     @POST("/search-music")
@@ -46,4 +46,10 @@ interface LoopangNetwork {
     @POST("/download")
     fun receiveFile(@Field("token") accessToken: String,
                     @Field("name") fileName: String): Call<ResponseBody>
+
+    @FormUrlEncoded
+    @POST("/request-like")
+    fun requestLike(@Field("token") token: String,
+                    @Field("music_id") music_id: String,
+                    @Field("like") like: Boolean): Call<Result>
 }

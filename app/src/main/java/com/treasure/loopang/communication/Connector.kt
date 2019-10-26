@@ -13,6 +13,8 @@ import java.security.cert.X509Certificate
 import javax.net.ssl.*
 import com.treasure.loopang.communication.ResultManager.accessToken
 import okhttp3.*
+import retrofit2.Callback
+import retrofit2.Response
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.io.FileOutputStream
 import java.lang.Exception
@@ -28,7 +30,7 @@ class Connector(private val DNS: String = "https://ec2-3-15-172-177.us-east-2.co
                 private var service: LoopangNetwork = retrofit.create(LoopangNetwork::class.java),
                 private var file: ByteArray? = null, var feedResult: FeedResult? = null, var searchResult: SearchResult? = null) {
     // 없는거는 알아서 무시되는거 같으니깐 Result 클래스에 멤버 싹다 때려박고 그냥 그거 하나로 다하면 call 갯수 줄일수 있을듯
-    fun process(case: Int, user: User? = null, fileName: String? = null, searchData: String? = null): Result{
+    fun process(case: Int, user: User? = null, fileName: String? = null, searchData: String? = null, musicID: String? = null): Result{
         var call: Call<Result>? = null
         var fileCall: Call<ResponseBody>? = null
         var infoCall: Call<ForUserInfo>? = null
@@ -42,11 +44,21 @@ class Connector(private val DNS: String = "https://ec2-3-15-172-177.us-east-2.co
             ResultManager.FILE_UPLOAD -> { call = service.sendFile(accessToken, fileName!!, getMultiPartBody(fileName)) }
             ResultManager.FILE_DOWNLOAD -> { fileCall = service.receiveFile(accessToken, fileName!!) }
             ResultManager.INFO_REQUEST -> { infoCall = service.receiveUserInfo(accessToken) }
-            ResultManager.FEED_REQUEST -> { feedCall = service.receiveFeed() }
-            ResultManager.SEARCH_REQUEST -> { searchCall = service.receiveSearch(searchData!!) }}
+            ResultManager.FEED_REQUEST -> { feedCall = service.receiveFeed(accessToken) }
+            ResultManager.SEARCH_REQUEST -> { searchCall = service.receiveSearch(searchData!!) }
+            ResultManager.REQUEST_LIKE_UP -> { call = service.requestLike(accessToken, musicID!!, true) }
+            ResultManager.REQUEST_LIKE_DOWN -> { call = service.requestLike(accessToken, musicID!!, false) }}
         try {
             if(call != null) { // 파일다운로드, 유저인포 요청이 아닐경우
-                result = call.execute().body()!!
+                if(case != ResultManager.REQUEST_LIKE_UP && case != ResultManager.REQUEST_LIKE_DOWN) {
+                    result = call.execute().body()!!
+                }
+                else {  // 좋아요 요청일때는 비동기로 처리
+                    call.enqueue(object : Callback<Result>{
+                        override fun onResponse(call: Call<Result>, response: Response<Result>) { }
+                        override fun onFailure(call: Call<Result>, t: Throwable) { }
+                    })
+                }
             }
             else if(fileCall != null) { // 파일다운로드 일경우
                 file = fileCall.execute().body()?.bytes()
