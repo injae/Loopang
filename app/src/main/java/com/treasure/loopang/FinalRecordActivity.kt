@@ -15,12 +15,14 @@ import android.widget.*
 import androidx.constraintlayout.widget.ConstraintSet
 import com.treasure.loopang.audio.EffectorPresets
 import com.treasure.loopang.ui.dialogs.BlockControlDialog
+import com.treasure.loopang.ui.dialogs.VolumeControlDialog
 import com.treasure.loopang.ui.dpToPx
 import com.treasure.loopang.ui.toast
 import com.treasure.loopang.ui.util.TimeWrapper
 import com.treasure.loopang.ui.util.WidthPerTime
 import com.treasure.loopang.ui.view.BlockLayerView
 import com.treasure.loopang.ui.view.BlockView
+import com.treasure.loopang.ui.view.VerticalTextButton
 import kotlinx.android.synthetic.main.activity_final_record.*
 
 class FinalRecordActivity : AppCompatActivity() {
@@ -66,7 +68,7 @@ class FinalRecordActivity : AppCompatActivity() {
     var recordStopButton: ImageButton? = null
     var overwriteButton: ToggleButton? = null
     var metronomeButton: ToggleButton? = null
-    var openVCDButton: ImageButton? = null
+    var openVCDButton: VerticalTextButton? = null
 
     //control panel
     var timeStampTxt: TextView? = null
@@ -80,7 +82,7 @@ class FinalRecordActivity : AppCompatActivity() {
 
     //dialog
     private val blockControlDialog: BlockControlDialog by lazy { BlockControlDialog(this, BCDListener()) }
-    // val volumeControlDialog: VolumeControlDialog =  VolumeControlDialog()
+    private val volumeControlDialog: VolumeControlDialog by lazy { VolumeControlDialog(this, VCDListener()) }
     // val blockControlDialog: BlockControlDialog = BlockControlDialog()
     // val saveDialog: FinalSaveDialog = FinalSaveDialog()
 
@@ -104,8 +106,11 @@ class FinalRecordActivity : AppCompatActivity() {
         val display = windowManager.defaultDisplay
         val size = Point()
         display.getSize(size)
-        val window = blockControlDialog.window
-        window?.setLayout((size.x * 0.25).toInt(), size.y)
+        val blockControlWindow = blockControlDialog.window
+        val volumeControlWindow = volumeControlDialog.window
+
+        blockControlWindow?.setLayout((size.x * 0.25).toInt(), size.y)
+        volumeControlWindow?.setLayout((size.x * 0.25).toInt(), size.y)
 
         recordButton!!.setOnClickListener {
             val btn = it as ToggleButton
@@ -189,6 +194,7 @@ class FinalRecordActivity : AppCompatActivity() {
                 Log.d("FRA, 녹음중 혹은 재생중", "녹음 혹은 재생 중 toEnd 버튼 조작을 막습니다.")
             }
         }
+        openVCDButton!!.setOnClickListener { volumeControlDialog.show() }
     }
 
     private fun initAfterInflation(){
@@ -258,6 +264,7 @@ class FinalRecordActivity : AppCompatActivity() {
         muteButtonLinearLayout = mute_button_linear
         layerListLinear = layer_list_linear
         recordSeekBarLine = record_progress_line
+        openVCDButton = btn_open_volume_cotrol
     }
 
     private fun refreshView(){
@@ -299,6 +306,12 @@ class FinalRecordActivity : AppCompatActivity() {
         blockControlDialog.show(layerId, blockId)
         Log.d("FRA, 블록컨트롤", "showBlockControlDialog(layerId: $layerId, blockId: $blockId)")
     }
+
+    private fun showRecordControlDialog() {
+        blockControlDialog.show()
+        Log.d("FRA, 볼류컨트롤", "showRecordControlDialog")
+    }
+
 
     //open view
     private fun openVolumeControlDrawer() {}
@@ -362,6 +375,19 @@ class FinalRecordActivity : AppCompatActivity() {
                 Log.d("FRA, BlockControl", "BCListener.onClickListener(layerId: $layerId, blockId: $blockId)")
             }
         }
+    }
+
+    inner class VCDListener: VolumeControlDialog.VolumeControlDialogListener {
+        override fun onRecordVolumeChanged(progress: Int, max: Int) {
+            // TODO("볼륨 컨트롤 추가") //To change body of created functions use File | Settings | File Templates.
+            Log.d("FRA, VolumeControl", "VCDListener.레코드볼륨(progress: $progress, max: $max)")
+        }
+
+        override fun onLoopVolumeChanged(progress: Int, max: Int) {
+            // TODO("볼륨 컨트롤 추가") //To change body of created functions use File | Settings | File Templates.
+            Log.d("FRA, VolumeControl", "VCDListener.루프볼륨(progress: $progress, max: $max)")
+        }
+
     }
 }
 
