@@ -5,6 +5,38 @@ import com.treasure.loopang.ui.interfaces.IFinalRecorder
 class FinalRecorder : IFinalRecorder {
     var mixer = EditableMixer()
 
+    override fun getBlockList(): List<List<SoundRange>> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onPlayStart() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onPlayStop() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onRecordStart() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onRecordStop() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun setEffectToBlock(layerId: Int, blockId: Int, effect: EffectorPresets) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun getBlockList(layerId: Int): List<SoundRange> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun insertSounds(soundList: List<Sound>) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun getRecordDuration(): Int {
         return mixer.duration()
     }
@@ -48,22 +80,6 @@ class FinalRecorder : IFinalRecorder {
         return true
     }
 
-    override fun onPlayStart(recordPosition: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onPlayStop(recordPosition: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onRecrodStart(recordPosition: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onRecordStop(recordPosition: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     override fun isRecording(): Boolean {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -84,10 +100,6 @@ class FinalRecorder : IFinalRecorder {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun setEffectToBlock(layerId: Int, blockId: Int, effect: Any?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     override fun setVolumeToBlock(layerId: Int, blockId: Int, volume: Int) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -97,14 +109,6 @@ class FinalRecorder : IFinalRecorder {
     }
 
     override fun setVolumeToLoop(volume: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun getEffectList(): List<Any> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun getBlockList(): List<List<Any>> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
