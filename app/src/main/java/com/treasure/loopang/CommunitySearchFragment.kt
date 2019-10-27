@@ -66,7 +66,7 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
             }
         })
 
-        communitySearchBtn.setOnClickListener {Log.d("aaaaaaaaaaaaaaaabb","editReult : " + editResult) }//버튼 클릭으로 검색 해야지 결과가 나옴
+        communitySearchBtn.setOnClickListener {Log.d("aaaaaaaaaaaaaaaabb","editReult : " + editResult) }
         xbutton.setOnClickListener { communitySearchEditText.setText("") }
 
         SearchTagBtn.setOnClickListener {
@@ -78,7 +78,7 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
             CommunitySearchResultTagView.visibility = View.VISIBLE
             CommunitySearchResultUserView.visibility= View.GONE
         }
-        
+
         SearchUserBtn.setOnClickListener {
             SearchUserBtn.setTextColor(Color.argb(200, 115, 115, 115))
             SearchUserBtn.setBackgroundColor(Color.WHITE)

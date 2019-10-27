@@ -6,7 +6,7 @@ import kotlinx.coroutines.runBlocking
 import java.util.concurrent.atomic.AtomicBoolean
 
 
-class SoundRange(var sound: Sound, var cycle: Int = 0, var start: Int = 0, var end: Int = 0, var repeat: Int = 0) {
+class SoundRange( var sound: Sound, var cycle: Int = 0, var start: Int = 0, var end: Int = 0, var repeat: Int = 0) {
     var soundLength = sound.data.size
     fun expand(size: Int) {
         end += size
@@ -14,6 +14,10 @@ class SoundRange(var sound: Sound, var cycle: Int = 0, var start: Int = 0, var e
             end -= soundLength
             repeat += 1
         }
+    }
+
+    init {
+        if(sound.data.isEmpty()) sound.data = ShortArray(sound.info.sampleRate, {0}).toMutableList()
     }
 
     fun remove(start: Int) {
@@ -44,6 +48,7 @@ class SoundRange(var sound: Sound, var cycle: Int = 0, var start: Int = 0, var e
     }
 }
 
+
 class EditableSound {
     var isMute: Boolean = false
     var effectorIndex: Int
@@ -68,19 +73,21 @@ class EditableSound {
         }
         sound.addTimeEffector {
             playedRange.expand(it.size)
-            var compare =  playedRange.endIndex() - blocks[playedIndex].startIndex()
-            if(compare > 0) {
-                var zeroRange = it.size - compare
-                for((index, data) in it.withIndex()) { if(index < zeroRange) it[index] = 0 }
-            }
-            else {
-                compare = playedRange.endIndex() - blocks[playedIndex].endIndex()
+            if(!blocks.isEmpty()) {
+                var compare =  playedRange.endIndex() - blocks[playedIndex].startIndex()
                 if(compare > 0) {
-                    playedIndex++
                     var zeroRange = it.size - compare
-                    for((index, data) in it.withIndex()) { if(index >= zeroRange) it[index] = 0 }
+                    for((index, data) in it.withIndex()) { if(index < zeroRange) it[index] = 0 }
                 }
-                else if(compare == 0) playedIndex++
+                else {
+                    compare = playedRange.endIndex() - blocks[playedIndex].endIndex()
+                    if(compare > 0) {
+                        playedIndex++
+                        var zeroRange = it.size - compare
+                        for((index, data) in it.withIndex()) { if(index >= zeroRange) it[index] = 0 }
+                    }
+                    else if(compare == 0) playedIndex++
+                }
             }
             it
         }
@@ -187,7 +194,7 @@ class EditableMixer(var sounds: MutableList<EditableSound> = mutableListOf()) : 
         var duration = 0
         sounds.filter{ it.blocks.isNotEmpty() }
               .map{ it.blocks.last().endDuration() }
-              .forEach { if(duration < it)  duration = it }
+              .forEach { if(duration < it) duration = it }
         return duration
     }
 
@@ -204,4 +211,8 @@ class EditableMixer(var sounds: MutableList<EditableSound> = mutableListOf()) : 
     fun save(path: String) {
        Sound(mixSounds()).save(path)
     }
+}
+
+class VoiceMixer(var sounds: MutableList<EditableSound> = mutableListOf()) : SoundFlow<EditableMixer>() {
+
 }

@@ -133,37 +133,6 @@ class Recording : AppCompatActivity()
             startActivity(intent)
         }
     }
-/*
-    fun checkPresentFragAndReplaceFrag(fragBtn : ImageButton){
-        for (fragment in supportFragmentManager.fragments) {
-            if (fragment.isVisible) {
-                when(fragBtn){
-                    btn_setMetronome -> if( fragment is setEffector || fragment is setting){
-                            getSupportFragmentManager()
-                                .beginTransaction()
-                                .setCustomAnimations( R.anim.fade_in, 0, 0, R.anim.fade_out)
-                                .replace(R.id.fragContainer, setMetronomeFrag)
-                                .commit()
-                        setEffectorFrag.adapter.positionMusicStop()
-                        }
-                    btn_setEffector -> if(fragment is setMetronome || fragment is setting) {
-                    getSupportFragmentManager()
-                        .beginTransaction()
-                        .setCustomAnimations(R.anim.fade_in, 0, 0, R.anim.fade_out)
-                        .replace(R.id.fragContainer, setEffectorFrag )
-                        .commit()}
-                    btn_setting -> if(fragment is setMetronome || fragment is setEffector) {
-                        getSupportFragmentManager()
-                            .beginTransaction()
-                            .setCustomAnimations( R.anim.fade_in, 0, 0, R.anim.fade_out)
-                            .replace(R.id.fragContainer, setting)
-                            .commit()
-                       setEffectorFrag.adapter.positionMusicStop()
-                    }
-                }
-            }
-        }
-    }*/
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         if( hasFocus ) {
