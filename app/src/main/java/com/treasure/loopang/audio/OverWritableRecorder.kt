@@ -49,9 +49,11 @@ class OverWritableRecorder (var format: IFormat = Pcm16(),
 
         fun seek(ms: Int) {
              var index = ms*info.tenMsSampleRate
-             if(index >= data.size)
-             data = data.subList(0, index)
-
+             if(index >= data.size) {
+                 var zeroBuf = ShortArray(index -data.size, { 0 })
+                 data.addAll(zeroBuf.toMutableList())
+             }
+            data = data.subList(0, index)
         }
 
 
