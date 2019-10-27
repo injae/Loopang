@@ -4,9 +4,12 @@ import com.treasure.loopang.ui.interfaces.IFinalRecorder
 
 class FinalRecorder : IFinalRecorder {
     var mixer = EditableMixer()
+    var recorder = OverWritableRecorder()
 
     override fun getBlockList(): List<List<SoundRange>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        var buf = mixer.sounds.map{ it.blocks }.toMutableList()
+        buf.add(recorder.blocks)
+        return buf
     }
 
     override fun onPlayStart() {
@@ -30,11 +33,11 @@ class FinalRecorder : IFinalRecorder {
     }
 
     override fun getBlockList(layerId: Int): List<SoundRange> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return if(layerId == 0) recorder.blocks else mixer.sounds[layerId].blocks
     }
 
     override fun insertSounds(soundList: List<Sound>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        soundList.forEach { mixer.addSound(it) }
     }
 
     override fun getRecordDuration(): Int {
@@ -53,11 +56,20 @@ class FinalRecorder : IFinalRecorder {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun seekToStart() { mixer.seek(0) }
+    override fun seekToStart() {
+        mixer.seek(0)
+        recorder.seek(0)
+    }
 
-    override fun seekToEnd() { mixer.seek(mixer.duration()) }
+    override fun seekToEnd() {
+        mixer.seek(mixer.duration())
+        recorder.seek(mixer.duration())
+    }
 
-    override fun seekTo(ms: Int) { mixer.seek(ms) }
+    override fun seekTo(ms: Int) {
+        mixer.seek(ms)
+        recorder.seek(ms)
+    }
 
     override fun playStart() {
         mixer.start()
@@ -69,19 +81,24 @@ class FinalRecorder : IFinalRecorder {
 
     override fun recordStart() {
         mixer.startBlock()
+        recorder.start()
     }
 
     override fun recordStop() {
         mixer.endBlock()
+        recorder.stop()
     }
 
     override fun export(title: String, soundFormat: String): Boolean {
         mixer.save(title+soundFormat)
+        var voice = EditableSound(recorder.getSound())
+        voice.blocks.add(SoundRange(voice.sound, 0, voice.sound.data.size))
+        mixer.sounds.add(voice)
         return true
     }
 
     override fun isRecording(): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return recorder.isRecording.get()
     }
 
     override fun isPlaying(): Boolean {
@@ -89,7 +106,7 @@ class FinalRecorder : IFinalRecorder {
     }
 
     override fun setMute(layerId: Int, flag: Boolean) {
-        mixer.setMute(layerId,flag)
+        if(layerId == 0) recorder.isMute.set(flag) else mixer.setMute(layerId,flag)
     }
 
     override fun setOverwrite(flag: Boolean) {
