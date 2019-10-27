@@ -24,6 +24,7 @@ import com.treasure.loopang.communication.ASyncer
 import com.treasure.loopang.communication.UserManager
 import com.treasure.loopang.ui.fragments.RecordFragment
 import com.treasure.loopang.ui.fragments.LoopManageFragment
+import com.treasure.loopang.ui.recorderConnector
 
 import kotlin.system.exitProcess
 
@@ -119,6 +120,18 @@ class Recording : AppCompatActivity()
         pager.adapter = pagerAdapter
         pager.addOnPageChangeListener(PageChangeListener())
         pager.setOnTouchListener { _, _ -> false}
+
+        btn_open_final_storage.setOnClickListener {
+            Log.d("aaaaaaaaaaaaa","aaaaaaaaaaaaaaaa")
+            Log.d("Recording, FRA", "final recording button click")
+            val fragment = (pagerAdapter.getItem(0) as RecordFragment)
+            val sounds = fragment.loopStation.getMixer().sounds.map { it._sound }
+            val intent = Intent(this, FinalRecordActivity::class.java)
+
+            recorderConnector.soundList = sounds
+            recorderConnector.labelList = fragment.loopStation.getLayerLabels().toList()
+            startActivity(intent)
+        }
     }
 /*
     fun checkPresentFragAndReplaceFrag(fragBtn : ImageButton){

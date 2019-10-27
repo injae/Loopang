@@ -13,10 +13,14 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintSet
+import com.treasure.loopang.Database.DatabaseManager
 import com.treasure.loopang.audio.EffectorPresets
+import com.treasure.loopang.audio.FinalRecorder
+import com.treasure.loopang.communication.UserManager
 import com.treasure.loopang.ui.dialogs.BlockControlDialog
 import com.treasure.loopang.ui.dialogs.VolumeControlDialog
 import com.treasure.loopang.ui.dpToPx
+import com.treasure.loopang.ui.recorderConnector
 import com.treasure.loopang.ui.toast
 import com.treasure.loopang.ui.util.TimeWrapper
 import com.treasure.loopang.ui.util.WidthPerTime
@@ -24,9 +28,14 @@ import com.treasure.loopang.ui.view.BlockLayerView
 import com.treasure.loopang.ui.view.BlockView
 import com.treasure.loopang.ui.view.VerticalTextButton
 import kotlinx.android.synthetic.main.activity_final_record.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlin.system.exitProcess
 
 class FinalRecordActivity : AppCompatActivity() {
-    private val wpt: WidthPerTime = WidthPerTime(width=5, ms=100)
+    private var backPressedTime: Long = 0
+
+    private val wpt: WidthPerTime = WidthPerTime(width=5, ms=10)
     val recordDuration: TimeWrapper = TimeWrapper()
     val recordCurrentPosition: TimeWrapper = TimeWrapper()
     val loopDuration: TimeWrapper = TimeWrapper()
@@ -45,6 +54,7 @@ class FinalRecordActivity : AppCompatActivity() {
 
     var loopCanvas: Canvas? = null
     var loopDrawable: Drawable? = null
+
     private val layerCanvasList: ArrayList<Canvas?> = arrayListOf()
     private val blockColorList: ArrayList<Int> by lazy {
         arrayListOf(
@@ -86,13 +96,25 @@ class FinalRecordActivity : AppCompatActivity() {
     // val blockControlDialog: BlockControlDialog = BlockControlDialog()
     // val saveDialog: FinalSaveDialog = FinalSaveDialog()
 
+    private val finalRecorder : FinalRecorder = FinalRecorder()
     private var expandFlag = false
+    private var num = 0
+
+    companion object {
+        private const val FINISH_INTERVAL_TIME = 2000
+    }
 
     //activity event
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         setContentView(R.layout.activity_final_record)
+
+        Log.d("FRA, recorderConnector","recorderConnector.soundList[size: ${recorderConnector.soundList!!.size}]")
+        recorderConnector.soundList!!.forEach {
+            finalRecorder.mixer.addSound(it)
+            num += 1
+        }
 
         bindView()
         initModule()
@@ -125,17 +147,17 @@ class FinalRecordActivity : AppCompatActivity() {
                         blockLayerViewList[index].addBlock(start = recordCurrentPosition.ms, duration = 0)
                         blockLayerViewList[index].expandBlock()
                     }
+                    finalRecorder.recordStart()
                 }
             } else {
                 recordFlag = false
                 stopBlock()
+                finalRecorder.recordStop()
+                recordDuration.ms = finalRecorder.getRecordDuration()
                 refreshView()
             }
         }
         recordStopButton!!.setOnClickListener {}
-
-        toStartButton!!.setOnClickListener { recordSeekBarButton!!.progress = 0 }
-        toEndButton!!.setOnClickListener { recordSeekBarButton!!.progress = wpt.getWidth(500) * recordDuration.hs}
         playButton!!.setOnClickListener {
             if(recordFlag) {
                 Log.d("FRA, 녹음중", "녹음 중 재생 버튼 조작을 막습니다.")
@@ -144,10 +166,11 @@ class FinalRecordActivity : AppCompatActivity() {
                 if ((it as ToggleButton).isChecked) {
                     playFlag = true
                     //todo: 재생시 동작
-                    clear()
+                    finalRecorder.playStart()
                 } else {
                     playFlag = false
                     //todo: 재생 정지시 동작
+                    finalRecorder.playStop()
                 }
             }
         }
@@ -175,12 +198,18 @@ class FinalRecordActivity : AppCompatActivity() {
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                seekBar?.let{
+                    if(it.progress > recordDuration.ms) {
+                        it.progress = recordDuration.ms
+                    }
+                    finalRecorder.seekTo(it.progress)
+                }
             }
         })
         toStartButton!!.setOnClickListener{
             if(!recordFlag && !playFlag){
                 recordSeekBarButton!!.progress = 0
+                finalRecorder.seekToStart()
                 Log.d("FRA, 녹음중 혹은 재생중", "toStart 버튼 클릭")
             } else {
                 Log.d("FRA, 녹음중 혹은 재생중", "녹음 혹은 재생 중 toStart 버튼 조작을 막습니다.")
@@ -189,6 +218,7 @@ class FinalRecordActivity : AppCompatActivity() {
         toEndButton!!.setOnClickListener{
             if(!recordFlag && !playFlag){
                 recordSeekBarButton!!.progress = recordDuration.ms
+                finalRecorder.seekToEnd()
                 Log.d("FRA, 녹음중 혹은 재생중", "toEnd 버튼 클릭")
             } else {
                 Log.d("FRA, 녹음중 혹은 재생중", "녹음 혹은 재생 중 toEnd 버튼 조작을 막습니다.")
@@ -213,7 +243,7 @@ class FinalRecordActivity : AppCompatActivity() {
                 layerListLinear?.layoutParams = param
 
                 //레이어뷰, 뮤트버튼 리스트에 초기화.
-                initLayerList(5)
+                initLayerList(num)
 
                 //전체 시크바 MAX 초기화.
                 recordSeekBarButton?.max = (basicWidth / wpt.width) * wpt.ms
@@ -224,12 +254,18 @@ class FinalRecordActivity : AppCompatActivity() {
     private fun initLayerList(num: Int) {
         for(x in 0 until num){
             val blockLayerView = BlockLayerView(this@FinalRecordActivity)
-            val buttonText = "button$x"
+            val buttonText = recorderConnector.labelList!![x]
             val muteButton = MuteButtonBuilder(this)
                 .basicHeight(basicHeight)
                 .label(buttonText)
-                .onMuteEvent { blockLayerViewList[x].mute(true, recordFlag, recordCurrentPosition.ms) }
-                .onUnMuteEvnet { blockLayerViewList[x].mute(false, recordFlag, recordCurrentPosition.ms) }
+                .onMuteEvent {
+                    blockLayerViewList[x].mute(true, recordFlag, recordCurrentPosition.ms)
+                    finalRecorder.setMute(x, true)
+                }
+                .onUnMuteEvnet {
+                    blockLayerViewList[x].mute(false, recordFlag, recordCurrentPosition.ms)
+                    finalRecorder.setMute(x, false)
+                }
                 .build()
 
             //blockLayerView 초기화
@@ -269,9 +305,11 @@ class FinalRecordActivity : AppCompatActivity() {
 
     private fun refreshView(){
         // todo: 여기에 블록들을 가시화하는 코드를 작성.
-        blockLayerViewList[0].addBlock(0, 1000,1000)
+        clear()
+
+        /*blockLayerViewList[0].addBlock(0, 1000,1000)
         blockLayerViewList[2].addBlock(0, 1500,2000)
-        blockLayerViewList[3].addBlock(0, 4000, 1200, BCListener())
+        blockLayerViewList[3].addBlock(0, 4000, 1200, BCListener())*/
 
         Log.d("FRA, 타임라인컨트롤", "refreshView()")
     }
@@ -287,6 +325,18 @@ class FinalRecordActivity : AppCompatActivity() {
             it.clear()
         }
         Log.d("FRA, 타임라인컨트롤", "clear()")
+    }
+
+    override fun onBackPressed() {
+        val tempTime = System.currentTimeMillis()
+        val intervalTime = tempTime - backPressedTime
+
+        if (intervalTime in 0..FINISH_INTERVAL_TIME) {
+            finish()
+        } else {
+            backPressedTime = tempTime
+            Toast.makeText(this, "One More pressed, Final Record will be closed", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun expandLayerLinear() {
@@ -310,6 +360,10 @@ class FinalRecordActivity : AppCompatActivity() {
     private fun showRecordControlDialog() {
         blockControlDialog.show()
         Log.d("FRA, 볼류컨트롤", "showRecordControlDialog")
+    }
+
+    private fun getSounds() {
+
     }
 
 
@@ -336,13 +390,23 @@ class FinalRecordActivity : AppCompatActivity() {
     // private fun onRecordVolumeChanged(lp: Int, bp: Int) {}
 
     //update view
-    val updateRunnable: Runnable = Runnable {
-        recordSeekBarButton!!.progress = recordCurrentPosition.ms
-        if (recordFlag){
+    val updateRecordRunnable: Runnable = Runnable {
+        while(recordFlag) {
+            recordCurrentPosition.ms = finalRecorder.getRecordPosition()
+            recordSeekBarButton!!.progress = recordCurrentPosition.ms
             if(recordSeekBarButton!!.progress >= recordSeekBarButton!!.max * 0.8f) {
                 expandRecordSeekMax()
                 expandLayerLinear()
             }
+        }
+    }
+
+    val updatePlayRunnaable: Runnable = Runnable {
+        playFlag = finalRecorder.isPlaying()
+        while(playFlag) {
+            recordCurrentPosition.ms = finalRecorder.getRecordPosition()
+            recordSeekBarButton!!.progress = recordCurrentPosition.ms
+            playFlag = finalRecorder.isPlaying()
         }
     }
 

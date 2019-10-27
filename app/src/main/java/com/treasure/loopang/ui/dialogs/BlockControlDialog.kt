@@ -12,6 +12,7 @@ import android.widget.SeekBar
 import com.google.android.material.tabs.TabLayout
 import com.treasure.loopang.R
 import com.treasure.loopang.audio.EffectorPresets
+import com.treasure.loopang.audio.FinalRecorder
 
 import kotlinx.android.synthetic.main.block_control_dialog.*
 import kotlinx.android.synthetic.main.block_effect_control_tab.*
@@ -47,8 +48,6 @@ class BlockControlDialog(context: Context, listener: BlockControlListener) : Dia
     var effect: EffectorPresets = EffectorPresets.NONE
 
     var blockControlListener : BlockControlListener? = null
-
-
 
     init {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
