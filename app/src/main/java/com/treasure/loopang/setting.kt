@@ -40,7 +40,6 @@ class setting : androidx.fragment.app.Fragment() {
                 val filterText : String = edit.toString()
                 (settingListView.getAdapter() as SettingAdapter).getFilter().filter(filterText)
             }
-
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
         })
@@ -48,12 +47,6 @@ class setting : androidx.fragment.app.Fragment() {
         btn_deleteAll.setOnClickListener{
             editText.setText("")
         }
-
-     //   val itemFragment = settingItemFragment()
-   //     var bundle : Bundle
-
-        //val intent = Intent(context, settingItemActivity::class.java)
-
 
         settingListView.setOnItemClickListener { parent, view, position, id ->
             // get item
@@ -69,8 +62,4 @@ class setting : androidx.fragment.app.Fragment() {
             startActivity(intent1)
         }
     }
-    /*
-    public interface  itemTitleSetListener{
-        fun itemTitleSet(title :String, listItemNum :  Int)
-    }*/
 }

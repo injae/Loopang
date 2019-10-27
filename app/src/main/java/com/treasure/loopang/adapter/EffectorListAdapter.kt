@@ -33,8 +33,6 @@ class EffectorListAdapter : BaseAdapter() {
         val context = parent.context
         val effectorViewHolder : ViewHolder
 
-
-        // "listview_item" Layout을 inflate하여 convertView 참조 획득.
         if (convertView == null) {
             view = LayoutInflater.from(context).inflate(com.treasure.loopang.R.layout.effectorlist, null)
             effectorViewHolder = ViewHolder()
@@ -43,7 +41,7 @@ class EffectorListAdapter : BaseAdapter() {
 
             view.tag = effectorViewHolder
         }else{
-            effectorViewHolder = convertView.tag as ViewHolder //viewHolder = convertView!!.getTag() as ViewHolder
+            effectorViewHolder = convertView.tag as ViewHolder
             view = convertView
             //viewHolder.playbackBtnView?.setImageDrawable(null)
         }
@@ -80,7 +78,6 @@ class EffectorListAdapter : BaseAdapter() {
             notifyDataSetChanged()
         }
         view.findViewById<View>(com.treasure.loopang.R.id.btn_add).setOnClickListener{
-            //recording 에 저장된 음원 추가되게 하는 기능 여기다 추가
         }
         return view
     }

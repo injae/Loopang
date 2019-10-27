@@ -185,9 +185,9 @@ class EditableMixer(var sounds: MutableList<EditableSound> = mutableListOf()) : 
 
     fun duration(): Int {
         var duration = 0
-        sounds.map{ it.blocks.last().endDuration() }.forEach {
-            if(duration < it)  duration = it
-        }
+        sounds.filter{ it.blocks.isNotEmpty() }
+              .map{ it.blocks.last().endDuration() }
+              .forEach { if(duration < it)  duration = it }
         return duration
     }
 

@@ -45,7 +45,7 @@ class Connector(private val DNS: String = "https://ec2-3-15-172-177.us-east-2.co
             ResultManager.FILE_DOWNLOAD -> { fileCall = service.receiveFile(accessToken, fileName!!) }
             ResultManager.INFO_REQUEST -> { infoCall = service.receiveUserInfo(accessToken) }
             ResultManager.FEED_REQUEST -> { feedCall = service.receiveFeed(accessToken) }
-            ResultManager.SEARCH_REQUEST -> { searchCall = service.receiveSearch(searchData!!) }
+            ResultManager.SEARCH_REQUEST -> { searchCall = service.receiveSearch(accessToken, searchData!!) }
             ResultManager.REQUEST_LIKE_UP -> { call = service.requestLike(accessToken, musicID!!, true) }
             ResultManager.REQUEST_LIKE_DOWN -> { call = service.requestLike(accessToken, musicID!!, false) }}
         try {
