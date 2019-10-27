@@ -119,10 +119,10 @@ class BlockLayerView(context: Context, attrs: AttributeSet? = null, defStyleAttr
                     val param = currentBlock!!.layoutParams as LayoutParams
                     param.width = blockBasicWidth + value
                     currentBlock!!.layoutParams = param
-                    if(param.width + param.leftMargin > width*0.8f){
+                    /*if(param.width + param.leftMargin > width*0.8f){
                         // expandSize()
                         layerEventListener?.onBlockExpand(this@BlockLayerView, param.width + param.leftMargin)
-                    }
+                    }*/
                 }
                 addListener(blockAnimationListener)
             }

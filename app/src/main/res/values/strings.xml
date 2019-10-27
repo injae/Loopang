@@ -69,6 +69,9 @@
     <string name="volume_tab_str">VOLUME</string>
     <string name="effect_tab_str">EFFECT</string>
     <string name="btn_volume_control_str">Volume Control</string>
+    <string name="title_save">Save</string>
+    <string name="sound_format_type">Sound Format Type</string>
+    <string name="title_music_title">Music Title</string>
 
 
 </resources>

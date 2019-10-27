@@ -13,9 +13,14 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintSet
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.customview.customView
+import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
+import com.afollestad.materialdialogs.list.listItems
 import com.treasure.loopang.Database.DatabaseManager
 import com.treasure.loopang.audio.EffectorPresets
 import com.treasure.loopang.audio.FinalRecorder
+import com.treasure.loopang.audio.LoopStation
 import com.treasure.loopang.communication.UserManager
 import com.treasure.loopang.ui.dialogs.BlockControlDialog
 import com.treasure.loopang.ui.dialogs.VolumeControlDialog
@@ -28,6 +33,13 @@ import com.treasure.loopang.ui.view.BlockLayerView
 import com.treasure.loopang.ui.view.BlockView
 import com.treasure.loopang.ui.view.VerticalTextButton
 import kotlinx.android.synthetic.main.activity_final_record.*
+import kotlinx.android.synthetic.main.dialog_final_save.*
+import kotlinx.android.synthetic.main.dialog_save_loop.*
+import kotlinx.android.synthetic.main.dialog_save_loop.check_drop
+import kotlinx.android.synthetic.main.dialog_save_loop.check_split
+import kotlinx.android.synthetic.main.dialog_save_loop.edit_loop_title
+import kotlinx.android.synthetic.main.dialog_save_loop.spinner
+import kotlinx.android.synthetic.main.dialog_save_new.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlin.system.exitProcess
@@ -111,11 +123,8 @@ class FinalRecordActivity : AppCompatActivity() {
         setContentView(R.layout.activity_final_record)
 
         Log.d("FRA, recorderConnector","recorderConnector.soundList[size: ${recorderConnector.soundList!!.size}]")
-        recorderConnector.soundList!!.forEach {
-            finalRecorder.mixer.addSound(it)
-            num += 1
-        }
 
+        getSounds()
         bindView()
         initModule()
         initView()
@@ -147,17 +156,19 @@ class FinalRecordActivity : AppCompatActivity() {
                         blockLayerViewList[index].addBlock(start = recordCurrentPosition.ms, duration = 0)
                         blockLayerViewList[index].expandBlock()
                     }
-                    finalRecorder.recordStart()
                 }
+                recordSeekBarButton!!.isEnabled = false
+                finalRecorder.recordStart()
             } else {
                 recordFlag = false
                 stopBlock()
                 finalRecorder.recordStop()
                 recordDuration.ms = finalRecorder.getRecordDuration()
+                recordSeekBarButton!!.isEnabled = true
                 refreshView()
             }
         }
-        recordStopButton!!.setOnClickListener {}
+        recordStopButton!!.setOnClickListener { showSaveDialog() }
         playButton!!.setOnClickListener {
             if(recordFlag) {
                 Log.d("FRA, 녹음중", "녹음 중 재생 버튼 조작을 막습니다.")
@@ -362,8 +373,35 @@ class FinalRecordActivity : AppCompatActivity() {
         Log.d("FRA, 볼류컨트롤", "showRecordControlDialog")
     }
 
-    private fun getSounds() {
+    private fun showSaveDialog() {
+        MaterialDialog(this).show {
+            title(R.string.title_save)
+            noAutoDismiss()
+            cornerRadius(16f)
+            cancelable(false)
+            customView(R.layout.dialog_final_save, horizontalPadding = true)
+            positiveButton(R.string.btn_save) {
+                // callback on positive button click
+                val title = this.edit_music_title.text.toString()
+                val soundFormat: String  = this.spinner_sound_format_type.selectedItem.toString()
 
+                finalRecorder.export(title, soundFormat)
+                it.dismiss()
+            }
+            negativeButton(R.string.btn_cancel) {
+                it.dismiss()
+            }
+
+            lifecycleOwner(this@FinalRecordActivity)
+        }
+
+    }
+
+    private fun getSounds() {
+        recorderConnector.soundList!!.forEach {
+            finalRecorder.mixer.addSound(it)
+            num += 1
+        }
     }
 
 
@@ -397,7 +435,9 @@ class FinalRecordActivity : AppCompatActivity() {
             if(recordSeekBarButton!!.progress >= recordSeekBarButton!!.max * 0.8f) {
                 expandRecordSeekMax()
                 expandLayerLinear()
+                Log.d("FRA, 녹음중", "리니어레이아웃과 시크바 맥스를 EXPAND 합니다.")
             }
+            Log.d("FRA, 녹음중", "recordFlag: $recordFlag, recordCurrentPosition.ms : ${recordCurrentPosition.ms}")
         }
     }
 
@@ -407,9 +447,12 @@ class FinalRecordActivity : AppCompatActivity() {
             recordCurrentPosition.ms = finalRecorder.getRecordPosition()
             recordSeekBarButton!!.progress = recordCurrentPosition.ms
             playFlag = finalRecorder.isPlaying()
+            Log.d("FRA, 재생중", "playFlag: $playFlag, recordCurrentPosition.ms : ${recordCurrentPosition.ms}")
         }
     }
 
+
+    //listener
     inner class BCDListener : BlockControlDialog.BlockControlListener {
         override fun onVolumeChanged(progress: Int, max: Int, layerId: Int, blockId: Int) {
             if(recordFlag || playFlag) {
