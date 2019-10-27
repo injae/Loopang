@@ -14,17 +14,17 @@
 
 
         <Button
-                android:id="@+id/SearchSongBtn"
+                android:id="@+id/SearchTagBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Song"
+                android:text="Tag"
                 android:textSize="18dp"
                 android:textColor="#737373"
                 android:background="#FFFFFF"/>
 
         <Button
-                android:id="@+id/SearchArtistBtn"
+                android:id="@+id/SearchUserBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -48,10 +48,10 @@
                 android:layout_height="match_parent"
                 android:dividerHeight="10dp"
                 android:divider=  "@android:color/transparent"
-                android:id="@+id/community_search_result_artist_listview"/>
+                android:id="@+id/community_search_result_tag_listview"/>
 
             <ListView
-                    android:id="@+id/community_search_result_song_listview"
+                    android:id="@+id/community_search_result_user_listview"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_below="@id/searchSort"
