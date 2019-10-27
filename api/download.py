@@ -13,7 +13,7 @@ class Download(Resource):
         try:
             parser = reqparse.RequestParser()
             parser.add_argument('token', type=str)
-            parser.add_argument('name', type=str)
+            parser.add_argument('music_id', type=str)
             args = parser.parse_args()
             logger().debug('[download] file: %s', args['name'])
 
@@ -21,7 +21,7 @@ class Download(Resource):
             if token is None:
                 return err, 200
 
-            file_name = Music.search(args['name'])
+            file_name = Music.query.filter_by(music_id=args['music_id']).first()
             if file_name is not None:
                 if(os.path.exists(file_name.path())):
                     buffer = open(file_name.path(), 'rb')
