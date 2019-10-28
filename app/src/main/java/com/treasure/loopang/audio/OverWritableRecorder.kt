@@ -71,8 +71,8 @@ class OverWritableRecorder (var format: IFormat = Pcm16(),
     fun stop(){
         if(isRecording.get()) {
             isRecording.set(false)
-            info.inputAudio.stop()
             runBlocking { routine.await() }
+            info.inputAudio.stop()
             currentBlock.expand(data.size)
             blocks.add(currentBlock)
             currentBlock = SoundRange(Sound())
