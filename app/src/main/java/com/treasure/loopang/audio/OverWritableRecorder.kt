@@ -24,6 +24,7 @@ class OverWritableRecorder (var format: IFormat = Pcm16(),
     fun start() {
         Stabilizer.stabilizeAudio(info.inputAudio)
         info.inputAudio.startRecording()
+        currentBlock = currentBlock.nextRange()
         callStart(this)
         routine = async {
             isRecording.set(true)
@@ -71,18 +72,15 @@ class OverWritableRecorder (var format: IFormat = Pcm16(),
 
     fun stop(limit:Int? = null){
         if(isRecording.get()) {
-            if(limit != null) {
-                Log.d("AudioTest","limit ${limit}")
-                this.limit = limit
-                while(isRecording.get()) { }
-            }
-            isRecording.set(false)
+            if(limit != null) { this.limit = limit } else { isRecording.set(false) }
             info.inputAudio.stop()
             runBlocking { routine.await() }
-            Log.d("AudioTest", "in data.size ${data.size}")
-            currentBlock.expand(data.size)
+            Log.d("AudioTest", "recorder recorded ${data.size}")
+            currentBlock.expand(data.size - currentBlock.startIndex())
+            Log.d("AudioTest", "recorder current ${currentBlock.startDuration()} ${currentBlock.endDuration()}")
             blocks.add(currentBlock)
-            currentBlock = SoundRange(Sound())
+            Log.d("AudioTest", "recorder blocks:${blocks.size}")
+            this.limit = null
             callStop(this)
         }
     }

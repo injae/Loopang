@@ -58,48 +58,60 @@ class FinalRecorder : IFinalRecorder {
     }
 
     override fun seekToStart() {
+        Log.d("AudioTest", "seekToStart")
         mixer.seek(0)
         recorder.seek(0)
     }
 
     override fun seekToEnd() {
+        Log.d("AudioTest", "seekToEnd")
+        Log.d("AudioTest", "seekTo ${mixer.duration()}")
         mixer.seek(mixer.duration())
         recorder.seek(mixer.duration())
     }
 
     override fun seekTo(ms: Int) {
+        Log.d("AudioTest", "seekTo ${ms}")
         mixer.seek(ms)
         recorder.seek(ms)
     }
 
     override fun playStart() {
-        mixer.addSound(recorder.getSound())
+        Log.d("AudioTest", "playStart")
+        var voice = EditableSound(recorder.getSound())
+        var range = SoundRange(voice.sound)
+        range.expand(voice.sound.data.size)
+        voice.blocks.add(range)
+        mixer.sounds.add(voice)
         mixer.start()
     }
 
     override fun playStop() {
+        Log.d("AudioTest", "playStop")
         mixer.stop()
         mixer.sounds.removeAt(mixer.sounds.size - 1)
     }
 
     override fun recordStart() {
+        Log.d("AudioTest", "recordStart")
         mixer.startBlock()
         if(!mixer.isLooping.get()) mixer.start()
         recorder.start()
     }
 
     override fun recordStop() {
+        Log.d("AudioTest", "recordStop")
+        mixer.stop()
         mixer.endBlock()
-        Log.d("AudioTest, 녹음중", "mixer played ${mixer.sounds[0].playedRange.endIndex()}")
+        Log.d("AudioTest", "mixer edited: ${mixer.sounds[0].playedRange.endDuration()}")
         mixer.sounds.map{ it.blocks }.forEach{
             it.forEach{
-                Log.d("AudioTest, ", "mixer: ${it.startDuration()} ${it.endDuration()}")
+                Log.d("AudioTest", "- mixer: ${it.startDuration()} ${it.endDuration()}")
             }
         }
-        mixer.stop()
-        recorder.stop(mixer.sounds[0].playedRange.endIndex())
+        recorder.stop(mixer.sounds[0].editedRange.endIndex())
         recorder.blocks.forEach{
-            Log.d("AudioTest, 녹음중", "recorder: ${it.startDuration()} ${it.endDuration()}")
+            Log.d("AudioTest", "- recorder: ${it.startDuration()} ${it.endDuration()}")
         }
     }
 
