@@ -1,5 +1,6 @@
 package com.treasure.loopang.audio
 
+import android.util.Log
 import com.treasure.loopang.audio.format.FormatInfo
 import com.treasure.loopang.audio.format.IFormat
 import com.treasure.loopang.audio.format.Pcm16
@@ -67,13 +68,17 @@ class OverWritableRecorder (var format: IFormat = Pcm16(),
     }
 
     fun stop(){
+        Log.d("AudioTest", "in -4")
         if(isRecording.get()) {
             isRecording.set(false)
-            runBlocking { routine.await() }
             info.inputAudio.stop()
+            runBlocking { routine.await() }
+            Log.d("AudioTest", "in data.size ${data.size}")
             currentBlock.expand(data.size)
             blocks.add(currentBlock)
+            Log.d("AudioTest", "in 2")
             currentBlock = SoundRange(Sound())
+            Log.d("AudioTest", "in 3")
             callStop(this)
         }
     }
