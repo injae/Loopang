@@ -42,7 +42,10 @@ class FinalRecorder : IFinalRecorder {
     }
 
     override fun getRecordDuration(): Int {
-        return mixer.duration()
+        mixer.sounds.add(recorder.getDumyBlocks())
+        var duration = mixer.duration()
+        mixer.sounds.removeAt(mixer.sounds.lastIndex)
+        return duration
     }
 
     override fun getLoopDuration(): Int {
@@ -65,9 +68,11 @@ class FinalRecorder : IFinalRecorder {
 
     override fun seekToEnd() {
         Log.d("AudioTest", "seekToEnd")
-        Log.d("AudioTest", "seekTo ${mixer.duration()}")
+        mixer.sounds.add(recorder.getDumyBlocks())
+        var duration = mixer.duration()
         mixer.seek(mixer.duration())
         recorder.seek(mixer.duration())
+        mixer.sounds.removeAt(mixer.sounds.lastIndex)
     }
 
     override fun seekTo(ms: Int) {
@@ -78,11 +83,7 @@ class FinalRecorder : IFinalRecorder {
 
     override fun playStart() {
         Log.d("AudioTest", "playStart")
-        var voice = EditableSound(recorder.getSound())
-        var range = SoundRange(voice.sound)
-        range.expand(voice.sound.data.size)
-        voice.blocks.add(range)
-        mixer.sounds.add(voice)
+        mixer.sounds.add(recorder.getEditableSound())
         mixer.start()
     }
 

@@ -1,5 +1,6 @@
 package com.treasure.loopang.audio
 
+import android.util.Log
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -8,20 +9,15 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 class SoundRange( var sound: Sound, var cycle: Int = 0, var start: Int = 0, var end: Int = 0, var repeat: Int = 0) {
     var soundLength: Int
-    fun expand(size: Int) {
-        end += size
-        repeat += (end / soundLength)
-        end = (end % soundLength)
-    }
 
     init {
         if(sound.data.isEmpty()) sound.data = ShortArray(size=sound.info.sampleRate).toMutableList()
         soundLength = sound.data.size
     }
 
-    fun remove(tenMs: Int) {
+    fun remove(index: Int) {
         var buf = SoundRange(sound, cycle, start)
-        buf.expand((tenMs * sound.info.tenMsSampleRate) - startIndex())
+        buf.expand(index - startIndex())
         end = buf.end
         repeat = buf.repeat
     }
@@ -44,8 +40,29 @@ class SoundRange( var sound: Sound, var cycle: Int = 0, var start: Int = 0, var 
         return  endIndex() / sound.info.tenMsSampleRate
     }
 
-    fun isOverlap(other: SoundRange): Boolean{
-        return cycle >= other.cycle
+    fun removeOver(other: SoundRange): Boolean{
+        return startDuration() >= other.startDuration()
+    }
+
+    fun isComplict(other: SoundRange): Boolean {
+        var target = other.startDuration()
+        return (startDuration() <= target && target <= endDuration())
+    }
+
+    fun overWrite(range: SoundRange): Boolean {
+        if(isComplict(range)) {
+            remove(range.startDuration())
+            return true
+        }
+        else {
+            return false
+        }
+    }
+
+    fun expand(size: Int) {
+        end += size
+        repeat += (end / soundLength)
+        end = (end % soundLength)
     }
 
     fun nextRange(): SoundRange {
@@ -64,9 +81,7 @@ class EditableSound {
 
     var playedRange: SoundRange
     var playedIndex: Int
-
-    var currentBlock: SoundRange? = null
-    var isEdit = AtomicBoolean(false)
+    var currentBlockIndex: Int? = null
 
     constructor(sound: Sound) {
         this.sound = sound
@@ -78,7 +93,7 @@ class EditableSound {
                 var compare =  playedRange.endIndex() - blocks[playedIndex].startIndex()
                 if(compare > 0) {
                     var zeroRange = it.size - compare
-                    for((index, data) in it.withIndex()) { if(index < zeroRange) it[index] = 0 }
+                    for((index, _) in it.withIndex()) { if(index < zeroRange) it[index] = 0 }
                 }
                 else {
                     compare = playedRange.endIndex() - blocks[playedIndex].endIndex()
@@ -104,26 +119,31 @@ class EditableSound {
         }
     }
 
-    fun seek(start: Int) {
-        playedRange.remove(start)
+    fun seek(index: Int) {
+        playedRange.remove(index)
+        Log.d("AudioTest"," seek duration: ${playedRange.endDuration()}")
     }
 
     fun startBlock() {
         if(!isMute) {
             sound.isMute.set(false)
-            isEdit.set(true)
-            currentBlock = playedRange.nextRange()
-            blocks = blocks.filter{ !it.isOverlap(currentBlock!!) }.toMutableList()
+            var currentBlock = playedRange.nextRange()
+            blocks = blocks.filter{ !it.removeOver(currentBlock) }.toMutableList()
+            for((index, block) in blocks.withIndex()) {
+                if(block.overWrite(currentBlock)) { currentBlockIndex = index }
+            }
+            if(currentBlockIndex == null) {
+                blocks.add(currentBlock)
+                currentBlockIndex = blocks.lastIndex
+            }
         }
     }
 
     fun endBlock() {
         if(!isMute) {
             sound.isMute.set(true)
-            isEdit.set(false)
-            var range = playedRange.endIndex() - currentBlock!!.startIndex()
-            currentBlock!!.expand(range)
-            blocks.add(currentBlock!!)
+            var range = playedRange.endIndex() - blocks[currentBlockIndex!!].startIndex()
+            blocks[currentBlockIndex!!].expand(range)
         }
     }
 
@@ -135,7 +155,6 @@ class EditableSound {
         var maxLength = playedRange.endIndex()
         seek(0)
         var export = Sound()
-        var isFinish = false
         sound.isMute.set(true)
         var save_effector = sound.addEffector {
             playedRange.expand(it.size)
