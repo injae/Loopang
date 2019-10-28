@@ -10,11 +10,9 @@ import java.util.concurrent.atomic.AtomicBoolean
 class SoundRange( var sound: Sound, var cycle: Int = 0, var start: Int = 0, var end: Int = 0, var repeat: Int = 0) {
     var soundLength: Int
     fun expand(size: Int) {
-        Log.d("AudioTest", "soundLength: ${soundLength}> ${end} + ${size}")
         end += size
         repeat += (end / soundLength)
         end = (end % soundLength)
-        Log.d("AudioTest", "soundLength: ${soundLength}> end: ${end} repeat: ${repeat}")
     }
 
     init {
@@ -34,7 +32,7 @@ class SoundRange( var sound: Sound, var cycle: Int = 0, var start: Int = 0, var 
     }
 
     fun endIndex(): Int{
-        return (cycle*soundLength) + start + end +(repeat*soundLength)
+        return (cycle*soundLength) + start + (repeat*soundLength) + end
     }
 
     fun startDuration(): Int {
@@ -49,6 +47,12 @@ class SoundRange( var sound: Sound, var cycle: Int = 0, var start: Int = 0, var 
 
     fun isOverlap(other: SoundRange): Boolean{
         return cycle >= other.cycle
+    }
+
+    fun nextRange(): SoundRange {
+        var eindex = endIndex()
+        if(eindex == 0) return SoundRange(sound)
+        return SoundRange( sound , cycle=eindex/soundLength , start=eindex%soundLength)
     }
 }
 
@@ -73,9 +77,6 @@ class EditableSound {
         playedIndex = 0
         effectorIndex = sound.addEffector {
             if(isEdit.get()) editedRange.expand(it.size)
-            it
-        }
-        sound.addTimeEffector {
             playedRange.expand(it.size)
             if(blocks.isNotEmpty()) {
                 var compare =  playedRange.endIndex() - blocks[playedIndex].startIndex()
@@ -97,6 +98,7 @@ class EditableSound {
             else {
                 ShortArray(it.size, { 0 })
             }
+            it
         }
     }
 
@@ -115,7 +117,7 @@ class EditableSound {
         if(!isMute) {
             sound.isMute.set(false)
             isEdit.set(true)
-            currentBlock = SoundRange(sound, cycle=editedRange.repeat, start=editedRange.end)
+            currentBlock = editedRange.nextRange()
             blocks = blocks.filter{ !it.isOverlap(currentBlock!!) }.toMutableList()
         }
     }
@@ -124,8 +126,8 @@ class EditableSound {
         if(!isMute) {
             sound.isMute.set(true)
             isEdit.set(false)
-            currentBlock?.repeat = editedRange.repeat - currentBlock?.cycle!!
-            currentBlock?.end = editedRange.end
+            var range = editedRange.endIndex() - currentBlock!!.startIndex()
+            currentBlock!!.expand(range)
             blocks.add(currentBlock!!)
         }
     }
