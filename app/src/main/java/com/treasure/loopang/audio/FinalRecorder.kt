@@ -85,7 +85,7 @@ class FinalRecorder : IFinalRecorder {
     override fun recordStart() {
         mixer.startBlock()
         if(!mixer.isLooping.get()) mixer.start()
-        recorder.start()
+        //recorder.start()
     }
 
     override fun recordStop() {
@@ -93,7 +93,7 @@ class FinalRecorder : IFinalRecorder {
         Log.d("FinalRecorder, 녹음중", "녹음종료, mixer.endBlock() 완료")
         mixer.stop()
         Log.d("FinalRecorder, 녹음중", "녹음종료, mixer.stop() 완료")
-        recorder.stop()
+        //recorder.stop()
         Log.d("FinalRecorder, 녹음중", "녹음종료, recorder.stop() 완료")
     }
 
@@ -114,7 +114,7 @@ class FinalRecorder : IFinalRecorder {
     }
 
     override fun setMute(layerId: Int, flag: Boolean) {
-        if(layerId == 0) recorder.isMute.set(flag) else mixer.setMute(layerId,flag)
+        if(layerId == 0) recorder.isMute.set(flag) else mixer.setMute(layerId - 1,flag)
     }
 
     override fun setOverwrite(flag: Boolean) {

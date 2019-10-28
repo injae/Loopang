@@ -29,9 +29,7 @@ class OverWritableRecorder (var format: IFormat = Pcm16(),
             var sampleCounter: Int = 0
             while(isRecording.get()) {
                 info.inputAudio.read(buffer,0, buffer.size)
-                if(isMute.get()) {
-                    buffer = ShortArray(buffer.size, { 0 })
-                }
+                if(isMute.get()) { buffer = ShortArray(buffer.size, { 0 }) }
                 buffer = effect(buffer)
                 buffer.forEach { data.add(it) }
 

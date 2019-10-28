@@ -1,5 +1,6 @@
 package com.treasure.loopang.audio
 
+import android.util.Log
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -73,26 +74,33 @@ class EditableSound {
         }
         sound.addTimeEffector {
             playedRange.expand(it.size)
-            var compare =  playedRange.endIndex() - blocks[playedIndex].startIndex()
-            if(compare > 0) {
-                var zeroRange = it.size - compare
-                for((index, data) in it.withIndex()) { if(index < zeroRange) it[index] = 0 }
+            if(blocks.isNotEmpty()) {
+                var compare =  playedRange.endIndex() - blocks[playedIndex].startIndex()
+                if(compare > 0) {
+                    var zeroRange = it.size - compare
+                    for((index, data) in it.withIndex()) { if(index < zeroRange) it[index] = 0 }
+                }
+                else {
+                    compare = playedRange.endIndex() - blocks[playedIndex].endIndex()
+                    if(compare > 0) {
+                        playedIndex++
+                        var zeroRange = it.size - compare
+                        for((index, data) in it.withIndex()) { if(index >= zeroRange) it[index] = 0 }
+                    }
+                    else if(compare == 0) playedIndex++
+                }
+                it
             }
             else {
-                compare = playedRange.endIndex() - blocks[playedIndex].endIndex()
-                if(compare > 0) {
-                    playedIndex++
-                    var zeroRange = it.size - compare
-                    for((index, data) in it.withIndex()) { if(index >= zeroRange) it[index] = 0 }
-                }
-                else if(compare == 0) playedIndex++
+                ShortArray(it.size, { 0 })
             }
-            it
         }
     }
 
     fun play() {
-        if(!isMute && blocks.isNotEmpty()) sound.play()
+        if(!isMute) {
+            sound.play()
+        }
     }
 
     fun seek(start: Int) {
