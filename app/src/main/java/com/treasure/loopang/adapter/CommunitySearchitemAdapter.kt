@@ -53,13 +53,18 @@ class CommunitySearchitemAdapter : BaseAdapter() {
     override fun getItem(position: Int): Any {
         return listViewItemList[position]
     }
-    fun addItem(userNickName: String, songName: String,songId : String) {
+    fun addItem(userNickName: String, songName: String,  likedNum : Int, downloadNum :Int,songId : String, productionDate : String, trackInfo : String) {
         val item = CommunitySongItem()
-        item.userNickName = userNickName
+        item.userNickName= userNickName
         item.songName = songName
+        item.downloadNum = downloadNum
+        item.likedNum = likedNum
         item.songId = songId
+        item.productionDate =productionDate
+        item.trackInfo = trackInfo
         listViewItemList.add(item)
     }
+
     private  class ViewHolder{
         var userNickNameTextView : TextView ? = null
         var songNameTextView :  TextView ? = null

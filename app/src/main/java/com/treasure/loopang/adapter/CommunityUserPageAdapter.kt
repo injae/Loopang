@@ -55,11 +55,15 @@ class CommunityUserPageAdapter : BaseAdapter() {
         return listViewItemList[position]
     }
 
-    fun addItem( userNickName: String,songName: String,songId :String) {
+    fun addItem(userNickName: String, songName: String,  likedNum : Int, downloadNum :Int,songId : String, productionDate : String, trackInfo : String) {
         val item = CommunitySongItem()
-        item.userNickName = userNickName
+        item.userNickName= userNickName
         item.songName = songName
-        item.songId=songId
+        item.downloadNum = downloadNum
+        item.likedNum = likedNum
+        item.songId = songId
+        item.productionDate =productionDate
+        item.trackInfo = trackInfo
         listViewItemList.add(item)
     }
 
