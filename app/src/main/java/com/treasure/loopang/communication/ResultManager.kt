@@ -64,7 +64,7 @@ object ResultManager {
                     "Uploaded ${result.message.slice(IntRange(9, result.message.length - 1))}" -> code = SUCCESS_UPLOAD
                     "file download success" -> code = SUCCESS_DOWNLOAD
                     "user-info" -> code = SUCCESS_INFO_REQUEST
-                    "success feed request" -> code = SUCCESS_FEED_REQUEST
+                    "feed data" -> code = SUCCESS_FEED_REQUEST
                     "success search" -> code = SUCCESS_SEARCH
                 }
                 accessToken = result.accessToken    // in case of SUCCESS_SIGN_UP, accessToken == ""
