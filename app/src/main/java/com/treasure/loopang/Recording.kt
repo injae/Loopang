@@ -82,13 +82,29 @@ class Recording : AppCompatActivity()
         val displayMetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(displayMetrics)
 
-        if(com.treasure.loopang.communication.UserManager.isLogined ==false)
-            drawer_logout_btn.visibility=View.GONE
-        else
-            drawer_logout_btn.visibility=View.VISIBLE
+        if(com.treasure.loopang.communication.UserManager.isLogined ==false) {
+            btn_community.visibility=View.GONE
+            drawer_login_btn.visibility=View.VISIBLE
+            drawer_logout_btn.visibility = View.GONE
+            btnDrawerLoginText.setText("Login")
+        } else {
+            btn_community.visibility=View.VISIBLE
+            drawer_logout_btn.visibility = View.VISIBLE
+            drawer_login_btn.visibility=View.GONE
+            btnDrawerLoginText.setText("Logout")
+        }
+        drawer_login_btn.setOnClickListener {
+            logInAndOut()
+            Log.d("logiiiiiiiin","logincliked: " + com.treasure.loopang.communication.UserManager.isLogined)
+        }
+        drawer_logout_btn.setOnClickListener { logInAndOut()
+            Log.d("logooooooout","logoutcliked: " + com.treasure.loopang.communication.UserManager.isLogined)
+        }
 
         drawer_logout_btn.setOnClickListener {
             GlobalScope.launch { DatabaseManager.deletePassword(this@Recording) }
+            UserManager.isLogined = false
+            UserManager.makeEmptyUser()
             startActivity(Intent(this, Login::class.java))
             finishAffinity()
         }
@@ -234,5 +250,10 @@ class Recording : AppCompatActivity()
     override fun onClear() {
         val recordFragment = pagerAdapter.getItem(0) as RecordFragment
         recordFragment.loopStation.dropAllLayer(messageFlag = false)
+    }
+    fun logInAndOut(){
+        GlobalScope.launch { DatabaseManager.deletePassword(this@Recording) }
+        startActivity(Intent(this, Login::class.java))
+        finishAffinity()
     }
 }

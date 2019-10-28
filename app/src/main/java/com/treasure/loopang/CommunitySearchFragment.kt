@@ -90,14 +90,14 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
         }
 
         CommunitySearchResultUserView.onItemClickListener=AdapterView.OnItemClickListener{ parent, v, position, id ->
-            val item = parent.getItemAtPosition(position) as CommunitySongItem
+            val itt = parent.getItemAtPosition(position) as CommunitySongItem
             activity!!.TrackFrame.visibility = View.VISIBLE
-            (activity as CommunityActivity).onFragmentChangedtoTrack(item.songId)
+            (activity as CommunityActivity).onFragmentChangedtoTrack(itt)
         }
         CommunitySearchResultTagView.onItemClickListener = AdapterView.OnItemClickListener { parent, v, position, id ->
-            val item = parent.getItemAtPosition(position) as CommunitySongItem
+            val itt = parent.getItemAtPosition(position) as CommunitySongItem
             activity!!.TrackFrame.visibility = View.VISIBLE
-            (activity as CommunityActivity).onFragmentChangedtoTrack(item.songId)
+            (activity as CommunityActivity).onFragmentChangedtoTrack(itt)
         }
     }
 

@@ -8,23 +8,17 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_community.*
 import androidx.viewpager.widget.ViewPager
 import com.treasure.loopang.adapter.CommunityPagerAdapter
+import com.treasure.loopang.communication.MusicListClass
+import com.treasure.loopang.listitem.CommunitySongItem
 import kotlinx.android.synthetic.main.community_feed.*
 
 class CommunityActivity : AppCompatActivity() {
-    var TrackFragmentsongId = ""
+
+    lateinit var itt : CommunitySongItem
     var isTrackFragOpen : Boolean = false
     val transaction = supportFragmentManager.beginTransaction()
-    //리스트 세개 필요함 1.전체 공유 큐,  2. 내가 좋아요 누른 곡 리스트, 3. 내가 공유한 곡 리스트
-    var likedSongNum : Int = 0 //위에 리스트 만들면 리스트에 들어있는 아이템 개수로 변수 대체 가능
-    // var likedSongList
-    var userSharedTrackNum : Int = 0
-    // var userSharedList
-    var downloadNum : Int = 0
-    var heartClikedNum : Int = 0
     var isCategorySelected :Boolean = false
-
     private var currentPage: Int = 0
-
      private val pagerAdapter by lazy { CommunityPagerAdapter(supportFragmentManager) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,9 +34,10 @@ class CommunityActivity : AppCompatActivity() {
         CommunityContainer.setOnTouchListener { _, _ -> false}
     }
 
-    fun onFragmentChangedtoTrack(songId : String) {
-        if(songId!=null) {
-            TrackFragmentsongId = songId
+    fun onFragmentChangedtoTrack(songitem : CommunitySongItem) {
+        itt = songitem
+
+        if(itt.songId!=null) {
             getSupportFragmentManager().beginTransaction()
                 .replace(R.id.TrackFrame, CommunityTrackFragment()).commit()
             isTrackFragOpen = true

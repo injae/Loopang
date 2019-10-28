@@ -65,18 +65,33 @@
             android:orientation="vertical"
             android:layout_marginBottom="20dp"
            >
-    <Button
-            android:id="@+id/drawer_logout_btn"
-            android:layout_width="41dp"
-            android:layout_height="41dp"
-            android:background="@drawable/btn_logout" />
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Logout"
-            android:textColor="#FFFFFF"
-            android:textSize="13dp"
-            android:layout_marginBottom="10dp"/>
+
+        <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            <Button
+                    android:id="@+id/drawer_logout_btn"
+                    android:layout_width="41dp"
+                    android:layout_height="41dp"
+                    android:background="@drawable/btn_logout"
+                    android:visibility="gone"/>
+            <Button
+                    android:id="@+id/drawer_login_btn"
+                    android:layout_width="41dp"
+                    android:layout_height="41dp"
+                    android:background="@drawable/btn_login"
+                    android:visibility="gone"/>
+        </FrameLayout>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Logout"
+                android:textColor="#FFFFFF"
+                android:textSize="13dp"
+                android:layout_marginBottom="10dp"
+                android:id="@+id/btnDrawerLoginText"
+                android:gravity="center"
+                />
     </LinearLayout>
 
 </RelativeLayout>
