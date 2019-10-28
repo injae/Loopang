@@ -9,24 +9,18 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintSet
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
-import com.afollestad.materialdialogs.list.listItems
-import com.treasure.loopang.Database.DatabaseManager
 import com.treasure.loopang.audio.EffectorPresets
 import com.treasure.loopang.audio.FinalRecorder
-import com.treasure.loopang.audio.LoopStation
-import com.treasure.loopang.communication.UserManager
 import com.treasure.loopang.ui.dialogs.BlockControlDialog
 import com.treasure.loopang.ui.dialogs.VolumeControlDialog
 import com.treasure.loopang.ui.dpToPx
 import com.treasure.loopang.ui.recorderConnector
-import com.treasure.loopang.ui.toast
 import com.treasure.loopang.ui.util.TimeWrapper
 import com.treasure.loopang.ui.util.WidthPerTime
 import com.treasure.loopang.ui.view.BlockLayerView
@@ -34,17 +28,9 @@ import com.treasure.loopang.ui.view.BlockView
 import com.treasure.loopang.ui.view.VerticalTextButton
 import kotlinx.android.synthetic.main.activity_final_record.*
 import kotlinx.android.synthetic.main.dialog_final_save.*
-import kotlinx.android.synthetic.main.dialog_save_loop.*
-import kotlinx.android.synthetic.main.dialog_save_loop.check_drop
-import kotlinx.android.synthetic.main.dialog_save_loop.check_split
-import kotlinx.android.synthetic.main.dialog_save_loop.edit_loop_title
-import kotlinx.android.synthetic.main.dialog_save_loop.spinner
-import kotlinx.android.synthetic.main.dialog_save_new.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlin.system.exitProcess
 
 class FinalRecordActivity : AppCompatActivity() {
+    private var buttonLabelList: List<String>? = null
     private var backPressedTime: Long = 0
 
     private val wpt: WidthPerTime = WidthPerTime(width=5, ms=10)
@@ -162,7 +148,9 @@ class FinalRecordActivity : AppCompatActivity() {
             } else {
                 recordFlag = false
                 stopBlock()
+                Log.d("FRA, 녹음중", "녹음종료, stopBlock")
                 finalRecorder.recordStop()
+                Log.d("FRA, 녹음중", "녹음종료, finalRecorder.recordStop")
                 recordDuration.ms = finalRecorder.getRecordDuration()
                 recordSeekBarButton!!.isEnabled = true
                 refreshView()
@@ -235,7 +223,7 @@ class FinalRecordActivity : AppCompatActivity() {
                 Log.d("FRA, 녹음중 혹은 재생중", "녹음 혹은 재생 중 toEnd 버튼 조작을 막습니다.")
             }
         }
-        openVCDButton!!.setOnClickListener { volumeControlDialog.show() }
+        openVCDButton!!.setOnClickListener { showVolumeControlDialog() }
     }
 
     private fun initAfterInflation(){
@@ -265,7 +253,7 @@ class FinalRecordActivity : AppCompatActivity() {
     private fun initLayerList(num: Int) {
         for(x in 0 until num){
             val blockLayerView = BlockLayerView(this@FinalRecordActivity)
-            val buttonText = recorderConnector.labelList!![x]
+            val buttonText = buttonLabelList!![x]
             val muteButton = MuteButtonBuilder(this)
                 .basicHeight(basicHeight)
                 .label(buttonText)
@@ -285,6 +273,8 @@ class FinalRecordActivity : AppCompatActivity() {
             blockLayerView.blockColor = blockColorList[x%blockColorList.size]
             layerListLinear!!.addView(blockLayerView, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, basicHeight))
             blockLayerViewList.add(blockLayerView)
+            blockLayerView.cornerRadius = 8
+            blockLayerView.roundedCorners = BlockLayerView.CORNER_ALL
 
             //muteButton 초기화
             mute_button_linear.addView(muteButton)
@@ -316,11 +306,16 @@ class FinalRecordActivity : AppCompatActivity() {
 
     private fun refreshView(){
         // todo: 여기에 블록들을 가시화하는 코드를 작성.
+        val blockList = finalRecorder.getBlockList()
         clear()
 
-        /*blockLayerViewList[0].addBlock(0, 1000,1000)
-        blockLayerViewList[2].addBlock(0, 1500,2000)
-        blockLayerViewList[3].addBlock(0, 4000, 1200, BCListener())*/
+        blockList.forEachIndexed { li, list ->
+            list.forEachIndexed { bi, soundRange ->
+                val start = soundRange.startDuration()
+                val duration = soundRange.endDuration() - start
+                blockLayerViewList[li].addBlock(bi,start,duration, BCListener())
+            }
+        }
 
         Log.d("FRA, 타임라인컨트롤", "refreshView()")
     }
@@ -368,9 +363,9 @@ class FinalRecordActivity : AppCompatActivity() {
         Log.d("FRA, 블록컨트롤", "showBlockControlDialog(layerId: $layerId, blockId: $blockId)")
     }
 
-    private fun showRecordControlDialog() {
-        blockControlDialog.show()
-        Log.d("FRA, 볼류컨트롤", "showRecordControlDialog")
+    private fun showVolumeControlDialog() {
+        volumeControlDialog.show()
+        Log.d("FRA, 볼륨컨트롤", "showVolumeControlDialog")
     }
 
     private fun showSaveDialog() {
@@ -398,10 +393,9 @@ class FinalRecordActivity : AppCompatActivity() {
     }
 
     private fun getSounds() {
-        recorderConnector.soundList!!.forEach {
-            finalRecorder.mixer.addSound(it)
-            num += 1
-        }
+        finalRecorder.insertSounds(recorderConnector.soundList!!)
+        buttonLabelList = listOf("Vocal") + recorderConnector.labelList!!
+        num = recorderConnector.soundList!!.size + 1
     }
 
 

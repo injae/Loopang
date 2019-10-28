@@ -3,6 +3,8 @@ package com.treasure.loopang.ui.view
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.RectF
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
@@ -29,6 +31,40 @@ class BlockView @JvmOverloads constructor(
     var blockBackgroundPaint: Paint? = null
     var blockRectPaint: Paint? = null
 
+    private val path: Path = Path()
+    var cornerRadius = 0
+        set(value) {
+            if (field != value) {
+                field = value
+                setPath()
+                invalidate()
+            }
+        }
+
+    var roundedCorners = 0
+        set(value) {
+            if (field != value) {
+                field = value
+                setPath()
+                invalidate()
+            }
+        }
+
+    companion object {
+        const val CORNER_NONE: Int = 0
+        const val CORNER_TOP_LEFT: Int = 1
+        const val CORNER_TOP_RIGHT: Int = 2
+        const val CORNER_BOTTOM_RIGHT: Int = 4
+        const val CORNER_BOTTOM_LEFT: Int = 8
+        const val CORNER_ALL: Int= 15
+
+        val CORNERS: List<Int> = listOf(
+            CORNER_TOP_LEFT,
+            CORNER_TOP_RIGHT,
+            CORNER_BOTTOM_RIGHT,
+            CORNER_BOTTOM_LEFT)
+    }
+
     init {
         isFocusable = true
         isClickable = true
@@ -36,8 +72,39 @@ class BlockView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas?) {
-        setBackgroundColor(blockColor)
+        canvas?.drawColor(blockColor)
+
+        canvas?.clipPath(path)
     }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        setPath()
+    }
+
+    private fun setPath() {
+        path.rewind()
+        if ((cornerRadius >= 1f) && (roundedCorners != BlockLayerView.CORNER_NONE)) {
+            val radii = FloatArray(8)
+
+            for (i in 0..3) {
+                if (isCornerRounded(BlockLayerView.CORNERS[i])) {
+                    radii[2 * i] = cornerRadius.toFloat()
+                    radii[2 * i + 1] = cornerRadius.toFloat()
+                }
+            }
+
+            path.addRoundRect(
+                RectF(0f, 0f, width.toFloat(), height.toFloat()),
+                radii, Path.Direction.CW
+            )
+        }
+    }
+
+    private fun isCornerRounded(corner: Int): Boolean {
+        return (roundedCorners and corner) == corner
+    }
+
 
     interface BlockControlListener {
         fun onClickListener(layerId: Int, blockId:Int)

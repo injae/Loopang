@@ -25,5 +25,6 @@
     <color name="block_color2">#D7FFC3</color>
     <color name="block_color3">#B2DF96</color>
     <color name="block_color4">#FFC3C3</color>
-    <color name="record_progress_line_color">#EA1C11</color>
+    <color name="record_progress_line_color">#C4C4C4</color>
+    <color name="blockLayerViewBackground">#8B8585</color>
 </resources>
