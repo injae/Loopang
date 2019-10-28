@@ -103,11 +103,11 @@ class BlockLayerView(context: Context, attrs: AttributeSet? = null, defStyleAttr
 
     private fun setPath() {
         path.rewind()
-        if ((cornerRadius >= 1f) && (roundedCorners != BlockLayerView.CORNER_NONE)) {
+        if ((cornerRadius >= 1f) && (roundedCorners != CORNER_NONE)) {
             val radii = FloatArray(8)
 
             for (i in 0..3) {
-                if (isCornerRounded(BlockLayerView.CORNERS[i])) {
+                if (isCornerRounded(CORNERS[i])) {
                     radii[2 * i] = cornerRadius.toFloat()
                     radii[2 * i + 1] = cornerRadius.toFloat()
                 }
@@ -129,7 +129,7 @@ class BlockLayerView(context: Context, attrs: AttributeSet? = null, defStyleAttr
         val start = blockView.startTime
         val duration = blockView.duration
         val param = LayoutParams(((duration / wpt.ms.toFloat()) * wpt.width).toInt(), LayoutParams.MATCH_PARENT)
-        param.leftMargin = start * wpt.width
+        param.leftMargin = ((start / wpt.ms.toFloat()) * wpt.width).toInt()
         blockView.wpt = wpt
         blockView.layoutParams = param
         blockView.amplitudeDrawable = amplitudesDrawable
@@ -137,6 +137,7 @@ class BlockLayerView(context: Context, attrs: AttributeSet? = null, defStyleAttr
         blockView.bcListener = listener
         blockView.cornerRadius = 20
         blockView.roundedCorners = BlockView.CORNER_ALL
+        blockBasicWidth = 0
         this.addView(blockView)
         this.blockViewList.add(blockView)
         this.currentBlock = blockView
