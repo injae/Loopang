@@ -72,20 +72,24 @@ class FinalRecorder : IFinalRecorder {
     }
 
     override fun playStart() {
+        mixer.addSound(recorder.getSound())
         mixer.start()
     }
 
     override fun playStop() {
         mixer.stop()
+        mixer.sounds.removeAt(mixer.sounds.size - 1)
     }
 
     override fun recordStart() {
+        if(!mixer.isLooping.get()) mixer.start()
         mixer.startBlock()
         recorder.start()
     }
 
     override fun recordStop() {
         mixer.endBlock()
+        mixer.stop()
         recorder.stop()
     }
 
