@@ -20,9 +20,9 @@ class BlockView @JvmOverloads constructor(
     var blockId: Int = 0
 
     var wpt: WidthPerTime = WidthPerTime()
-    var startTime: TimeWrapper = TimeWrapper()
-    var endTime: TimeWrapper = TimeWrapper()
-    var duration: TimeWrapper = TimeWrapper()
+    var startTime: Int = 0
+    var endTime: Int = 0
+    var duration: Int = 0
 
     var bcListener: BlockControlListener? = null
 

@@ -126,9 +126,9 @@ class BlockLayerView(context: Context, attrs: AttributeSet? = null, defStyleAttr
 
 
     private fun addBlock(blockView: BlockView, listener: BlockView.BlockControlListener? = null) {
-        val start = blockView.startTime.ms
-        val duration = blockView.duration.ms
-        val param = LayoutParams((duration * wpt.width) / 10, LayoutParams.MATCH_PARENT)
+        val start = blockView.startTime
+        val duration = blockView.duration
+        val param = LayoutParams(((duration / wpt.ms.toFloat()) * wpt.width).toInt(), LayoutParams.MATCH_PARENT)
         param.leftMargin = start * wpt.width
         blockView.wpt = wpt
         blockView.layoutParams = param
@@ -146,8 +146,8 @@ class BlockLayerView(context: Context, attrs: AttributeSet? = null, defStyleAttr
 
     fun addBlock(blockId: Int = lastBlockId++, start: Int, duration: Int, listener: BlockView.BlockControlListener? = null) {
         val blockView = BlockView(context)
-        blockView.startTime.set(start)
-        blockView.duration.set(duration)
+        blockView.startTime = start
+        blockView.duration = duration
         blockView.layerId = layerId
         blockView.blockId = blockId
         addBlock(blockView, listener)
@@ -180,7 +180,7 @@ class BlockLayerView(context: Context, attrs: AttributeSet? = null, defStyleAttr
         if (blockAnimator == null) {
             blockAnimator = ValueAnimator.ofInt(0, wpt.width)
             blockAnimator!!.apply{
-                duration = wpt.ms.toLong()*10
+                duration = wpt.ms.toLong() * 10
                 repeatCount = ValueAnimator.INFINITE
                 repeatMode = ValueAnimator.RESTART
                 addUpdateListener {
