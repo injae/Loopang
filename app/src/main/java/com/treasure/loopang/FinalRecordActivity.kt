@@ -178,7 +178,11 @@ class FinalRecordActivity : AppCompatActivity() {
                 }
             }
         }
-        recordStopButton!!.setOnClickListener { showSaveDialog() }
+        recordStopButton!!.setOnClickListener {
+            if(!(finalRecorder.isRecording() || finalRecorder.isPlaying())){
+                showSaveDialog()
+            }
+        }
         playButton!!.setOnClickListener {
             if(finalRecorder.isRecording()) {
                 Log.d("FRA, 녹음중", "녹음 중 재생 버튼 조작을 막습니다.")
