@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.View
 import com.treasure.loopang.ui.util.TimeWrapper
 import com.treasure.loopang.ui.util.WidthPerTime
+import kotlin.math.round
 
 class BlockView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -33,7 +34,7 @@ class BlockView @JvmOverloads constructor(
     private val path: Path = Path()
     var cornerRadius = 0
         set(value) {
-            if (field != value) {
+            if (cornerRadius != value) {
                 field = value
                 setPath()
                 invalidate()
@@ -42,7 +43,7 @@ class BlockView @JvmOverloads constructor(
 
     var roundedCorners = 0
         set(value) {
-            if (field != value) {
+            if (roundedCorners != value) {
                 field = value
                 setPath()
                 invalidate()
@@ -71,9 +72,8 @@ class BlockView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas?) {
-        canvas?.drawColor(blockColor)
-
         canvas?.clipPath(path)
+        canvas?.drawColor(blockColor)
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -84,7 +84,7 @@ class BlockView @JvmOverloads constructor(
     private fun setPath() {
         path.rewind()
         if ((cornerRadius >= 1f) && (roundedCorners != BlockLayerView.CORNER_NONE)) {
-            Log.d("ConerRadius", "코너의 패스를 만듭니다.")
+            Log.d("ConerRadius", "코너의 패스를 만듭니다. cornerRadius")
             val radii = FloatArray(8)
 
             for (i in 0..3) {

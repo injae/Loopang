@@ -44,23 +44,22 @@ class BlockLayerView(context: Context, attrs: AttributeSet? = null, defStyleAttr
 
     private val path: Path = Path()
     var cornerRadius = 0
-    set(value) {
-        if (field != value) {
-            field = value
-            setPath()
-            invalidate()
+        set(value) {
+            if (cornerRadius != value) {
+                field = value
+                setPath()
+                invalidate()
+            }
         }
-    }
-
 
     var roundedCorners = 0
-    set(value) {
-        if (field != value) {
-            field = value
-            setPath()
-            invalidate()
+        set(value) {
+            if (roundedCorners != value) {
+                field = value
+                setPath()
+                invalidate()
+            }
         }
-    }
 
     companion object {
         const val CORNER_NONE: Int = 0
@@ -82,13 +81,13 @@ class BlockLayerView(context: Context, attrs: AttributeSet? = null, defStyleAttr
     }
 
     override fun onDraw(canvas: Canvas?) {
+        canvas?.clipPath(path)
+
         canvas?.drawColor(resources.getColor(R.color.blockLayerViewBackground, null))
         canvas?.drawLine(0f,0f, width.toFloat(), 0f, paint)
         canvas?.drawLine(0f, height.toFloat(), width.toFloat(), height.toFloat(), paint)
         canvas?.drawLine(0f, 0f, 0f, height.toFloat(), paint)
         canvas?.drawLine(width.toFloat(), 0f, width.toFloat(), height.toFloat(), paint)
-
-        canvas?.clipPath(path)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -136,7 +135,7 @@ class BlockLayerView(context: Context, attrs: AttributeSet? = null, defStyleAttr
         blockView.amplitudeDrawable = amplitudesDrawable
         blockView.blockColor = blockColor
         blockView.bcListener = listener
-        blockView.cornerRadius = 10
+        blockView.cornerRadius = 20
         blockView.roundedCorners = BlockView.CORNER_ALL
         this.addView(blockView)
         this.blockViewList.add(blockView)
