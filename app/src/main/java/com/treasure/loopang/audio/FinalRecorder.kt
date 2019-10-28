@@ -82,8 +82,8 @@ class FinalRecorder : IFinalRecorder {
     }
 
     override fun recordStart() {
-        if(!mixer.isLooping.get()) mixer.start()
         mixer.startBlock()
+        if(!mixer.isLooping.get()) mixer.start()
         recorder.start()
     }
 
