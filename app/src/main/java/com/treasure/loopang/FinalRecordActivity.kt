@@ -1,5 +1,7 @@
 package com.treasure.loopang
 
+import android.animation.Animator
+import android.animation.ValueAnimator
 import android.content.Context
 import android.content.pm.ActivityInfo
 import android.graphics.Canvas
@@ -27,10 +29,16 @@ import com.treasure.loopang.ui.view.BlockLayerView
 import com.treasure.loopang.ui.view.BlockView
 import com.treasure.loopang.ui.view.VerticalTextButton
 import kotlinx.android.synthetic.main.activity_final_record.*
+import kotlinx.android.synthetic.main.activity_final_record.btn_stop
 import kotlinx.android.synthetic.main.dialog_final_save.*
+import kotlinx.android.synthetic.main.manage_preview_dialog.*
 import kotlinx.coroutines.launch
 
 class FinalRecordActivity : AppCompatActivity() {
+    private var seekBarAnimator: ValueAnimator? = null
+    private var seekBarAnimationListener = SeekBarAnimatorListener()
+    private var tempProgress: Int = 0
+
     private var buttonLabelList: List<String>? = null
     private var backPressedTime: Long = 0
 
@@ -122,6 +130,19 @@ class FinalRecordActivity : AppCompatActivity() {
     private fun initModule() {}
 
     private fun initView(){
+        if (seekBarAnimator == null) {
+            seekBarAnimator = ValueAnimator.ofInt(0, wpt.width)
+            seekBarAnimator!!.apply {
+                duration = wpt.ms.toLong() * 5
+                repeatCount = ValueAnimator.INFINITE
+                repeatMode = ValueAnimator.RESTART
+                addUpdateListener {
+                    val value = it.animatedValue as Int
+                    recordSeekBarButton!!.progress = tempProgress + value
+                }
+                addListener(seekBarAnimationListener)
+            }
+        }
 
         recordButton!!.setOnClickListener {
             val btn = it as ToggleButton
@@ -139,6 +160,7 @@ class FinalRecordActivity : AppCompatActivity() {
                 }
                 recordSeekBarButton!!.isEnabled = false
                 finalRecorder.recordStart()
+                seekBarAnimator!!.start()
                 Thread(updateRecordRunnable).start()
             } else {
                 recordFlag = false
@@ -147,6 +169,7 @@ class FinalRecordActivity : AppCompatActivity() {
                 finalRecorder.recordStop()
                 Log.d("FRA, 녹음중", "녹음종료, finalRecorder.recordStop")
                 recordDuration.ms = finalRecorder.getRecordDuration()
+                seekBarAnimator!!.cancel()
                 recordSeekBarButton!!.isEnabled = true
                 refreshView()
             }
@@ -161,6 +184,7 @@ class FinalRecordActivity : AppCompatActivity() {
                     playFlag = true
                     //todo: 재생시 동작
                     finalRecorder.playStart()
+                    seekBarAnimator!!.start()
                     Thread(updatePlayRunnaable).start()
                 } else {
                     playFlag = false
@@ -241,7 +265,7 @@ class FinalRecordActivity : AppCompatActivity() {
                 initLayerList(num)
 
                 //전체 시크바 MAX 초기화.
-                recordSeekBarButton?.max = (basicWidth / wpt.width) * wpt.ms / 10
+                recordSeekBarButton?.max = (basicWidth / wpt.width) * wpt.ms
             }
         })
     }
@@ -438,9 +462,10 @@ class FinalRecordActivity : AppCompatActivity() {
 
     //update view
     val updateRecordRunnable: Runnable = Runnable {
+
         while(recordFlag) {
             recordCurrentPosition.ms = finalRecorder.getRecordPosition()
-            recordSeekBarButton!!.progress = finalRecorder.getRecordPosition()
+            // recordSeekBarButton!!.progress = finalRecorder.getRecordPosition()
             if(recordSeekBarButton!!.progress >= recordSeekBarButton!!.max * 0.8f) {
                 //expandRecordSeekMax()
                 //expandLayerLinear()
@@ -454,10 +479,11 @@ class FinalRecordActivity : AppCompatActivity() {
         playFlag = finalRecorder.isPlaying()
         while(playFlag) {
             recordCurrentPosition.ms = finalRecorder.getRecordPosition()
-            recordSeekBarButton!!.progress = finalRecorder.getRecordPosition()
+            //recordSeekBarButton!!.progress = finalRecorder.getRecordPosition()
             playFlag = finalRecorder.isPlaying()
             Log.d("FRA, 재생중", "playFlag: $playFlag, recordCurrentPosition.ms : ${recordCurrentPosition.ms}")
         }
+        this.runOnUiThread{seekBarAnimator!!.cancel()}
     }
 
 
@@ -505,6 +531,28 @@ class FinalRecordActivity : AppCompatActivity() {
         }
 
     }
+
+    inner class SeekBarAnimatorListener: Animator.AnimatorListener {
+        override fun onAnimationRepeat(animation: Animator?) {
+            tempProgress += wpt.width
+            Log.d("animation", "onAnimationRepeat")
+        }
+
+        override fun onAnimationEnd(animation: Animator?) {
+            recordCurrentPosition.ms = recordSeekBarButton!!.progress
+            Log.d("animation", "onAnimationEnd")
+        }
+
+        override fun onAnimationCancel(animation: Animator?) {
+
+        }
+
+        override fun onAnimationStart(animation: Animator?) {
+            tempProgress = recordSeekBarButton!!.progress
+        }
+
+    }
+
 }
 
 class MuteButtonBuilder(val context: Context) {
