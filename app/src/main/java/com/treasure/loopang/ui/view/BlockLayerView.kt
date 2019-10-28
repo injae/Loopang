@@ -180,7 +180,7 @@ class BlockLayerView(context: Context, attrs: AttributeSet? = null, defStyleAttr
         if (blockAnimator == null) {
             blockAnimator = ValueAnimator.ofInt(0, wpt.width)
             blockAnimator!!.apply{
-                duration = wpt.ms.toLong()
+                duration = wpt.ms.toLong()*10
                 repeatCount = ValueAnimator.INFINITE
                 repeatMode = ValueAnimator.RESTART
                 addUpdateListener {

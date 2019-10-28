@@ -122,14 +122,6 @@ class FinalRecordActivity : AppCompatActivity() {
     private fun initModule() {}
 
     private fun initView(){
-        val display = windowManager.defaultDisplay
-        val size = Point()
-        display.getSize(size)
-        val blockControlWindow = blockControlDialog.window
-        val volumeControlWindow = volumeControlDialog.window
-
-        blockControlWindow?.setLayout((size.x * 0.25).toInt(), size.y)
-        volumeControlWindow?.setLayout((size.x * 0.25).toInt(), size.y)
 
         recordButton!!.setOnClickListener {
             val btn = it as ToggleButton
@@ -249,7 +241,7 @@ class FinalRecordActivity : AppCompatActivity() {
                 initLayerList(num)
 
                 //전체 시크바 MAX 초기화.
-                recordSeekBarButton?.max = (basicWidth / wpt.width) * wpt.ms
+                recordSeekBarButton?.max = (basicWidth / wpt.width) * wpt.ms / 10
             }
         })
     }
@@ -367,11 +359,26 @@ class FinalRecordActivity : AppCompatActivity() {
     }
 
     private fun showBlockControlDialog(layerId:Int, blockId: Int) {
+        val display = windowManager.defaultDisplay
+        val size = Point()
+        display.getSize(size)
+        val blockControlWindow = blockControlDialog.window
+
+        blockControlWindow?.setLayout((size.x * 0.25).toInt(), size.y)
+
         blockControlDialog.show(layerId, blockId)
+
         Log.d("FRA, 블록컨트롤", "showBlockControlDialog(layerId: $layerId, blockId: $blockId)")
     }
 
     private fun showVolumeControlDialog() {
+        val display = windowManager.defaultDisplay
+        val size = Point()
+        display.getSize(size)
+        val volumeControlWindow = volumeControlDialog.window
+
+        volumeControlWindow?.setLayout((size.x * 0.25).toInt(), size.y)
+
         volumeControlDialog.show()
         Log.d("FRA, 볼륨컨트롤", "showVolumeControlDialog")
     }
@@ -433,10 +440,10 @@ class FinalRecordActivity : AppCompatActivity() {
     val updateRecordRunnable: Runnable = Runnable {
         while(recordFlag) {
             recordCurrentPosition.ms = finalRecorder.getRecordPosition()
-            recordSeekBarButton!!.progress = recordCurrentPosition.ms
+            recordSeekBarButton!!.progress = finalRecorder.getRecordPosition()
             if(recordSeekBarButton!!.progress >= recordSeekBarButton!!.max * 0.8f) {
-                expandRecordSeekMax()
-                expandLayerLinear()
+                //expandRecordSeekMax()
+                //expandLayerLinear()
                 Log.d("FRA, 녹음중", "리니어레이아웃과 시크바 맥스를 EXPAND 합니다.")
             }
             Log.d("FRA, 녹음중", "recordFlag: $recordFlag, recordCurrentPosition.ms : ${recordCurrentPosition.ms}")
@@ -447,7 +454,7 @@ class FinalRecordActivity : AppCompatActivity() {
         playFlag = finalRecorder.isPlaying()
         while(playFlag) {
             recordCurrentPosition.ms = finalRecorder.getRecordPosition()
-            recordSeekBarButton!!.progress = recordCurrentPosition.ms
+            recordSeekBarButton!!.progress = finalRecorder.getRecordPosition()
             playFlag = finalRecorder.isPlaying()
             Log.d("FRA, 재생중", "playFlag: $playFlag, recordCurrentPosition.ms : ${recordCurrentPosition.ms}")
         }

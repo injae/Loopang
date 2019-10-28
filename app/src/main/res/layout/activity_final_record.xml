@@ -16,14 +16,16 @@
 
         <ImageButton
                 android:id="@+id/btn_open_volume_cotrol"
-                android:layout_width="28dp"
-                android:layout_height="102dp"
+                android:layout_width="35dp"
+                android:layout_height="109dp"
                 android:layout_margin="-10dp"
+                android:scaleType="fitCenter"
                 android:src="@drawable/open_vcd"
+                android:background="@android:color/transparent"
+                android:alpha = "0.5"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:src="@drawable/open_vcd" />
+                app:layout_constraintTop_toTopOf="parent" />
 
         <ScrollView
                 android:background="#4C4C4C"
