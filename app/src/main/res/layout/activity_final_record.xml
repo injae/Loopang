@@ -108,6 +108,8 @@
                         android:layout_gravity="center"
                         android:layout_weight="1"
                         android:text="ToggleButton"
+                        android:textOff=""
+                        android:textOn=""
                         android:background="@drawable/final_record_btn_play_state"
                         />
 
@@ -142,6 +144,8 @@
                         android:layout_gravity="center"
                         android:layout_weight="1"
                         android:text="ToggleButton"
+                        android:textOff=""
+                        android:textOn=""
                         android:background="@drawable/final_record_btn_record_state"/>
 
                 <ImageButton
@@ -170,14 +174,27 @@
                     android:layout_height="@dimen/fr_icon_height1"
                     android:layout_weight="1"
                     android:text="ToggleButton"
+                    android:textOn="Overwrite"
+                    android:textOff="Overwrite"
+                    android:textSize="8dp"
+                    android:textColor="@android:color/white"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/final_record_overwrite_and_metronome_btn_state"
                     />
 
             <ToggleButton
+                    android:layout_marginStart="3dp"
                     android:id="@+id/btn_metronome"
                     android:layout_width="@dimen/fr_icon_width1"
                     android:layout_height="@dimen/fr_icon_height1"
                     android:layout_weight="1"
-                    android:text="ToggleButton" />
+                    android:layout_gravity="center_vertical"
+                    android:text="ToggleButton"
+                    android:textOn="Metronome"
+                    android:textOff="Metronome"
+                    android:textSize="7dp"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/final_record_overwrite_and_metronome_btn_state"/>
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
