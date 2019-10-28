@@ -103,6 +103,8 @@ class Recording : AppCompatActivity()
 
         drawer_logout_btn.setOnClickListener {
             GlobalScope.launch { DatabaseManager.deletePassword(this@Recording) }
+            UserManager.isLogined = false
+            UserManager.makeEmptyUser()
             startActivity(Intent(this, Login::class.java))
             finishAffinity()
         }
