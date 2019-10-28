@@ -11,12 +11,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tabGravity="fill">
+            app:tabGravity="fill"
+            app:tabTextColor="#FFFFFF"
+            app:tabSelectedTextColor="#FFFFFF"
+            android:background="#313131"
+            >
 
         <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/volume_tab_str" />
+                android:text="@string/volume_tab_str"
+                />
 
         <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
@@ -31,7 +36,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/block_control_tab">
+            app:layout_constraintTop_toBottomOf="@+id/block_control_tab"
+            android:background="#909090">
 
         <include
                 android:id="@+id/volume_tab"
