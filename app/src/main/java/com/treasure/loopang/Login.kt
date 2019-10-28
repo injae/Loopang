@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings
 import android.text.SpannableStringBuilder
 import android.view.WindowManager
 import com.jakewharton.rxbinding3.view.clicks
@@ -31,8 +32,12 @@ class Login : AppCompatActivity() {
 
         GlobalScope.launch {
             DatabaseManager.deleteToken(this@Login)
+            val email = DatabaseManager.getEmail(this@Login)
             if(DatabaseManager.getPassword(this@Login) != null) {
-                input_id.text = SpannableStringBuilder(DatabaseManager.getEmail(this@Login))
+                CoroutineScope(Dispatchers.Main).launch {
+                    if(email != null) input_id.text = SpannableStringBuilder(email)
+                    input_password.text = SpannableStringBuilder("********")
+                }
                 UserManager.setUser(DatabaseManager.getEmail(this@Login)!!, decodeYuni(DatabaseManager.getPassword(this@Login)!!))
                 cb_auto_login.isChecked = true
                 val cnt = Connector()
