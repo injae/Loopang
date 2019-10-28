@@ -13,13 +13,16 @@
             android:roundIcon="@mipmap/ic_launcher_loopang_round"
             android:supportsRtl="true"
             android:theme="@style/LoopangAppTheme">
-        <activity android:name=".FinalRecordActivity" android:theme="@style/finalRecordActivityTheme">
+        <activity android:name=".FinalRecordActivity"
+                android:theme="@style/finalRecordActivityTheme"
+                android:configChanges="orientation|screenSize">
 
         </activity>
 
         <activity android:name=".RegisterActivity"></activity>
         <activity android:name=".Login"></activity>
-        <activity android:name=".Recording"></activity>
+        <activity android:name=".Recording"
+                android:configChanges="orientation|screenSize"></activity>
 
         <activity android:name=".settingItemActivity"></activity>
         <activity android:name=".CommunityActivity"></activity>

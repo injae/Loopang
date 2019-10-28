@@ -126,8 +126,8 @@ class BlockLayerView(context: Context, attrs: AttributeSet? = null, defStyleAttr
 
 
     private fun addBlock(blockView: BlockView, listener: BlockView.BlockControlListener? = null) {
-        val start = blockView.startTime.ohms
-        val duration = blockView.duration.ohms
+        val start = blockView.startTime.ms
+        val duration = blockView.duration.ms
         val param = LayoutParams(duration * wpt.width, LayoutParams.MATCH_PARENT)
         param.leftMargin = start * wpt.width
         blockView.wpt = wpt
@@ -141,7 +141,7 @@ class BlockLayerView(context: Context, attrs: AttributeSet? = null, defStyleAttr
         this.blockViewList.add(blockView)
         this.currentBlock = blockView
 
-        Log.d("block", "[$layerId,${blockView.blockId}] width: ${param.width}, height: ${param.height}, start: $start, duration: $duration")
+        Log.d("BlockLayerView, 녹음중", "블록 생성, [$layerId,${blockView.blockId}] width: ${param.width}, height: ${param.height}, start: $start, duration: $duration")
     }
 
     fun addBlock(blockId: Int = lastBlockId++, start: Int, duration: Int, listener: BlockView.BlockControlListener? = null) {
@@ -180,7 +180,7 @@ class BlockLayerView(context: Context, attrs: AttributeSet? = null, defStyleAttr
         if (blockAnimator == null) {
             blockAnimator = ValueAnimator.ofInt(0, wpt.width)
             blockAnimator!!.apply{
-                duration = wpt.ms.toLong()
+                duration = wpt.ms.toLong()*10
                 repeatCount = ValueAnimator.INFINITE
                 repeatMode = ValueAnimator.RESTART
                 addUpdateListener {

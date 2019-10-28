@@ -14,18 +14,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-        <com.treasure.loopang.ui.view.VerticalTextButton
+        <ImageButton
                 android:id="@+id/btn_open_volume_cotrol"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="35dp"
+                android:layout_height="109dp"
                 android:layout_margin="-10dp"
-                android:layout_marginStart="-10dp"
-                android:gravity="center_vertical"
-                android:text="@string/btn_volume_control_str"
-                android:textSize="8sp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/open_vcd"
+                android:background="@android:color/transparent"
+                android:alpha = "0.5"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/mute_button_scroll" />
+                app:layout_constraintTop_toTopOf="parent" />
 
         <ScrollView
                 android:background="#4C4C4C"
@@ -44,7 +44,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:divider="@drawable/final_record_linear_divisor"
-                    android:dividerPadding="9dp"
                     android:orientation="vertical" />
         </ScrollView>
 
@@ -249,8 +248,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:divider="@drawable/final_record_linear_divisor"
-                            android:dividerPadding="9dp"
-                            android:background="#2196F3"
                             android:orientation="vertical" />
                 </FrameLayout>
             </ScrollView>
