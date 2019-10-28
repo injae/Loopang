@@ -73,28 +73,26 @@ class EditableSound {
         }
         sound.addTimeEffector {
             playedRange.expand(it.size)
-            if(!blocks.isEmpty()) {
-                var compare =  playedRange.endIndex() - blocks[playedIndex].startIndex()
+            var compare =  playedRange.endIndex() - blocks[playedIndex].startIndex()
+            if(compare > 0) {
+                var zeroRange = it.size - compare
+                for((index, data) in it.withIndex()) { if(index < zeroRange) it[index] = 0 }
+            }
+            else {
+                compare = playedRange.endIndex() - blocks[playedIndex].endIndex()
                 if(compare > 0) {
+                    playedIndex++
                     var zeroRange = it.size - compare
-                    for((index, data) in it.withIndex()) { if(index < zeroRange) it[index] = 0 }
+                    for((index, data) in it.withIndex()) { if(index >= zeroRange) it[index] = 0 }
                 }
-                else {
-                    compare = playedRange.endIndex() - blocks[playedIndex].endIndex()
-                    if(compare > 0) {
-                        playedIndex++
-                        var zeroRange = it.size - compare
-                        for((index, data) in it.withIndex()) { if(index >= zeroRange) it[index] = 0 }
-                    }
-                    else if(compare == 0) playedIndex++
-                }
+                else if(compare == 0) playedIndex++
             }
             it
         }
     }
 
     fun play() {
-        if(!isMute) sound.play()
+        if(!isMute && blocks.isNotEmpty()) sound.play()
     }
 
     fun seek(start: Int) {
