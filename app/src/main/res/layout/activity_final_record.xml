@@ -44,7 +44,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:divider="@drawable/final_record_linear_divisor"
-                    android:dividerPadding="9dp"
                     android:orientation="vertical" />
         </ScrollView>
 
@@ -249,8 +248,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:divider="@drawable/final_record_linear_divisor"
-                            android:dividerPadding="9dp"
-                            android:background="#2196F3"
                             android:orientation="vertical" />
                 </FrameLayout>
             </ScrollView>

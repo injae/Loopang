@@ -146,6 +146,7 @@ class FinalRecordActivity : AppCompatActivity() {
                 }
                 recordSeekBarButton!!.isEnabled = false
                 finalRecorder.recordStart()
+                Thread(updateRecordRunnable).start()
             } else {
                 recordFlag = false
                 stopBlock()
@@ -167,7 +168,7 @@ class FinalRecordActivity : AppCompatActivity() {
                     playFlag = true
                     //todo: 재생시 동작
                     finalRecorder.playStart()
-                    // Thread(PlayUp)
+                    Thread(updatePlayRunnaable).start()
                 } else {
                     playFlag = false
                     //todo: 재생 정지시 동작
@@ -267,6 +268,7 @@ class FinalRecordActivity : AppCompatActivity() {
                     blockLayerViewList[x].mute(false, recordFlag, recordCurrentPosition.ms)
                     finalRecorder.setMute(x, false)
                 }
+                .topMargin(10)
                 .build()
 
             //blockLayerView 초기화
@@ -274,9 +276,10 @@ class FinalRecordActivity : AppCompatActivity() {
             blockLayerView.wpt = wpt
             blockLayerView.blockColor = blockColorList[x%blockColorList.size]
             layerListLinear!!.addView(blockLayerView, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, basicHeight))
-            blockLayerViewList.add(blockLayerView)
-            blockLayerView.cornerRadius = 8
+            blockLayerView.cornerRadius = 20
             blockLayerView.roundedCorners = BlockLayerView.CORNER_ALL
+            blockLayerView.top = 10
+            blockLayerViewList.add(blockLayerView)
 
             //muteButton 초기화
             mute_button_linear.addView(muteButton)
@@ -311,11 +314,13 @@ class FinalRecordActivity : AppCompatActivity() {
         val blockList = finalRecorder.getBlockList()
         clear()
 
+        Log.d("RRA, 녹음중", "refreshView(), blockList.size: ${blockList.size}")
         blockList.forEachIndexed { li, list ->
             list.forEachIndexed { bi, soundRange ->
                 val start = soundRange.startDuration()
                 val duration = soundRange.endDuration() - start
                 blockLayerViewList[li].addBlock(bi,start,duration, BCListener())
+                Log.d("RRA, 녹음중", "refreshView(), 블록 리스트에서 가져오기, li: $li, bi: $bi, $start: start, duration: $duration")
             }
         }
 
@@ -500,6 +505,7 @@ class MuteButtonBuilder(val context: Context) {
     private var onMuteEvent: ()->Unit = {}
     private var onUnMuteEvent: ()->Unit = {}
     private var basicHeight: Int = 0
+    private var topMargin: Int = 0
 
     fun label(label: String): MuteButtonBuilder {
         this.label = label
@@ -517,6 +523,10 @@ class MuteButtonBuilder(val context: Context) {
         this.basicHeight = h
         return this
     }
+    fun topMargin(px: Int): MuteButtonBuilder {
+        this.topMargin = px
+        return this
+    }
     fun build(): ToggleButton {
         return ToggleButton(context).apply{
             setBackgroundResource(R.drawable.mute_toggle_selector)
@@ -530,6 +540,7 @@ class MuteButtonBuilder(val context: Context) {
             }
             Log.d("muteButtonBuild", "lable: $label, height: $height")
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, basicHeight)
+            top = this@MuteButtonBuilder.topMargin
             setTextColor(resources.getColorStateList(R.color.mute_toggle_text_selector, null))
         }
     }
