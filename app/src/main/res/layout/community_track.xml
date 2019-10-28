@@ -146,19 +146,36 @@
                 android:layout_marginStart="10dp"
                 android:background="#FFFFFF"
                 >
-
+            <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/TrackUserTextView"
+                    android:background="#8B8B8B">
             <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight = "1"
+                    android:text="User"
+                    android:textSize="20dp"
+                    android:textColor="#FFFFFF"
+                    android:gravity="center_horizontal"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center_horizontal"
+                    />
+            </FrameLayout>
+            <TextView
+                    android:layout_marginTop="3dp"
                     android:id="@+id/Track_artistName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:layout_below="@id/TrackUserTextView"
                     android:text="Artist Name"
                     android:textSize="20dp"
                     android:textColor="#8B8B8B"
-                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginStart="35dp"
                     android:layout_marginEnd="35dp"/>
-
         </RelativeLayout>
     </LinearLayout>
     <RelativeLayout
@@ -179,9 +196,7 @@
                 android:gravity="center"
                 android:textColor="#7E7E7E"
                 android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-
-                />
+                android:layout_marginTop="10dp" />
 
         <LinearLayout
                 android:layout_width="match_parent"
@@ -201,9 +216,11 @@
                         android:id="@+id/trackInfoTextEdit"
                         android:layout_width="300dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
                         android:layout_marginTop="10dp"
+                        android:layout_weight="1"
                         android:layout_gravity="center_horizontal"
-                        android:text="사용박자: 4/4\n 곡 설명: 다장조의 코드를 이용한 피아노와 기타의 음을 쌓아 만든 창작곡이다." />
+                        android:text="" />
 
         </LinearLayout>
     </RelativeLayout>

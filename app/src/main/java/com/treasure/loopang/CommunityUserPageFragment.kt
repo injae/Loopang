@@ -11,6 +11,7 @@ import android.widget.AdapterView
 import android.widget.FrameLayout
 import android.widget.ListView
 import com.treasure.loopang.adapter.CommunityUserPageAdapter
+import com.treasure.loopang.communication.UserManager
 import com.treasure.loopang.listitem.CommunitySongItem
 import kotlinx.android.synthetic.main.activity_community.*
 import kotlinx.android.synthetic.main.community_user_page.*
@@ -38,7 +39,11 @@ class CommunityUserPageFragment : androidx.fragment.app.Fragment() {
                 userPageItemAdapter.addItem(
                     com.treasure.loopang.communication.UserManager.getUser().trackList[i].owner,
                     com.treasure.loopang.communication.UserManager.getUser().trackList[i].name,
-                    com.treasure.loopang.communication.UserManager.getUser().trackList[i].id
+                    com.treasure.loopang.communication.UserManager.getUser().trackList[i].likes,
+                    com.treasure.loopang.communication.UserManager.getUser().trackList[i].downloads,
+                    com.treasure.loopang.communication.UserManager.getUser().trackList[i].id,
+                    com.treasure.loopang.communication.UserManager.getUser().trackList[i].updated_date,
+                    ""
                 )
             }
         }else {
@@ -47,7 +52,11 @@ class CommunityUserPageFragment : androidx.fragment.app.Fragment() {
                 userPageItemAdapter.addItem(
                     com.treasure.loopang.communication.UserManager.getUser().likedList[i].owner,
                     com.treasure.loopang.communication.UserManager.getUser().likedList[i].name,
-                    com.treasure.loopang.communication.UserManager.getUser().likedList[i].id
+                    com.treasure.loopang.communication.UserManager.getUser().likedList[i].likes,
+                    com.treasure.loopang.communication.UserManager.getUser().likedList[i].downloads,
+                    com.treasure.loopang.communication.UserManager.getUser().likedList[i].id,
+                    com.treasure.loopang.communication.UserManager.getUser().likedList[i].updated_date,
+                    ""
                 )
             }
         }
@@ -73,20 +82,10 @@ class CommunityUserPageFragment : androidx.fragment.app.Fragment() {
             isButtonStateTrack = false
         }
         userPageListView.onItemClickListener = AdapterView.OnItemClickListener { parent, v, position, id ->
-            // get item
-            val item = parent.getItemAtPosition(position) as CommunitySongItem
-
-            val songName = item.songName
-            val userNickName = item.userNickName
-            val downloadNum = item.downloadNum
-            val likedNum = item.likedNum
-            val songId = item.songId
-
-            var trackFrame : FrameLayout = activity!!.TrackFrame
-            trackFrame.visibility = View.VISIBLE
-            (activity as CommunityActivity).onFragmentChangedtoTrack(songId) //likednum,downloadnum 넣어주기 ㅇㅇ
+            val itt = parent.getItemAtPosition(position) as CommunitySongItem
+            activity!!.TrackFrame.visibility = View.VISIBLE
+            (activity as CommunityActivity).onFragmentChangedtoTrack(itt)
         }
-
         addTrackButton.setOnClickListener {
             val intent = Intent(activity, CommunityShareActivity::class.java)  //intent.putExtra()
             startActivity(intent)

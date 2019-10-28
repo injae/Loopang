@@ -54,12 +54,13 @@ class CommunityFeedFragment : androidx.fragment.app.Fragment() {
             communityFeedListView.adapter = FeedAdapter
 
             if(item.categoryName == "The Newest 5") {
-                FeedAdapter.addItem("1","2",0,1,"dd")
+
+                /*FeedAdapter.addItem("1","2",0,1,"dd")
                 FeedAdapter.addItem("ㅇㅁ나어","ㄷㅈㄷ2",0,1,"dㄴd")
                 FeedAdapter.addItem("1ㄴㅁ","2ㅂㅂ",1,4,"dㅇd")
                 FeedAdapter.addItem("12323","2ㅇㅁㄴㅇㅁ",5,6,"ddㅁ")
                 FeedAdapter.addItem("14324","2ㄴㅁㅇㅇ",6,8,"ddㅂ")
-                /*for (i in 0..com.treasure.loopang.communication.UserManager.getUser().likedList.size-1) {
+                for (i in 0..com.treasure.loopang.communication.UserManager.getUser().likedList.size-1) {
             FeedAdapter.addItem(
                 com.treasure.loopang.communication.UserManager.getUser().likedList[i].owner,
                 com.treasure.loopang.communication.UserManager.getUser().likedList[i].name,
@@ -72,15 +73,10 @@ class CommunityFeedFragment : androidx.fragment.app.Fragment() {
             }
         }
 
-
-
-
-
         communityFeedListView.onItemClickListener = AdapterView.OnItemClickListener { parent, v, position, id ->
-            val item = parent.getItemAtPosition(position) as CommunitySongItem
-
+            val itt = parent.getItemAtPosition(position) as CommunitySongItem
             activity!!.TrackFrame.visibility = View.VISIBLE
-            (activity as CommunityActivity).onFragmentChangedtoTrack(item.songId)
+            (activity as CommunityActivity).onFragmentChangedtoTrack(itt)
         }
     }
 }
