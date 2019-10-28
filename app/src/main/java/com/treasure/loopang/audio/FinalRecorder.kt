@@ -85,16 +85,21 @@ class FinalRecorder : IFinalRecorder {
     override fun recordStart() {
         mixer.startBlock()
         if(!mixer.isLooping.get()) mixer.start()
-        //recorder.start()
+        recorder.start()
     }
 
     override fun recordStop() {
         mixer.endBlock()
-        Log.d("FinalRecorder, 녹음중", "녹음종료, mixer.endBlock() 완료")
+        Log.d("AudioTest, 녹음중", "녹음종료, mixer played ${mixer.sounds[0].playedRange.endIndex()}")
+        mixer.sounds.map{ it.blocks }.forEach{
+            it.forEach{
+                Log.d("AudioTest, 녹음중", " ${it.cycle} ${it.start} ${it.end} ${it.repeat}")
+            }
+        }
         mixer.stop()
-        Log.d("FinalRecorder, 녹음중", "녹음종료, mixer.stop() 완료")
-        //recorder.stop()
-        Log.d("FinalRecorder, 녹음중", "녹음종료, recorder.stop() 완료")
+        Log.d("AudioTest, 녹음중", "녹음종료, mixer.stop() 완료")
+        recorder.stop()
+        Log.d("AudioTest, 녹음중", "녹음종료, recorder.stop() 완료")
     }
 
     override fun export(title: String, soundFormat: String): Boolean {
