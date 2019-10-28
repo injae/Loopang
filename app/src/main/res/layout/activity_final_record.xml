@@ -18,10 +18,11 @@
                 android:id="@+id/btn_open_volume_cotrol"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="-10dp"
+                android:layout_marginStart="-10dp"
                 android:gravity="center_vertical"
                 android:text="@string/btn_volume_control_str"
                 android:textSize="8sp"
-                android:layout_margin="-10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/mute_button_scroll" />
@@ -42,6 +43,8 @@
                     android:id="@+id/mute_button_linear"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:divider="@drawable/final_record_linear_divisor"
+                    android:dividerPadding="9dp"
                     android:orientation="vertical" />
         </ScrollView>
 
@@ -107,7 +110,6 @@
                         android:layout_height="@dimen/fr_icon_size1"
                         android:layout_gravity="center"
                         android:layout_weight="1"
-                        android:text="ToggleButton"
                         android:textOff=""
                         android:textOn=""
                         android:background="@drawable/final_record_btn_play_state"
@@ -143,7 +145,6 @@
                         android:layout_height="28dp"
                         android:layout_gravity="center"
                         android:layout_weight="1"
-                        android:text="ToggleButton"
                         android:textOff=""
                         android:textOn=""
                         android:background="@drawable/final_record_btn_record_state"/>
@@ -173,7 +174,6 @@
                     android:layout_width="@dimen/fr_icon_width1"
                     android:layout_height="@dimen/fr_icon_height1"
                     android:layout_weight="1"
-                    android:text="ToggleButton"
                     android:textOn="Overwrite"
                     android:textOff="Overwrite"
                     android:textSize="8dp"
@@ -189,7 +189,6 @@
                     android:layout_height="@dimen/fr_icon_height1"
                     android:layout_weight="1"
                     android:layout_gravity="center_vertical"
-                    android:text="ToggleButton"
                     android:textOn="Metronome"
                     android:textOff="Metronome"
                     android:textSize="7dp"
@@ -249,6 +248,8 @@
                             android:id="@+id/layer_list_linear"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:divider="@drawable/final_record_linear_divisor"
+                            android:dividerPadding="9dp"
                             android:background="#2196F3"
                             android:orientation="vertical" />
                 </FrameLayout>
@@ -260,6 +261,8 @@
                     android:layout_height="17dp"
                     android:paddingStart="0dp"
                     android:paddingEnd="0dp"
+                    android:thumb="@drawable/final_record_seekbar_thumb"
+                    android:progressDrawable="@drawable/final_record_seekbar"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="@+id/layer_list_scroll"
                     app:layout_constraintStart_toStartOf="parent" />

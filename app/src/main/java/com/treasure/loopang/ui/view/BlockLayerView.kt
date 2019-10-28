@@ -6,13 +6,16 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Path
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.util.Log
-import android.view.animation.Animation
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import com.treasure.loopang.R
 import com.treasure.loopang.ui.util.WidthPerTime
+import android.graphics.RectF
+
 
 class BlockLayerView(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0):
     FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
@@ -35,17 +38,52 @@ class BlockLayerView(context: Context, attrs: AttributeSet? = null, defStyleAttr
     var blockAnimator: ValueAnimator? = null
     private val blockAnimationListener: BlockAnimatorListener = BlockAnimatorListener()
 
-    var layerEventListener: LayerEventListener? = null
+    // var layerEventListener: LayerEventListener? = null
 
     private val paint = Paint(Color.BLACK)
+
+    private val path: Path = Path()
+    var cornerRadius = 0
+        set(value) {
+            if (cornerRadius != value) {
+                field = value
+                setPath()
+                invalidate()
+            }
+        }
+
+    var roundedCorners = 0
+        set(value) {
+            if (roundedCorners != value) {
+                field = value
+                setPath()
+                invalidate()
+            }
+        }
+
+    companion object {
+        const val CORNER_NONE: Int = 0
+        const val CORNER_TOP_LEFT: Int = 1
+        const val CORNER_TOP_RIGHT: Int = 2
+        const val CORNER_BOTTOM_RIGHT: Int = 4
+        const val CORNER_BOTTOM_LEFT: Int = 8
+        const val CORNER_ALL: Int= 15
+
+        val CORNERS: List<Int> = listOf(
+            CORNER_TOP_LEFT,
+            CORNER_TOP_RIGHT,
+            CORNER_BOTTOM_RIGHT,
+            CORNER_BOTTOM_LEFT)
+    }
 
     init {
         setWillNotDraw(false)
     }
 
     override fun onDraw(canvas: Canvas?) {
-        Log.d("BlockLayerView Draw", "Canvas is null? : ${(canvas == null)}")
-        canvas?.drawColor(Color.WHITE)
+        canvas?.clipPath(path)
+
+        canvas?.drawColor(resources.getColor(R.color.blockLayerViewBackground, null))
         canvas?.drawLine(0f,0f, width.toFloat(), 0f, paint)
         canvas?.drawLine(0f, height.toFloat(), width.toFloat(), height.toFloat(), paint)
         canvas?.drawLine(0f, 0f, 0f, height.toFloat(), paint)
@@ -58,6 +96,35 @@ class BlockLayerView(context: Context, attrs: AttributeSet? = null, defStyleAttr
         basicWidth = width
     }
 
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        setPath()
+    }
+
+    private fun setPath() {
+        path.rewind()
+        if ((cornerRadius >= 1f) && (roundedCorners != BlockLayerView.CORNER_NONE)) {
+            val radii = FloatArray(8)
+
+            for (i in 0..3) {
+                if (isCornerRounded(BlockLayerView.CORNERS[i])) {
+                    radii[2 * i] = cornerRadius.toFloat()
+                    radii[2 * i + 1] = cornerRadius.toFloat()
+                }
+            }
+
+            path.addRoundRect(
+                RectF(0f, 0f, width.toFloat(), height.toFloat()),
+                radii, Path.Direction.CW
+            )
+        }
+    }
+
+    private fun isCornerRounded(corner: Int): Boolean {
+        return (roundedCorners and corner) == corner
+    }
+
+
     private fun addBlock(blockView: BlockView, listener: BlockView.BlockControlListener? = null) {
         val start = blockView.startTime.ohms
         val duration = blockView.duration.ohms
@@ -68,6 +135,8 @@ class BlockLayerView(context: Context, attrs: AttributeSet? = null, defStyleAttr
         blockView.amplitudeDrawable = amplitudesDrawable
         blockView.blockColor = blockColor
         blockView.bcListener = listener
+        blockView.cornerRadius = 20
+        blockView.roundedCorners = BlockView.CORNER_ALL
         this.addView(blockView)
         this.blockViewList.add(blockView)
         this.currentBlock = blockView
@@ -119,10 +188,10 @@ class BlockLayerView(context: Context, attrs: AttributeSet? = null, defStyleAttr
                     val param = currentBlock!!.layoutParams as LayoutParams
                     param.width = blockBasicWidth + value
                     currentBlock!!.layoutParams = param
-                    if(param.width + param.leftMargin > width*0.8f){
+                    /*if(param.width + param.leftMargin > width*0.8f){
                         // expandSize()
                         layerEventListener?.onBlockExpand(this@BlockLayerView, param.width + param.leftMargin)
-                    }
+                    }*/
                 }
                 addListener(blockAnimationListener)
             }
