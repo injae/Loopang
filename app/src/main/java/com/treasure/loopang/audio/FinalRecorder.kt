@@ -109,7 +109,7 @@ class FinalRecorder : IFinalRecorder {
                 Log.d("AudioTest", "- mixer: ${it.startDuration()} ${it.endDuration()}")
             }
         }
-        recorder.stop(mixer.sounds[0].editedRange.endIndex())
+        recorder.stop(mixer.sounds[0].playedRange.endIndex())
         recorder.blocks.forEach{
             Log.d("AudioTest", "- recorder: ${it.startDuration()} ${it.endDuration()}")
         }
