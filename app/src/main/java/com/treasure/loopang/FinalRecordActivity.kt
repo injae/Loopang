@@ -77,7 +77,7 @@ class FinalRecordActivity : AppCompatActivity() {
     var recordStopButton: ImageButton? = null
     var overwriteButton: ToggleButton? = null
     var metronomeButton: ToggleButton? = null
-    var openVCDButton: VerticalTextButton? = null
+    var openVCDButton: ImageButton? = null
 
     //control panel
     var timeStampTxt: TextView? = null
@@ -116,6 +116,7 @@ class FinalRecordActivity : AppCompatActivity() {
         initModule()
         initView()
         initAfterInflation()
+        openVCDButton!!.bringToFront()
     }
 
     private fun initModule() {}

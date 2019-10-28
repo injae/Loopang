@@ -14,18 +14,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-        <com.treasure.loopang.ui.view.VerticalTextButton
+        <ImageButton
                 android:id="@+id/btn_open_volume_cotrol"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="28dp"
+                android:layout_height="102dp"
                 android:layout_margin="-10dp"
-                android:layout_marginStart="-10dp"
-                android:gravity="center_vertical"
-                android:text="@string/btn_volume_control_str"
-                android:textSize="8sp"
+                android:src="@drawable/open_vcd"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/mute_button_scroll" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/open_vcd" />
 
         <ScrollView
                 android:background="#4C4C4C"
