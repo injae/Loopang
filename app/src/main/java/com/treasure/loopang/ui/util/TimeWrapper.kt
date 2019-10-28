@@ -7,6 +7,7 @@ class TimeWrapper(var ms: Int = 0) {
     var ohms = ms / 100
 
     fun set(ms: Int) {
+        this.ms = ms
         s = ms / 1000
         hs = ms / 500
         thms = ms / 200

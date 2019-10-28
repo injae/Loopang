@@ -4,13 +4,10 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Environment
 import android.text.SpannableStringBuilder
-import android.util.Log
 import android.view.WindowManager
 import com.jakewharton.rxbinding3.view.clicks
 import com.treasure.loopang.Database.DatabaseManager
-import com.treasure.loopang.audio.SoundEffector
 import com.treasure.loopang.communication.*
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_login.*
@@ -35,6 +32,7 @@ class Login : AppCompatActivity() {
         GlobalScope.launch {
             DatabaseManager.deleteToken(this@Login)
             if(DatabaseManager.getPassword(this@Login) != null) {
+                input_id.text = SpannableStringBuilder(DatabaseManager.getEmail(this@Login))
                 UserManager.setUser(DatabaseManager.getEmail(this@Login)!!, decodeYuni(DatabaseManager.getPassword(this@Login)!!))
                 cb_auto_login.isChecked = true
                 val cnt = Connector()

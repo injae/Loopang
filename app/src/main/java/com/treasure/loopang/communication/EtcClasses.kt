@@ -15,6 +15,6 @@ data class MusicListClass(var id: String = "", var name: String = "", var owner:
 
 data class Result(var refreshToken: String = "", var accessToken: String = "") : defaultFrame("","")
 
-data class FeedResult(var newFeed: List<String>) : defaultFrame("","")
+data class FeedResult(var feed: List<MusicListClass>) : defaultFrame("","")
 
-data class SearchResult(var searchResult: List<String>) : defaultFrame("","")
+data class SearchResult(var searchResult: List<MusicListClass>) : defaultFrame("","")

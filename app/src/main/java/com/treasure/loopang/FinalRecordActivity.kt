@@ -77,7 +77,7 @@ class FinalRecordActivity : AppCompatActivity() {
     var recordStopButton: ImageButton? = null
     var overwriteButton: ToggleButton? = null
     var metronomeButton: ToggleButton? = null
-    var openVCDButton: VerticalTextButton? = null
+    var openVCDButton: ImageButton? = null
 
     //control panel
     var timeStampTxt: TextView? = null
@@ -116,19 +116,12 @@ class FinalRecordActivity : AppCompatActivity() {
         initModule()
         initView()
         initAfterInflation()
+        openVCDButton!!.bringToFront()
     }
 
     private fun initModule() {}
 
     private fun initView(){
-        val display = windowManager.defaultDisplay
-        val size = Point()
-        display.getSize(size)
-        val blockControlWindow = blockControlDialog.window
-        val volumeControlWindow = volumeControlDialog.window
-
-        blockControlWindow?.setLayout((size.x * 0.25).toInt(), size.y)
-        volumeControlWindow?.setLayout((size.x * 0.25).toInt(), size.y)
 
         recordButton!!.setOnClickListener {
             val btn = it as ToggleButton
@@ -146,6 +139,7 @@ class FinalRecordActivity : AppCompatActivity() {
                 }
                 recordSeekBarButton!!.isEnabled = false
                 finalRecorder.recordStart()
+                Thread(updateRecordRunnable).start()
             } else {
                 recordFlag = false
                 stopBlock()
@@ -167,7 +161,7 @@ class FinalRecordActivity : AppCompatActivity() {
                     playFlag = true
                     //todo: 재생시 동작
                     finalRecorder.playStart()
-                    // Thread(PlayUp)
+                    Thread(updatePlayRunnaable).start()
                 } else {
                     playFlag = false
                     //todo: 재생 정지시 동작
@@ -247,7 +241,7 @@ class FinalRecordActivity : AppCompatActivity() {
                 initLayerList(num)
 
                 //전체 시크바 MAX 초기화.
-                recordSeekBarButton?.max = (basicWidth / wpt.width) * wpt.ms
+                recordSeekBarButton?.max = (basicWidth / wpt.width) * wpt.ms / 10
             }
         })
     }
@@ -267,6 +261,7 @@ class FinalRecordActivity : AppCompatActivity() {
                     blockLayerViewList[x].mute(false, recordFlag, recordCurrentPosition.ms)
                     finalRecorder.setMute(x, false)
                 }
+                .topMargin(10)
                 .build()
 
             //blockLayerView 초기화
@@ -274,9 +269,10 @@ class FinalRecordActivity : AppCompatActivity() {
             blockLayerView.wpt = wpt
             blockLayerView.blockColor = blockColorList[x%blockColorList.size]
             layerListLinear!!.addView(blockLayerView, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, basicHeight))
-            blockLayerViewList.add(blockLayerView)
-            blockLayerView.cornerRadius = 8
+            blockLayerView.cornerRadius = 20
             blockLayerView.roundedCorners = BlockLayerView.CORNER_ALL
+            blockLayerView.top = 10
+            blockLayerViewList.add(blockLayerView)
 
             //muteButton 초기화
             mute_button_linear.addView(muteButton)
@@ -311,11 +307,13 @@ class FinalRecordActivity : AppCompatActivity() {
         val blockList = finalRecorder.getBlockList()
         clear()
 
+        Log.d("RRA, 녹음중", "refreshView(), blockList.size: ${blockList.size}")
         blockList.forEachIndexed { li, list ->
             list.forEachIndexed { bi, soundRange ->
                 val start = soundRange.startDuration()
                 val duration = soundRange.endDuration() - start
                 blockLayerViewList[li].addBlock(bi,start,duration, BCListener())
+                Log.d("RRA, 녹음중", "refreshView(), 블록 리스트에서 가져오기, li: $li, bi: $bi, $start: start, duration: $duration")
             }
         }
 
@@ -361,11 +359,26 @@ class FinalRecordActivity : AppCompatActivity() {
     }
 
     private fun showBlockControlDialog(layerId:Int, blockId: Int) {
+        val display = windowManager.defaultDisplay
+        val size = Point()
+        display.getSize(size)
+        val blockControlWindow = blockControlDialog.window
+
+        blockControlWindow?.setLayout((size.x * 0.25).toInt(), size.y)
+
         blockControlDialog.show(layerId, blockId)
+
         Log.d("FRA, 블록컨트롤", "showBlockControlDialog(layerId: $layerId, blockId: $blockId)")
     }
 
     private fun showVolumeControlDialog() {
+        val display = windowManager.defaultDisplay
+        val size = Point()
+        display.getSize(size)
+        val volumeControlWindow = volumeControlDialog.window
+
+        volumeControlWindow?.setLayout((size.x * 0.25).toInt(), size.y)
+
         volumeControlDialog.show()
         Log.d("FRA, 볼륨컨트롤", "showVolumeControlDialog")
     }
@@ -427,10 +440,10 @@ class FinalRecordActivity : AppCompatActivity() {
     val updateRecordRunnable: Runnable = Runnable {
         while(recordFlag) {
             recordCurrentPosition.ms = finalRecorder.getRecordPosition()
-            recordSeekBarButton!!.progress = recordCurrentPosition.ms
+            recordSeekBarButton!!.progress = finalRecorder.getRecordPosition()
             if(recordSeekBarButton!!.progress >= recordSeekBarButton!!.max * 0.8f) {
-                expandRecordSeekMax()
-                expandLayerLinear()
+                //expandRecordSeekMax()
+                //expandLayerLinear()
                 Log.d("FRA, 녹음중", "리니어레이아웃과 시크바 맥스를 EXPAND 합니다.")
             }
             Log.d("FRA, 녹음중", "recordFlag: $recordFlag, recordCurrentPosition.ms : ${recordCurrentPosition.ms}")
@@ -441,7 +454,7 @@ class FinalRecordActivity : AppCompatActivity() {
         playFlag = finalRecorder.isPlaying()
         while(playFlag) {
             recordCurrentPosition.ms = finalRecorder.getRecordPosition()
-            recordSeekBarButton!!.progress = recordCurrentPosition.ms
+            recordSeekBarButton!!.progress = finalRecorder.getRecordPosition()
             playFlag = finalRecorder.isPlaying()
             Log.d("FRA, 재생중", "playFlag: $playFlag, recordCurrentPosition.ms : ${recordCurrentPosition.ms}")
         }
@@ -500,6 +513,7 @@ class MuteButtonBuilder(val context: Context) {
     private var onMuteEvent: ()->Unit = {}
     private var onUnMuteEvent: ()->Unit = {}
     private var basicHeight: Int = 0
+    private var topMargin: Int = 0
 
     fun label(label: String): MuteButtonBuilder {
         this.label = label
@@ -517,6 +531,10 @@ class MuteButtonBuilder(val context: Context) {
         this.basicHeight = h
         return this
     }
+    fun topMargin(px: Int): MuteButtonBuilder {
+        this.topMargin = px
+        return this
+    }
     fun build(): ToggleButton {
         return ToggleButton(context).apply{
             setBackgroundResource(R.drawable.mute_toggle_selector)
@@ -530,6 +548,7 @@ class MuteButtonBuilder(val context: Context) {
             }
             Log.d("muteButtonBuild", "lable: $label, height: $height")
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, basicHeight)
+            top = this@MuteButtonBuilder.topMargin
             setTextColor(resources.getColorStateList(R.color.mute_toggle_text_selector, null))
         }
     }
