@@ -7,6 +7,7 @@ import android.graphics.Path
 import android.graphics.RectF
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import com.treasure.loopang.ui.util.TimeWrapper
 import com.treasure.loopang.ui.util.WidthPerTime
@@ -28,8 +29,6 @@ class BlockView @JvmOverloads constructor(
     var amplitudeDrawable: Drawable? = null
 
     var blockColor: Int = 0
-    var blockBackgroundPaint: Paint? = null
-    var blockRectPaint: Paint? = null
 
     private val path: Path = Path()
     var cornerRadius = 0
@@ -85,6 +84,7 @@ class BlockView @JvmOverloads constructor(
     private fun setPath() {
         path.rewind()
         if ((cornerRadius >= 1f) && (roundedCorners != BlockLayerView.CORNER_NONE)) {
+            Log.d("ConerRadius", "코너의 패스를 만듭니다.")
             val radii = FloatArray(8)
 
             for (i in 0..3) {
@@ -98,6 +98,7 @@ class BlockView @JvmOverloads constructor(
                 RectF(0f, 0f, width.toFloat(), height.toFloat()),
                 radii, Path.Direction.CW
             )
+            invalidate()
         }
     }
 

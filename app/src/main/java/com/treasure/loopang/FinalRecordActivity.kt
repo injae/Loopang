@@ -28,6 +28,7 @@ import com.treasure.loopang.ui.view.BlockView
 import com.treasure.loopang.ui.view.VerticalTextButton
 import kotlinx.android.synthetic.main.activity_final_record.*
 import kotlinx.android.synthetic.main.dialog_final_save.*
+import kotlinx.coroutines.launch
 
 class FinalRecordActivity : AppCompatActivity() {
     private var buttonLabelList: List<String>? = null
@@ -166,6 +167,7 @@ class FinalRecordActivity : AppCompatActivity() {
                     playFlag = true
                     //todo: 재생시 동작
                     finalRecorder.playStart()
+                    // Thread(PlayUp)
                 } else {
                     playFlag = false
                     //todo: 재생 정지시 동작

@@ -1,5 +1,6 @@
 package com.treasure.loopang.audio
 
+import android.util.Log
 import com.treasure.loopang.ui.interfaces.IFinalRecorder
 
 class FinalRecorder : IFinalRecorder {
@@ -72,21 +73,28 @@ class FinalRecorder : IFinalRecorder {
     }
 
     override fun playStart() {
+        mixer.addSound(recorder.getSound())
         mixer.start()
     }
 
     override fun playStop() {
         mixer.stop()
+        mixer.sounds.removeAt(mixer.sounds.size - 1)
     }
 
     override fun recordStart() {
+        if(!mixer.isLooping.get()) mixer.start()
         mixer.startBlock()
         recorder.start()
     }
 
     override fun recordStop() {
         mixer.endBlock()
+        Log.d("FinalRecorder, 녹음중", "녹음종료, mixer.endBlock() 완료")
+        mixer.stop()
+        Log.d("FinalRecorder, 녹음중", "녹음종료, mixer.stop() 완료")
         recorder.stop()
+        Log.d("FinalRecorder, 녹음중", "녹음종료, recorder.stop() 완료")
     }
 
     override fun export(title: String, soundFormat: String): Boolean {

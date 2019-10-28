@@ -173,19 +173,26 @@
                     android:layout_width="@dimen/fr_icon_width1"
                     android:layout_height="@dimen/fr_icon_height1"
                     android:layout_weight="1"
-                    android:textOff="Overwrite"
                     android:textOn="Overwrite"
-                    android:textSize="7dp"
+                    android:textOff="Overwrite"
+                    android:textSize="8dp"
+                    android:textColor="@android:color/white"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/final_record_overwrite_and_metronome_btn_state"
                     />
 
             <ToggleButton
+                    android:layout_marginStart="3dp"
                     android:id="@+id/btn_metronome"
                     android:layout_width="@dimen/fr_icon_width1"
                     android:layout_height="@dimen/fr_icon_height1"
                     android:layout_weight="1"
-                    android:textOff="Metronome"
+                    android:layout_gravity="center_vertical"
                     android:textOn="Metronome"
-                    android:textSize="7dp" />
+                    android:textOff="Metronome"
+                    android:textSize="7dp"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/final_record_overwrite_and_metronome_btn_state"/>
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
