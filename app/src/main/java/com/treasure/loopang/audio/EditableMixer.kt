@@ -1,6 +1,5 @@
 package com.treasure.loopang.audio
 
-import android.util.Log
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -20,9 +19,9 @@ class SoundRange( var sound: Sound, var cycle: Int = 0, var start: Int = 0, var 
         soundLength = sound.data.size
     }
 
-    fun remove(start: Int) {
-        var buf = SoundRange(sound, cycle, this.start)
-        buf.expand(start-(cycle * this.start))
+    fun remove(tenMs: Int) {
+        var buf = SoundRange(sound, cycle, start)
+        buf.expand((tenMs * sound.info.tenMsSampleRate) - startIndex())
         end = buf.end
         repeat = buf.repeat
     }
@@ -63,7 +62,6 @@ class EditableSound {
     var blocks: MutableList<SoundRange> = mutableListOf()
     var sound: Sound
 
-    var editedRange: SoundRange
     var playedRange: SoundRange
     var playedIndex: Int
 
@@ -72,11 +70,9 @@ class EditableSound {
 
     constructor(sound: Sound) {
         this.sound = sound
-        editedRange = SoundRange(sound, 0)
         playedRange = SoundRange(sound, 0)
         playedIndex = 0
         effectorIndex = sound.addEffector {
-            if(isEdit.get()) editedRange.expand(it.size)
             playedRange.expand(it.size)
             if(blocks.isNotEmpty()) {
                 var compare =  playedRange.endIndex() - blocks[playedIndex].startIndex()
@@ -109,7 +105,6 @@ class EditableSound {
     }
 
     fun seek(start: Int) {
-        editedRange.remove(start)
         playedRange.remove(start)
     }
 
@@ -117,7 +112,7 @@ class EditableSound {
         if(!isMute) {
             sound.isMute.set(false)
             isEdit.set(true)
-            currentBlock = editedRange.nextRange()
+            currentBlock = playedRange.nextRange()
             blocks = blocks.filter{ !it.isOverlap(currentBlock!!) }.toMutableList()
         }
     }
@@ -126,7 +121,7 @@ class EditableSound {
         if(!isMute) {
             sound.isMute.set(true)
             isEdit.set(false)
-            var range = editedRange.endIndex() - currentBlock!!.startIndex()
+            var range = playedRange.endIndex() - currentBlock!!.startIndex()
             currentBlock!!.expand(range)
             blocks.add(currentBlock!!)
         }
