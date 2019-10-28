@@ -8,8 +8,8 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 
 class SoundRange( var sound: Sound, var cycle: Int = 0, var start: Int = 0, var end: Int = 0, var repeat: Int = 0) {
+    var soundLength: Int
     fun expand(size: Int) {
-        var soundLength = sound.data.size
         Log.d("AudioTest", "soundLength: ${soundLength}> ${end} + ${size}")
         end += size
         repeat += (end / soundLength)
@@ -19,6 +19,7 @@ class SoundRange( var sound: Sound, var cycle: Int = 0, var start: Int = 0, var 
 
     init {
         if(sound.data.isEmpty()) sound.data = ShortArray(size=sound.info.sampleRate).toMutableList()
+        soundLength = sound.data.size
     }
 
     fun remove(start: Int) {
@@ -37,7 +38,9 @@ class SoundRange( var sound: Sound, var cycle: Int = 0, var start: Int = 0, var 
     }
 
     fun startDuration(): Int {
-        return startIndex() / sound.info.tenMsSampleRate
+        var sd = startIndex()
+        if(sd == 0) return 0
+        return sd / sound.info.tenMsSampleRate
     }
 
     fun endDuration(): Int {
