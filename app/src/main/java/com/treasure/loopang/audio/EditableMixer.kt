@@ -30,11 +30,11 @@ class SoundRange( var sound: Sound, var cycle: Int = 0, var start: Int = 0, var 
     }
 
     fun startIndex(): Int{
-        return cycle*start
+        return cycle*soundLength + start
     }
 
     fun endIndex(): Int{
-        return (cycle*start) + (end*repeat)
+        return (cycle*soundLength) + start + (end*repeat)
     }
 
     fun startDuration(): Int {
