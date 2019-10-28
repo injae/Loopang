@@ -8,8 +8,8 @@ class FinalRecorder : IFinalRecorder {
     var recorder = OverWritableRecorder()
 
     override fun getBlockList(): List<List<SoundRange>> {
-        var buf = mixer.sounds.map{ it.blocks }.toMutableList()
-        buf.add(recorder.blocks)
+        var buf = mutableListOf<List<SoundRange>>(recorder.blocks)
+        buf.addAll(mixer.sounds.map{ it.blocks })
         return buf
     }
 
@@ -90,16 +90,17 @@ class FinalRecorder : IFinalRecorder {
 
     override fun recordStop() {
         mixer.endBlock()
-        Log.d("AudioTest, 녹음중", "녹음종료, mixer played ${mixer.sounds[0].playedRange.endIndex()}")
+        Log.d("AudioTest, 녹음중", "mixer played ${mixer.sounds[0].playedRange.endIndex()}")
         mixer.sounds.map{ it.blocks }.forEach{
             it.forEach{
-                Log.d("AudioTest, 녹음중", " ${it.cycle} ${it.start} ${it.end} ${it.repeat}")
+                Log.d("AudioTest, ", "mixer: ${it.startDuration()} ${it.endDuration()}")
             }
         }
         mixer.stop()
-        Log.d("AudioTest, 녹음중", "녹음종료, mixer.stop() 완료")
-        recorder.stop()
-        Log.d("AudioTest, 녹음중", "녹음종료, recorder.stop() 완료")
+        recorder.stop(mixer.sounds[0].playedRange.endIndex())
+        recorder.blocks.forEach{
+            Log.d("AudioTest, 녹음중", "recorder: ${it.startDuration()} ${it.endDuration()}")
+        }
     }
 
     override fun export(title: String, soundFormat: String): Boolean {

@@ -42,7 +42,7 @@ class Connector(private val DNS: String = "https://ec2-3-15-172-177.us-east-2.co
             ResultManager.SIGN_UP -> { call = service.sendSignUpInfo(user!!.email, user.password, user.name) }
             ResultManager.LOGIN -> { call = service.sendLoginInfo(user!!.email, user.password) }
             ResultManager.FILE_UPLOAD -> { call = service.sendFile(accessToken, fileName!!, getMultiPartBody(fileName)) }
-            ResultManager.FILE_DOWNLOAD -> { fileCall = service.receiveFile(accessToken, fileName!!) }
+            ResultManager.FILE_DOWNLOAD -> { fileCall = service.receiveFile(accessToken, musicID!!) }
             ResultManager.INFO_REQUEST -> { infoCall = service.receiveUserInfo(accessToken) }
             ResultManager.FEED_REQUEST -> { feedCall = service.receiveFeed(accessToken) }
             ResultManager.SEARCH_REQUEST -> { searchCall = service.receiveSearch(accessToken, searchData!!) }
@@ -88,6 +88,45 @@ class Connector(private val DNS: String = "https://ec2-3-15-172-177.us-east-2.co
     }
 
     fun getFile() = file
+
+    private fun getMultiPartBody(fileName: String) = MultipartBody.Part
+        .createFormData("file", fileName, RequestBody.create(MediaType.parse("audio/*"),
+            File("${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)}/Loopang/${fileName}")))
+
+    private fun getErrorResult(): Result {
+        val temp = Result()
+        temp.status = "error"
+        return temp
+    }
+
+    private fun getSuccessFileReceive(): Result {
+        val temp = Result()
+        temp.status = "success"
+        temp.message = "file download success"
+        return temp
+    }
+
+    private fun getInfoRequest(userInfo: ForUserInfo): Result {
+        val temp = Result()
+        if(userInfo.status == "success") { UserManager.setInfo(userInfo.nickName, userInfo.trackList, userInfo.likedList) }
+        temp.status = userInfo.status
+        temp.message = userInfo.message
+        return temp
+    }
+
+    private fun getFeedRequest(feedResult: FeedResult): Result {
+        val temp = Result()
+        temp.status = feedResult.status
+        temp.message = feedResult.message
+        return temp
+    }
+
+    private fun getSearchRequest(searchResult: SearchResult): Result {
+        val temp = Result()
+        temp.status = searchResult.status
+        temp.message = searchResult.message
+        return temp
+    }
 }
 
 private fun getUnsafeOkHttpClient(): OkHttpClient {
@@ -107,43 +146,4 @@ private fun getUnsafeOkHttpClient(): OkHttpClient {
         .addInterceptor(logger)
         .sslSocketFactory(sslSocketFactory, trustAllCerts[0] as X509TrustManager)
         .hostnameVerifier { _, _ -> true }.build()
-}
-
-private fun getMultiPartBody(fileName: String) = MultipartBody.Part
-    .createFormData("file", fileName, RequestBody.create(MediaType.parse("audio/*"),
-    File("${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)}/Loopang/${fileName}")))
-
-private fun getErrorResult(): Result {
-    val temp = Result()
-    temp.status = "error"
-    return temp
-}
-
-private fun getSuccessFileReceive(): Result {
-    val temp = Result()
-    temp.status = "success"
-    temp.message = "file download success"
-    return temp
-}
-
-private fun getInfoRequest(userInfo: ForUserInfo): Result {
-    val temp = Result()
-    if(userInfo.status == "success") { UserManager.setInfo(userInfo.nickName, userInfo.trackList, userInfo.likedList) }
-    temp.status = userInfo.status
-    temp.message = userInfo.message
-    return temp
-}
-
-private fun getFeedRequest(feedResult: FeedResult): Result {
-    val temp = Result()
-    temp.status = feedResult.status
-    temp.message = feedResult.message
-    return temp
-}
-
-private fun getSearchRequest(searchResult: SearchResult): Result {
-    val temp = Result()
-    temp.status = searchResult.status
-    temp.message = searchResult.message
-    return temp
 }
