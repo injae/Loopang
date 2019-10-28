@@ -15,7 +15,8 @@ class OverWritableRecorder (var format: IFormat = Pcm16(),
                             var isRecording: AtomicBoolean = AtomicBoolean(false),
                             var blocks: MutableList<SoundRange> = mutableListOf(),
                             var currentBlock: SoundRange = SoundRange(Sound()),
-                            var isMute: AtomicBoolean  = AtomicBoolean(false)
+                            var isMute: AtomicBoolean  = AtomicBoolean(false),
+                            var limit: Int? = null
                             ): SoundFlow<OverWritableRecorder>() {
     lateinit var routine : Deferred<Unit>
 
@@ -32,7 +33,8 @@ class OverWritableRecorder (var format: IFormat = Pcm16(),
                 info.inputAudio.read(buffer,0, buffer.size)
                 if(isMute.get()) { buffer = ShortArray(buffer.size, { 0 }) }
                 buffer = effect(buffer)
-                buffer.forEach { data.add(it) }
+                limit?.let { buffer.forEach { if(limit!! > data.size) data.add(it) else isRecording.set(false) } }
+                          ?: buffer.forEach { data.add(it) }
 
                 var currentSampleCount = data.chunked(info.sampleRate).count() - 1
                 if(sampleCounter < currentSampleCount) {
@@ -54,8 +56,8 @@ class OverWritableRecorder (var format: IFormat = Pcm16(),
     fun seek(tenMs: Int) {
         var index = tenMs*info.tenMsSampleRate
         currentBlock = SoundRange(Sound())
-        currentBlock.cycle = index/currentBlock.sound.data.size
-        currentBlock.start = index%currentBlock.sound.data.size
+        currentBlock.cycle = index / currentBlock.sound.data.size
+        currentBlock.start = index % currentBlock.sound.data.size
         blocks = blocks.filter{ !it.isOverlap(currentBlock) }.toMutableList()
 
         if(index >= data.size) {
@@ -67,18 +69,20 @@ class OverWritableRecorder (var format: IFormat = Pcm16(),
         }
     }
 
-    fun stop(){
-        Log.d("AudioTest", "in -4")
+    fun stop(limit:Int? = null){
         if(isRecording.get()) {
+            if(limit != null) {
+                Log.d("AudioTest","limit ${limit}")
+                this.limit = limit
+                while(isRecording.get()) { }
+            }
             isRecording.set(false)
             info.inputAudio.stop()
             runBlocking { routine.await() }
             Log.d("AudioTest", "in data.size ${data.size}")
             currentBlock.expand(data.size)
             blocks.add(currentBlock)
-            Log.d("AudioTest", "in 2")
             currentBlock = SoundRange(Sound())
-            Log.d("AudioTest", "in 3")
             callStop(this)
         }
     }

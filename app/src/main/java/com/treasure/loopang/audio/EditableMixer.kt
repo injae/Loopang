@@ -34,7 +34,7 @@ class SoundRange( var sound: Sound, var cycle: Int = 0, var start: Int = 0, var 
     }
 
     fun endIndex(): Int{
-        return (cycle*soundLength) + start + (end*repeat)
+        return (cycle*soundLength) + start + end +(repeat*soundLength)
     }
 
     fun startDuration(): Int {
@@ -222,6 +222,3 @@ class EditableMixer(var sounds: MutableList<EditableSound> = mutableListOf()) : 
     }
 }
 
-class VoiceMixer(var sounds: MutableList<EditableSound> = mutableListOf()) : SoundFlow<EditableMixer>() {
-
-}
