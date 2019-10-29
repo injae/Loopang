@@ -21,7 +21,7 @@ class Download(Resource):
                 return err, 200
 
             file_name = Music.query.filter_by(music_id=args['music_id']).first()
-            logger().debug('[download] file: %s', args['file_name'])
+            logger().debug('[download] file: %s', args['music_id'])
             if file_name is not None:
                 if(os.path.exists(file_name.path())):
                     buffer = open(file_name.path(), 'rb')
