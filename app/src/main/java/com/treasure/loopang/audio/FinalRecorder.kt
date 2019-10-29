@@ -76,32 +76,27 @@ class FinalRecorder : IFinalRecorder {
     }
 
     override fun seekTo(ms: Int) {
-        Log.d("AudioTest", "seekTo ${ms}")
         mixer.seek(ms)
         recorder.seek(ms)
     }
 
     override fun playStart() {
-        Log.d("AudioTest", "playStart")
         mixer.sounds.add(recorder.getEditableSound())
         mixer.start()
     }
 
     override fun playStop() {
-        Log.d("AudioTest", "playStop")
         mixer.stop()
-        mixer.sounds.removeAt(mixer.sounds.size - 1)
+        mixer.sounds.removeAt(mixer.sounds.lastIndex)
     }
 
     override fun recordStart() {
-        Log.d("AudioTest", "recordStart")
         mixer.startBlock()
         if(!mixer.isLooping.get()) mixer.start()
         recorder.start()
     }
 
     override fun recordStop() {
-        Log.d("AudioTest", "recordStop")
         mixer.stop()
         mixer.endBlock()
         Log.d("AudioTest", "mixer edited: ${mixer.sounds[0].playedRange.endDuration()}")
