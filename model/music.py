@@ -25,7 +25,7 @@ class Music(db.Model):
         return self.user_id+self.music_id
 
     def path(self):
-        return os.path.join(MUSIC_FOLDER, self.file_name())
+        return os.path.join(MUSIC_FOLDER, self.name())
 
     def save_music(self, file):
         path = self.path()

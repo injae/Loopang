@@ -20,12 +20,12 @@ class Download(Resource):
             if token is None:
                 return err, 200
 
-            file_name = Music.query.filter_by(music_id=args['music_id']).first()
+            file = Music.query.filter_by(music_id=args['music_id']).first()
             logger().debug('[download] file: %s', args['music_id'])
-            if file_name is not None:
-                if(os.path.exists(file_name.path())):
-                    buffer = open(file_name.path(), 'rb')
-                    file_name.downloads += 1
+            if file is not None:
+                if(os.path.exists(file.path())):
+                    buffer = open(file.path(), 'rb')
+                    file.downloads += 1
                     update()
                     def streaming():
                         for line in buffer:
