@@ -482,11 +482,11 @@ class FinalRecordActivity : AppCompatActivity() {
     }
 
     val updatePlayRunnaable: Runnable = Runnable {
-        playFlag = finalRecorder.isPlaying()
-        while(playFlag) {
+        // playFlag = finalRecorder.isPlaying()
+        while(finalRecorder.isPlaying()) {
             // recordCurrentPosition = finalRecorder.getRecordPosition()
             //recordSeekBarButton!!.progress = finalRecorder.getRecordPosition()
-            playFlag = finalRecorder.isPlaying()
+            // playFlag = finalRecorder.isPlaying()
             Log.d("FRA, 재생중", "playFlag: $playFlag, recordCurrentPosition.ms : ${finalRecorder.getRecordPosition()}")
         }
         this.runOnUiThread{seekBarAnimator!!.cancel()}
