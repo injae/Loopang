@@ -1,5 +1,7 @@
 package com.treasure.loopang.communication
 
+import java.io.Serializable
+
 data class User(var email: String = "", var password: String = "",
                 var name: String = "", var encodedPassword: String = "",
                 var trackList: List<MusicListClass> = List<MusicListClass>(0, { MusicListClass() }),
@@ -15,6 +17,6 @@ data class MusicListClass(var id: String = "", var name: String = "", var owner:
 
 data class Result(var refreshToken: String = "", var accessToken: String = "") : defaultFrame("","")
 
-data class FeedResult(var feed: List<MusicListClass>) : defaultFrame("","")
+data class FeedResult(var feed: List<List<MusicListClass>>) : defaultFrame("",""), Serializable
 
-data class SearchResult(var searchResult: List<MusicListClass>) : defaultFrame("","")
+data class SearchResult(var searchResult: List<List<MusicListClass>>) : defaultFrame("",""), Serializable

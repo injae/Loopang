@@ -8,11 +8,14 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_community.*
 import androidx.viewpager.widget.ViewPager
 import com.treasure.loopang.adapter.CommunityPagerAdapter
+import com.treasure.loopang.communication.Connector
+import com.treasure.loopang.communication.FeedResult
 import com.treasure.loopang.communication.MusicListClass
+import com.treasure.loopang.communication.SearchResult
 import com.treasure.loopang.listitem.CommunitySongItem
 import kotlinx.android.synthetic.main.community_feed.*
 
-class CommunityActivity : AppCompatActivity() {
+class CommunityActivity(var connector: Connector = Connector()) : AppCompatActivity() {
 
     lateinit var itt : CommunitySongItem
     var isTrackFragOpen : Boolean = false
@@ -25,6 +28,7 @@ class CommunityActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_community)
         window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+        connector.feedResult = intent.getSerializableExtra("feedResult") as FeedResult
 
        // val intent = getIntent()
         //val userId = intent.extras!!.getString("userId")

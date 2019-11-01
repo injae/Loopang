@@ -21,8 +21,11 @@ import kotlin.math.log
 import android.view.KeyEvent.KEYCODE_ENTER
 import android.R
 import android.view.KeyEvent
-import android.widget.EditText
-
+import com.treasure.loopang.communication.ResultManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 class CommunitySearchFragment : androidx.fragment.app.Fragment() {
@@ -66,7 +69,14 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
             }
         })
 
-        communitySearchBtn.setOnClickListener {Log.d("aaaaaaaaaaaaaaaabb","editReult : " + editResult) }
+        communitySearchBtn.setOnClickListener {
+            val ld = LoadingActivity(activity!!)
+            GlobalScope.launch {
+                CoroutineScope(Dispatchers.Main).launch { ld?.show() }
+                val result = (activity as CommunityActivity).connector.process(ResultManager.SEARCH_REQUEST, null, null, editResult)
+                CoroutineScope(Dispatchers.Main).launch { ld?.dismiss() }
+            }
+        }
         xbutton.setOnClickListener { communitySearchEditText.setText("") }
 
         SearchTagBtn.setOnClickListener {
