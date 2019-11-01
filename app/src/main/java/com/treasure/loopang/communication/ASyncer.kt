@@ -14,16 +14,20 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class ASyncer<T>(private val context: T, private var code: Int = 0,
-                 private var response: Result = Result()) : AsyncTask<Unit, Unit, Unit>() {
+                 private var response: Result = Result(), private var ld: LoadingActivity? = null) : AsyncTask<Unit, Unit, Unit>() {
     override fun onPreExecute() {
         super.onPreExecute()
         when(context) {
             is Login -> {
+                ld = LoadingActivity(context)
+                ld?.show()
                 context.login_button.text = context.getString(R.string.btn_login_wait)
                 context.login_button.isClickable = false
             }
 
             is RegisterActivity -> {
+                ld = LoadingActivity(context)
+                ld?.show()
                 context.sign_up_button.text = context.getString(R.string.btn_login_wait)
                 context.sign_up_button.isClickable = false
             }
@@ -58,16 +62,13 @@ class ASyncer<T>(private val context: T, private var code: Int = 0,
                 if(UserManager.isLogined && UserManager.getUser().name == "") {
                     response = connector.process(ResultManager.INFO_REQUEST)
                     code = ResultManager.getCode(response)
-                    val ct = Connector()
-                    //Log.d("OkHttp", "첫번째로 받아온 트랙 : ${UserManager.getUser().trackList[0]}")
-                    Log.d("OkHttp", "나의 토큰 : ${ResultManager.accessToken}")
-                    //ct.process(ResultManager.FILE_DOWNLOAD, null, null, null, UserManager.getUser().trackList[0].id)
-
+                    /*val ct = Connector()
+                    Log.d("OkHttp", "첫번째로 받아온 트랙 : ${UserManager.getUser().trackList[0]}")
+                    ct.process(ResultManager.FILE_DOWNLOAD, null, null, null, UserManager.getUser().trackList[0].id)
                     connector.process(ResultManager.FEED_REQUEST)
-                    Log.d("OkHttp", "피드 받아오누 : ${connector.feedResult}")
-
+                    Log.d("OkHttp", "피드 결과 : ${connector.feedResult}")
                     connector.process(ResultManager.SEARCH_REQUEST, null, null, "open")
-                    Log.d("OkHttp", "검색 바당보자 : ${connector.searchResult}")
+                    Log.d("OkHttp", "검색 결과 : ${connector.searchResult}")*/
                 }
             }
         }
@@ -77,6 +78,7 @@ class ASyncer<T>(private val context: T, private var code: Int = 0,
         super.onPostExecute(result)
         when(context) {
             is Login -> {
+                ld?.dismiss()
                 context.toast("Code = ${response.message}")
                 when(code) {
                     ResultManager.SUCCESS -> {
@@ -103,6 +105,7 @@ class ASyncer<T>(private val context: T, private var code: Int = 0,
             }
 
             is RegisterActivity -> {
+                ld?.dismiss()
                 context.toast("Code = ${response.message}")
                 when(code) {
                     ResultManager.SUCCESS -> { context.finish() }

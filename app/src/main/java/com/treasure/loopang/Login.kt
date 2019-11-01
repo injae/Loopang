@@ -29,12 +29,14 @@ class Login : AppCompatActivity() {
         setContentView(R.layout.activity_login)
         checkPermission()
         window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+        val ld = LoadingActivity(this@Login)
 
         GlobalScope.launch {
             DatabaseManager.deleteToken(this@Login)
             val email = DatabaseManager.getEmail(this@Login)
             if(DatabaseManager.getPassword(this@Login) != null) {
                 CoroutineScope(Dispatchers.Main).launch {
+                    ld.show()
                     if(email != null) input_id.text = SpannableStringBuilder(email)
                     input_password.text = SpannableStringBuilder("********")
                 }
@@ -45,6 +47,7 @@ class Login : AppCompatActivity() {
                 if(ResultManager.getCode(res) == ResultManager.SUCCESS) {
                     UserManager.isLogined = true
                     DatabaseManager.insertToken(this@Login, res.refreshToken)
+                    CoroutineScope(Dispatchers.Main).launch { ld.dismiss() }
                     startActivity(Intent(this@Login, Recording::class.java))
                     finish()
                 }

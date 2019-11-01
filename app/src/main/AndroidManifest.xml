@@ -23,6 +23,7 @@
         <activity android:name=".Login"></activity>
         <activity android:name=".Recording"
                 android:configChanges="orientation|screenSize"></activity>
+        <activity android:name=".LoadingActivity"></activity>
 
         <activity android:name=".settingItemActivity"></activity>
         <activity android:name=".CommunityActivity"></activity>
