@@ -30,7 +30,7 @@ interface LoopangNetwork {
     fun receiveFeed(@Field("token") token: String): Call<FeedResult>
 
     @FormUrlEncoded
-    @POST("/search-music")
+    @POST("/music-search")
     fun receiveSearch(@Field("token") token: String,
                       @Field("target") target: String): Call<SearchResult>
 

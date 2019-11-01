@@ -10,11 +10,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.FrameLayout
+import com.treasure.loopang.communication.Connector
+import com.treasure.loopang.communication.ResultManager
 import kotlinx.android.synthetic.main.activity_community.*
 import kotlinx.android.synthetic.main.community_feed_item.*
 import kotlinx.android.synthetic.main.community_track.*
 import kotlinx.android.synthetic.main.community_track.view.*
 import kotlinx.android.synthetic.main.setting_item_back.view.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class CommunityTrackFragment: androidx.fragment.app.Fragment() {
 
@@ -48,15 +52,18 @@ class CommunityTrackFragment: androidx.fragment.app.Fragment() {
             })
         }
         heartButton.setOnClickListener {
+            val connector = Connector()
             if(heartState == false) {
                 heartState = true
                 (activity as CommunityActivity).itt.likedNum += 1
+                GlobalScope.launch { connector.process(ResultManager.REQUEST_LIKE_UP, null, null, null, (activity as CommunityActivity).itt.songId) }
                 heartButton.setImageDrawable(getResources().getDrawable(R.drawable.trackicon_heart_clicked))
                 trackHeartClikedNum.setText((activity as CommunityActivity).itt.likedNum.toString())
             }
             else {
                 heartState = false
                 (activity as CommunityActivity).itt.likedNum -= 1
+                GlobalScope.launch { connector.process(ResultManager.REQUEST_LIKE_DOWN, null, null, null, (activity as CommunityActivity).itt.songId) }
                 heartButton.setImageDrawable(getResources().getDrawable(R.drawable.trackicon_heart))
                 trackHeartClikedNum.setText((activity as CommunityActivity).itt.likedNum.toString())
             }

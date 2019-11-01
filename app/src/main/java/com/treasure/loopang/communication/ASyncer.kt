@@ -2,11 +2,9 @@ package com.treasure.loopang.communication
 
 import android.content.Intent
 import android.os.AsyncTask
+import android.util.Log
+import com.treasure.loopang.*
 import com.treasure.loopang.Database.DatabaseManager
-import com.treasure.loopang.Login
-import com.treasure.loopang.R
-import com.treasure.loopang.Recording
-import com.treasure.loopang.RegisterActivity
 import com.treasure.loopang.ui.toast
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_login.input_id
@@ -60,6 +58,16 @@ class ASyncer<T>(private val context: T, private var code: Int = 0,
                 if(UserManager.isLogined && UserManager.getUser().name == "") {
                     response = connector.process(ResultManager.INFO_REQUEST)
                     code = ResultManager.getCode(response)
+                    val ct = Connector()
+                    //Log.d("OkHttp", "첫번째로 받아온 트랙 : ${UserManager.getUser().trackList[0]}")
+                    Log.d("OkHttp", "나의 토큰 : ${ResultManager.accessToken}")
+                    //ct.process(ResultManager.FILE_DOWNLOAD, null, null, null, UserManager.getUser().trackList[0].id)
+
+                    connector.process(ResultManager.FEED_REQUEST)
+                    Log.d("OkHttp", "피드 받아오누 : ${connector.feedResult}")
+
+                    connector.process(ResultManager.SEARCH_REQUEST, null, null, "open")
+                    Log.d("OkHttp", "검색 바당보자 : ${connector.searchResult}")
                 }
             }
         }

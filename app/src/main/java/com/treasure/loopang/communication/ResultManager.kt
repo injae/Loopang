@@ -26,7 +26,8 @@ object ResultManager {
         var code = 0
         when(result.status) {
             "success" -> {
-                accessToken = result.accessToken
+                if(result.accessToken != "")
+                    accessToken = result.accessToken
                 code = SUCCESS
             }
             "fail" -> { code = FAIL }
