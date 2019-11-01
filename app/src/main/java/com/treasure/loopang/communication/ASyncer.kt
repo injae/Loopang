@@ -127,6 +127,7 @@ class ASyncer<T>(private val context: T, private var code: Int = 0, private var 
             is Recording -> {
                 if(UserManager.isLogined) {
                     ld?.dismiss()
+                    code = ResultManager.SUCCESS // 실제 운영시 지워야 되는 코드
                     context.toast("Code = ${response.message}")
                     when(code) {
                         ResultManager.SUCCESS -> {
@@ -135,6 +136,7 @@ class ASyncer<T>(private val context: T, private var code: Int = 0, private var 
                             context.startActivity(intentToCommunity)
                         }
                         ResultManager.FAIL -> {
+                            context.toast("통신 에러가 발생했습니다.")
                             UserManager.setInfo("FAIL_NICKNAME", List<MusicListClass>(0,{ MusicListClass() }), List<MusicListClass>(0,{MusicListClass()}))
                         }
                     }
