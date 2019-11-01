@@ -11,7 +11,9 @@ import com.treasure.loopang.adapter.CommunityFeedItemAdapter
 import com.treasure.loopang.listitem.CommunitySongItem
 import kotlinx.android.synthetic.main.community_feed.*
 import android.widget.FrameLayout
+import androidx.fragment.app.FragmentActivity
 import com.treasure.loopang.adapter.CommunityFeedCategoryAdapter
+import com.treasure.loopang.communication.ASyncer
 import com.treasure.loopang.listitem.CommunityFeedCategoryItem
 import kotlinx.android.synthetic.main.activity_community.*
 import java.util.*
@@ -54,7 +56,6 @@ class CommunityFeedFragment : androidx.fragment.app.Fragment() {
             communityFeedListView.adapter = FeedAdapter
 
             if(item.categoryName == "The Newest 5") {
-
                 /*FeedAdapter.addItem("1","2",0,1,"dd")
                 FeedAdapter.addItem("ㅇㅁ나어","ㄷㅈㄷ2",0,1,"dㄴd")
                 FeedAdapter.addItem("1ㄴㅁ","2ㅂㅂ",1,4,"dㅇd")

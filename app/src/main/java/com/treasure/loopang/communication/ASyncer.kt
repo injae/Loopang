@@ -2,7 +2,6 @@ package com.treasure.loopang.communication
 
 import android.content.Intent
 import android.os.AsyncTask
-import android.util.Log
 import com.treasure.loopang.*
 import com.treasure.loopang.Database.DatabaseManager
 import com.treasure.loopang.ui.toast
@@ -13,7 +12,7 @@ import kotlinx.android.synthetic.main.activity_register.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class ASyncer<T>(private val context: T, private var code: Int = 0,
+class ASyncer<T>(private val context: T, private var code: Int = 0, private var connector: Connector = Connector(),
                  private var response: Result = Result(), private var ld: LoadingActivity? = null) : AsyncTask<Unit, Unit, Unit>() {
     override fun onPreExecute() {
         super.onPreExecute()
@@ -31,11 +30,15 @@ class ASyncer<T>(private val context: T, private var code: Int = 0,
                 context.sign_up_button.text = context.getString(R.string.btn_login_wait)
                 context.sign_up_button.isClickable = false
             }
+
+            is Recording -> {
+                ld = LoadingActivity(context)
+                ld?.show()
+            }
         }
     }
 
     override fun doInBackground(vararg params: Unit?) {
-        val connector = Connector()
         when(context) {
             is Login -> {
                 UserManager.setEncodedPassword(encodeYuni(context.input_password.text.toString()))
@@ -60,7 +63,12 @@ class ASyncer<T>(private val context: T, private var code: Int = 0,
 
             is Recording -> {
                 if(UserManager.isLogined && UserManager.getUser().name == "") {
+                    var boolTemp = true
                     response = connector.process(ResultManager.INFO_REQUEST)
+                    if(response.status == "fail") boolTemp = false
+                    response = connector.process(ResultManager.FEED_REQUEST)
+                    if(response.status == "fail") boolTemp = false
+                    if(boolTemp) response.message = "SUCCESS INFO, FEED"
                     code = ResultManager.getCode(response)
                     /*val ct = Connector()
                     Log.d("OkHttp", "첫번째로 받아온 트랙 : ${UserManager.getUser().trackList[0]}")
@@ -118,9 +126,14 @@ class ASyncer<T>(private val context: T, private var code: Int = 0,
 
             is Recording -> {
                 if(UserManager.isLogined) {
+                    ld?.dismiss()
                     context.toast("Code = ${response.message}")
                     when(code) {
-                        ResultManager.SUCCESS -> {  }
+                        ResultManager.SUCCESS -> {
+                            val intentToCommunity = Intent(context, CommunityActivity::class.java)
+                            intentToCommunity.putExtra("feedResult", connector.feedResult)
+                            context.startActivity(intentToCommunity)
+                        }
                         ResultManager.FAIL -> {
                             UserManager.setInfo("FAIL_NICKNAME", List<MusicListClass>(0,{ MusicListClass() }), List<MusicListClass>(0,{MusicListClass()}))
                         }

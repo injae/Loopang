@@ -55,7 +55,6 @@ class Recording : AppCompatActivity()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        ASyncer(this).execute()
 
         //setEffectorFrag = setEffector()
         setMetronomeFrag = setMetronome()
@@ -126,11 +125,7 @@ class Recording : AppCompatActivity()
             // checkPresentFragAndReplaceFrag(btn_setting)
         }
         btn_community.setOnClickListener {
-            var userId : String? = null
-            val intentToCommunity = Intent(this, CommunityActivity::class.java)
-
-            intentToCommunity.putExtra("userId",userId)
-            startActivity(intentToCommunity)
+            ASyncer<Recording>(this).execute()
         }
         pager.adapter = pagerAdapter
         pager.addOnPageChangeListener(PageChangeListener())
