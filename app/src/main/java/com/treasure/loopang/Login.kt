@@ -42,7 +42,7 @@ class Login : AppCompatActivity() {
                 cb_auto_login.isChecked = true
                 val cnt = Connector()
                 val res = cnt.process(ResultManager.LOGIN, UserManager.getUser())
-                if(ResultManager.getCode(res) == ResultManager.SUCCESS_LOGIN) {
+                if(ResultManager.getCode(res) == ResultManager.SUCCESS) {
                     UserManager.isLogined = true
                     DatabaseManager.insertToken(this@Login, res.refreshToken)
                     startActivity(Intent(this@Login, Recording::class.java))
@@ -50,7 +50,7 @@ class Login : AppCompatActivity() {
                 }
             }
             else {
-                val email = DatabaseManager.getEmail(this@Login)
+                //val email = DatabaseManager.getEmail(this@Login)
                 if(email != null) {
                     CoroutineScope(Dispatchers.Main).launch {
                         cb_save_id.isChecked = true
