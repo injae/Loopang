@@ -29,10 +29,6 @@ class ASyncer<T>(private val context: T, private var code: Int = 0,
                 context.sign_up_button.text = context.getString(R.string.btn_login_wait)
                 context.sign_up_button.isClickable = false
             }
-
-            is Recording -> { // 유저 인포 요청시
-                // 전동작...
-            }
         }
     }
 
@@ -54,7 +50,9 @@ class ASyncer<T>(private val context: T, private var code: Int = 0,
                     code = ResultManager.getCode(response)
                 }
                 else {
-                    code = ResultManager.WRONG_FORMAT
+                    code = ResultManager.FAIL
+                    response.status = "fail"
+                    response.message = "아이디는 이메일 형식이어야 합니다."
                 }
             }
 
@@ -71,14 +69,15 @@ class ASyncer<T>(private val context: T, private var code: Int = 0,
         super.onPostExecute(result)
         when(context) {
             is Login -> {
-                context.toast("Code = ${ResultManager.codeToString(code)}")
+                context.toast("Code = ${response.message}")
                 when(code) {
-                    ResultManager.SUCCESS_LOGIN -> {
+                    ResultManager.SUCCESS -> {
                         GlobalScope.launch {
                             DatabaseManager.deleteEmail(context)
                             DatabaseManager.deletePassword(context)
                             DatabaseManager.insertToken(context, response.refreshToken)
-                            if(context.cb_save_id.isChecked) DatabaseManager.insertEmail(context, UserManager.getUser().email)
+                            if(context.cb_save_id.isChecked)
+                                DatabaseManager.insertEmail(context, UserManager.getUser().email)
                             if(context.cb_auto_login.isChecked) {
                                 DatabaseManager.insertEmail(context, UserManager.getUser().email)
                                 DatabaseManager.insertPassword(context, UserManager.getUser().encodedPassword)
@@ -87,7 +86,6 @@ class ASyncer<T>(private val context: T, private var code: Int = 0,
                         UserManager.isLogined = true
                         context.startActivity(Intent(context, Recording::class.java))
                     }
-
                     else -> {
                         UserManager.makeEmptyUser()
                         context.login_button.isClickable = true
@@ -97,10 +95,9 @@ class ASyncer<T>(private val context: T, private var code: Int = 0,
             }
 
             is RegisterActivity -> {
-                context.toast("Code = ${ResultManager.codeToString(code)}")
+                context.toast("Code = ${response.message}")
                 when(code) {
-                    ResultManager.SUCCESS_SIGN_UP -> { context.finish() }
-
+                    ResultManager.SUCCESS -> { context.finish() }
                     else -> {
                         context.sign_up_button.isClickable = true
                         context.sign_up_button.text = context.getString(R.string.btn_register_sign_up)
@@ -109,11 +106,13 @@ class ASyncer<T>(private val context: T, private var code: Int = 0,
             }
 
             is Recording -> {
-                context.toast("Code = ${ResultManager.codeToString(code)}")
-                when(code) {
-                    ResultManager.SUCCESS_INFO_REQUEST -> {  }
-                    ResultManager.FAIL_INFO_REQUEST -> {
-                        UserManager.setInfo("FAIL_NICKNAME", List<MusicListClass>(0,{ MusicListClass() }), List<MusicListClass>(0,{MusicListClass()}))
+                if(UserManager.isLogined) {
+                    context.toast("Code = ${response.message}")
+                    when(code) {
+                        ResultManager.SUCCESS -> {  }
+                        ResultManager.FAIL -> {
+                            UserManager.setInfo("FAIL_NICKNAME", List<MusicListClass>(0,{ MusicListClass() }), List<MusicListClass>(0,{MusicListClass()}))
+                        }
                     }
                 }
             }
