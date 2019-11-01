@@ -1,20 +1,31 @@
 package com.treasure.loopang
 
+import android.app.Dialog
+import android.content.Context
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.os.PersistableBundle
-import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.loading_layout.*
 
-open class LoadingActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
+open class LoadingActivity(context: Context) : Dialog(context) {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         setContentView(R.layout.loading_layout)
+        window.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
+        setCancelable(false)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun show() {
+        super.show()
+        avi.smoothToShow()
     }
 
-    fun startLoading() { avi.show() }
-    fun stopLoading() { avi.hide() }
+    override fun dismiss() {
+        super.dismiss()
+        avi.smoothToHide()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        return
+    }
 }

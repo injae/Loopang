@@ -3,12 +3,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:background="#80000000">
+        android:background="@android:color/transparent">
 
     <com.wang.avi.AVLoadingIndicatorView
             android:id="@+id/avi"
             style="@style/AVLoadingIndicatorView"
-            android:layout_width="106dp"
+            android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_centerInParent="true"
             app:indicatorColor="#EC7E6D"
