@@ -1,4 +1,5 @@
 from model.database import db, gen_id
+from sqlalchemy.ext.hybrid import hybrid_property
 from datetime import datetime
 from pathlib import Path
 import os
@@ -15,6 +16,10 @@ class Music(db.Model):
     updated_date = db.Column(db.DateTime(), default=datetime.utcnow())
     downloads = db.Column(db.Integer)
 
+    @hybrid_property
+    def num_likes(self):
+        return len(self.music_likes)
+
     def __init__(self, name, user_id):
         self.music_id = gen_id()
         self.name = name
@@ -25,7 +30,7 @@ class Music(db.Model):
         return self.user_id+self.music_id
 
     def path(self):
-        return os.path.join(MUSIC_FOLDER, self.name())
+        return os.path.join(MUSIC_FOLDER, self.file_name())
 
     def save_music(self, file):
         path = self.path()
@@ -43,7 +48,7 @@ class Music(db.Model):
     def public_data(self):
         return {  'id': self.music_id, 'name': self.name, 'owner': self.owner.name 
                 , 'updated_date': str(self.updated_date), 'downloads': self.downloads
-                  , 'likes': self.music_likes.count() }
+                , 'likes': self.music_likes.count()}
 
     @staticmethod
     def track_list(user_id):
