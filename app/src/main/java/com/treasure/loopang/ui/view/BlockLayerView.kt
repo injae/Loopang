@@ -25,7 +25,7 @@ class BlockLayerView(context: Context, attrs: AttributeSet? = null, defStyleAttr
     var amplitudesDrawable: Drawable? = null
 
     var currentBlock: BlockView? = null
-    val blockViewList: ArrayList<BlockView> = arrayListOf()
+    val blockViewList: MutableList<BlockView> = mutableListOf()
     var blockColor: Int = 0
 
     var basicHeight: Int = 0
@@ -171,8 +171,8 @@ class BlockLayerView(context: Context, attrs: AttributeSet? = null, defStyleAttr
     }
 
     fun clear(){
-        removeAllViews()
         blockViewList.clear()
+        removeAllViews()
     }
 
     fun expandBlock() {

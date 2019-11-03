@@ -9,6 +9,7 @@ import android.graphics.Point
 import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.SystemClock
 import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
@@ -19,6 +20,7 @@ import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import com.treasure.loopang.audio.EffectorPresets
 import com.treasure.loopang.audio.FinalRecorder
+import com.treasure.loopang.ui.WaveformBitmapMaker
 import com.treasure.loopang.ui.dialogs.BlockControlDialog
 import com.treasure.loopang.ui.dialogs.VolumeControlDialog
 import com.treasure.loopang.ui.dpToPx
@@ -61,6 +63,7 @@ class FinalRecordActivity : AppCompatActivity() {
 
     var basicWidth = 0
     var basicHeight = 0
+    var expandSize = 0
 
     var loopCanvas: Canvas? = null
     var loopDrawable: Drawable? = null
@@ -217,7 +220,7 @@ class FinalRecordActivity : AppCompatActivity() {
                     }.applyTo(record_timeline_panel)
                 }
                 // time stamp 변경
-                timeStampTxt!!.text = progress.toString()
+                timeStampTxt!!.text = String.format("%02d : %02d", ((progress.toFloat() / 1000) % 60).toInt(), ((progress.toFloat() / 1000*60) % 60).toInt() )
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -263,6 +266,7 @@ class FinalRecordActivity : AppCompatActivity() {
                 val temp = record_timeline_panel_scroll.width
                 basicWidth = temp - (temp % wpt.width) + wpt.width
                 basicHeight = dpToPx(this@FinalRecordActivity, 56f).toInt()
+                expandSize = basicWidth
 
                 //레이어를 담는 리니어 레이아웃 너비 초기화
                 val param = layerListLinear!!.layoutParams as FrameLayout.LayoutParams
@@ -378,9 +382,11 @@ class FinalRecordActivity : AppCompatActivity() {
     }
 
     private fun expandLayerLinear() {
-        val param = layerListLinear!!.layoutParams as LinearLayout.LayoutParams
+        val param = layerListLinear!!.layoutParams as FrameLayout.LayoutParams
         param.width = param.width + basicWidth
-        layerListLinear!!.layoutParams = param
+        runOnUiThread{
+            layerListLinear!!.layoutParams = param
+        }
         Log.d("FRA, 타임라인컨트롤", "expandLayerLinear(new width: ${param.width}, basicwidth: $basicWidth)")
     }
 
@@ -388,6 +394,16 @@ class FinalRecordActivity : AppCompatActivity() {
         val prev = recordSeekBarButton!!.max
         recordSeekBarButton!!.max = prev + ((basicWidth / wpt.width) * wpt.ms)
         Log.d("FRA, 타임라인컨트롤", "expandRecordSeekMax(prev: $prev, new max: ${recordSeekBarButton!!.max})")
+    }
+
+    private fun checkToExpandSize(): Boolean {
+        if(expandSize - ((recordSeekBarButton!!.progress.toFloat() / wpt.ms) * wpt.width) <= basicWidth * 0.2) {
+            if(recordSeekBarButton!!.width + basicWidth > expandSize){
+                expandSize += basicWidth
+                return true
+            }
+        }
+        return false
     }
 
     private fun showBlockControlDialog(layerId:Int, blockId: Int) {
@@ -443,6 +459,9 @@ class FinalRecordActivity : AppCompatActivity() {
         finalRecorder.insertSounds(recorderConnector.soundList!!)
         buttonLabelList = listOf("Vocal") + recorderConnector.labelList!!
         num = recorderConnector.soundList!!.size + 1
+        /*recorderConnector.soundList!!.forEach {
+            WaveformBitmapMaker.
+        }*/
     }
 
 
@@ -472,22 +491,26 @@ class FinalRecordActivity : AppCompatActivity() {
     val updateRecordRunnable: Runnable = Runnable {
 
         while(recordFlag) {
-            if(recordSeekBarButton!!.progress >= recordSeekBarButton!!.max * 0.8f) {
-                //expandRecordSeekMax()
-                //expandLayerLinear()
+            if(checkToExpandSize()) {
+                expandRecordSeekMax()
+                expandLayerLinear()
                 Log.d("FRA, 녹음중", "리니어레이아웃과 시크바 맥스를 EXPAND 합니다.")
             }
             Log.d("FRA, 녹음중", "recordFlag: $recordFlag, recordCurrentPosition.ms : ${finalRecorder.getRecordPosition()}")
+
+            SystemClock.sleep(10)
         }
     }
 
     val updatePlayRunnaable: Runnable = Runnable {
-        playFlag = finalRecorder.isPlaying()
-        while(playFlag) {
+        // playFlag = finalRecorder.isPlaying()
+        while(finalRecorder.isPlaying()) {
             // recordCurrentPosition = finalRecorder.getRecordPosition()
             //recordSeekBarButton!!.progress = finalRecorder.getRecordPosition()
-            playFlag = finalRecorder.isPlaying()
+            // playFlag = finalRecorder.isPlaying()
             Log.d("FRA, 재생중", "playFlag: $playFlag, recordCurrentPosition.ms : ${finalRecorder.getRecordPosition()}")
+
+            SystemClock.sleep(10)
         }
         this.runOnUiThread{seekBarAnimator!!.cancel()}
     }

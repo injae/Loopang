@@ -48,23 +48,23 @@
         </ScrollView>
 
         <TextView
-                android:background="#3C3C3C"
                 android:id="@+id/txt_record_timestamp"
                 android:layout_width="0dp"
-                android:layout_height="17dp"
+                android:layout_height="24dp"
+                android:background="#3C3C3C"
                 android:text="TextView"
-                android:textColor="@android:color/white"
                 android:textAlignment="center"
+                android:textColor="@android:color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:background="#686868"
             android:id="@+id/record_toolbox_panel"
             android:layout_width="match_parent"
-            android:layout_height="53dp"
+            android:layout_height="60dp"
+            android:background="#686868"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/record_control_panel"
             tools:layout_editor_absoluteX="296dp">
@@ -108,51 +108,55 @@
                         android:layout_width="@dimen/fr_icon_size1"
                         android:layout_height="@dimen/fr_icon_size1"
                         android:layout_gravity="center"
+                        android:layout_marginStart="3dp"
                         android:layout_weight="1"
-                        android:textOff=""
-                        android:textOn=""
                         android:background="@drawable/final_record_btn_play_state"
-                        />
+                        android:textOff=""
+                        android:textOn="" />
 
                 <ImageButton
                         android:id="@+id/btn_to_end"
                         android:layout_width="@dimen/fr_icon_size1"
                         android:layout_height="@dimen/fr_icon_size1"
                         android:layout_gravity="center"
+                        android:layout_marginStart="3dp"
                         android:layout_weight="1"
                         android:background="@android:color/transparent"
                         app:srcCompat="@drawable/icon_final_storage_btn_to_end" />
             </LinearLayout>
 
             <LinearLayout
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
-                    android:padding="2dp"
                     android:id="@+id/toolbox_record_control_panel"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/icon_final_storage_round"
                     android:orientation="horizontal"
+                    android:padding="2dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:background="@drawable/icon_final_storage_round">
+                    app:layout_constraintTop_toTopOf="parent">
 
                 <ToggleButton
-                        android:layout_marginStart="5dp"
                         android:id="@+id/btn_record"
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
                         android:layout_gravity="center"
+                        android:layout_marginStart="5dp"
                         android:layout_weight="1"
+                        android:background="@drawable/final_record_btn_record_state"
+                        android:padding="7dp"
                         android:textOff=""
-                        android:textOn=""
-                        android:background="@drawable/final_record_btn_record_state"/>
+                        android:textOn="" />
 
                 <ImageButton
                         android:id="@+id/btn_stop"
                         android:layout_width="@dimen/fr_icon_size1"
                         android:layout_height="@dimen/fr_icon_size1"
                         android:layout_gravity="center"
+                        android:layout_marginStart="3dp"
+                        android:layout_marginEnd="5dp"
                         android:layout_weight="1"
                         android:background="@android:color/transparent"
                         app:srcCompat="@drawable/icon_final_storage_stop" />
@@ -172,27 +176,26 @@
                     android:id="@+id/btn_overwrite"
                     android:layout_width="@dimen/fr_icon_width1"
                     android:layout_height="@dimen/fr_icon_height1"
-                    android:layout_weight="1"
-                    android:textOn="Overwrite"
-                    android:textOff="Overwrite"
-                    android:textSize="8dp"
-                    android:textColor="@android:color/white"
                     android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
                     android:background="@drawable/final_record_overwrite_and_metronome_btn_state"
-                    />
+                    android:textColor="@android:color/white"
+                    android:textOff="Overwrite"
+                    android:textOn="Overwrite"
+                    android:textSize="8dp" />
 
             <ToggleButton
-                    android:layout_marginStart="3dp"
                     android:id="@+id/btn_metronome"
                     android:layout_width="@dimen/fr_icon_width1"
                     android:layout_height="@dimen/fr_icon_height1"
-                    android:layout_weight="1"
                     android:layout_gravity="center_vertical"
-                    android:textOn="Metronome"
-                    android:textOff="Metronome"
-                    android:textSize="7dp"
+                    android:layout_marginStart="3dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/final_record_overwrite_and_metronome_btn_state"
                     android:textColor="@android:color/white"
-                    android:background="@drawable/final_record_overwrite_and_metronome_btn_state"/>
+                    android:textOff="Metronome"
+                    android:textOn="Metronome"
+                    android:textSize="7dp" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -255,11 +258,11 @@
             <SeekBar
                     android:id="@+id/whole_progress_seekbar"
                     android:layout_width="0dp"
-                    android:layout_height="17dp"
+                    android:layout_height="24dp"
                     android:paddingStart="0dp"
                     android:paddingEnd="0dp"
-                    android:thumb="@drawable/final_record_seekbar_thumb"
                     android:progressDrawable="@drawable/final_record_seekbar"
+                    android:thumb="@drawable/final_record_seekbar_thumb"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="@+id/layer_list_scroll"
                     app:layout_constraintStart_toStartOf="parent" />
