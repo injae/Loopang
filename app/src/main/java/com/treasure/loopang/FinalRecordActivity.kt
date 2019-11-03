@@ -27,9 +27,7 @@ import com.treasure.loopang.ui.dpToPx
 import com.treasure.loopang.ui.recorderConnector
 import com.treasure.loopang.ui.util.TimeWrapper
 import com.treasure.loopang.ui.util.WidthPerTime
-import com.treasure.loopang.ui.view.BlockLayerView
-import com.treasure.loopang.ui.view.BlockView
-import com.treasure.loopang.ui.view.VerticalTextButton
+import com.treasure.loopang.ui.view.*
 import kotlinx.android.synthetic.main.activity_final_record.*
 import kotlinx.android.synthetic.main.activity_final_record.btn_stop
 import kotlinx.android.synthetic.main.dialog_final_save.*
@@ -278,6 +276,8 @@ class FinalRecordActivity : AppCompatActivity() {
 
                 //전체 시크바 MAX 초기화.
                 recordSeekBarButton?.max = (basicWidth / wpt.width) * wpt.ms
+
+                setupScrolling()
             }
         })
     }
@@ -354,6 +354,14 @@ class FinalRecordActivity : AppCompatActivity() {
         }
 
         Log.d("FRA, 타임라인컨트롤", "refreshView()")
+    }
+
+    private fun setupScrolling() {
+        val scrollManager = ScrollManager()
+
+        scrollManager.addScrollClient(mute_button_scroll as ScrollNotifier)
+        scrollManager.addScrollClient(layer_list_scroll as ScrollNotifier)
+
     }
 
     private fun stopBlock(){

@@ -27,7 +27,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-        <ScrollView
+        <com.treasure.loopang.ui.view.SyncedScrollView
                 android:background="#4C4C4C"
                 android:id="@+id/mute_button_scroll"
                 android:layout_width="0dp"
@@ -45,7 +45,7 @@
                     android:layout_height="wrap_content"
                     android:divider="@drawable/final_record_linear_divisor"
                     android:orientation="vertical" />
-        </ScrollView>
+        </com.treasure.loopang.ui.view.SyncedScrollView>
 
         <TextView
                 android:id="@+id/txt_record_timestamp"
@@ -232,7 +232,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-            <ScrollView
+            <com.treasure.loopang.ui.view.SyncedScrollView
                     android:id="@+id/layer_list_scroll"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
@@ -253,7 +253,7 @@
                             android:divider="@drawable/final_record_linear_divisor"
                             android:orientation="vertical" />
                 </FrameLayout>
-            </ScrollView>
+            </com.treasure.loopang.ui.view.SyncedScrollView>
 
             <SeekBar
                     android:id="@+id/whole_progress_seekbar"
