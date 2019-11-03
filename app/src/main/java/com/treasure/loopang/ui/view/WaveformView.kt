@@ -1,6 +1,7 @@
 package com.treasure.loopang.ui.view
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
@@ -30,8 +31,6 @@ class WaveformView @JvmOverloads constructor(
     private var _height: Int = 0 // _height of this View
     private var _size: Int = 0 // _amplitudes size
 
-    private val mColumnsNum: Int = 200
-
     private val mLinePaint: Paint = Paint() // specifies line drawing characteristics
     private val mHandler = Handler()
     private val mAudioAnalyzer = AudioAnalyzer()
@@ -49,7 +48,6 @@ class WaveformView @JvmOverloads constructor(
         _width = w // new _width of this View
         _height = h // new _height of this View
         _size = _width / LINE_WIDTH
-
         mAudioAnalyzer.setMaxAmplitude(_height)
 
         amplitudes?.let{
@@ -66,7 +64,6 @@ class WaveformView @JvmOverloads constructor(
     // draw the visualizer with scaled lines representing the _amplitudes
     public override fun onDraw(canvas: Canvas) {
         var curX = 0f // start curX at middle
-
         // for each item in the _amplitudes ArrayList
         _amplitudes?.forEach{ power ->
             val scaledHeight = mAudioAnalyzer.analyze(power.toInt()) // scale the power

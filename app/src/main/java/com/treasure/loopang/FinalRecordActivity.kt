@@ -20,6 +20,7 @@ import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import com.treasure.loopang.audio.EffectorPresets
 import com.treasure.loopang.audio.FinalRecorder
+import com.treasure.loopang.ui.WaveformBitmapMaker
 import com.treasure.loopang.ui.dialogs.BlockControlDialog
 import com.treasure.loopang.ui.dialogs.VolumeControlDialog
 import com.treasure.loopang.ui.dpToPx
@@ -219,7 +220,7 @@ class FinalRecordActivity : AppCompatActivity() {
                     }.applyTo(record_timeline_panel)
                 }
                 // time stamp 변경
-                timeStampTxt!!.text = String.format("%02d : $02d", (progress.toFloat() / 1000*60) % 60,(progress.toFloat() / 1000) % 60 )
+                timeStampTxt!!.text = String.format("%02d : %02d", ((progress.toFloat() / 1000) % 60).toInt(), ((progress.toFloat() / 1000*60) % 60).toInt() )
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -381,9 +382,11 @@ class FinalRecordActivity : AppCompatActivity() {
     }
 
     private fun expandLayerLinear() {
-        val param = layerListLinear!!.layoutParams as LinearLayout.LayoutParams
+        val param = layerListLinear!!.layoutParams as FrameLayout.LayoutParams
         param.width = param.width + basicWidth
-        layerListLinear!!.layoutParams = param
+        runOnUiThread{
+            layerListLinear!!.layoutParams = param
+        }
         Log.d("FRA, 타임라인컨트롤", "expandLayerLinear(new width: ${param.width}, basicwidth: $basicWidth)")
     }
 
@@ -456,6 +459,9 @@ class FinalRecordActivity : AppCompatActivity() {
         finalRecorder.insertSounds(recorderConnector.soundList!!)
         buttonLabelList = listOf("Vocal") + recorderConnector.labelList!!
         num = recorderConnector.soundList!!.size + 1
+        /*recorderConnector.soundList!!.forEach {
+            WaveformBitmapMaker.
+        }*/
     }
 
 
