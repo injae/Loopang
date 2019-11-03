@@ -24,6 +24,7 @@ services:
       - "5000:5000"
     volumes:
       - ./:/app
+      - $HOME/music:/music/data
     depends_on:
       - db
     links:

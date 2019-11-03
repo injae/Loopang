@@ -19,7 +19,7 @@ class Feed(Resource):
                 "status": "success",
                 "message": "feed data",
                 "recent_musics": make_data(Music.query.order_by(Music.updated_date).limit(5)),
-                "likes_top": make_data(Music.query.order_by(Music.music_likes).limit(5)),
+                "likes_top": make_data(Music.query.order_by(Music.num_likes).limit(5)),
                 "download_top": make_data(Music.query.order_by(Music.downloads).limit(5))                
             }, 200
         except Exception as e:
