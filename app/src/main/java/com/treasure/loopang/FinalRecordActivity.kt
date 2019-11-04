@@ -4,7 +4,9 @@ import android.animation.Animator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.content.pm.ActivityInfo
+import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Point
 import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
@@ -63,10 +65,7 @@ class FinalRecordActivity : AppCompatActivity() {
     var basicHeight = 0
     var expandSize = 0
 
-    var loopCanvas: Canvas? = null
-    var loopDrawable: Drawable? = null
-
-    private val layerCanvasList: ArrayList<Canvas?> = arrayListOf()
+    private val layerBitmapList: ArrayList<Bitmap> = arrayListOf()
     private val blockColorList: ArrayList<Int> by lazy {
         arrayListOf(
             resources.getColor(R.color.block_color1, null),
@@ -227,8 +226,8 @@ class FinalRecordActivity : AppCompatActivity() {
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 seekBar?.let{
-                    if(it.progress > finalRecorder.getRecordDuration()) {
-                        it.progress = finalRecorder.getRecordDuration()
+                    if(it.progress > finalRecorder.getRecordPosition()) {
+                        it.progress = finalRecorder.getRecordPosition()
                     }
                     finalRecorder.seekTo(it.progress)
                 }
@@ -314,9 +313,6 @@ class FinalRecordActivity : AppCompatActivity() {
             mute_button_linear.addView(muteButton)
             muteButtonList.add(muteButton)
             // muteButton.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, basicHeight)
-
-            //그림초기화
-            layerCanvasList.add(null)
         }
     }
 
@@ -434,6 +430,23 @@ class FinalRecordActivity : AppCompatActivity() {
         val volumeControlWindow = volumeControlDialog.window
 
         volumeControlWindow?.setLayout((size.x * 0.25).toInt(), size.y)
+
+        if(layerBitmapList.size == 0){
+            val width = 0
+            val height = basicHeight
+            val waveformBitmapMaker = WaveformBitmapMaker().apply {
+                this.width = width
+                this.height = height
+                this.backgroundColor = Color.BLACK
+                this.color = Color.WHITE
+                this.cornerRadius = 16
+                this.roundedCorners = WaveformBitmapMaker.CORNER_ALL
+            }
+            recorderConnector.soundList!!.forEach {
+                waveformBitmapMaker.amplitudes = it.data
+                layerBitmapList.add(waveformBitmapMaker.make())
+            }
+        }
 
         volumeControlDialog.show()
         Log.d("FRA, 볼륨컨트롤", "showVolumeControlDialog")
