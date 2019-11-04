@@ -11,9 +11,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="20dp"
+            android:layout_alignParentBottom = "true"
+            android:layout_marginTop="50dp"
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="80dp"
-            android:id="@+id/communityFeedListView"
+            android:id="@+id/communityShareListView"
             android:dividerHeight="7dp"
             android:divider="#00000000"/>
 

@@ -17,14 +17,8 @@ class setEffector : androidx.fragment.app.Fragment() {
    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 리스트뷰 참조 및 Adapter달기
         effectorListView.adapter =adapter
 
-        //아이템 추가
-       //music = MediaPlayer.create(context, com.treasure.loopang.R.raw.soap)
-       //        music.setLooping(true)
-
-        // 위에서 생성한 listview에 클릭 이벤트 핸들러 정의.
         effectorListView.setOnItemClickListener { parent, view, position, id ->
             // get item
             val item = parent.getItemAtPosition(position) as EffectorListItem
