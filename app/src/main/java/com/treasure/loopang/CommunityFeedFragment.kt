@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Adapter
 import android.widget.AdapterView
 import android.widget.ListView
 import com.treasure.loopang.adapter.CommunityFeedItemAdapter
@@ -54,30 +55,29 @@ class CommunityFeedFragment : androidx.fragment.app.Fragment() {
 
             val FeedAdapter : CommunityFeedItemAdapter = CommunityFeedItemAdapter()
             communityFeedListView.adapter = FeedAdapter
-
-            if(item.categoryName == "The Newest 5") {
-                /*FeedAdapter.addItem("1","2",0,1,"dd")
-                FeedAdapter.addItem("ㅇㅁ나어","ㄷㅈㄷ2",0,1,"dㄴd")
-                FeedAdapter.addItem("1ㄴㅁ","2ㅂㅂ",1,4,"dㅇd")
-                FeedAdapter.addItem("12323","2ㅇㅁㄴㅇㅁ",5,6,"ddㅁ")
-                FeedAdapter.addItem("14324","2ㄴㅁㅇㅇ",6,8,"ddㅂ")
-                for (i in 0..com.treasure.loopang.communication.UserManager.getUser().likedList.size-1) {
-            FeedAdapter.addItem(
-                com.treasure.loopang.communication.UserManager.getUser().likedList[i].owner,
-                com.treasure.loopang.communication.UserManager.getUser().likedList[i].name,
-                com.treasure.loopang.communication.UserManager.getUser().likedList[i].id
-            )}*/
-            }
-            else if(item.categoryName== "Liked Top 5"){
-            }
-            else if(item.categoryName == "Download Top 5"){
-            }
+            if(item.categoryName == "The Newest 5") { additemByCategory( FeedAdapter, 0)}
+            else if(item.categoryName== "Liked Top 5") { additemByCategory( FeedAdapter, 1) }
+            else if(item.categoryName == "Download Top 5"){ additemByCategory( FeedAdapter, 2)}
         }
 
         communityFeedListView.onItemClickListener = AdapterView.OnItemClickListener { parent, v, position, id ->
             val itt = parent.getItemAtPosition(position) as CommunitySongItem
             activity!!.TrackFrame.visibility = View.VISIBLE
             (activity as CommunityActivity).onFragmentChangedtoTrack(itt)
+        }
+    }
+    fun additemByCategory( FeedAdapter : CommunityFeedItemAdapter, category : Int){
+        (activity as CommunityActivity).connector.feedResult?.let{
+            for(i in 0.. (activity as CommunityActivity).connector.feedResult!!.feed[category].size-1) {
+                FeedAdapter.addItem(
+                    (activity as CommunityActivity).connector.feedResult!!.feed[category][i].owner,
+                    (activity as CommunityActivity).connector.feedResult!!.feed[category][i].name,
+                    (activity as CommunityActivity).connector.feedResult!!.feed[category][i].likes,
+                    (activity as CommunityActivity).connector.feedResult!!.feed[category][i].downloads,
+                    (activity as CommunityActivity).connector.feedResult!!.feed[category][i].id,
+                    (activity as CommunityActivity).connector.feedResult!!.feed[category][i].updated_date
+                )
+            }
         }
     }
 }

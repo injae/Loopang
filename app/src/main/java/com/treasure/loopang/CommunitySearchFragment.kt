@@ -35,27 +35,15 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var btnSortState : String ="Tag" //tag로 초기화
+        var isButtonStateTag = true
         var editResult : String = ""
         val CommunitySearchResultTagView : ListView = community_search_result_tag_listview
         val CommunitySearchResultUserView: ListView = community_search_result_user_listview
         val CommunitySearchAdapter: CommunitySearchitemAdapter = CommunitySearchitemAdapter()
 
-        CommunitySearchResultTagView.adapter = CommunitySearchAdapter
-        CommunitySearchResultUserView.adapter = CommunitySearchAdapter
-/*
-        CommunitySearchAdapter.addItem("punch","Done For Me","p_d")
-        CommunitySearchAdapter.addItem("punch","Another Day","p_a")
-        CommunitySearchAdapter.addItem("Melanie Martinez","Lunchbox Friends","m_l")
-        CommunitySearchAdapter.addItem("Melanie Martinez","Orange Juice","m_o")
-        CommunitySearchAdapter.addItem("Melanie Martinez","Wheels on the Bus","m_w")
-        CommunitySearchAdapter.addItem("Melanie Martinez","Class Fight","m_c")
-*/
-
         communitySearchEditText.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
             if (event.action != KeyEvent.KEYCODE_ENTER) {
                 editResult = communitySearchEditText.getText().toString()
-                Log.d("ddddddddddddddd","editReult : " + editResult)
                 return@OnKeyListener true
             }
             false
@@ -66,6 +54,8 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {  }//텍스트 바뀌는 중
             override fun afterTextChanged(edit: Editable) {//텍스트 바뀐 후
                editResult = communitySearchEditText.getText().toString()
+                if(isButtonStateTag == true) addItemByBtnState(CommunitySearchResultTagView,CommunitySearchAdapter,0)
+                else addItemByBtnState(CommunitySearchResultUserView,CommunitySearchAdapter,1)
             }
         })
 
@@ -84,7 +74,7 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
             SearchTagBtn.setBackgroundColor(Color.WHITE)
             SearchUserBtn.setBackgroundColor(Color.argb(0, 0, 0, 0))
             SearchUserBtn.setTextColor(Color.WHITE)
-            btnSortState = "Tag"
+            isButtonStateTag = true
             CommunitySearchResultTagView.visibility = View.VISIBLE
             CommunitySearchResultUserView.visibility= View.GONE
         }
@@ -94,7 +84,7 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
             SearchUserBtn.setBackgroundColor(Color.WHITE)
             SearchTagBtn.setTextColor(Color.WHITE)
             SearchTagBtn.setBackgroundColor(Color.argb(0, 0, 0, 0))
-            btnSortState = "User"
+            isButtonStateTag = false
             CommunitySearchResultTagView.visibility = View.GONE
             CommunitySearchResultUserView.visibility= View.VISIBLE
         }
@@ -108,6 +98,21 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
             val itt = parent.getItemAtPosition(position) as CommunitySongItem
             activity!!.TrackFrame.visibility = View.VISIBLE
             (activity as CommunityActivity).onFragmentChangedtoTrack(itt)
+        }
+    }
+    fun addItemByBtnState(listView :ListView ,CommunitySearchAdapter : CommunitySearchitemAdapter, btn : Int){
+        listView.adapter = CommunitySearchAdapter
+        (activity as CommunityActivity).connector.searchResult?.let{
+            for(i in 0.. (activity as CommunityActivity).connector.searchResult!!.searchResult[btn].size-1) {
+                CommunitySearchAdapter.addItem(
+                    (activity as CommunityActivity).connector.searchResult!!.searchResult[btn][i].owner,
+                    (activity as CommunityActivity).connector.searchResult!!.searchResult[btn][i].name,
+                    (activity as CommunityActivity).connector.searchResult!!.searchResult[btn][i].likes,
+                    (activity as CommunityActivity).connector.searchResult!!.searchResult[btn][i].downloads,
+                    (activity as CommunityActivity).connector.searchResult!!.searchResult[btn][i].id,
+                    (activity as CommunityActivity).connector.searchResult!!.searchResult[btn][i].updated_date
+                )
+            }
         }
     }
 
