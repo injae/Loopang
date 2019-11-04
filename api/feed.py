@@ -1,5 +1,6 @@
 from flask_restful import Resource, reqparse
 from model.music import Music
+from sqlalchemy import func
 from api.auth import Auth
 from tools.request_message import request_message, make_data
 from App import logger
@@ -19,7 +20,7 @@ class Feed(Resource):
                 "status": "success",
                 "message": "feed data",
                 "recent_musics": make_data(Music.query.order_by(Music.updated_date).limit(5)),
-                "likes_top": make_data(Music.query.order_by(Music.num_likes).limit(5)),
+                "likes_top": make_data(Music.query.order_by(func.count(Music.music_likes)).limit(5)),
                 "download_top": make_data(Music.query.order_by(Music.downloads).limit(5))                
             }, 200
         except Exception as e:
