@@ -18,7 +18,7 @@ class Music(db.Model):
 
     @hybrid_property
     def num_likes(self):
-        return len(self.music_likes)
+        return self.music_likes.count()
 
     def __init__(self, name, user_id):
         self.music_id = gen_id()

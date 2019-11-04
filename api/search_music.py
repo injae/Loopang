@@ -20,7 +20,7 @@ class MusicSearch(Resource):
             logger().debug('[upload] parameter: %s', args['target'])
             return {
                 'status': 'success',
-                'message': 'user-info',
+                'message': 'music-search',
                 'searchResult': Music.search(args['target'])
             }, 200
 
