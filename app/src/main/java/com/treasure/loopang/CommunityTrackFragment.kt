@@ -55,14 +55,12 @@ class CommunityTrackFragment: androidx.fragment.app.Fragment() {
             val connector = Connector()
             if(heartState == false) {
                 heartState = true
-                (activity as CommunityActivity).itt.likedNum += 1
                 GlobalScope.launch { connector.process(ResultManager.REQUEST_LIKE_UP, null, null, null, (activity as CommunityActivity).itt.songId) }
                 heartButton.setImageDrawable(getResources().getDrawable(R.drawable.trackicon_heart_clicked))
                 trackHeartClikedNum.setText((activity as CommunityActivity).itt.likedNum.toString())
             }
             else {
                 heartState = false
-                (activity as CommunityActivity).itt.likedNum -= 1
                 GlobalScope.launch { connector.process(ResultManager.REQUEST_LIKE_DOWN, null, null, null, (activity as CommunityActivity).itt.songId) }
                 heartButton.setImageDrawable(getResources().getDrawable(R.drawable.trackicon_heart))
                 trackHeartClikedNum.setText((activity as CommunityActivity).itt.likedNum.toString())

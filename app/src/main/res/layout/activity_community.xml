@@ -30,19 +30,19 @@
                 app:srcCompat="@drawable/community_feedbtn"
                 android:background= "#939393"/>
         <ImageButton
+                android:id="@+id/btn_userpage"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/community_userpagebtn"
+                android:background= "#939393" />
+        <ImageButton
                 android:id="@+id/btn_community_search"
                 android:layout_width="wrap_content"
                 android:layout_height="60dp"
                 android:layout_weight="1"
                 app:srcCompat="@drawable/icon_search_white"
                 android:background=  "#939393"/>
-        <ImageButton
-                android:id="@+id/btn_userpage"
-                android:layout_width="wrap_content"
-                android:layout_height="60dp"
-                android:layout_weight="1"
-                app:srcCompat="@drawable/community_userpagebtn"
-                android:background=  "#939393" />
     </LinearLayout>
     <FrameLayout
             android:layout_width="match_parent"
