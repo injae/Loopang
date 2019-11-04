@@ -1,5 +1,6 @@
 from model.database import db, gen_id
 from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy import func
 from datetime import datetime
 from pathlib import Path
 import os
@@ -18,7 +19,7 @@ class Music(db.Model):
 
     @hybrid_property
     def num_likes(self):
-        return self.music_likes.count()
+        return func.count(self.music_likes)
 
     def __init__(self, name, user_id):
         self.music_id = gen_id()
