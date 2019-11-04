@@ -1,4 +1,5 @@
 from model.database import db
+from model.music import Music
 
 
 class Like(db.Model):
@@ -20,11 +21,13 @@ class Like(db.Model):
     def off(self):
         is_find = Like.query.filter_by(user_id=self.user_id, music_id=self.music_id).first()
         if is_find is not None:
+            is_find.owner.likes -= 1
             db.session.delete(is_find)
             db.session.commit()
 
     def on(self):
         if self.can_likes():
+            self.owner.likes += 1
             db.session.add(self)
             db.session.commit()
             return True

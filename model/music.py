@@ -16,6 +16,7 @@ class Music(db.Model):
     owner = db.relationship("User", backref=db.backref("musics", lazy='dynamic', foreign_keys=[user_id]))
     updated_date = db.Column(db.DateTime(), default=datetime.utcnow())
     downloads = db.Column(db.Integer)
+    likes = db.Column(db.Integer)
 
     @hybrid_property
     def num_likes(self):
