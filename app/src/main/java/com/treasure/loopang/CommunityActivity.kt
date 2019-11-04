@@ -28,10 +28,8 @@ class CommunityActivity(var connector: Connector = Connector()) : AppCompatActiv
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_community)
         window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-        connector.feedResult = intent.getSerializableExtra("feedResult") as FeedResult
 
-       // val intent = getIntent()
-        //val userId = intent.extras!!.getString("userId")
+        connector.feedResult = intent.getSerializableExtra("feedResult") as FeedResult
 
         CommunityContainer.adapter = pagerAdapter
         CommunityContainer.addOnPageChangeListener(PageChangeListener())

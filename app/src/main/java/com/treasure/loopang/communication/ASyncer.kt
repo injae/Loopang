@@ -71,12 +71,9 @@ class ASyncer<T>(private val context: T, private var code: Int = 0, private var 
                     if(boolTemp) response.message = "SUCCESS INFO, FEED"
                     code = ResultManager.getCode(response)
                     /*val ct = Connector()
-                    Log.d("OkHttp", "첫번째로 받아온 트랙 : ${UserManager.getUser().trackList[0]}")
-                    ct.process(ResultManager.FILE_DOWNLOAD, null, null, null, UserManager.getUser().trackList[0].id)
-                    connector.process(ResultManager.FEED_REQUEST)
-                    Log.d("OkHttp", "피드 결과 : ${connector.feedResult}")
-                    connector.process(ResultManager.SEARCH_REQUEST, null, null, "open")
-                    Log.d("OkHttp", "검색 결과 : ${connector.searchResult}")*/
+                    Log.d("OkHttp", "두번째로 받아온 트랙 : ${UserManager.getUser().trackList[1]}")
+                    //ct.process(ResultManager.FILE_DOWNLOAD, null, null, null, UserManager.getUser().trackList[1].id)
+                    connector.process(ResultManager.FEED_REQUEST)*/
                 }
             }
         }
@@ -127,7 +124,6 @@ class ASyncer<T>(private val context: T, private var code: Int = 0, private var 
             is Recording -> {
                 if(UserManager.isLogined) {
                     ld?.dismiss()
-                    code = ResultManager.SUCCESS // 실제 운영시 지워야 되는 코드
                     context.toast("Code = ${response.message}")
                     when(code) {
                         ResultManager.SUCCESS -> {
