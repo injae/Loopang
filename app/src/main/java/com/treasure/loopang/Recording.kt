@@ -48,7 +48,7 @@ class Recording : AppCompatActivity()
    // lateinit var setEffectorFrag : setEffector
     lateinit var setMetronomeFrag : setMetronome
     lateinit var setting : setting
-    lateinit var myPage: MyPage
+
     val fileManager : FileManager =FileManager()
 
     private val pagerAdapter by lazy { LoopStationPagerAdapter(supportFragmentManager) }
@@ -59,7 +59,7 @@ class Recording : AppCompatActivity()
         //setEffectorFrag = setEffector()
         setMetronomeFrag = setMetronome()
         setting = setting()
-        myPage = MyPage()
+
 
         // 화면을 세로로 고정
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -117,9 +117,6 @@ class Recording : AppCompatActivity()
             //checkPresentFragAndReplaceFrag(btn_setMetronome)
         }
 
-        btn_myPage.setOnClickListener {
-            getSupportFragmentManager().beginTransaction().setCustomAnimations( R.anim.fade_in, 0, 0, R.anim.fade_out).replace(R.id.fragContainer, myPage).commit()
-        }
         btn_setting.setOnClickListener {
             getSupportFragmentManager().beginTransaction().setCustomAnimations( R.anim.fade_in, 0, 0, R.anim.fade_out).replace(R.id.fragContainer, setting).commit()
             // checkPresentFragAndReplaceFrag(btn_setting)
@@ -131,7 +128,7 @@ class Recording : AppCompatActivity()
         pager.addOnPageChangeListener(PageChangeListener())
         pager.setOnTouchListener { _, _ -> false}
 
-        btn_open_final_storage.setOnClickListener {
+       btn_final_record.setOnClickListener {
             Log.d("aaaaaaaaaaaaa","aaaaaaaaaaaaaaaa")
             Log.d("Recording, FRA", "final recording button click")
             val fragment = (pagerAdapter.getItem(0) as RecordFragment)
