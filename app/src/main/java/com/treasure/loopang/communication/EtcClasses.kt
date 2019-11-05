@@ -12,7 +12,8 @@ data class ForUserInfo(var status: String = "", var message: String = "",
                        var likedList: List<MusicListClass>)
 
 data class MusicListClass(var id: String = "", var name: String = "", var owner: String = "",
-                          var updated_date: String = "", var downloads: Int = 0, var likes: Int = 0) : Serializable
+                          var updated_date: String = "", var downloads: Int = 0, var likes: Int = 0,
+                          var subject: String = "", var explanation: String = "", var tags: List<String>? = null) : Serializable
 
 data class Result(var status: String = "", var message: String = "",
                   var refreshToken: String = "", var accessToken: String = "")

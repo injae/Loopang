@@ -39,9 +39,9 @@ interface LoopangNetwork {
 
     @Multipart
     @POST("/upload")
-    fun sendFile(@Part("token") accessToken: String,
-                 @Part("name") fileName: String,
-                 @Part file: MultipartBody.Part): Call<Result>
+    fun sendFile(@Part("token") accessToken: String, @Part("name") fileName: String,
+                 @Part("subject") subject: String, @Part("explanation") explanation: String,
+                 @Part("tags") tags: List<String>, @Part file: MultipartBody.Part): Call<Result>
 
     @FormUrlEncoded
     @POST("/download")

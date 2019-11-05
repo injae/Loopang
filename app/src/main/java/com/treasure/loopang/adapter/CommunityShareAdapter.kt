@@ -23,7 +23,7 @@ class CommunityShareAdapter : BaseAdapter() {
         if (convertView == null) {
             view = LayoutInflater.from(context).inflate(com.treasure.loopang.R.layout.project_item, null)
             ViewHolder = ViewHolder()
-           ViewHolder.loopTitleView = view.findViewById(com.treasure.loopang.R.id.txt_title) as TextView
+            ViewHolder.loopTitleView = view.findViewById(com.treasure.loopang.R.id.txt_title) as TextView
             ViewHolder.dateStringView = view.findViewById(com.treasure.loopang.R.id.txt_date) as TextView
 
             view.tag =  ViewHolder
@@ -55,6 +55,13 @@ class CommunityShareAdapter : BaseAdapter() {
         item.dateString = dateString
         //item.filePath =filePath
 
+        listViewItemList.add(item)
+    }
+
+    fun addItem(loopMusic: LoopMusic) {
+        val item = CommunityShareItem()
+        item.loopTitle = loopMusic.name
+        item.dateString = loopMusic.date
         listViewItemList.add(item)
     }
 
