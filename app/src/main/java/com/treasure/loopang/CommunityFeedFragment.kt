@@ -49,35 +49,21 @@ class CommunityFeedFragment : androidx.fragment.app.Fragment() {
         communityFeedCategoryListView.onItemClickListener = AdapterView.OnItemClickListener { parent, v, position, id ->
             val item = parent.getItemAtPosition(position) as CommunityFeedCategoryItem
             (activity as CommunityActivity).isCategorySelected = true
-
             communityFeedListView.visibility = View.VISIBLE
             communityFeedCategoryListView.visibility = View.GONE
 
             val FeedAdapter : CommunityFeedItemAdapter = CommunityFeedItemAdapter()
             communityFeedListView.adapter = FeedAdapter
-            if(item.categoryName == "The Newest 5") { additemByCategory( FeedAdapter, 0)}
-            else if(item.categoryName== "Liked Top 5") { additemByCategory( FeedAdapter, 1) }
-            else if(item.categoryName == "Download Top 5"){ additemByCategory( FeedAdapter, 2)}
+
+            if(item.categoryName == "The Newest 5") { (activity as CommunityActivity).connector?.feedResult?.recent_musics?.forEach { FeedAdapter.addItem(it) } }
+            else if(item.categoryName== "Liked Top 5") { (activity as CommunityActivity).connector?.feedResult?.likes_top?.forEach { FeedAdapter.addItem(it) } }
+            else if(item.categoryName == "Download Top 5"){ (activity as CommunityActivity).connector?.feedResult?.download_top?.forEach { FeedAdapter.addItem(it) }}
         }
 
         communityFeedListView.onItemClickListener = AdapterView.OnItemClickListener { parent, v, position, id ->
             val itt = parent.getItemAtPosition(position) as CommunitySongItem
             activity!!.TrackFrame.visibility = View.VISIBLE
             (activity as CommunityActivity).onFragmentChangedtoTrack(itt)
-        }
-    }
-    fun additemByCategory( FeedAdapter : CommunityFeedItemAdapter, category : Int){
-        (activity as CommunityActivity).connector.feedResult?.let{
-            for(i in 0.. (activity as CommunityActivity).connector.feedResult!!.feed[category].size-1) {
-                FeedAdapter.addItem(
-                    (activity as CommunityActivity).connector.feedResult!!.feed[category][i].owner,
-                    (activity as CommunityActivity).connector.feedResult!!.feed[category][i].name,
-                    (activity as CommunityActivity).connector.feedResult!!.feed[category][i].likes,
-                    (activity as CommunityActivity).connector.feedResult!!.feed[category][i].downloads,
-                    (activity as CommunityActivity).connector.feedResult!!.feed[category][i].id,
-                    (activity as CommunityActivity).connector.feedResult!!.feed[category][i].updated_date
-                )
-            }
         }
     }
 }

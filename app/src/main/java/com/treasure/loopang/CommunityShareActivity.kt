@@ -25,9 +25,10 @@ class CommunityShareActivity : AppCompatActivity() {
         ShareAdapter.addItem("d","d")
         ShareAdapter.addItem("b","b")
         ShareAdapter.addItem("a","a")
-        //ShareAdapter.addItem("","","","")
+
         communityShareListView.onItemClickListener = AdapterView.OnItemClickListener { parent, v, position, id ->
                 val item = parent.getItemAtPosition(position) as CommunityShareItem
+            getSupportFragmentManager().beginTransaction().replace(R.id.shareContainer, CommunityShareFragment()).commit()
         }
     }
 }

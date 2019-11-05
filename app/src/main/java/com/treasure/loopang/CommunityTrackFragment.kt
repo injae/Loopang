@@ -30,7 +30,7 @@ class CommunityTrackFragment: androidx.fragment.app.Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         TrackInfoTextView.isEnabled = false
-        trackInfoTextEdit.setEnabled(false)
+        trackInfoText.setEnabled(false)
 
         var StatePlaying : Boolean = false
         var heartState :Boolean = false
@@ -42,8 +42,8 @@ class CommunityTrackFragment: androidx.fragment.app.Fragment() {
         Track_artistName.setText(songMasteruserNickName)
 
         if(songMasteruserNickName == presentuserNickname) {
-            trackInfoTextEdit.setEnabled(true); //사용자와 노래주인이 같으면 터치해서 info바꿀 수 있음
-            trackInfoTextEdit.addTextChangedListener(object  : TextWatcher{
+            trackInfoText.setEnabled(true); //사용자와 노래주인이 같으면 터치해서 info바꿀 수 있음
+            trackInfoText.addTextChangedListener(object  : TextWatcher{
                 override fun afterTextChanged(edit: Editable) {}
                 override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
