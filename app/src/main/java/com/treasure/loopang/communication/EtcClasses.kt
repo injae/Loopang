@@ -4,8 +4,8 @@ import java.io.Serializable
 
 data class User(var email: String = "", var password: String = "",
                 var name: String = "", var encodedPassword: String = "",
-                var trackList: List<MusicListClass> = List<MusicListClass>(0, { MusicListClass() }),
-                var likedList: List<MusicListClass> = List<MusicListClass>(0, { MusicListClass() }))
+                var trackList: List<MusicListClass> = List(0, { MusicListClass() }),
+                var likedList: List<MusicListClass> = List(0, { MusicListClass() }))
 
 data class ForUserInfo(var status: String = "", var message: String = "",
                        var nickName: String = "", var trackList: List<MusicListClass>,
@@ -22,4 +22,4 @@ data class FeedResult(var status: String = "", var message: String = "",
                       var recent_musics: List<MusicListClass>) : Serializable
 
 data class SearchResult(var status: String = "", var message: String = "",
-                        var searchResult: List<List<MusicListClass>>) : Serializable
+                        var tagList: List<MusicListClass>, var userList: List<MusicListClass>) : Serializable
