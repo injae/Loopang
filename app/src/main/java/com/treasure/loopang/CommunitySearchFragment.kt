@@ -54,11 +54,16 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {  }//텍스트 바뀌는 중
             override fun afterTextChanged(edit: Editable) {//텍스트 바뀐 후
                editResult = communitySearchEditText.getText().toString()
-                if(isButtonStateTag == true) addItemByBtnState(CommunitySearchResultTagView,CommunitySearchAdapter,0)
-                else addItemByBtnState(CommunitySearchResultUserView,CommunitySearchAdapter,1)
+                if(isButtonStateTag == true) {
+                    CommunitySearchResultTagView.adapter = CommunitySearchAdapter
+                    (activity as CommunityActivity).connector?.searchResult?.tagList?.forEach { CommunitySearchAdapter.addItem(it) }
+                }
+                else {
+                    CommunitySearchResultUserView.adapter = CommunitySearchAdapter
+                    (activity as CommunityActivity).connector?.searchResult?.userList?.forEach { CommunitySearchAdapter.addItem(it) }
+                }
             }
         })
-
         communitySearchBtn.setOnClickListener {
             val ld = LoadingActivity(activity!!)
             GlobalScope.launch {
@@ -100,20 +105,4 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
             (activity as CommunityActivity).onFragmentChangedtoTrack(itt)
         }
     }
-    fun addItemByBtnState(listView :ListView ,CommunitySearchAdapter : CommunitySearchitemAdapter, btn : Int){
-        listView.adapter = CommunitySearchAdapter
-        (activity as CommunityActivity).connector.searchResult?.let{
-            for(i in 0.. (activity as CommunityActivity).connector.searchResult!!.searchResult[btn].size-1) {
-                CommunitySearchAdapter.addItem(
-                    (activity as CommunityActivity).connector.searchResult!!.searchResult[btn][i].owner,
-                    (activity as CommunityActivity).connector.searchResult!!.searchResult[btn][i].name,
-                    (activity as CommunityActivity).connector.searchResult!!.searchResult[btn][i].likes,
-                    (activity as CommunityActivity).connector.searchResult!!.searchResult[btn][i].downloads,
-                    (activity as CommunityActivity).connector.searchResult!!.searchResult[btn][i].id,
-                    (activity as CommunityActivity).connector.searchResult!!.searchResult[btn][i].updated_date
-                )
-            }
-        }
-    }
-
 }

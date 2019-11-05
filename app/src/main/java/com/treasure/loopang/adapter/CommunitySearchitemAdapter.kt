@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.treasure.loopang.communication.MusicListClass
 import com.treasure.loopang.listitem.CommunitySongItem
 import java.util.ArrayList
 
@@ -53,15 +54,15 @@ class CommunitySearchitemAdapter : BaseAdapter() {
     override fun getItem(position: Int): Any {
         return listViewItemList[position]
     }
-    fun addItem(userNickName: String, songName: String,  likedNum : Int, downloadNum :Int,songId : String, productionDate : String) {
+    fun addItem(music: MusicListClass) {
         val item = CommunitySongItem()
-        item.userNickName= userNickName
-        item.songName = songName
-        item.downloadNum = downloadNum
-        item.likedNum = likedNum
-        item.songId = songId
-        item.productionDate =productionDate
-    //    item.trackInfo = trackInfo  ,trackInfo : String
+        item.userNickName = music.owner
+        item.songName = music.name
+        item.downloadNum = music.downloads
+        item.likedNum = music.likes
+        item.songId = music.id
+        item.productionDate =music.updated_date
+
         listViewItemList.add(item)
     }
 
