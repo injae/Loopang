@@ -139,8 +139,8 @@ class CommunityActivity(var connector: Connector = Connector()) : AppCompatActiv
             isTrackFragOpen = false
         }
         else if(isTrackFragOpen == false && isCategorySelected == true){
-            communityFeedListView.visibility = View.VISIBLE
-            communityFeedCategoryListView.visibility = View.GONE
+            communityFeedListView.visibility = View.GONE
+            communityFeedCategoryListView.visibility = View.VISIBLE
             isCategorySelected = false
         }
         else {

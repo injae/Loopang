@@ -18,5 +18,9 @@
             android:id="@+id/communityShareListView"
             android:dividerHeight="7dp"
             android:divider="#00000000"/>
-
+<FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/shareContainer"
+        android:visibility="gone"/>
 </RelativeLayout>
