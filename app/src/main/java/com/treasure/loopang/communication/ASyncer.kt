@@ -62,7 +62,7 @@ class ASyncer<T>(private val context: T, private var code: Int = 0, private var 
             }
 
             is Recording -> {
-                if(UserManager.isLogined && UserManager.getUser().name == "") {
+                if(UserManager.isLogined) {
                     var boolTemp = true
                     response = connector.process(ResultManager.INFO_REQUEST)
                     if(response.status == "fail") boolTemp = false
@@ -70,10 +70,6 @@ class ASyncer<T>(private val context: T, private var code: Int = 0, private var 
                     if(response.status == "fail") boolTemp = false
                     if(boolTemp) response.message = "SUCCESS INFO, FEED"
                     code = ResultManager.getCode(response)
-                    /*val ct = Connector()
-                    Log.d("OkHttp", "두번째로 받아온 트랙 : ${UserManager.getUser().trackList[1]}")
-                    //ct.process(ResultManager.FILE_DOWNLOAD, null, null, null, UserManager.getUser().trackList[1].id)
-                    connector.process(ResultManager.FEED_REQUEST)*/
                 }
             }
         }

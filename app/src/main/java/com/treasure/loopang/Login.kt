@@ -4,7 +4,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.Settings
 import android.text.SpannableStringBuilder
 import android.view.WindowManager
 import com.jakewharton.rxbinding3.view.clicks
@@ -13,8 +12,6 @@ import com.treasure.loopang.communication.*
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.coroutines.*
-import java.io.File
-import java.io.FileOutputStream
 
 class Login : AppCompatActivity() {
     protected val disposables by lazy { CompositeDisposable() }
@@ -29,8 +26,8 @@ class Login : AppCompatActivity() {
         setContentView(R.layout.activity_login)
         checkPermission()
         window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-        val ld = LoadingActivity(this@Login)
 
+        val ld = LoadingActivity(this@Login)
         GlobalScope.launch {
             DatabaseManager.deleteToken(this@Login)
             val email = DatabaseManager.getEmail(this@Login)
