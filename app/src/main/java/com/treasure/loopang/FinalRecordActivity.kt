@@ -104,12 +104,11 @@ class FinalRecordActivity : AppCompatActivity() {
 
     //dialog
     private val blockControlDialog: BlockControlDialog by lazy { BlockControlDialog(this, BCDListener()) }
-    private val volumeControlDialog: VolumeControlDialog by lazy { VolumeControlDialog(this, VCDListener()) }
+    private val volumeControlDialog: VolumeControlDialog by lazy { VolumeControlDialog(this, VCDListener(),recorderConnector.soundList!!.map{it.data}) }
     // val blockControlDialog: BlockControlDialog = BlockControlDialog()
     // val saveDialog: FinalSaveDialog = FinalSaveDialog()
 
     private val finalRecorder : FinalRecorder = FinalRecorder()
-    private var expandFlag = false
     private var num = 0
 
     companion object {
@@ -279,6 +278,16 @@ class FinalRecordActivity : AppCompatActivity() {
                 recordSeekBarButton?.max = (basicWidth / wpt.width) * wpt.ms
 
                 setupScrolling()
+
+                //다이얼로그 크기 동적지정
+                val display = windowManager.defaultDisplay
+                val size = Point()
+                val volumeControlWindow = volumeControlDialog.window
+                val blockControlWindow = blockControlDialog.window
+
+                display.getSize(size)
+                volumeControlWindow?.setLayout((size.x * 0.25).toInt(), size.y)
+                blockControlWindow?.setLayout((size.x * 0.25).toInt(), size.y)
             }
         })
     }
@@ -413,44 +422,11 @@ class FinalRecordActivity : AppCompatActivity() {
     }
 
     private fun showBlockControlDialog(layerId:Int, blockId: Int) {
-        val display = windowManager.defaultDisplay
-        val size = Point()
-        display.getSize(size)
-        val blockControlWindow = blockControlDialog.window
-
-        blockControlWindow?.setLayout((size.x * 0.25).toInt(), size.y)
-
         blockControlDialog.show(layerId, blockId)
-
         Log.d("FRA, 블록컨트롤", "showBlockControlDialog(layerId: $layerId, blockId: $blockId)")
     }
 
     private fun showVolumeControlDialog() {
-        val display = windowManager.defaultDisplay
-        val size = Point()
-        display.getSize(size)
-        val volumeControlWindow = volumeControlDialog.window
-
-        volumeControlWindow?.setLayout((size.x * 0.25).toInt(), size.y)
-
-        if(layerBitmapList.size == 0){
-            val width = (size.x *0.25).toInt()
-            val height = basicHeight
-            val waveformBitmapMaker = WaveformBitmapMaker().apply {
-                this.width = width
-                this.height = height
-                this.backgroundColor = Color.BLACK
-                this.color = Color.WHITE
-                this.cornerRadius = 16
-                this.roundedCorners = WaveformBitmapMaker.CORNER_ALL
-            }
-            recorderConnector.soundList!!.forEach {
-                waveformBitmapMaker.amplitudes = it.data
-                layerBitmapList.add(waveformBitmapMaker.make())
-            }
-            volumeControlDialog.amplitudes_listview.adapter = LayerBitmapAdapter(layerBitmapList)
-        }
-
         volumeControlDialog.show()
         Log.d("FRA, 볼륨컨트롤", "showVolumeControlDialog")
     }
@@ -488,31 +464,8 @@ class FinalRecordActivity : AppCompatActivity() {
         }*/
     }
 
-
-    //open view
-    private fun openVolumeControlDrawer() {}
-    private fun openBlockControlDrawer() {}
-    private fun openSaveDialog() {}
-
-    //event callback
-    //private fun onSeekBarMove() {}
-    private fun onPlayButtonClick() {}
-    private fun onToStartButtonClick() {}
-    private fun onToEndButtonClick() {}
-    private fun onRecordStartButtonClick() {}
-    private fun onRecordPauseButtonClick() {}
-    private fun onRecordStopButtonClick() {}
-    private fun onOverwriteButtonClick(flag: Boolean) {}
-    private fun onMetronomeButtonClick(flag: Boolean) {}
-    private fun onLVCDOpen() {}
-    private fun onBCDOpen(layerPosition: Int, blockPosition: Int) {}
-    // private fun onBlockVolumeSeekBarMove(lp:Int, bp: Int) {}
-    // private fun onBlockEffectChanged(lp:Imt, bp: Int) {}
-    // private fun onLoopVolumeSeekBarMove(lp: Int, bp: Int) {}
-    // private fun onRecordVolumeChanged(lp: Int, bp: Int) {}
-
     //update view
-    val updateRecordRunnable: Runnable = Runnable {
+    private val updateRecordRunnable: Runnable = Runnable {
 
         while(recordFlag) {
             if(checkToExpandSize()) {
@@ -526,7 +479,7 @@ class FinalRecordActivity : AppCompatActivity() {
         }
     }
 
-    val updatePlayRunnaable: Runnable = Runnable {
+   private val updatePlayRunnaable: Runnable = Runnable {
         // playFlag = finalRecorder.isPlaying()
         while(finalRecorder.isPlaying()) {
             // recordCurrentPosition = finalRecorder.getRecordPosition()

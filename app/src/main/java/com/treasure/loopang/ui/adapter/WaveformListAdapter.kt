@@ -1,35 +1,34 @@
 package com.treasure.loopang.ui.adapter
 
-import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.ImageView
 import com.treasure.loopang.R
-import kotlinx.android.synthetic.main.layer_amplitudes_item.view.*
+import com.treasure.loopang.ui.view.WaveformView
+import kotlinx.android.synthetic.main.waveform_item.view.*
 
-class LayerBitmapAdapter(var itemList: ArrayList<Bitmap>) : BaseAdapter() {
+class WaveformListAdapter(var itemList: List<MutableList<Short>>) : BaseAdapter() {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view: View
-        val layerImageHolder: LayerImageHolder
-        val image = itemList[position]
+        val waveformHolder: WaveformHolder
+        val item = itemList[position]
 
         if (convertView == null) {
             view = LayoutInflater.from(parent?.context).inflate(
-                R.layout.layer_amplitudes_item, parent, false
+                R.layout.waveform_item, parent, false
             )
 
-            layerImageHolder = LayerImageHolder()
-            layerImageHolder.imageView = view.layer_iv
+            waveformHolder = WaveformHolder()
+            waveformHolder.waveform = view.vd_waveform
 
-            view.tag = layerImageHolder
+            view.tag = waveformHolder
         } else {
             view = convertView
-            layerImageHolder = view.tag as LayerImageHolder
+            waveformHolder = view.tag as WaveformHolder
         }
 
-        layerImageHolder.imageView.setImageBitmap(image)
+        waveformHolder.waveform.amplitudes = item
 
         return view
     }
@@ -47,6 +46,6 @@ class LayerBitmapAdapter(var itemList: ArrayList<Bitmap>) : BaseAdapter() {
     }
 }
 
-class LayerImageHolder{
-    lateinit var imageView: ImageView
+class WaveformHolder{
+    lateinit var waveform: WaveformView
 }

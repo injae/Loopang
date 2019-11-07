@@ -7,9 +7,10 @@ import android.view.Gravity
 import android.view.Window
 import android.widget.SeekBar
 import com.treasure.loopang.R
+import com.treasure.loopang.ui.adapter.WaveformListAdapter
 import kotlinx.android.synthetic.main.volume_control_drawer.*
 
-class VolumeControlDialog(context: Context, var listener : VolumeControlDialogListener? = null ) : Dialog(context) {
+class VolumeControlDialog(context: Context, var listener : VolumeControlDialogListener? = null, dataList: List<MutableList<Short>> ) : Dialog(context) {
 
     private val recordVolumeSeekBar : SeekBar by lazy { record_volume_seekbar }
     private val loopVolumeSeekBar : SeekBar by lazy { loop_volume_seekbar }
@@ -19,6 +20,8 @@ class VolumeControlDialog(context: Context, var listener : VolumeControlDialogLi
 
     var recordVolumeMax = 100
     var recordVolume = 50
+
+    private var amplitudesList: List<MutableList<Short>> = dataList
 
     init {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -33,6 +36,8 @@ class VolumeControlDialog(context: Context, var listener : VolumeControlDialogLi
 
         loopVolumeSeekBar.max = loopVolumeMax
         loopVolumeSeekBar.progress = loopVolume
+
+        amplitudes_listview.adapter = WaveformListAdapter(dataList)
 
         Log.d("VolumeControlDialog", "VolumeControlDialog.init()")
     }
