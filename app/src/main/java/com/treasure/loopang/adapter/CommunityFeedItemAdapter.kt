@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.treasure.loopang.communication.MusicListClass
 import com.treasure.loopang.listitem.CommunitySongItem
 import java.util.ArrayList
 
@@ -51,7 +52,7 @@ class CommunityFeedItemAdapter : BaseAdapter(){
         return listViewItemList[position]
     }
 
-    fun addItem(userNickName: String, songName: String,  likedNum : Int, downloadNum :Int,songId : String, productionDate : String, trackInfo : String) {
+    fun addItem(userNickName: String, songName: String,  likedNum : Int, downloadNum :Int,songId : String, productionDate : String) {
         val item = CommunitySongItem()
         item.userNickName= userNickName
         item.songName = songName
@@ -59,7 +60,19 @@ class CommunityFeedItemAdapter : BaseAdapter(){
         item.likedNum = likedNum
         item.songId = songId
         item.productionDate =productionDate
-        item.trackInfo = trackInfo
+     //   item.trackInfo = trackInfo   , trackInfo : String
+        listViewItemList.add(item)
+    }
+
+    fun addItem(music: MusicListClass) {
+        val item = CommunitySongItem()
+        item.userNickName = music.owner
+        item.songName = music.name
+        item.downloadNum = music.downloads
+        item.likedNum = music.likes
+        item.songId = music.id
+        item.productionDate =music.updated_date
+        //   item.trackInfo = trackInfo   , trackInfo : String
         listViewItemList.add(item)
     }
 

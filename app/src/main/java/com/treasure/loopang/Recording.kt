@@ -48,20 +48,18 @@ class Recording : AppCompatActivity()
    // lateinit var setEffectorFrag : setEffector
     lateinit var setMetronomeFrag : setMetronome
     lateinit var setting : setting
-    lateinit var myPage: MyPage
+
     val fileManager : FileManager =FileManager()
-    val loopList = fileManager.soundList()
 
     private val pagerAdapter by lazy { LoopStationPagerAdapter(supportFragmentManager) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        ASyncer(this).execute()
 
         //setEffectorFrag = setEffector()
         setMetronomeFrag = setMetronome()
         setting = setting()
-        myPage = MyPage()
+
 
         // 화면을 세로로 고정
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -119,25 +117,18 @@ class Recording : AppCompatActivity()
             //checkPresentFragAndReplaceFrag(btn_setMetronome)
         }
 
-        btn_myPage.setOnClickListener {
-            getSupportFragmentManager().beginTransaction().setCustomAnimations( R.anim.fade_in, 0, 0, R.anim.fade_out).replace(R.id.fragContainer, myPage).commit()
-        }
         btn_setting.setOnClickListener {
             getSupportFragmentManager().beginTransaction().setCustomAnimations( R.anim.fade_in, 0, 0, R.anim.fade_out).replace(R.id.fragContainer, setting).commit()
             // checkPresentFragAndReplaceFrag(btn_setting)
         }
         btn_community.setOnClickListener {
-            var userId : String? = null
-            val intentToCommunity = Intent(this, CommunityActivity::class.java)
-
-            intentToCommunity.putExtra("userId",userId)
-            startActivity(intentToCommunity)
+            ASyncer<Recording>(this).execute()
         }
         pager.adapter = pagerAdapter
         pager.addOnPageChangeListener(PageChangeListener())
         pager.setOnTouchListener { _, _ -> false}
 
-        btn_open_final_storage.setOnClickListener {
+       btn_final_record.setOnClickListener {
             Log.d("aaaaaaaaaaaaa","aaaaaaaaaaaaaaaa")
             Log.d("Recording, FRA", "final recording button click")
             val fragment = (pagerAdapter.getItem(0) as RecordFragment)

@@ -54,4 +54,5 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:3.10.0"
     implementation "com.squareup.retrofit2:converter-scalars:2.6.1"
     implementation 'io.github.junyuecao:soundtouch:1.0.1'
+    implementation 'com.wang.avi:library:2.1.3'
 }

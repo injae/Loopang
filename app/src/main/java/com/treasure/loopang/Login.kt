@@ -4,7 +4,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.Settings
 import android.text.SpannableStringBuilder
 import android.view.WindowManager
 import com.jakewharton.rxbinding3.view.clicks
@@ -13,8 +12,6 @@ import com.treasure.loopang.communication.*
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.coroutines.*
-import java.io.File
-import java.io.FileOutputStream
 
 class Login : AppCompatActivity() {
     protected val disposables by lazy { CompositeDisposable() }
@@ -30,11 +27,13 @@ class Login : AppCompatActivity() {
         checkPermission()
         window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
 
+        val ld = LoadingActivity(this@Login)
         GlobalScope.launch {
             DatabaseManager.deleteToken(this@Login)
             val email = DatabaseManager.getEmail(this@Login)
             if(DatabaseManager.getPassword(this@Login) != null) {
                 CoroutineScope(Dispatchers.Main).launch {
+                    ld.show()
                     if(email != null) input_id.text = SpannableStringBuilder(email)
                     input_password.text = SpannableStringBuilder("********")
                 }
@@ -42,15 +41,16 @@ class Login : AppCompatActivity() {
                 cb_auto_login.isChecked = true
                 val cnt = Connector()
                 val res = cnt.process(ResultManager.LOGIN, UserManager.getUser())
-                if(ResultManager.getCode(res) == ResultManager.SUCCESS_LOGIN) {
+                if(ResultManager.getCode(res) == ResultManager.SUCCESS) {
                     UserManager.isLogined = true
                     DatabaseManager.insertToken(this@Login, res.refreshToken)
+                    CoroutineScope(Dispatchers.Main).launch { ld.dismiss() }
                     startActivity(Intent(this@Login, Recording::class.java))
                     finish()
                 }
             }
             else {
-                val email = DatabaseManager.getEmail(this@Login)
+                //val email = DatabaseManager.getEmail(this@Login)
                 if(email != null) {
                     CoroutineScope(Dispatchers.Main).launch {
                         cb_save_id.isChecked = true

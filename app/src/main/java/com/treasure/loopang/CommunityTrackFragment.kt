@@ -10,11 +10,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.FrameLayout
+import com.treasure.loopang.communication.Connector
+import com.treasure.loopang.communication.ResultManager
 import kotlinx.android.synthetic.main.activity_community.*
 import kotlinx.android.synthetic.main.community_feed_item.*
 import kotlinx.android.synthetic.main.community_track.*
 import kotlinx.android.synthetic.main.community_track.view.*
 import kotlinx.android.synthetic.main.setting_item_back.view.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class CommunityTrackFragment: androidx.fragment.app.Fragment() {
 
@@ -26,7 +30,7 @@ class CommunityTrackFragment: androidx.fragment.app.Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         TrackInfoTextView.isEnabled = false
-        trackInfoTextEdit.setEnabled(false)
+        trackInfoText.setEnabled(false)
 
         var StatePlaying : Boolean = false
         var heartState :Boolean = false
@@ -38,8 +42,8 @@ class CommunityTrackFragment: androidx.fragment.app.Fragment() {
         Track_artistName.setText(songMasteruserNickName)
 
         if(songMasteruserNickName == presentuserNickname) {
-            trackInfoTextEdit.setEnabled(true); //사용자와 노래주인이 같으면 터치해서 info바꿀 수 있음
-            trackInfoTextEdit.addTextChangedListener(object  : TextWatcher{
+            trackInfoText.setEnabled(true); //사용자와 노래주인이 같으면 터치해서 info바꿀 수 있음
+            trackInfoText.addTextChangedListener(object  : TextWatcher{
                 override fun afterTextChanged(edit: Editable) {}
                 override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
@@ -48,15 +52,16 @@ class CommunityTrackFragment: androidx.fragment.app.Fragment() {
             })
         }
         heartButton.setOnClickListener {
+            val connector = Connector()
             if(heartState == false) {
                 heartState = true
-                (activity as CommunityActivity).itt.likedNum += 1
+                GlobalScope.launch { connector.process(ResultManager.REQUEST_LIKE_UP, null, null, null, (activity as CommunityActivity).itt.songId) }
                 heartButton.setImageDrawable(getResources().getDrawable(R.drawable.trackicon_heart_clicked))
                 trackHeartClikedNum.setText((activity as CommunityActivity).itt.likedNum.toString())
             }
             else {
                 heartState = false
-                (activity as CommunityActivity).itt.likedNum -= 1
+                GlobalScope.launch { connector.process(ResultManager.REQUEST_LIKE_DOWN, null, null, null, (activity as CommunityActivity).itt.songId) }
                 heartButton.setImageDrawable(getResources().getDrawable(R.drawable.trackicon_heart))
                 trackHeartClikedNum.setText((activity as CommunityActivity).itt.likedNum.toString())
             }

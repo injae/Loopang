@@ -21,8 +21,11 @@ import kotlin.math.log
 import android.view.KeyEvent.KEYCODE_ENTER
 import android.R
 import android.view.KeyEvent
-import android.widget.EditText
-
+import com.treasure.loopang.communication.ResultManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 class CommunitySearchFragment : androidx.fragment.app.Fragment() {
@@ -32,27 +35,15 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var btnSortState : String ="Tag" //tag로 초기화
+        var isButtonStateTag = true
         var editResult : String = ""
         val CommunitySearchResultTagView : ListView = community_search_result_tag_listview
         val CommunitySearchResultUserView: ListView = community_search_result_user_listview
         val CommunitySearchAdapter: CommunitySearchitemAdapter = CommunitySearchitemAdapter()
 
-        CommunitySearchResultTagView.adapter = CommunitySearchAdapter
-        CommunitySearchResultUserView.adapter = CommunitySearchAdapter
-/*
-        CommunitySearchAdapter.addItem("punch","Done For Me","p_d")
-        CommunitySearchAdapter.addItem("punch","Another Day","p_a")
-        CommunitySearchAdapter.addItem("Melanie Martinez","Lunchbox Friends","m_l")
-        CommunitySearchAdapter.addItem("Melanie Martinez","Orange Juice","m_o")
-        CommunitySearchAdapter.addItem("Melanie Martinez","Wheels on the Bus","m_w")
-        CommunitySearchAdapter.addItem("Melanie Martinez","Class Fight","m_c")
-*/
-
         communitySearchEditText.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
             if (event.action != KeyEvent.KEYCODE_ENTER) {
                 editResult = communitySearchEditText.getText().toString()
-                Log.d("ddddddddddddddd","editReult : " + editResult)
                 return@OnKeyListener true
             }
             false
@@ -63,10 +54,24 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {  }//텍스트 바뀌는 중
             override fun afterTextChanged(edit: Editable) {//텍스트 바뀐 후
                editResult = communitySearchEditText.getText().toString()
+                if(isButtonStateTag == true) {
+                    CommunitySearchResultTagView.adapter = CommunitySearchAdapter
+                    (activity as CommunityActivity).connector?.searchResult?.tagList?.forEach { CommunitySearchAdapter.addItem(it) }
+                }
+                else {
+                    CommunitySearchResultUserView.adapter = CommunitySearchAdapter
+                    (activity as CommunityActivity).connector?.searchResult?.userList?.forEach { CommunitySearchAdapter.addItem(it) }
+                }
             }
         })
-
-        communitySearchBtn.setOnClickListener {Log.d("aaaaaaaaaaaaaaaabb","editReult : " + editResult) }
+        communitySearchBtn.setOnClickListener {
+            val ld = LoadingActivity(activity!!)
+            GlobalScope.launch {
+                CoroutineScope(Dispatchers.Main).launch { ld?.show() }
+                val result = (activity as CommunityActivity).connector.process(ResultManager.SEARCH_REQUEST, null, null, editResult)
+                CoroutineScope(Dispatchers.Main).launch { ld?.dismiss() }
+            }
+        }
         xbutton.setOnClickListener { communitySearchEditText.setText("") }
 
         SearchTagBtn.setOnClickListener {
@@ -74,7 +79,7 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
             SearchTagBtn.setBackgroundColor(Color.WHITE)
             SearchUserBtn.setBackgroundColor(Color.argb(0, 0, 0, 0))
             SearchUserBtn.setTextColor(Color.WHITE)
-            btnSortState = "Tag"
+            isButtonStateTag = true
             CommunitySearchResultTagView.visibility = View.VISIBLE
             CommunitySearchResultUserView.visibility= View.GONE
         }
@@ -84,7 +89,7 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
             SearchUserBtn.setBackgroundColor(Color.WHITE)
             SearchTagBtn.setTextColor(Color.WHITE)
             SearchTagBtn.setBackgroundColor(Color.argb(0, 0, 0, 0))
-            btnSortState = "User"
+            isButtonStateTag = false
             CommunitySearchResultTagView.visibility = View.GONE
             CommunitySearchResultUserView.visibility= View.VISIBLE
         }
@@ -100,5 +105,4 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
             (activity as CommunityActivity).onFragmentChangedtoTrack(itt)
         }
     }
-
 }
