@@ -2,18 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#909090">
+        android:background="#909090"
+        android:orientation="vertical">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/record_volume_control_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/block_effect_item_background_s"
             android:layout_margin="10dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:background="@drawable/block_effect_item_background_s">
 
         <TextView
                 android:id="@+id/record_volume_label"
@@ -38,33 +39,20 @@
                 app:layout_constraintTop_toBottomOf="@+id/record_volume_label" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <View
+    <ListView
+            android:id="@+id/amplitudes_listview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
-
-    <View
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
-
-    <View
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
-    <View
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="0.4" />
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/loop_volume_control_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/block_effect_item_background"
             android:layout_margin="10dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:background="@drawable/block_effect_item_background">
 
         <TextView
                 android:id="@+id/loop_volume_label"

@@ -22,19 +22,15 @@ import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import com.treasure.loopang.audio.EffectorPresets
 import com.treasure.loopang.audio.FinalRecorder
-import com.treasure.loopang.ui.WaveformBitmapMaker
 import com.treasure.loopang.ui.dialogs.BlockControlDialog
 import com.treasure.loopang.ui.dialogs.VolumeControlDialog
 import com.treasure.loopang.ui.dpToPx
 import com.treasure.loopang.ui.recorderConnector
-import com.treasure.loopang.ui.util.TimeWrapper
 import com.treasure.loopang.ui.util.WidthPerTime
 import com.treasure.loopang.ui.view.*
 import kotlinx.android.synthetic.main.activity_final_record.*
 import kotlinx.android.synthetic.main.activity_final_record.btn_stop
 import kotlinx.android.synthetic.main.dialog_final_save.*
-import kotlinx.android.synthetic.main.manage_preview_dialog.*
-import kotlinx.coroutines.launch
 
 class FinalRecordActivity : AppCompatActivity() {
     private var seekBarAnimator: ValueAnimator? = null
@@ -102,12 +98,11 @@ class FinalRecordActivity : AppCompatActivity() {
 
     //dialog
     private val blockControlDialog: BlockControlDialog by lazy { BlockControlDialog(this, BCDListener()) }
-    private val volumeControlDialog: VolumeControlDialog by lazy { VolumeControlDialog(this, VCDListener()) }
+    private val volumeControlDialog: VolumeControlDialog by lazy { VolumeControlDialog(this, VCDListener(),recorderConnector.soundList!!.map{it.data}) }
     // val blockControlDialog: BlockControlDialog = BlockControlDialog()
     // val saveDialog: FinalSaveDialog = FinalSaveDialog()
 
     private val finalRecorder : FinalRecorder = FinalRecorder()
-    private var expandFlag = false
     private var num = 0
 
     companion object {
@@ -237,6 +232,7 @@ class FinalRecordActivity : AppCompatActivity() {
             if(!recordFlag && !playFlag){
                 recordSeekBarButton!!.progress = 0
                 finalRecorder.seekToStart()
+                recordTimelineScrollView?.smoothScrollTo(0,0)
                 Log.d("FRA, 녹음중 혹은 재생중", "toStart 버튼 클릭")
             } else {
                 Log.d("FRA, 녹음중 혹은 재생중", "녹음 혹은 재생 중 toStart 버튼 조작을 막습니다.")
@@ -245,6 +241,7 @@ class FinalRecordActivity : AppCompatActivity() {
         toEndButton!!.setOnClickListener{
             if(!recordFlag && !playFlag){
                 recordSeekBarButton!!.progress = finalRecorder.getRecordDuration()
+                recordTimelineScrollView?.smoothScrollTo((finalRecorder.getRecordDuration()*wpt.width/10 - (recordTimelineScrollView!!.width / 2f)).toInt(),0)
                 finalRecorder.seekToEnd()
                 Log.d("FRA, 녹음중 혹은 재생중", "toEnd 버튼 클릭")
             } else {
@@ -277,6 +274,16 @@ class FinalRecordActivity : AppCompatActivity() {
                 recordSeekBarButton?.max = (basicWidth / wpt.width) * wpt.ms
 
                 setupScrolling()
+
+                //다이얼로그 크기 동적지정
+                val display = windowManager.defaultDisplay
+                val size = Point()
+                val volumeControlWindow = volumeControlDialog.window
+                val blockControlWindow = blockControlDialog.window
+
+                display.getSize(size)
+                volumeControlWindow?.setLayout((size.x * 0.25).toInt(), size.y)
+                blockControlWindow?.setLayout((size.x * 0.25).toInt(), size.y)
             }
         })
     }
@@ -411,43 +418,11 @@ class FinalRecordActivity : AppCompatActivity() {
     }
 
     private fun showBlockControlDialog(layerId:Int, blockId: Int) {
-        val display = windowManager.defaultDisplay
-        val size = Point()
-        display.getSize(size)
-        val blockControlWindow = blockControlDialog.window
-
-        blockControlWindow?.setLayout((size.x * 0.25).toInt(), size.y)
-
         blockControlDialog.show(layerId, blockId)
-
         Log.d("FRA, 블록컨트롤", "showBlockControlDialog(layerId: $layerId, blockId: $blockId)")
     }
 
     private fun showVolumeControlDialog() {
-        val display = windowManager.defaultDisplay
-        val size = Point()
-        display.getSize(size)
-        val volumeControlWindow = volumeControlDialog.window
-
-        volumeControlWindow?.setLayout((size.x * 0.25).toInt(), size.y)
-
-        if(layerBitmapList.size == 0){
-            val width = 0
-            val height = basicHeight
-            val waveformBitmapMaker = WaveformBitmapMaker().apply {
-                this.width = width
-                this.height = height
-                this.backgroundColor = Color.BLACK
-                this.color = Color.WHITE
-                this.cornerRadius = 16
-                this.roundedCorners = WaveformBitmapMaker.CORNER_ALL
-            }
-            recorderConnector.soundList!!.forEach {
-                waveformBitmapMaker.amplitudes = it.data
-                layerBitmapList.add(waveformBitmapMaker.make())
-            }
-        }
-
         volumeControlDialog.show()
         Log.d("FRA, 볼륨컨트롤", "showVolumeControlDialog")
     }
@@ -485,31 +460,8 @@ class FinalRecordActivity : AppCompatActivity() {
         }*/
     }
 
-
-    //open view
-    private fun openVolumeControlDrawer() {}
-    private fun openBlockControlDrawer() {}
-    private fun openSaveDialog() {}
-
-    //event callback
-    //private fun onSeekBarMove() {}
-    private fun onPlayButtonClick() {}
-    private fun onToStartButtonClick() {}
-    private fun onToEndButtonClick() {}
-    private fun onRecordStartButtonClick() {}
-    private fun onRecordPauseButtonClick() {}
-    private fun onRecordStopButtonClick() {}
-    private fun onOverwriteButtonClick(flag: Boolean) {}
-    private fun onMetronomeButtonClick(flag: Boolean) {}
-    private fun onLVCDOpen() {}
-    private fun onBCDOpen(layerPosition: Int, blockPosition: Int) {}
-    // private fun onBlockVolumeSeekBarMove(lp:Int, bp: Int) {}
-    // private fun onBlockEffectChanged(lp:Imt, bp: Int) {}
-    // private fun onLoopVolumeSeekBarMove(lp: Int, bp: Int) {}
-    // private fun onRecordVolumeChanged(lp: Int, bp: Int) {}
-
     //update view
-    val updateRecordRunnable: Runnable = Runnable {
+    private val updateRecordRunnable: Runnable = Runnable {
 
         while(recordFlag) {
             if(checkToExpandSize()) {
@@ -517,21 +469,24 @@ class FinalRecordActivity : AppCompatActivity() {
                 expandLayerLinear()
                 Log.d("FRA, 녹음중", "리니어레이아웃과 시크바 맥스를 EXPAND 합니다.")
             }
+            // recordTimelineScrollView?.smoothScrollTo((finalRecorder.getRecordPosition()*wpt.width/10 - (recordTimelineScrollView!!.width / 2f)).toInt(),0)
+
             Log.d("FRA, 녹음중", "recordFlag: $recordFlag, recordCurrentPosition.ms : ${finalRecorder.getRecordPosition()}")
 
-            SystemClock.sleep(10)
+            SystemClock.sleep(50)
         }
     }
 
-    val updatePlayRunnaable: Runnable = Runnable {
+   private val updatePlayRunnaable: Runnable = Runnable {
         // playFlag = finalRecorder.isPlaying()
         while(finalRecorder.isPlaying()) {
             // recordCurrentPosition = finalRecorder.getRecordPosition()
             //recordSeekBarButton!!.progress = finalRecorder.getRecordPosition()
             // playFlag = finalRecorder.isPlaying()
+           //  recordTimelineScrollView?.smoothScrollTo((finalRecorder.getRecordPosition()*wpt.width/10 - (recordTimelineScrollView!!.width / 2f)).toInt(),0)
             Log.d("FRA, 재생중", "playFlag: $playFlag, recordCurrentPosition.ms : ${finalRecorder.getRecordPosition()}")
 
-            SystemClock.sleep(10)
+            SystemClock.sleep(50)
         }
         this.runOnUiThread{seekBarAnimator!!.cancel()}
     }

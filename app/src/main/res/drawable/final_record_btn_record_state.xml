@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-            android:drawable="@drawable/icon_final_storage_btn_record_true"
-            android:state_checked="true"/>
-    <item
-            android:drawable="@drawable/icon_final_storage_record"
-            android:state_checked="false"/>
+    <item android:state_checked="true" android:drawable="@drawable/icon_final_storage_btn_record_true" />
+    <item android:state_checked="false" android:drawable="@drawable/icon_final_storage_record" />
 </selector>
