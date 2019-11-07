@@ -14,6 +14,15 @@ import kotlinx.android.synthetic.main.activity_community_share.*
 import kotlinx.android.synthetic.main.community_feed.*
 
 class CommunityShareActivity : AppCompatActivity() {
+    val tag = {tagPreset: tagPresets ->
+        when(tagPreset){
+            tagPresets.BEAT     -> "비트"
+            tagPresets.ACAPELLA -> "아카펠라"
+            tagPresets.PEN_BEAT -> "펜비트"
+            tagPresets.PIANO    -> "피아노"
+            tagPresets.VOICE    -> "목소리"
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,4 +49,5 @@ class CommunityShareActivity : AppCompatActivity() {
     }
 }
 
+enum class tagPresets { BEAT, PEN_BEAT, PIANO, VOICE, ACAPELLA }
 
