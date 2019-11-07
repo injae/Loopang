@@ -22,21 +22,15 @@ import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import com.treasure.loopang.audio.EffectorPresets
 import com.treasure.loopang.audio.FinalRecorder
-import com.treasure.loopang.ui.WaveformBitmapMaker
-import com.treasure.loopang.ui.adapter.LayerBitmapAdapter
 import com.treasure.loopang.ui.dialogs.BlockControlDialog
 import com.treasure.loopang.ui.dialogs.VolumeControlDialog
 import com.treasure.loopang.ui.dpToPx
 import com.treasure.loopang.ui.recorderConnector
-import com.treasure.loopang.ui.util.TimeWrapper
 import com.treasure.loopang.ui.util.WidthPerTime
 import com.treasure.loopang.ui.view.*
 import kotlinx.android.synthetic.main.activity_final_record.*
 import kotlinx.android.synthetic.main.activity_final_record.btn_stop
 import kotlinx.android.synthetic.main.dialog_final_save.*
-import kotlinx.android.synthetic.main.manage_preview_dialog.*
-import kotlinx.android.synthetic.main.volume_control_drawer.*
-import kotlinx.coroutines.launch
 
 class FinalRecordActivity : AppCompatActivity() {
     private var seekBarAnimator: ValueAnimator? = null
@@ -238,6 +232,7 @@ class FinalRecordActivity : AppCompatActivity() {
             if(!recordFlag && !playFlag){
                 recordSeekBarButton!!.progress = 0
                 finalRecorder.seekToStart()
+                recordTimelineScrollView?.smoothScrollTo(0,0)
                 Log.d("FRA, 녹음중 혹은 재생중", "toStart 버튼 클릭")
             } else {
                 Log.d("FRA, 녹음중 혹은 재생중", "녹음 혹은 재생 중 toStart 버튼 조작을 막습니다.")
@@ -246,6 +241,7 @@ class FinalRecordActivity : AppCompatActivity() {
         toEndButton!!.setOnClickListener{
             if(!recordFlag && !playFlag){
                 recordSeekBarButton!!.progress = finalRecorder.getRecordDuration()
+                recordTimelineScrollView?.smoothScrollTo((finalRecorder.getRecordDuration()*wpt.width/10 - (recordTimelineScrollView!!.width / 2f)).toInt(),0)
                 finalRecorder.seekToEnd()
                 Log.d("FRA, 녹음중 혹은 재생중", "toEnd 버튼 클릭")
             } else {
@@ -473,9 +469,11 @@ class FinalRecordActivity : AppCompatActivity() {
                 expandLayerLinear()
                 Log.d("FRA, 녹음중", "리니어레이아웃과 시크바 맥스를 EXPAND 합니다.")
             }
+            // recordTimelineScrollView?.smoothScrollTo((finalRecorder.getRecordPosition()*wpt.width/10 - (recordTimelineScrollView!!.width / 2f)).toInt(),0)
+
             Log.d("FRA, 녹음중", "recordFlag: $recordFlag, recordCurrentPosition.ms : ${finalRecorder.getRecordPosition()}")
 
-            SystemClock.sleep(10)
+            SystemClock.sleep(50)
         }
     }
 
@@ -485,9 +483,10 @@ class FinalRecordActivity : AppCompatActivity() {
             // recordCurrentPosition = finalRecorder.getRecordPosition()
             //recordSeekBarButton!!.progress = finalRecorder.getRecordPosition()
             // playFlag = finalRecorder.isPlaying()
+           //  recordTimelineScrollView?.smoothScrollTo((finalRecorder.getRecordPosition()*wpt.width/10 - (recordTimelineScrollView!!.width / 2f)).toInt(),0)
             Log.d("FRA, 재생중", "playFlag: $playFlag, recordCurrentPosition.ms : ${finalRecorder.getRecordPosition()}")
 
-            SystemClock.sleep(10)
+            SystemClock.sleep(50)
         }
         this.runOnUiThread{seekBarAnimator!!.cancel()}
     }
