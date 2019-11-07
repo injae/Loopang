@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.*
 import com.treasure.loopang.audio.LoopMusic
 import com.treasure.loopang.listitem.CommunityShareItem
+import kotlinx.android.synthetic.main.project_item.view.*
 import java.util.ArrayList
 
 
@@ -24,6 +25,7 @@ class CommunityShareAdapter : BaseAdapter() {
             view = LayoutInflater.from(context).inflate(com.treasure.loopang.R.layout.project_item, null)
             ViewHolder = ViewHolder()
             ViewHolder.loopTitleView = view.findViewById(com.treasure.loopang.R.id.txt_title) as TextView
+            ViewHolder.fileTypeView = view.txt_type as TextView
             ViewHolder.dateStringView = view.findViewById(com.treasure.loopang.R.id.txt_date) as TextView
 
             view.tag =  ViewHolder
@@ -34,6 +36,7 @@ class CommunityShareAdapter : BaseAdapter() {
 
         ViewHolder.dateStringView?.setText(listViewItemList.get(position).dateString)
         ViewHolder.loopTitleView?.setText(listViewItemList.get(position).loopTitle)
+        ViewHolder.fileTypeView?.setText(listViewItemList[position].fileType)
 
         val listViewItem = listViewItemList[position]
         return view
@@ -62,11 +65,15 @@ class CommunityShareAdapter : BaseAdapter() {
         val item = CommunityShareItem()
         item.loopTitle = loopMusic.name
         item.dateString = loopMusic.date
+        if(loopMusic.child != null) item.fileType = "Project"
+        else item.fileType = "Layer"
+        item.childItems = loopMusic.child
         listViewItemList.add(item)
     }
 
     private  class ViewHolder{
         var loopTitleView : TextView? = null
         var dateStringView : TextView? = null
+        var fileTypeView: TextView? = null
     }
 }

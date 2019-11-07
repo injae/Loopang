@@ -80,7 +80,7 @@ class ASyncer<T>(private val context: T, private var code: Int = 0, private var 
         when(context) {
             is Login -> {
                 ld?.dismiss()
-                context.toast("Code = ${response.message}")
+                context.toast("${response.message}")
                 when(code) {
                     ResultManager.SUCCESS -> {
                         GlobalScope.launch {
@@ -107,7 +107,7 @@ class ASyncer<T>(private val context: T, private var code: Int = 0, private var 
 
             is RegisterActivity -> {
                 ld?.dismiss()
-                context.toast("Code = ${response.message}")
+                context.toast("${response.message}")
                 when(code) {
                     ResultManager.SUCCESS -> { context.finish() }
                     else -> {
