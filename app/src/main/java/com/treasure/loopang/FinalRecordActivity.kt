@@ -23,6 +23,7 @@ import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import com.treasure.loopang.audio.EffectorPresets
 import com.treasure.loopang.audio.FinalRecorder
 import com.treasure.loopang.ui.WaveformBitmapMaker
+import com.treasure.loopang.ui.adapter.LayerBitmapAdapter
 import com.treasure.loopang.ui.dialogs.BlockControlDialog
 import com.treasure.loopang.ui.dialogs.VolumeControlDialog
 import com.treasure.loopang.ui.dpToPx
@@ -34,6 +35,7 @@ import kotlinx.android.synthetic.main.activity_final_record.*
 import kotlinx.android.synthetic.main.activity_final_record.btn_stop
 import kotlinx.android.synthetic.main.dialog_final_save.*
 import kotlinx.android.synthetic.main.manage_preview_dialog.*
+import kotlinx.android.synthetic.main.volume_control_drawer.*
 import kotlinx.coroutines.launch
 
 class FinalRecordActivity : AppCompatActivity() {
@@ -432,7 +434,7 @@ class FinalRecordActivity : AppCompatActivity() {
         volumeControlWindow?.setLayout((size.x * 0.25).toInt(), size.y)
 
         if(layerBitmapList.size == 0){
-            val width = 0
+            val width = (size.x *0.25).toInt()
             val height = basicHeight
             val waveformBitmapMaker = WaveformBitmapMaker().apply {
                 this.width = width
@@ -446,6 +448,7 @@ class FinalRecordActivity : AppCompatActivity() {
                 waveformBitmapMaker.amplitudes = it.data
                 layerBitmapList.add(waveformBitmapMaker.make())
             }
+            volumeControlDialog.amplitudes_listview.adapter = LayerBitmapAdapter(layerBitmapList)
         }
 
         volumeControlDialog.show()

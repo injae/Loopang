@@ -48,6 +48,7 @@ class WaveformBitmapMaker {
     }
 
     fun make(): Bitmap {
+        Log.d("WaveformBuilder", "width: $width, height: $height")
         val bitmap: Bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         val canvas: Canvas = Canvas(bitmap)
         var curX = 0f // start curX at middle
