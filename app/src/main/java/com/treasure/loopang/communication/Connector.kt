@@ -96,13 +96,14 @@ class Connector(private val DNS: String = "https://ec2-3-15-172-177.us-east-2.co
     private fun getErrorResult(): Result {
         val temp = Result()
         temp.status = "error"
+        temp.message = "서버에 에러가 발생했습니다."
         return temp
     }
 
     private fun getSuccessFileReceive(): Result {
         val temp = Result()
         temp.status = "success"
-        temp.message = "file download success"
+        temp.message = "다운로드를 완료 했습니다."
         return temp
     }
 
