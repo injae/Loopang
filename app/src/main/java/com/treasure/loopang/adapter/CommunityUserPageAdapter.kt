@@ -1,17 +1,10 @@
 package com.treasure.loopang.adapter
 
-import android.content.Context
-import android.graphics.drawable.Drawable
-import android.media.MediaPlayer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.treasure.loopang.listitem.CommunitySongItem
-import com.treasure.loopang.listitem.EffectorListItem
-import com.treasure.loopang.listitem.SettingItem
-import org.w3c.dom.Text
-import java.io.IOException
 import java.util.ArrayList
 
 
