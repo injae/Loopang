@@ -47,6 +47,7 @@ class CommunityShareFragment : androidx.fragment.app.Fragment() {
         shareButton.setOnClickListener {
             val intent = Intent(activity, CommunityActivity::class.java)  //intent.putExtra()
             intent.putExtra("finish","true")
+            intent.putExtra("from", "CommunityShareFragment")
             startActivity(intent)
 
         }
