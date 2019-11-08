@@ -124,6 +124,7 @@ class ASyncer<T>(private val context: T, private var code: Int = 0, private var 
                     when(code) {
                         ResultManager.SUCCESS -> {
                             val intentToCommunity = Intent(context, CommunityActivity::class.java)
+                            intentToCommunity.putExtra("from", "Asyncer")
                             intentToCommunity.putExtra("feedResult", connector.feedResult)
                             context.startActivity(intentToCommunity)
                         }

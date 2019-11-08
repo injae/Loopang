@@ -37,7 +37,7 @@ class CommunityActivity(var connector: Connector = Connector()) : AppCompatActiv
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //Hide Bottom Soft Navigation Bar
-        connector.feedResult = intent.getSerializableExtra("feedResult") as FeedResult
+        if(intent.getStringExtra("from") == "Asyncer") connector.feedResult = intent.getSerializableExtra("feedResult") as FeedResult
 
         mUiOption = mDecorView.systemUiVisibility
         mUiOption = mUiOption or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
