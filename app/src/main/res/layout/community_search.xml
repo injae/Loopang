@@ -5,15 +5,26 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
+    <TextView
+            android:id="@+id/SearchTextView"
+            android:layout_width="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_height="50dp"
+            android:gravity="left"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="5dp"
+            android:text="SEARCH"
+            android:textSize="36dp"
+            android:textColor="#FFFFFF"/>
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="5dp"
             android:id="@+id/searchBar"
+            android:layout_below="@id/SearchTextView"
             android:background="@color/twenty_per_white">
 
         <ImageButton
