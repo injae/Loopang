@@ -5,6 +5,8 @@ import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.SpannableStringBuilder
+import android.view.KeyEvent
+import android.view.View
 import android.view.WindowManager
 import com.jakewharton.rxbinding3.view.clicks
 import com.treasure.loopang.Database.DatabaseManager
@@ -60,6 +62,24 @@ class Login : AppCompatActivity() {
             }
         }
 
+        input_id.setOnKeyListener(object : View.OnKeyListener {
+            override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
+                if((event?.action == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    input_password.requestFocus()
+                    return true
+                }
+                return false
+            }
+        })
+        input_password.setOnKeyListener(object : View.OnKeyListener {
+            override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
+                if((event?.action == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    ASyncer(this@Login).execute()
+                    return true
+                }
+                return false
+            }
+        })
         login_button.clicks()
             .subscribe { onLoginButtonClick() }.apply { disposables.add(this) }
         btn_sign_up.clicks()
