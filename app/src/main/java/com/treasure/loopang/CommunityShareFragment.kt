@@ -22,14 +22,13 @@ class CommunityShareFragment : androidx.fragment.app.Fragment() {
         Log.d("들어옴?","들어왔다.")
         (activity as CommunityShareActivity).isShareing = true
         //(activity as CommunityShareActivity).layerItem >> 어떤 애를 선택했는 지 알려줌 ㅇㅇ
-
         var post : String
         writePostAboutLayer.setEnabled(true)
         writePostAboutLayer.addTextChangedListener(object  : TextWatcher {
             override fun afterTextChanged(edit: Editable) {}
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                post = writePostAboutLayer.toString()
+                post = writePostAboutLayer.text.toString()
             }
         })
         val tagButtonList : List<ToggleButton> = listOf(tagBeat,tagAcappella,tagClap,tagDrum,tagJanggu,tagPercussionInstrument,tagPiano,tagViolin)
