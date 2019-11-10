@@ -8,7 +8,7 @@ class FinalRecorder : IFinalRecorder {
     var recorder = OverWritableRecorder()
 
     override fun getBlockList(): List<List<SoundRange>> {
-        var buf = mutableListOf<List<SoundRange>>(recorder.blocks)
+        var buf = mutableListOf<List<SoundRange>>(recorder.getEditableSound().blocks)
         buf.addAll(mixer.sounds.map{ it.blocks })
         return buf
     }
@@ -42,7 +42,7 @@ class FinalRecorder : IFinalRecorder {
     }
 
     override fun getRecordDuration(): Int {
-        mixer.sounds.add(recorder.getDumyBlocks())
+        mixer.sounds.add(recorder.getEditableSound())
         var duration = mixer.duration()
         mixer.sounds.removeAt(mixer.sounds.lastIndex)
         return duration
@@ -68,7 +68,7 @@ class FinalRecorder : IFinalRecorder {
 
     override fun seekToEnd() {
         Log.d("AudioTest", "seekToEnd")
-        mixer.sounds.add(recorder.getDumyBlocks())
+        mixer.sounds.add(recorder.getEditableSound())
         var duration = mixer.duration()
         mixer.seek(mixer.duration())
         recorder.seek(mixer.duration())
