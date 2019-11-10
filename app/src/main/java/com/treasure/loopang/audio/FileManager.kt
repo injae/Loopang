@@ -6,15 +6,17 @@ import java.io.File
 import java.text.SimpleDateFormat
 
 class FileManager {
-   val looperDir = File(Environment.getExternalStorageDirectory(), "Loopang")
-   val looperSoundDir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC),"Loopang")
-   val looperProjectDir = File(Environment.getExternalStorageDirectory(), "Loopang/Data")
-   private val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
-   init{
-      if(!looperDir.exists()) looperDir.mkdir()
-      if(!looperProjectDir.exists()) looperProjectDir.mkdir()
-      if(!looperSoundDir.isDirectory) looperSoundDir.mkdir()
-   }
+    val looperDir = File(Environment.getExternalStorageDirectory(), "Loopang")
+    val looperCacheDir = File(Environment.getExternalStorageDirectory(), "Loopang/Cache")
+    val looperSoundDir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC),"Loopang")
+    val looperProjectDir = File(Environment.getExternalStorageDirectory(), "Loopang/Data")
+    private val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
+    init{
+        if(!looperDir.exists()) looperDir.mkdir()
+        if(!looperCacheDir.exists()) looperCacheDir.mkdir()
+        if(!looperProjectDir.exists()) looperProjectDir.mkdir()
+        if(!looperSoundDir.isDirectory) looperSoundDir.mkdir()
+    }
    fun soundList() : List<LoopMusic> {
        var projects = LoopMusic.searchAllLoopMusic()
        var sounds = looperSoundDir.list()
