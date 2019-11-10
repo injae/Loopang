@@ -11,7 +11,12 @@ import kotlinx.android.synthetic.main.community_share_fragment.*
 import android.graphics.Color
 import android.util.Log
 import android.widget.ToggleButton
-import kotlinx.android.synthetic.main.activity_community.*
+import com.treasure.loopang.communication.MusicListClass
+import com.treasure.loopang.communication.ResultManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class CommunityShareFragment : androidx.fragment.app.Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -19,18 +24,13 @@ class CommunityShareFragment : androidx.fragment.app.Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("들어옴?","들어왔다.")
         (activity as CommunityShareActivity).isShareing = true
-        //(activity as CommunityShareActivity).layerItem >> 어떤 애를 선택했는 지 알려줌 ㅇㅇ
-        var post : String
+        var post = ""
         writePostAboutLayer.setEnabled(true)
         writePostAboutLayer.addTextChangedListener(object  : TextWatcher {
             override fun afterTextChanged(edit: Editable) {}
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                post = writePostAboutLayer.text.toString()
-            }
-        })
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) { post = writePostAboutLayer.text.toString() } })
         val tagButtonList : List<ToggleButton> = listOf(tagBeat,tagAcappella,tagClap,tagDrum,tagJanggu,tagPercussionInstrument,tagPiano,tagViolin)
         for(tagButton in tagButtonList){
             tagButton.setOnClickListener {
@@ -44,11 +44,22 @@ class CommunityShareFragment : androidx.fragment.app.Fragment() {
             }
         }
         shareButton.setOnClickListener {
-            val intent = Intent(activity, CommunityActivity::class.java)  //intent.putExtra()
+            val ld = LoadingActivity(activity!!)
+            GlobalScope.launch {
+                CoroutineScope(Dispatchers.Main).launch { ld.show() }
+                (activity as CommunityShareActivity).connector.process(ResultManager.FILE_UPLOAD, null, null, null, null, makeUploadInfo(post, (activity as CommunityShareActivity)))
+                CoroutineScope(Dispatchers.Main).launch { ld.dismiss() }
+            }
+            val intent = Intent(activity, CommunityActivity::class.java)
             intent.putExtra("finish","true")
             intent.putExtra("from", "CommunityShareFragment")
             startActivity(intent)
 
         }
     }
+
+    private fun makeUploadInfo(post: String, activity: CommunityShareActivity)
+            = MusicListClass("",
+        activity.parent_name + '_' + activity.layerItem.loopTitle + '.' + activity.layerItem.extension,
+        "", "",0, 0, post, activity.userTagSet.toList())
 }

@@ -17,7 +17,7 @@ class CommunityShareAdapter : BaseAdapter() {
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        var view : View
+        val view : View
         val context = parent.context
         val ViewHolder : ViewHolder
 
@@ -65,6 +65,7 @@ class CommunityShareAdapter : BaseAdapter() {
         val item = CommunityShareItem()
         item.loopTitle = loopMusic.name
         item.dateString = loopMusic.date
+        item.extension = loopMusic.type
         if(loopMusic.child != null) item.fileType = "Project"
         else item.fileType = "Layer"
         item.childItems = loopMusic.child
