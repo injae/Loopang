@@ -26,6 +26,13 @@ class OverWritableRecorder (var format: IFormat = Pcm16(),
         Stabilizer.stabilizeAudio(info.inputAudio)
         info.inputAudio.startRecording()
         callStart(this)
+        if(playedRange.endIndex() >= data.size) {
+            var zeroBuf = ShortArray(playedRange.endIndex() -data.size, { 0 })
+            data.addAll(zeroBuf.toMutableList())
+        }
+        else {
+            data = data.filterIndexed{i, t -> i < playedRange.endIndex()}.toMutableList()
+        }
         startBlock()
         routine = async {
             isRecording.set(true)
@@ -85,13 +92,6 @@ class OverWritableRecorder (var format: IFormat = Pcm16(),
         var index = tenMs*info.tenMsSampleRate
         playedRange.remove(index)
 
-        if(index >= data.size) {
-            var zeroBuf = ShortArray(index -data.size, { 0 })
-            data.addAll(zeroBuf.toMutableList())
-        }
-        else {
-             data = data.filterIndexed{i, t -> i < index}.toMutableList()
-        }
     }
 
     fun stop(limit:Int? = null){
@@ -114,17 +114,12 @@ class OverWritableRecorder (var format: IFormat = Pcm16(),
     }
 
     fun getEditableSound(): EditableSound {
-        var voice = EditableSound(Sound(data))
+        var voice = EditableSound(Sound(data.toMutableList()))
+        voice.isMute = isMute.get()
         var range = SoundRange(voice.sound)
+        Log.d("AudioTest", "recorder range length ${range.soundLength}")
         range.expand(voice.sound.data.size)
         voice.blocks.add(range)
-        return voice
-    }
-
-    fun getDumyBlocks(): EditableSound {
-        var voice = getEditableSound()
-        voice.isMute = isMute.get()
-        voice.blocks = blocks
         return voice
     }
 }
