@@ -1,6 +1,5 @@
 package com.treasure.loopang
 
-import android.app.Activity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,21 +7,19 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.FrameLayout
+import com.treasure.loopang.audio.FileManager
 import com.treasure.loopang.communication.Connector
 import com.treasure.loopang.communication.ResultManager
+import com.treasure.loopang.communication.makeSHA256
 import kotlinx.android.synthetic.main.activity_community.*
-import kotlinx.android.synthetic.main.community_feed_item.*
 import kotlinx.android.synthetic.main.community_track.*
-import kotlinx.android.synthetic.main.community_track.view.*
-import kotlinx.android.synthetic.main.setting_item_back.view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.io.File
 
 class CommunityTrackFragment: androidx.fragment.app.Fragment() {
-
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(com.treasure.loopang.R.layout.community_track,container,false);
     }
@@ -32,10 +29,10 @@ class CommunityTrackFragment: androidx.fragment.app.Fragment() {
         TrackInfoTextView.isEnabled = false
         trackInfoText.setEnabled(false)
 
-        var StatePlaying : Boolean = false
-        var heartState :Boolean = false
-        var songMasteruserNickName : String = (activity as CommunityActivity).itt.userNickName
-        var presentuserNickname : String = com.treasure.loopang.communication.UserManager.getUser().name
+        var StatePlaying = false
+        var heartState = false
+        val songMasteruserNickName : String = (activity as CommunityActivity).itt.userNickName
+        val presentuserNickname : String = com.treasure.loopang.communication.UserManager.getUser().name
         Track_trackName.setText((activity as CommunityActivity).itt.songName)
         trackInfoDate.setText((activity as CommunityActivity).itt.productionDate)
         trackHeartClikedNum.setText((activity as CommunityActivity).itt.likedNum.toString())
@@ -68,12 +65,33 @@ class CommunityTrackFragment: androidx.fragment.app.Fragment() {
         }
         downloadButton.setOnClickListener {
             //사용자의 recording item으로 song이 들어가게 하는 기능 추가
+            val ld = LoadingActivity(activity!!)
+            GlobalScope.launch {
+                CoroutineScope(Dispatchers.Main).launch { ld.show() }
+                (activity as CommunityActivity).connector.process(ResultManager.FILE_DOWNLOAD, null,
+                    (activity as CommunityActivity).itt.songName, null, (activity as CommunityActivity).itt.songId)
+                CoroutineScope(Dispatchers.Main).launch { ld.dismiss() }
+            }
             Log.d("download","download")
             (activity as CommunityActivity).itt.downloadNum += 1
             playNumText.setText((activity as CommunityActivity).itt.downloadNum.toString())
         }
         Track_btn_play.setOnClickListener {
+            val musicID = (activity as CommunityActivity).itt.songId
             if(StatePlaying == false) {
+                if(File(FileManager().looperCacheDir.path + '/' + makeSHA256(musicID)).exists()) {
+                    // 캐시파일 재생
+                }
+                else {
+                    val ld = LoadingActivity(activity!!)
+                    GlobalScope.launch {
+                        CoroutineScope(Dispatchers.Main).launch { ld.show() }
+                        (activity as CommunityActivity).connector.process(ResultManager.FILE_DOWNLOAD, null, null, null, musicID)
+                        CoroutineScope(Dispatchers.Main).launch { ld.dismiss() }
+                        // 캐시파일 재생
+                    }
+                }
+
                 Track_btn_play.setImageDrawable(getResources().getDrawable(R.drawable.trackicon_pause))
                 TrackBtnReplay.visibility = View.VISIBLE
                 StatePlaying =true
