@@ -102,12 +102,12 @@ class FinalRecorder : IFinalRecorder {
         Log.d("AudioTest", "mixer edited: ${mixer.sounds[0].playedRange.endDuration()}")
         mixer.sounds.map{ it.blocks }.forEach{
             it.forEach{
-                Log.d("AudioTest", "- mixer: ${it.startDuration()} ${it.endDuration()}")
+                Log.d("AudioTest", "- mixer: ${it.startIndex()} ${it.endIndex()}")
             }
         }
         recorder.stop(mixer.sounds[0].playedRange.endIndex())
         recorder.blocks.forEach{
-            Log.d("AudioTest", "- recorder: ${it.startDuration()} ${it.endDuration()}")
+            Log.d("AudioTest", "- recorder: ${it.startIndex()} ${it.endIndex()}")
         }
     }
 

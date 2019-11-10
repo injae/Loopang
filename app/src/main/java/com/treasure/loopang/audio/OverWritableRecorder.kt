@@ -90,7 +90,7 @@ class OverWritableRecorder (var format: IFormat = Pcm16(),
             data.addAll(zeroBuf.toMutableList())
         }
         else {
-             data = data.subList(0, index)
+             data = data.filterIndexed{i, t -> i < index}.toMutableList()
         }
     }
 
@@ -122,7 +122,8 @@ class OverWritableRecorder (var format: IFormat = Pcm16(),
     }
 
     fun getDumyBlocks(): EditableSound {
-        var voice = EditableSound(getSound())
+        var voice = getEditableSound()
+        voice.isMute = isMute.get()
         voice.blocks = blocks
         return voice
     }
