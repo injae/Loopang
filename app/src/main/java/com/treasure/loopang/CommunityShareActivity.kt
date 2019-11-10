@@ -1,37 +1,23 @@
 package com.treasure.loopang
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.AdapterView
-import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
-import com.treasure.loopang.adapter.CommunityFeedCategoryAdapter
 import com.treasure.loopang.adapter.CommunityShareAdapter
 import com.treasure.loopang.audio.FileManager
-import com.treasure.loopang.listitem.CommunityFeedCategoryItem
+import com.treasure.loopang.communication.Connector
 import com.treasure.loopang.listitem.CommunityShareItem
-import com.treasure.loopang.listitem.CommunitySongItem
 import kotlinx.android.synthetic.main.activity_community_share.*
-import kotlinx.android.synthetic.main.community_feed.*
 
-class CommunityShareActivity : AppCompatActivity() {
+class CommunityShareActivity(val connector: Connector = Connector(), var parent_name: String = "") : AppCompatActivity() {
     var isShareing : Boolean = false
     var isProjectClicked: Boolean =false
     private var mUiOption: Int = 0
     private val mDecorView: View by lazy { window.decorView }
     val userTagSet : MutableSet<String> = mutableSetOf()
     lateinit var layerItem : CommunityShareItem
-    val tag = {tagPreset: tagPresets ->
-        when(tagPreset){
-            tagPresets.BEAT     -> "비트"
-            tagPresets.ACAPELLA -> "아카펠라"
-            tagPresets.PEN_BEAT -> "펜비트"
-            tagPresets.PIANO    -> "피아노"
-            tagPresets.VOICE    -> "목소리"
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,12 +38,12 @@ class CommunityShareActivity : AppCompatActivity() {
         shareProjectClikedLayer.visibility = View.GONE
 
         if(fm.soundList().size != 0) fm.soundList().forEach { ShareAdapter.addItem(it) }
-        var tagg : String ="1123?"
 
         //mytList<String>list에 item 추가
         communityShareListView.onItemClickListener = AdapterView.OnItemClickListener { parent, v, position, id ->
             val item = parent.getItemAtPosition(position) as CommunityShareItem
             if(item.childItems != null) {
+                parent_name = item.loopTitle
                 val ShareAdapter2 = CommunityShareAdapter()
                 shareProjectClikedLayer.adapter = ShareAdapter2
                 for(layer in item.childItems!!){ ShareAdapter2.addItem(layer) } // 프로젝트니깐 프로젝트의 레이어 보여주기 프로젝트의 레이어는 item.childItems 임
@@ -89,5 +75,3 @@ class CommunityShareActivity : AppCompatActivity() {
         getSupportFragmentManager().beginTransaction().replace(R.id.shareContainer, CommunityShareFragment()).commit()
     }
 }
-enum class tagPresets { BEAT, PEN_BEAT, PIANO, VOICE, ACAPELLA }
-
