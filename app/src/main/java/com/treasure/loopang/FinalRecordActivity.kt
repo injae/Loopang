@@ -487,7 +487,7 @@ class FinalRecordActivity : AppCompatActivity() {
             //recordSeekBarButton!!.progress = finalRecorder.getRecordPosition()
             // playFlag = finalRecorder.isPlaying()
            //  recordTimelineScrollView?.smoothScrollTo((finalRecorder.getRecordPosition()*wpt.width/10 - (recordTimelineScrollView!!.width / 2f)).toInt(),0)
-            if(finalRecorder.getRecordPosition() >= finalRecorder.getRecordDuration()){
+           /* if(finalRecorder.getRecordPosition() >= finalRecorder.getRecordDuration()){
                 finalRecorder.playStop()
                 playFlag = false
                 runOnUiThread{
@@ -495,7 +495,7 @@ class FinalRecordActivity : AppCompatActivity() {
                     playButton!!.isChecked = !playButton!!.isChecked
                 }
                 break
-            }
+            }*/
 
             Log.d("FRA, 재생중", "playFlag: $playFlag, recordCurrentPosition.ms : ${finalRecorder.getRecordPosition()}")
 
