@@ -140,10 +140,13 @@ class EditableSound {
             var retZero = false
             if(!isRecording.get()) {
                 if (blocks.isNotEmpty()) {
+                    Log.d( "AudioTest", "B(${blocks})::blocks[${playedIndex}] playing: [${curRange.startIndex()}:${curRange.endIndex()}]" )
                     if (playedIndex + 1 <= blocks.size-1) {
                         var btw = blocks[playedIndex].between(blocks[playedIndex + 1])
+                        Log.d( "AudioTest", "B(${blocks}):: between: [${btw.startIndex()}:${btw.endIndex()}]" )
                         if(btw.isComplict(curRange)) {
                             var complict = btw.complictedRange(curRange)
+                            Log.d( "AudioTest", "B(${blocks}):: complict: [${complict.startIndex()}:${complict.endIndex()}]" )
                             var zeroStart = complict.startIndex() - start
                             var zeroEnd = complict.endIndex() - start
                             for ((index, _) in it.withIndex()) { if (zeroStart <= index && index < zeroEnd) it[index] = 0 }
@@ -156,6 +159,7 @@ class EditableSound {
                     } else {
                         if(curRange.isComplict(blocks[playedIndex])) {
                             var complict = curRange.complictedRange(blocks[playedIndex])
+                            Log.d( "AudioTest", "B(${blocks}):: playable: [${complict.startIndex()}:${complict.endIndex()}]" )
                             var nonZeroStart = complict.startIndex() - start
                             var nonZeroEnd = complict.endIndex() - start
                             if(nonZeroEnd != it.size) for ((index, _) in it.withIndex()) { if (!(nonZeroStart <= index && index < nonZeroEnd)) it[index] = 0 }
@@ -172,7 +176,7 @@ class EditableSound {
 
     fun play() {
         if(!isMute) {
-            Log.d("AudioTest"," play duration: ${playedRange.endDuration()}")
+            Log.d("AudioTest"," play index: ${playedRange.endIndex()}")
             sound.play()
         }
     }
@@ -191,7 +195,6 @@ class EditableSound {
         if(!isMute) {
             isRecording.set(true)
             var currentBlock = playedRange.nextRange()
-            currentBlock.expand(1)
             blocks = blocks.filter{ !it.removeOver(currentBlock) }.toMutableList()
             blocks.forEach{ Log.d("AudioTest", "- none over: ${it.startIndex()} ${it.endIndex()}") }
             for((index, block) in blocks.withIndex()) {

@@ -84,8 +84,8 @@ class OverWritableRecorder (var format: IFormat = Pcm16(),
                     blocks.add(currentBlock)
                     currentBlockIndex = blocks.lastIndex
                 }
-                Log.d("AudioTest","recorder startblock begin: ${blocks[currentBlockIndex!!].startIndex()}")
-                Log.d("AudioTest","recorder startblock end: ${blocks[currentBlockIndex!!].endIndex()}")
+                //Log.d("AudioTest","recorder startblock begin: ${blocks[currentBlockIndex!!].startIndex()}")
+                //Log.d("AudioTest","recorder startblock end: ${blocks[currentBlockIndex!!].endIndex()}")
                 isMakeBlock=true
             }
         }
@@ -95,10 +95,10 @@ class OverWritableRecorder (var format: IFormat = Pcm16(),
         if(isMakeBlock) {
             blocks[currentBlockIndex!!] = blocks[currentBlockIndex!!]
                 .subRange(playedRange.endIndex()-blocks[currentBlockIndex!!].startIndex())
-            Log.d("AudioTest","recorder endblock: ${blocks[currentBlockIndex!!].endIndex()}")
+            //Log.d("AudioTest","recorder endblock: ${blocks[currentBlockIndex!!].endIndex()}")
             currentBlockIndex = null
             isMakeBlock=false
-            Log.d("AudioTest","recorder played: ${playedRange.endIndex()}")
+            //Log.d("AudioTest","recorder played: ${playedRange.endIndex()}")
         }
     }
 
