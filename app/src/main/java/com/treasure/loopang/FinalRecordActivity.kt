@@ -79,7 +79,6 @@ class FinalRecordActivity : AppCompatActivity() {
     var playButton: ToggleButton? = null
     var toStartButton: ImageButton? = null
     var toEndButton: ImageButton? = null
-    var loopProgressBar: ProgressBar? = null
     var recordButton: ToggleButton? = null
     var recordStopButton: ImageButton? = null
     var overwriteButton: ToggleButton? = null
@@ -334,7 +333,6 @@ class FinalRecordActivity : AppCompatActivity() {
         toEndButton = btn_to_end
         recordButton = btn_record
         recordStopButton = btn_stop
-        loopProgressBar = progress_loop
         overwriteButton = btn_overwrite
         metronomeButton = btn_metronome
         recordSeekBarButton = whole_progress_seekbar
