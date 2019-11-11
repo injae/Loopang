@@ -487,16 +487,15 @@ class FinalRecordActivity : AppCompatActivity() {
             //recordSeekBarButton!!.progress = finalRecorder.getRecordPosition()
             // playFlag = finalRecorder.isPlaying()
            //  recordTimelineScrollView?.smoothScrollTo((finalRecorder.getRecordPosition()*wpt.width/10 - (recordTimelineScrollView!!.width / 2f)).toInt(),0)
-            if(finalRecorder.getRecordPosition() >= finalRecorder.getRecordDuration()){
+           /* if(finalRecorder.getRecordPosition() >= finalRecorder.getRecordDuration()){
                 finalRecorder.playStop()
                 playFlag = false
                 runOnUiThread{
                     seekBarAnimator!!.cancel()
-                    playButton!!.isChecked != playButton!!.isChecked
+                    playButton!!.isChecked = !playButton!!.isChecked
                 }
-
                 break
-            }
+            }*/
 
             Log.d("FRA, 재생중", "playFlag: $playFlag, recordCurrentPosition.ms : ${finalRecorder.getRecordPosition()}")
 
@@ -512,7 +511,7 @@ class FinalRecordActivity : AppCompatActivity() {
                 Log.d("FRA, BlockControl", "BCDListener.onVolumeChanged(재생 혹은 녹음 중이어서 이벤트를 받지 않음.)")
             } else {
                 Log.d("FRA, BlockControl", "BCDListener.onVolumeChanged(progress: $progress, max: $max, layerId: $layerId, blockId: $blockId)")
-                // TODO("블록 볼륨 바꾸기") //To change body of created functions use File | Settings | File Templates.
+                finalRecorder.setVolumeToLayer(layerId, ((progress.toFloat() / max) * 100).toInt())
             }
         }
 
@@ -521,7 +520,7 @@ class FinalRecordActivity : AppCompatActivity() {
                 Log.d("FRA, BlockControl", "BCDListener.onEffectChanged(재생 혹은 녹음 중이어서 이벤트를 받지 않음.)")
             } else {
                 Log.d("FRA, BlockControl", "BCDListener.onEffectChanged(effect: $effect.name, layerId: $layerId, blockId: $blockId)")
-                // TODO("이펙트 바꾸기") //To change body of created functions use File | Settings | File Templates.
+                finalRecorder.setEffectToBlock(layerId, blockId, effect)
             }
         }
     }
@@ -544,7 +543,7 @@ class FinalRecordActivity : AppCompatActivity() {
         }
 
         override fun onLoopVolumeChanged(progress: Int, max: Int) {
-            // TODO("볼륨 컨트롤 추가") //To change body of created functions use File | Settings | File Templates.
+            finalRecorder.setVolumeToLoop(((progress.toFloat() / max) * 100).toInt())
             Log.d("FRA, VolumeControl", "VCDListener.루프볼륨(progress: $progress, max: $max)")
         }
 
