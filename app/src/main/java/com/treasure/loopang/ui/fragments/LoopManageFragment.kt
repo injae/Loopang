@@ -18,9 +18,12 @@ import com.afollestad.materialdialogs.callbacks.onDismiss
 import com.afollestad.materialdialogs.callbacks.onShow
 import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.list.listItems
+import com.treasure.loopang.CommunityShareActivity
+import com.treasure.loopang.LoadingActivity
 import com.treasure.loopang.R
 import com.treasure.loopang.audio.FileManager
 import com.treasure.loopang.audio.LoopMusic
+import com.treasure.loopang.communication.ResultManager
 import com.treasure.loopang.ui.interfaces.IPageFragment
 import com.treasure.loopang.ui.adapter.v2.LoopListAdapter
 import com.treasure.loopang.ui.stringForTime
@@ -29,10 +32,7 @@ import kotlinx.android.synthetic.main.fragment_loop_manage.loop_list
 import kotlinx.android.synthetic.main.manage_preview_dialog.*
 import kotlinx.android.synthetic.main.manager_detail_information_dialog_layout.*
 import kotlinx.android.synthetic.main.manager_detail_information_dialog_layout.txt_title
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.lang.IllegalStateException
 import kotlin.RuntimeException
 
@@ -43,6 +43,7 @@ class LoopManageFragment : androidx.fragment.app.Fragment()
     private var mProjectList = listOf<LoopMusic>()
     private val mAdapter = LoopListAdapter(mProjectList)
     private var mOnLoopManageListener: OnLoopManageListener? = null
+    private val loadingActivity by lazy {LoadingActivity(this@LoopManageFragment.context!!)}
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -106,28 +107,57 @@ class LoopManageFragment : androidx.fragment.app.Fragment()
     fun stop() {}
 
     private fun clear() {
+        loadingActivity.show()
         stop()
         Log.d("FileManagerTest","removeAll()")
         mFileManager.deleteAllFiles()
         refreshList()
+        loadingActivity.dismiss()
     }
 
     private fun deleteSound(soundMusic: LoopMusic) {
-        mFileManager.deleteFilePath(soundMusic.path)
+        GlobalScope.launch {
+            CoroutineScope(Dispatchers.Main).launch { loadingActivity.show() }
+            mFileManager.deleteFilePath(soundMusic.path)
+            refreshList()
+            CoroutineScope(Dispatchers.Main).launch { loadingActivity.dismiss() }
+        }
+        /*mFileManager.deleteFilePath(soundMusic.path)
         refreshList()
+        */
     }
 
     private fun addLoopAsLayer(soundMusic: LoopMusic) {
-        mOnLoopManageListener?.onImport(soundMusic, newLoadFlag = false)
+        GlobalScope.launch {
+            CoroutineScope(Dispatchers.Main).launch { loadingActivity.show() }
+            mOnLoopManageListener?.onImport(soundMusic, newLoadFlag = false)
+            CoroutineScope(Dispatchers.Main).launch { loadingActivity.dismiss() }
+        }
+        // mOnLoopManageListener?.onImport(soundMusic, newLoadFlag = false)
     }
 
     private fun deleteProject(project: LoopMusic) {
-        project.delete()
+        GlobalScope.launch {
+            CoroutineScope(Dispatchers.Main).launch { loadingActivity.show() }
+            project.delete()
+            CoroutineScope(Dispatchers.Main).launch {
+                refreshList()
+                loadingActivity.dismiss()
+            }
+        }
+        /*
+        * project.delete()
         refreshList()
+        * */
     }
 
     private fun loadProject(project: LoopMusic, clearFlag: Boolean) {
-        mOnLoopManageListener?.onImport(project, clearFlag)
+        GlobalScope.launch {
+            CoroutineScope(Dispatchers.Main).launch { loadingActivity.show() }
+            mOnLoopManageListener?.onImport(project, clearFlag)
+            CoroutineScope(Dispatchers.Main).launch { loadingActivity.dismiss() }
+        }
+        // mOnLoopManageListener?.onImport(project, clearFlag)
     }
 
     private fun refreshList() {
