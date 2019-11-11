@@ -7,19 +7,20 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.treasure.loopang.audio.DownloadChecker
 import com.treasure.loopang.audio.FileManager
+import com.treasure.loopang.audio.Sound
+import com.treasure.loopang.audio.convertBytesToShort
 import com.treasure.loopang.communication.Connector
 import com.treasure.loopang.communication.ResultManager
 import com.treasure.loopang.communication.makeSHA256
 import kotlinx.android.synthetic.main.activity_community.*
 import kotlinx.android.synthetic.main.community_track.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.io.File
 
-class CommunityTrackFragment: androidx.fragment.app.Fragment() {
+class CommunityTrackFragment(var sound: Sound? = null, val downloadChecker: DownloadChecker = DownloadChecker(),
+                             var statePlaying: Boolean = false): androidx.fragment.app.Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(com.treasure.loopang.R.layout.community_track,container,false);
     }
@@ -29,7 +30,6 @@ class CommunityTrackFragment: androidx.fragment.app.Fragment() {
         TrackInfoTextView.isEnabled = false
         trackInfoText.setEnabled(false)
 
-        var StatePlaying = false
         var heartState = false
         val songMasteruserNickName : String = (activity as CommunityActivity).itt.userNickName
         val presentuserNickname : String = com.treasure.loopang.communication.UserManager.getUser().name
@@ -37,6 +37,9 @@ class CommunityTrackFragment: androidx.fragment.app.Fragment() {
         trackInfoDate.setText((activity as CommunityActivity).itt.productionDate)
         trackHeartClikedNum.setText((activity as CommunityActivity).itt.likedNum.toString())
         Track_artistName.setText(songMasteruserNickName)
+
+        val musicID = (activity as CommunityActivity).itt.songId
+        setSound(musicID)
 
         if(songMasteruserNickName == presentuserNickname) {
             trackInfoText.setEnabled(true); //사용자와 노래주인이 같으면 터치해서 info바꿀 수 있음
@@ -48,6 +51,7 @@ class CommunityTrackFragment: androidx.fragment.app.Fragment() {
                 }
             })
         }
+
         heartButton.setOnClickListener {
             val connector = Connector()
             if(heartState == false) {
@@ -63,50 +67,34 @@ class CommunityTrackFragment: androidx.fragment.app.Fragment() {
                 trackHeartClikedNum.setText((activity as CommunityActivity).itt.likedNum.toString())
             }
         }
+
         downloadButton.setOnClickListener {
             //사용자의 recording item으로 song이 들어가게 하는 기능 추가
-            val ld = LoadingActivity(activity!!)
-            GlobalScope.launch {
-                CoroutineScope(Dispatchers.Main).launch { ld.show() }
-                (activity as CommunityActivity).connector.process(ResultManager.FILE_DOWNLOAD, null,
-                    (activity as CommunityActivity).itt.songName, null, (activity as CommunityActivity).itt.songId)
-                CoroutineScope(Dispatchers.Main).launch { ld.dismiss() }
-            }
-            Log.d("download","download")
+            downloadChecker.download((activity as CommunityActivity).itt.songName, (activity as CommunityActivity).itt.songId, activity!!)
             (activity as CommunityActivity).itt.downloadNum += 1
             playNumText.setText((activity as CommunityActivity).itt.downloadNum.toString())
         }
-        Track_btn_play.setOnClickListener {
-            val musicID = (activity as CommunityActivity).itt.songId
-            if(StatePlaying == false) {
-                if(File(FileManager().looperCacheDir.path + '/' + makeSHA256(musicID)).exists()) {
-                    // 캐시파일 재생
-                }
-                else {
-                    val ld = LoadingActivity(activity!!)
-                    GlobalScope.launch {
-                        CoroutineScope(Dispatchers.Main).launch { ld.show() }
-                        (activity as CommunityActivity).connector.process(ResultManager.FILE_DOWNLOAD, null, null, null, musicID)
-                        CoroutineScope(Dispatchers.Main).launch { ld.dismiss() }
-                        // 캐시파일 재생
-                    }
-                }
 
+        Track_btn_play.setOnClickListener {
+            if(statePlaying == false) {
+                if(sound != null) { soundPlay() }
+                else { downloadChecker.download(null, musicID, activity!!, this) }
                 Track_btn_play.setImageDrawable(getResources().getDrawable(R.drawable.trackicon_pause))
                 TrackBtnReplay.visibility = View.VISIBLE
-                StatePlaying =true
-                Log.d("pause btn replay o","pause btn > replay o")
+                statePlaying =true
             }
             else { //statePlaying == true
+                soundStop()
                 Track_btn_play.setImageDrawable(getResources().getDrawable(R.drawable.trackicon_play))
                 TrackBtnReplay.visibility = View.GONE
-                StatePlaying = false
-                Log.d("playBtn > replay x","playBtn > replay x")
+                statePlaying = false
             }
         }
-        TrackBtnReplay.setOnClickListener { // 음원의 재생을 처음으로 돌리기 기능
+
+        TrackBtnReplay.setOnClickListener { // 이거 필요없으니 지우셈
             Log.d("replay Btn" , "replay btn")
         }
+
         track_btn_back.setOnClickListener {   activity!!.TrackFrame.visibility = View.GONE
             val fragmentManager = activity!!.supportFragmentManager
             fragmentManager.beginTransaction().remove(this).commit()
@@ -114,4 +102,27 @@ class CommunityTrackFragment: androidx.fragment.app.Fragment() {
             (activity as CommunityActivity).isTrackFragOpen = false
         }
     }
+
+    fun setSound(musicID: String) {
+        if(downloadChecker.cacheCheck(musicID)) {
+            val ff = File(FileManager().looperCacheDir.path + '/' + makeSHA256(musicID))
+            val ms = ff.readBytes().toMutableList().chunked(2).map{ it.toByteArray() }.flatMap { listOf(convertBytesToShort(it)) }.toMutableList()
+            sound = Sound(ms)
+        }
+    }
+
+    fun soundPlay() {
+        GlobalScope.launch {
+            sound?.play()
+            CoroutineScope(Dispatchers.Main).launch {
+                if(statePlaying) {
+                    Track_btn_play.setImageDrawable(getResources().getDrawable(R.drawable.trackicon_play))
+                    TrackBtnReplay.visibility = View.GONE
+                    statePlaying = false
+                }
+            }
+        }
+    }
+
+    private fun soundStop() { GlobalScope.launch { sound?.stop() } }
 }
