@@ -25,22 +25,6 @@ class FinalRecorder : IFinalRecorder {
         return buf
     }
 
-    override fun onPlayStart() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onPlayStop() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onRecordStart() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onRecordStop() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     override fun setEffectToBlock(layerId: Int, blockId: Int, effect: EffectorPresets) {
         val index = layerId - 1
 
@@ -50,12 +34,13 @@ class FinalRecorder : IFinalRecorder {
         val sound = mixer.sounds[index].sound.data
         if(effectFlagList[index] == effect) return
         else if(effectFlagList[index] == EffectorPresets.NONE){
-            // effector.presetControl(sound, effect)
+            // var newData = effector.presetControl(sound, effect)
         } else {
-            // effector.presetControl(sound, EffectorPresets.NONE)
-            // effector.presetControl(sound, effect)
+            // newData = effector.presetControl(sound, EffectorPresets.NONE)
+            // newData = effector.presetControl(newData, effect)
         }
         effectFlagList[index] = effect
+        // mixer.sounds[index].sound.data  = newData
     }
 
     override fun getBlockList(layerId: Int): List<SoundRange> {
@@ -169,10 +154,27 @@ class FinalRecorder : IFinalRecorder {
     }
 
     override fun setVolumeToLayer(layerId: Int, volume: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if(layerId  ==  0) return // 보컬 레코더는 적용안함.
+
+        val index = layerId - 1
+        val sound = mixer.sounds[index].sound.data
+        val editedVolume = volume.toFloat() / 100
+
+        // 이펙터에 적용
+        // val newData = effector.volumeControl(sound, editedVolume)
+
+        // 다시 믹서에 넣어줌
+        // mixer.sounds[index].sound.data  = newData
     }
 
     override fun setVolumeToLoop(volume: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val sounds = mixer.sounds
+        val editedVolume = volume.toFloat() / 100
+
+        sounds.forEach {
+            val sound = it.sound.data
+            // val newData = effector.volumeControl(sound, editedVolume)
+            // it.sound.data = newData
+        }
     }
 }

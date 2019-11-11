@@ -551,7 +551,7 @@ class FinalRecordActivity : AppCompatActivity() {
 
     inner class SeekBarAnimatorListener: Animator.AnimatorListener {
         override fun onAnimationRepeat(animation: Animator?) {
-            tempProgress += 10
+            tempProgress += wpt.ms
             Log.d("animation", "onAnimationRepeat")
         }
 
