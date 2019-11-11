@@ -70,7 +70,6 @@ class FinalRecorder : IFinalRecorder {
         mixer.sounds.add(recorder.getEditableSound())
         var duration = mixer.duration()
         mixer.sounds.removeAt(mixer.sounds.lastIndex)
-        Log.d("AudioTest", "recordDuration")
         return duration
     }
 
