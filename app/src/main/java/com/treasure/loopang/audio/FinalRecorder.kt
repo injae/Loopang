@@ -8,7 +8,7 @@ class FinalRecorder : IFinalRecorder {
     var recorder = OverWritableRecorder()
 
     override fun getBlockList(): List<List<SoundRange>> {
-        var buf = mutableListOf<List<SoundRange>>(recorder.getBlock())
+        var buf = mutableListOf(recorder.getBlock())
         buf.addAll(mixer.sounds.map{ it.blocks })
         return buf
     }
@@ -34,7 +34,7 @@ class FinalRecorder : IFinalRecorder {
     }
 
     override fun getBlockList(layerId: Int): List<SoundRange> {
-        return if(layerId == 0) recorder.blocks else mixer.sounds[layerId].blocks
+        return if(layerId == 0) recorder.getBlock() else mixer.sounds[layerId].blocks
     }
 
     override fun insertSounds(soundList: List<Sound>) {
@@ -45,15 +45,19 @@ class FinalRecorder : IFinalRecorder {
         mixer.sounds.add(recorder.getEditableSound())
         var duration = mixer.duration()
         mixer.sounds.removeAt(mixer.sounds.lastIndex)
+        Log.d("AudioTest", "recordDuration")
         return duration
     }
 
     override fun getLoopDuration(): Int {
-        return mixer.sounds[0].sound.duration()
+        mixer.sounds.add(recorder.getEditableSound())
+        var duration = mixer.loopDuration()
+        mixer.sounds.removeAt(mixer.sounds.lastIndex)
+        return duration
     }
 
     override fun getRecordPosition(): Int {
-        return mixer.currentPositioin()
+        return recorder.playedRange.endDuration()
     }
 
     override fun getLoopPosition(): Int {
@@ -91,6 +95,7 @@ class FinalRecorder : IFinalRecorder {
     }
 
     override fun recordStart() {
+        mixer.seek(recorder.playedRange.endDuration())
         mixer.startBlock()
         if(!mixer.isLooping.get()) mixer.start()
         recorder.start()
@@ -102,8 +107,8 @@ class FinalRecorder : IFinalRecorder {
         recorder.blocks.forEach{
             Log.d("AudioTest", "- recorder: ${it.startIndex()} ${it.endIndex()}")
         }
-        mixer.endBlock(recorder.getEditableSound().blocks[0].endIndex())
-        Log.d("AudioTest", "mixer edited: ${mixer.sounds[0].playedRange.endDuration()}")
+        mixer.endBlock(recorder.playedRange.endIndex())
+        Log.d("AudioTest", "mixer edited: ${mixer.sounds[0].playedRange.endIndex()}")
         mixer.sounds.map{ it.blocks }.forEach{
             it.forEach{
                 Log.d("AudioTest", "- mixer: ${it.startIndex()} ${it.endIndex()}")

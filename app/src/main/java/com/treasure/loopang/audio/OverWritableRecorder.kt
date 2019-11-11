@@ -78,12 +78,14 @@ class OverWritableRecorder (var format: IFormat = Pcm16(),
                 var currentBlock = playedRange.nextRange()
                 blocks = blocks.filter{ !it.removeOver(currentBlock) }.toMutableList()
                 for((index, block) in blocks.withIndex()) {
-                    if(block.overWrite(currentBlock)) { currentBlockIndex = index }
+                    if(blocks[index].overWrite(currentBlock)) { currentBlockIndex = index }
                 }
                 if(currentBlockIndex == null) {
                     blocks.add(currentBlock)
                     currentBlockIndex = blocks.lastIndex
                 }
+                Log.d("AudioTest","recorder startblock begin: ${blocks[currentBlockIndex!!].startIndex()}")
+                Log.d("AudioTest","recorder startblock end: ${blocks[currentBlockIndex!!].endIndex()}")
                 isMakeBlock=true
             }
         }
@@ -91,17 +93,19 @@ class OverWritableRecorder (var format: IFormat = Pcm16(),
 
     fun endBlock() {
         if(isMakeBlock) {
-            var range = playedRange.endIndex() - blocks[currentBlockIndex!!].startIndex()
-            blocks[currentBlockIndex!!].expand(range)
+            blocks[currentBlockIndex!!] = blocks[currentBlockIndex!!]
+                .subRange(playedRange.endIndex()-blocks[currentBlockIndex!!].startIndex())
+            Log.d("AudioTest","recorder endblock: ${blocks[currentBlockIndex!!].endIndex()}")
             currentBlockIndex = null
             isMakeBlock=false
+            Log.d("AudioTest","recorder played: ${playedRange.endIndex()}")
         }
     }
 
     fun seek(tenMs: Int) {
         var index = tenMs*info.tenMsSampleRate
         playedRange.remove(index)
-        Log.d("AudioTest"," seek duration: ${playedRange.endDuration()}")
+        Log.d("AudioTest","recorder seek index: ${playedRange.endIndex()}")
     }
 
     fun stop(limit:Int? = null){
@@ -131,7 +135,6 @@ class OverWritableRecorder (var format: IFormat = Pcm16(),
         var voice = EditableSound(Sound(data.toMutableList()))
         voice.isMute = isMute.get()
         var range = SoundRange(voice.sound)
-        Log.d("AudioTest", "recorder range length ${range.soundLength}")
         range.expand(voice.sound.data.size)
         voice.blocks.add(range)
         return voice
