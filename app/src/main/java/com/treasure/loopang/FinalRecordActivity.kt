@@ -184,15 +184,20 @@ class FinalRecordActivity : AppCompatActivity() {
                 (it as ToggleButton).isChecked = !(it.isChecked)
             } else {
                 if ((it as ToggleButton).isChecked) {
-                    playFlag = true
-                    //todo: 재생시 동작
-                    finalRecorder.playStart()
-                    seekBarAnimator!!.start()
-                    Thread(updatePlayRunnaable).start()
+                    if(finalRecorder.getRecordDuration() == 0) {
+                        it.isChecked = !(it.isChecked)
+                    } else {
+                        playFlag = true
+                        //todo: 재생시 동작
+                        finalRecorder.playStart()
+                        seekBarAnimator!!.start()
+                        Thread(updatePlayRunnaable).start()
+                    }
                 } else {
                     playFlag = false
                     //todo: 재생 정지시 동작
                     finalRecorder.playStop()
+                    seekBarAnimator!!.cancel()
                 }
             }
         }
@@ -484,11 +489,21 @@ class FinalRecordActivity : AppCompatActivity() {
             //recordSeekBarButton!!.progress = finalRecorder.getRecordPosition()
             // playFlag = finalRecorder.isPlaying()
            //  recordTimelineScrollView?.smoothScrollTo((finalRecorder.getRecordPosition()*wpt.width/10 - (recordTimelineScrollView!!.width / 2f)).toInt(),0)
+            if(finalRecorder.getRecordPosition() >= finalRecorder.getRecordDuration()){
+                finalRecorder.playStop()
+                playFlag = false
+                runOnUiThread{
+                    seekBarAnimator!!.cancel()
+                    playButton!!.isChecked != playButton!!.isChecked
+                }
+
+                break
+            }
+
             Log.d("FRA, 재생중", "playFlag: $playFlag, recordCurrentPosition.ms : ${finalRecorder.getRecordPosition()}")
 
             SystemClock.sleep(50)
         }
-        this.runOnUiThread{seekBarAnimator!!.cancel()}
     }
 
 
