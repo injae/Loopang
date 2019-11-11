@@ -16,6 +16,12 @@ import com.treasure.loopang.communication.MusicListClass
 import com.treasure.loopang.communication.SearchResult
 import com.treasure.loopang.listitem.CommunitySongItem
 import kotlinx.android.synthetic.main.community_feed.*
+import android.content.Intent
+import androidx.core.app.NotificationCompat.getExtras
+
+
+
+
 
 class CommunityActivity(var connector: Connector = Connector()) : AppCompatActivity() {
 
@@ -31,7 +37,7 @@ class CommunityActivity(var connector: Connector = Connector()) : AppCompatActiv
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //Hide Bottom Soft Navigation Bar
-        connector.feedResult = intent.getSerializableExtra("feedResult") as FeedResult
+        if(intent.getStringExtra("from") == "Asyncer") connector.feedResult = intent.getSerializableExtra("feedResult") as FeedResult
 
         mUiOption = mDecorView.systemUiVisibility
         mUiOption = mUiOption or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
@@ -51,6 +57,10 @@ class CommunityActivity(var connector: Connector = Connector()) : AppCompatActiv
         CommunityContainer.adapter = pagerAdapter
         CommunityContainer.addOnPageChangeListener(PageChangeListener())
         CommunityContainer.setOnTouchListener { _, _ -> false}
+
+        val shareActivityintent = intent
+        val isSharingFinished = intent.extras.getString("finish")
+        if(isSharingFinished == "true") CommunityContainer.setCurrentItem(1)
 
         btn_feed.setOnClickListener { CommunityContainer.setCurrentItem(0) }
         btn_userpage.setOnClickListener { CommunityContainer.setCurrentItem(1) }

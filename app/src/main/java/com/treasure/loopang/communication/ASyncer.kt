@@ -41,10 +41,17 @@ class ASyncer<T>(private val context: T, private var code: Int = 0, private var 
     override fun doInBackground(vararg params: Unit?) {
         when(context) {
             is Login -> {
-                UserManager.setEncodedPassword(encodeYuni(context.input_password.text.toString()))
-                UserManager.setUser(context.input_id.text.toString(), context.input_password.text.toString())
-                response = connector.process(ResultManager.LOGIN, UserManager.getUser())
-                code = ResultManager.getCode(response)
+                if((context.input_id.text.toString() != "") && (context.input_password.text.toString() != "")) {
+                    UserManager.setEncodedPassword(encodeYuni(context.input_password.text.toString()))
+                    UserManager.setUser(context.input_id.text.toString(), context.input_password.text.toString())
+                    response = connector.process(ResultManager.LOGIN, UserManager.getUser())
+                    code = ResultManager.getCode(response)
+                }
+                else {
+                    response.status = "fail"
+                    response.message = "ID 또는 Password를 채워주세요."
+                    code = ResultManager.getCode(response)
+                }
             }
 
             is RegisterActivity -> {
@@ -80,7 +87,7 @@ class ASyncer<T>(private val context: T, private var code: Int = 0, private var 
         when(context) {
             is Login -> {
                 ld?.dismiss()
-                context.toast("${response.message}")
+                context.toast(response.message)
                 when(code) {
                     ResultManager.SUCCESS -> {
                         GlobalScope.launch {
@@ -107,7 +114,7 @@ class ASyncer<T>(private val context: T, private var code: Int = 0, private var 
 
             is RegisterActivity -> {
                 ld?.dismiss()
-                context.toast("${response.message}")
+                context.toast(response.message)
                 when(code) {
                     ResultManager.SUCCESS -> { context.finish() }
                     else -> {
@@ -124,6 +131,7 @@ class ASyncer<T>(private val context: T, private var code: Int = 0, private var 
                     when(code) {
                         ResultManager.SUCCESS -> {
                             val intentToCommunity = Intent(context, CommunityActivity::class.java)
+                            intentToCommunity.putExtra("from", "Asyncer")
                             intentToCommunity.putExtra("feedResult", connector.feedResult)
                             context.startActivity(intentToCommunity)
                         }

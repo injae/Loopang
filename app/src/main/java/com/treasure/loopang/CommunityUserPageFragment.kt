@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ListView
 import com.treasure.loopang.adapter.CommunityUserPageAdapter
@@ -60,27 +61,25 @@ class CommunityUserPageFragment : androidx.fragment.app.Fragment() {
                 )
             }
         }
+        val userPageButton : List<Button> = listOf(userPageTrackBtn,userPageLikedBtn)
+        for(i in 0.. userPageButton.size-1){
+            userPageButton[i].setOnClickListener {
+                if(userPageButton[i] == userPageTrackBtn){
+                    isButtonStateTrack = true
+                    userPageListView.visibility = View.VISIBLE
+                    userPageLikedListView.visibility = View.GONE
+                }else{
+                    isButtonStateTrack = false
+                    userPageListView.visibility = View.GONE
+                    userPageLikedListView.visibility = View.VISIBLE
+                }
+                userPageButton[i].setTextColor(Color.argb(200,115,115,115))
+                userPageButton[i].setBackgroundColor(Color.WHITE)
+                userPageButton[1-i].setBackgroundColor(Color.argb(0,0,0,0))
+                userPageButton[1-i].setTextColor(Color.WHITE)
+            }
+        }
 
-        userPageTrackBtn.setOnClickListener {
-            userPageListView.visibility = View.VISIBLE
-            userPageLikedListView.visibility = View.GONE
-            Log.d("Track Btn","Track Btn Cliked")
-            userPageTrackBtn.setTextColor(Color.argb(200,115,115,115))
-            userPageTrackBtn.setBackgroundColor(Color.WHITE)
-            userPageLikedBtn.setBackgroundColor(Color.argb(0,0,0,0))
-            userPageLikedBtn.setTextColor(Color.WHITE)
-            isButtonStateTrack = true
-        }
-        userPageLikedBtn.setOnClickListener{
-            userPageListView.visibility = View.GONE
-            userPageLikedListView.visibility = View.VISIBLE
-            Log.d("Liked btn","Liked Btn Cliked")
-            userPageLikedBtn.setTextColor(Color.argb(200,115,115,115))
-            userPageLikedBtn.setBackgroundColor(Color.WHITE)
-            userPageTrackBtn.setBackgroundColor(Color.argb(0,0,0,0))
-            userPageTrackBtn.setTextColor(Color.WHITE)
-            isButtonStateTrack = false
-        }
         userPageListView.onItemClickListener = AdapterView.OnItemClickListener { parent, v, position, id ->
             val itt = parent.getItemAtPosition(position) as CommunitySongItem
             activity!!.TrackFrame.visibility = View.VISIBLE

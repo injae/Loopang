@@ -61,18 +61,10 @@ class SoundRange( var sound: Sound, var cycle: Int = 0, var start: Int = 0, var 
 
     fun complictedRange(other: SoundRange): SoundRange {
         if(isComplict(other)) {
-            if(endIndex() > other.endIndex()) {
-                var range = other.subRange(startIndex())
-                range.seekFront()
-                range.expand(endIndex())
-                return range
-            }
-            else {
-                var range = subRange(other.startIndex())
-                range.seekFront()
-                range.expand(other.endIndex())
-                return range
-            }
+            var endFirst  = if(endIndex() < other.endIndex()) this else other
+            var startLast = if(startIndex() <= other.startIndex()) other else this
+
+            return startLast.subRange(endFirst.endIndex()-startLast.startIndex())
         }
         return other
     }
@@ -86,11 +78,11 @@ class SoundRange( var sound: Sound, var cycle: Int = 0, var start: Int = 0, var 
 
     fun subRange(index: Int): SoundRange {
         var bend = end; var brepeat = repeat
-        end = 0; repeat = 0
+        seekFront()
         expand(index)
-        var range = nextRange()
+        var range = SoundRange(sound,cycle,start,end,repeat)
         end = bend; repeat = brepeat
-        return nextRange()
+        return range
     }
 
 
@@ -106,7 +98,7 @@ class SoundRange( var sound: Sound, var cycle: Int = 0, var start: Int = 0, var 
 
     fun between(range: SoundRange): SoundRange {
         var btw = nextRange()
-        btw.expand(range.startIndex() - endIndex())
+        btw.expand(range.startIndex() - btw.endIndex())
         return btw
     }
 
@@ -128,6 +120,7 @@ class SoundRange( var sound: Sound, var cycle: Int = 0, var start: Int = 0, var 
 
 class EditableSound {
     var isMute: Boolean = false
+    var isRecording: AtomicBoolean = AtomicBoolean(false)
     var effectorIndex: Int
     var blocks: MutableList<SoundRange> = mutableListOf()
     var sound: Sound
@@ -141,48 +134,54 @@ class EditableSound {
         playedRange = SoundRange(sound, 0)
         playedIndex = 0
         effectorIndex = sound.addEffector {
-            var start = playedRange.startIndex()
+            var start = playedRange.endIndex()
             playedRange.expand(it.size)
             var end = playedRange.endIndex()
-            var curRange = playedRange.makeFromIndex(start).expand(end)
-            if(blocks.isNotEmpty()) {
-                if(blocks.size > 1) {
-                    var btw = blocks[playedIndex].between(blocks[playedIndex+1])
-                    if(btw.isComplict(curRange)) {
-                        var complict = btw.complictedRange(curRange)
-                        Log.d("AudioTest","complict: ${complict.startDuration()} ${complict.endDuration()}")
-                        var zeroStart = complict.startIndex() - start
-                        var zeroEnd = complict.endIndex() - end
-                        for((index, buf) in it.withIndex()) {
-                            if(!(zeroStart <= index && index <= zeroEnd)) it[index] = 0
+            var curRange = playedRange.makeFromIndex(start).expand(end-start)
+            var retZero = false
+            if(!isRecording.get()) {
+                //Log.d( "AudioTest", "B(${blocks}):: B[${playedIndex}]:[${blocks[playedIndex].startIndex()}:${blocks[playedIndex].endIndex()-1}]==================")
+                //Log.d( "AudioTest", "B(${blocks}):: read: [${curRange.startIndex()}:${curRange.endIndex()-1}]" )
+                if (blocks.isNotEmpty()) {
+                    if (playedIndex + 1 <= blocks.size-1) {
+                        var btw = blocks[playedIndex].between(blocks[playedIndex + 1])
+                        //Log.d( "AudioTest", "B(${blocks}):: B[${playedIndex}~${playedIndex+1}]: btw[${btw.startIndex()}:${btw.endIndex()-1}]" )
+                        if(btw.isComplict(curRange)) {
+                            var complict = btw.complictedRange(curRange)
+                            //Log.d( "AudioTest", "B(${blocks}):: 1complict: ${complict.startIndex()} ${complict.endIndex()-1}" )
+                            var zeroStart = complict.startIndex() - start
+                            var zeroEnd = complict.endIndex() - start
+                            //Log.d( "AudioTest", "B(${blocks}):: zero: [${zeroStart}:${zeroEnd}]" )
+                            for ((index, _) in it.withIndex()) { if (zeroStart <= index && index < zeroEnd) it[index] = 0 }
+                            curRange.expand(1)
+                            if (blocks[playedIndex + 1].isComplict(curRange)) { playedIndex += 1 }
                         }
-                        //btw zero
-                        if(blocks[playedIndex+1].isComplict(playedRange)) {
-                            playedIndex++
+                        else {
+                            //Log.d( "AudioTest", "B(${blocks}):: playing: [${curRange.startIndex()}:${curRange.endIndex()}]" )
                         }
+                    } else {
+                        if(curRange.isComplict(blocks[playedIndex])) {
+                            var complict = curRange.complictedRange(blocks[playedIndex])
+                            //Log.d( "AudioTest", "B(${blocks}):: 2complict: [${complict.startIndex()}:${complict.endIndex() -1}]" )
+                            var nonZeroStart = complict.startIndex() - start
+                            var nonZeroEnd = complict.endIndex() - start
+                            //Log.d( "AudioTest", "B(${blocks}):: none zero: [${nonZeroStart}:${nonZeroEnd-1}]" )
+                            //Log.d( "AudioTest", "B(${blocks}):: data read: [0:${it.size-1}]" )
+                            if(nonZeroEnd != it.size) for ((index, _) in it.withIndex()) { if (!(nonZeroStart <= index && index < nonZeroEnd)) it[index] = 0 }
+                        }
+                        else { retZero = true; }//Log.d( "AudioTest", "B(${blocks[playedIndex]}):: stop" ) }
                     }
-                }
-                else {
-                    var complict =blocks[playedIndex].complictedRange(curRange)
-                    Log.d("AudioTest","complict: ${complict.startDuration()} ${complict.endDuration()}")
-                    var zeroStart = complict.startIndex() - start
-                    var zeroEnd = complict.endIndex() - end
-                    for((index, buf) in it.withIndex()) {
-                        if(!(zeroStart <= index && index <= zeroEnd)) it[index] = 0
-                    }
-                }
-                it
+                } else { retZero=true }
             }
-            else {
-                ShortArray(it.size, { 0 })
-            }
-            it
+            //else { Log.d( "AudioTest", "B(${blocks}):: record: ${curRange.startDuration()} ${curRange.endDuration()}" ) }
+            if(retZero) ShortArray(it.size, { 0 })
+            else it
         }
     }
 
     fun play() {
         if(!isMute) {
-            Log.d("AudioTest"," seek duration: ${playedRange.endDuration()}")
+            Log.d("AudioTest"," play duration: ${playedRange.endDuration()}")
             sound.play()
         }
     }
@@ -199,7 +198,7 @@ class EditableSound {
 
     fun startBlock() {
         if(!isMute) {
-            sound.isMute.set(false)
+            isRecording.set(true)
             var currentBlock = playedRange.nextRange()
             blocks = blocks.filter{ !it.removeOver(currentBlock) }.toMutableList()
             for((index, block) in blocks.withIndex()) {
@@ -212,10 +211,16 @@ class EditableSound {
         }
     }
 
-    fun endBlock() {
+    fun endBlock(limit:Int? = null) {
         if(!isMute) {
-            sound.isMute.set(true)
-            var range = playedRange.endIndex() - blocks[currentBlockIndex!!].startIndex()
+            isRecording.set(false)
+            var range = 0
+            if(limit != null) {
+                var end = playedRange.startIndex()
+                playedRange.seekFront()
+                playedRange.expand(limit - end)
+            }
+            range = playedRange.endIndex() - blocks[currentBlockIndex!!].startIndex()
             blocks[currentBlockIndex!!].expand(range)
             currentBlockIndex = null
         }
@@ -261,6 +266,7 @@ class EditableMixer(var sounds: MutableList<EditableSound> = mutableListOf()) : 
         isLooping.set(true)
         callStart(this)
         launch { while(isLooping.get()) { sounds.map { async { it.play() } }.forEach{ it.await() }; callSuccess(this@EditableMixer) } }.start()
+        //launch { while(isLooping.get()) { sounds.forEach{ if(!it.isRecording.get()) { isLooping.set(false)}}}}.start()
     }
 
     fun stop() {
@@ -274,8 +280,8 @@ class EditableMixer(var sounds: MutableList<EditableSound> = mutableListOf()) : 
 
     }
 
-    fun endBlock() {
-        sounds.forEach{ it.endBlock() }
+    fun endBlock(limit:Int? = null) {
+        sounds.forEach{ it.endBlock(limit) }
     }
 
     fun seek(tenMs: Int) {

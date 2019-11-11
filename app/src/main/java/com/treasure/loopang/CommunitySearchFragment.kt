@@ -21,7 +21,9 @@ import kotlin.math.log
 import android.view.KeyEvent.KEYCODE_ENTER
 import android.R
 import android.view.KeyEvent
+import android.widget.Button
 import com.treasure.loopang.communication.ResultManager
+import kotlinx.android.synthetic.main.community_user_page.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -74,24 +76,23 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
         }
         xbutton.setOnClickListener { communitySearchEditText.setText("") }
 
-        SearchTagBtn.setOnClickListener {
-            SearchTagBtn.setTextColor(Color.argb(200, 115, 115, 115))
-            SearchTagBtn.setBackgroundColor(Color.WHITE)
-            SearchUserBtn.setBackgroundColor(Color.argb(0, 0, 0, 0))
-            SearchUserBtn.setTextColor(Color.WHITE)
-            isButtonStateTag = true
-            CommunitySearchResultTagView.visibility = View.VISIBLE
-            CommunitySearchResultUserView.visibility= View.GONE
-        }
-
-        SearchUserBtn.setOnClickListener {
-            SearchUserBtn.setTextColor(Color.argb(200, 115, 115, 115))
-            SearchUserBtn.setBackgroundColor(Color.WHITE)
-            SearchTagBtn.setTextColor(Color.WHITE)
-            SearchTagBtn.setBackgroundColor(Color.argb(0, 0, 0, 0))
-            isButtonStateTag = false
-            CommunitySearchResultTagView.visibility = View.GONE
-            CommunitySearchResultUserView.visibility= View.VISIBLE
+        val searchButton : List<Button> = listOf(SearchTagBtn,SearchUserBtn)
+        for(i in 0.. searchButton.size-1) {
+            searchButton[i].setOnClickListener {
+                searchButton[i].setTextColor(Color.argb(200, 115, 115, 115))
+                searchButton[i].setBackgroundColor(Color.WHITE)
+                searchButton[1-i].setBackgroundColor(Color.argb(0, 0, 0, 0))
+                searchButton[1-i].setTextColor(Color.WHITE)
+            }
+            if(searchButton[i] == SearchTagBtn) {
+                isButtonStateTag = true
+                CommunitySearchResultTagView.visibility = View.VISIBLE
+                CommunitySearchResultUserView.visibility= View.GONE
+            }else{
+                isButtonStateTag = false
+                CommunitySearchResultTagView.visibility = View.GONE
+                CommunitySearchResultUserView.visibility= View.VISIBLE
+            }
         }
 
         CommunitySearchResultUserView.onItemClickListener=AdapterView.OnItemClickListener{ parent, v, position, id ->
