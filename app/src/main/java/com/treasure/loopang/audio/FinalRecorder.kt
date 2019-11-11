@@ -8,7 +8,7 @@ class FinalRecorder : IFinalRecorder {
     var recorder = OverWritableRecorder()
 
     override fun getBlockList(): List<List<SoundRange>> {
-        var buf = mutableListOf<List<SoundRange>>(recorder.getEditableSound().blocks)
+        var buf = mutableListOf<List<SoundRange>>(recorder.getBlock())
         buf.addAll(mixer.sounds.map{ it.blocks })
         return buf
     }
@@ -97,17 +97,17 @@ class FinalRecorder : IFinalRecorder {
     }
 
     override fun recordStop() {
+        recorder.stop()
         mixer.stop()
-        mixer.endBlock()
+        recorder.blocks.forEach{
+            Log.d("AudioTest", "- recorder: ${it.startIndex()} ${it.endIndex()}")
+        }
+        mixer.endBlock(recorder.getEditableSound().blocks[0].endIndex())
         Log.d("AudioTest", "mixer edited: ${mixer.sounds[0].playedRange.endDuration()}")
         mixer.sounds.map{ it.blocks }.forEach{
             it.forEach{
                 Log.d("AudioTest", "- mixer: ${it.startIndex()} ${it.endIndex()}")
             }
-        }
-        recorder.stop(mixer.sounds[0].playedRange.endIndex())
-        recorder.blocks.forEach{
-            Log.d("AudioTest", "- recorder: ${it.startIndex()} ${it.endIndex()}")
         }
     }
 
