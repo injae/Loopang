@@ -6,6 +6,18 @@ import com.treasure.loopang.ui.interfaces.IFinalRecorder
 class FinalRecorder : IFinalRecorder {
     var mixer = EditableMixer()
     var recorder = OverWritableRecorder()
+    var effector = SoundEffector()
+    var effectFlagList = mutableListOf<EffectorPresets>()
+    var count = 0
+    set(value) {
+        if(effectFlagList.size != 0)
+            effectFlagList.clear()
+        (0 until value).forEach {
+            effectFlagList.add(EffectorPresets.NONE)
+        }
+        field = value
+    }
+
 
     override fun getBlockList(): List<List<SoundRange>> {
         var buf = mutableListOf(recorder.getBlock())
@@ -30,7 +42,20 @@ class FinalRecorder : IFinalRecorder {
     }
 
     override fun setEffectToBlock(layerId: Int, blockId: Int, effect: EffectorPresets) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val index = layerId - 1
+
+        // 보컬 레코더는 적용안함.
+        if(index ==  -1) return
+
+        val sound = mixer.sounds[index].sound.data
+        if(effectFlagList[index] == effect) return
+        else if(effectFlagList[index] == EffectorPresets.NONE){
+            // effector.presetControl(sound, effect)
+        } else {
+            // effector.presetControl(sound, EffectorPresets.NONE)
+            // effector.presetControl(sound, effect)
+        }
+        effectFlagList[index] = effect
     }
 
     override fun getBlockList(layerId: Int): List<SoundRange> {
