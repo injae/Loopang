@@ -11,11 +11,12 @@ import android.os.SystemClock
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import com.treasure.loopang.R
 
 class MetronomeView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : View(context, attrs, defStyleAttr) {
+) : ImageView(context, attrs, defStyleAttr) {
     var playState: Boolean = false
 
     private var mIsTik: Boolean = false
@@ -36,7 +37,7 @@ class MetronomeView @JvmOverloads constructor(
     init{
         mDefaultPaint.color = resources.getColor(R.color.metronome_default, null)
         mTikPaint.color = resources.getColor(R.color.metronome_tik, null)
-        background = mDefaultDrawable
+        this.setImageDrawable(mDefaultDrawable)
         this.isClickable = true
         this.setOnClickListener{
             if(!playState){
@@ -60,13 +61,13 @@ class MetronomeView @JvmOverloads constructor(
         /*mIsTik = true
         invalidate()
         Handler().postDelayed({invalidate()}, ((30/bpm)*1000).toLong())*/
-        background = transition
+        this.setImageDrawable(transition)
         transition.startTransition(60000/bpm)
     }
     fun clear(){
         /*mIsTik = false
         invalidate()*/
-        background = mDefaultDrawable
+        this.setImageDrawable(mDefaultDrawable)
     }
 
    /* override fun onDraw(canvas: Canvas?) {

@@ -46,14 +46,17 @@
             android:id="@+id/loop_list"/>
 
     <ImageButton
-            android:src="@drawable/bin_icon"
+            android:id="@+id/btn_drop_all_loop"
             android:layout_width="@dimen/record_fragment_icon_width"
             android:layout_height="@dimen/record_fragment_icon_height"
-            android:id="@+id/btn_drop_all_loop"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
+            android:layout_marginTop="17dp"
             android:layout_marginEnd="15dp"
-            android:layout_marginTop="21dp"
-            android:background="@android:color/transparent" android:tint="#00FFFFFF" android:scaleType="fitCenter"/>
+            android:background="@android:color/transparent"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/bin_icon"
+            android:tint="#FFFFFFFF" />
 
 </RelativeLayout>
