@@ -64,7 +64,7 @@ class Connector(private val DNS: String = "https://ec2-3-15-172-177.us-east-2.co
             else if(fileCall != null) { // 파일다운로드 일경우
                 val tempFile: File
                 if(fileName == null) tempFile = File(FileManager().looperCacheDir.path + '/' + makeSHA256(musicID!!))
-                else tempFile = File("${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)}/Loopang/${fileName}")
+                else tempFile = File("${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)}/Loopang/${fileName}.pcm")
 
                 file = fileCall.execute().body()?.bytes()
                 val fos = FileOutputStream(tempFile)

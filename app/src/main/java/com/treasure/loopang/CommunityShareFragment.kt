@@ -13,6 +13,7 @@ import android.util.Log
 import android.widget.ToggleButton
 import com.treasure.loopang.communication.MusicListClass
 import com.treasure.loopang.communication.ResultManager
+import com.treasure.loopang.ui.toast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -45,17 +46,21 @@ class CommunityShareFragment : androidx.fragment.app.Fragment() {
         }
         shareButton.setOnClickListener {
             val at = (activity as CommunityShareActivity)
-            val ld = LoadingActivity(activity!!)
-            GlobalScope.launch {
-                CoroutineScope(Dispatchers.Main).launch { ld.show() }
-                at.connector.process(ResultManager.FILE_UPLOAD, null, at.layerItem.loopTitle, null, null, makeUploadInfo(post, at))
-                CoroutineScope(Dispatchers.Main).launch { ld.dismiss() }
+            if(at.layerItem.extension == "pcm") {
+                val ld = LoadingActivity(activity!!)
+                GlobalScope.launch {
+                    CoroutineScope(Dispatchers.Main).launch { ld.show() }
+                    at.connector.process(ResultManager.FILE_UPLOAD, null, at.layerItem.loopTitle, null, null, makeUploadInfo(post, at))
+                    CoroutineScope(Dispatchers.Main).launch { ld.dismiss() }
+                }
+                val intent = Intent(activity, CommunityActivity::class.java)
+                intent.putExtra("finish","true")
+                intent.putExtra("from", "CommunityShareFragment")
+                startActivity(intent)
             }
-            val intent = Intent(activity, CommunityActivity::class.java)
-            intent.putExtra("finish","true")
-            intent.putExtra("from", "CommunityShareFragment")
-            startActivity(intent)
-
+            else {
+                toast("레이어만 업로드 할 수 있습니다.")
+            }
         }
     }
 
