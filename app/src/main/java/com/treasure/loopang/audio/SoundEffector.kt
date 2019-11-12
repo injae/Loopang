@@ -9,6 +9,10 @@ class SoundEffector(private var channel: Int = 1, private var sampleRate: Int = 
                     private var st: SoundTouch? = null, private val weightValue: Int = 6,
                     private var sourceBackup: MutableList<Pair<ByteArray, ByteArray>> = MutableList(0, { Pair(ByteArray(0, {0}), ByteArray(0, {0})) }),
                     private var volumeBackup: MutableList<Pair<ByteArray, ByteArray>> = MutableList(0, { Pair(ByteArray(0, {0}), ByteArray(0, {0})) })) {
+    private fun setChannel(cn: Int) { st?.setChannels(cn) }
+    private fun setSampleRate(sr: Int) { st?.setSampleRate(sr) }
+    private fun setTempo(tp: Double) { st?.setTempo(tp) }
+    private fun setPitch(pt: Double) { st?.setPitch(pt) }
     private fun preSetting() {
         st = SoundTouch()
         st?.setChannels(channel)
@@ -16,19 +20,15 @@ class SoundEffector(private var channel: Int = 1, private var sampleRate: Int = 
         st?.setTempo(tempo)
     }
 
-    private fun setChannel(cn: Int) { st?.setChannels(cn) }
-    private fun setSampleRate(sr: Int) { st?.setSampleRate(sr) }
-    private fun setTempo(tp: Double) { st?.setTempo(tp) }
-    private fun setPitch(pt: Double) { st?.setPitch(pt) }
-
-    fun presetControl(targetSource: ByteArray, preset: EffectorPresets): ByteArray {
+    fun presetControl(data: MutableList<Short>, preset: EffectorPresets): MutableList<Short> {
+        val targetSource = convertShortArrayToByteArray(data.toShortArray())
         preSetting()
         when(preset) {
             EffectorPresets.SCARY -> { setPitch(0.5) }
             EffectorPresets.SINKING -> { setPitch(0.8) }
             EffectorPresets.EXCITING -> { setPitch(1.2) }
             EffectorPresets.FANTASTIC -> { setPitch(1.4) }
-            EffectorPresets.NONE -> { return getSourceData(targetSource, true)!! }
+            EffectorPresets.NONE -> { return mlByteToMlShort(getSourceData(targetSource, true)!!.toMutableList()) }
         }
         st?.putSamples(targetSource, targetSource.size)
 
@@ -50,10 +50,11 @@ class SoundEffector(private var channel: Int = 1, private var sampleRate: Int = 
         st = SoundTouch()
 
         sourceBackup.add(Pair(targetSource, result.toByteArray().copyOfRange(0, (result.size / weightValue))))
-        return result.toByteArray()
+        return mlByteToMlShort(result)
     }
 
-    fun volumeControl(sourceData: ByteArray, volume: Int): ByteArray {
+    fun volumeControl(data: MutableList<Short>, volume: Int): MutableList<Short> {
+        val sourceData = convertShortArrayToByteArray(data.toShortArray())
         var tempSourceData = getSourceData(sourceData, false)
         if(tempSourceData == null) tempSourceData = sourceData
 
@@ -74,10 +75,10 @@ class SoundEffector(private var channel: Int = 1, private var sampleRate: Int = 
         }
 
         volumeBackup.add(Pair(tempSourceData, modifiedData.copyOfRange(0, (modifiedData.size / weightValue))))
-        return modifiedData
+        return mlByteToMlShort(modifiedData.toMutableList())
     }
 
-    fun getSourceData(processedData: ByteArray, functionCheck: Boolean): ByteArray? { // fucntionCheck가 true면 process, false면 volumeControl
+    fun getSourceData(processedData: ByteArray, functionCheck: Boolean): ByteArray? { // fucntionCheck가 true면 presetControl, false면 volumeControl
         val tempBackup: MutableList<Pair<ByteArray, ByteArray>>
         if(functionCheck) tempBackup = sourceBackup
         else tempBackup = volumeBackup
@@ -101,6 +102,8 @@ class SoundEffector(private var channel: Int = 1, private var sampleRate: Int = 
 
         return forReturn
     }
+
+    private fun mlByteToMlShort(target: MutableList<Byte>) = target.chunked(2).map{ it.toByteArray() }.flatMap { listOf(convertBytesToShort(it)) }.toMutableList()
 }
 
 enum class EffectorPresets { NONE, SCARY, SINKING, EXCITING, FANTASTIC }
