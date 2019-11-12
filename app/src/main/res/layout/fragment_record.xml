@@ -1,23 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/fragment_record_layout"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/view_pager_background"
-        android:animateLayoutChanges="true"
-        tools:context=".ui.fragments.v1.RecordFragment">
+        android:animateLayoutChanges="true">
+
+    <ImageButton
+            android:id="@+id/btn_change_project_title"
+            android:layout_width="@dimen/record_fragment_icon_width"
+            android:layout_height="@dimen/record_fragment_icon_height"
+            android:layout_alignBottom="@id/loop_title_label"
+            android:layout_toEndOf="@id/loop_title_label"
+            android:background="@android:color/transparent"
+            android:padding="10dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/edittext_icon"
+            android:tint="#ffffffff" />
+
     <TextView
-            android:text="@string/title_activity_recording"
-            android:textSize="24sp"
+            android:id="@+id/loop_title_label"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="17dp"
+            android:layout_height="@dimen/record_fragment_icon_height"
             android:layout_marginStart="29dp"
+            android:layout_marginTop="17dp"
+            android:gravity="center_vertical"
+            android:text="@string/title_activity_recording"
             android:textColor="#FFFFFF"
-            android:id="@+id/loop_title_label"/>
+            android:textSize="24sp" />
     <FrameLayout android:layout_width="match_parent"
                  android:layout_height="wrap_content"
                  android:layout_marginTop="64dp"
@@ -38,12 +52,10 @@
             android:id="@+id/layer_list_frame"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/loop_seek_bar"
             android:layout_below="@id/realtime_visualizer_view_frame"
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginBottom="5dp">
+            android:layout_marginRight="15dp">
 
         <ListView
                 android:id="@+id/layer_list"
@@ -57,23 +69,30 @@
                 android:listSelector="@drawable/layer_listview_selector"
                 android:transcriptMode="normal" />
     </FrameLayout>
+
     <com.treasure.loopang.ui.view.MetronomeView
+            android:id="@+id/metronome_view"
             android:layout_width="@dimen/record_fragment_icon_width"
             android:layout_height="@dimen/record_fragment_icon_height"
             android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@id/btn_drop_all_layer"
+            android:layout_marginTop="21dp"
             android:layout_marginEnd="5dp"
-            android:layout_marginTop="21dp" android:id="@+id/metronome_view"/>
+            android:layout_toLeftOf="@id/btn_drop_all_layer"
+            android:padding="8dp" />
+
     <ImageButton
-            android:src="@drawable/bin_icon"
+            android:id="@+id/btn_drop_all_layer"
             android:layout_width="@dimen/record_fragment_icon_width"
             android:layout_height="@dimen/record_fragment_icon_height"
-            android:id="@+id/btn_drop_all_layer"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="15dp"
             android:layout_marginTop="21dp"
-            android:background="@android:color/transparent" android:tint="#00FFFFFF" android:scaleType="fitCenter"/>
+            android:layout_marginEnd="15dp"
+            android:background="@android:color/transparent"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/bin_icon"
+            android:tint="#FFFFFFFF" />
 
     <SeekBar
             android:id="@+id/loop_seek_bar"

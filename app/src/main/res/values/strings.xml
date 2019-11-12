@@ -11,7 +11,7 @@
     <!-- 레코딩 액티비티, 프래그먼트 용 스트링 리소스 -->
     <string name="title_activity_recording">Make Loop</string>
 
-    <string name="music_list">My Loop List</string>
+    <string name="music_list">Project Manager</string>
     <string name="music_list_search_hint">Search…</string>
 
     <string name="example_track_item">Track Item</string>
@@ -20,7 +20,7 @@
 
     <string name="layer_label">Layer #</string>
 
-    <string name="title_save_loop">Save Loop</string>
+    <string name="title_save_loop">Save Project</string>
     <string name="title_loop_title">Loop Title</string>
     <string name="title_file_type">File Type</string>
     <string name="check_split">Split and Save</string>
@@ -72,6 +72,8 @@
     <string name="title_save">Save</string>
     <string name="sound_format_type">Sound Format Type</string>
     <string name="title_music_title">Music Title</string>
+    <string name="changelayerlabeldialog_title">Change Layer Label</string>
+    <string name="changeprojecttitledialog_title">Change Project Title</string>
 
 
 </resources>
