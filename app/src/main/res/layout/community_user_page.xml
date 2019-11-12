@@ -6,17 +6,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
+
     <TextView
             android:id="@+id/SearchTextView"
             android:layout_width="wrap_content"
-            android:layout_marginStart="30dp"
             android:layout_height="50dp"
-            android:gravity="left"
+            android:layout_marginStart="30dp"
             android:layout_marginTop="50dp"
             android:layout_marginBottom="5dp"
-            android:text="USER"
-            android:textSize="36dp"
-            android:textColor="#FFFFFF"/>
+            android:gravity="left"
+            android:text="User"
+            android:textColor="#FFFFFF"
+            android:textSize="36dp" />
 
     <RelativeLayout
             android:layout_width="match_parent"

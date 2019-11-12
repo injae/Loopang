@@ -44,10 +44,11 @@ class CommunityShareFragment : androidx.fragment.app.Fragment() {
             }
         }
         shareButton.setOnClickListener {
+            val at = (activity as CommunityShareActivity)
             val ld = LoadingActivity(activity!!)
             GlobalScope.launch {
                 CoroutineScope(Dispatchers.Main).launch { ld.show() }
-                (activity as CommunityShareActivity).connector.process(ResultManager.FILE_UPLOAD, null, null, null, null, makeUploadInfo(post, (activity as CommunityShareActivity)))
+                at.connector.process(ResultManager.FILE_UPLOAD, null, at.layerItem.loopTitle, null, null, makeUploadInfo(post, at))
                 CoroutineScope(Dispatchers.Main).launch { ld.dismiss() }
             }
             val intent = Intent(activity, CommunityActivity::class.java)

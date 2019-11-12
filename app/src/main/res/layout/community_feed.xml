@@ -9,14 +9,14 @@
     <TextView
             android:id="@+id/FeedTextView"
             android:layout_width="wrap_content"
-            android:layout_marginStart="30dp"
             android:layout_height="50dp"
-            android:gravity="left"
+            android:layout_marginStart="30dp"
             android:layout_marginTop="50dp"
             android:layout_marginBottom="10dp"
-            android:text="FEED"
-            android:textSize="36dp"
-            android:textColor="#FFFFFF"/>
+            android:gravity="left"
+            android:text="Feed"
+            android:textColor="#FFFFFF"
+            android:textSize="36dp" />
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
