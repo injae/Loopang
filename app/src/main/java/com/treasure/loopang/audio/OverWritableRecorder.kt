@@ -76,7 +76,7 @@ class OverWritableRecorder (var format: IFormat = Pcm16(),
         if(!isMute.get()){
             if(!isMakeBlock) {
                 var currentBlock = playedRange.nextRange()
-                blocks = blocks.filter{ !it.removeOver(currentBlock) }.toMutableList()
+                blocks = blocks.filter{ !it.isOver(currentBlock) }.toMutableList()
                 for((index, block) in blocks.withIndex()) {
                     if(blocks[index].overWrite(currentBlock)) { currentBlockIndex = index }
                 }

@@ -67,14 +67,14 @@ class FinalRecorder : IFinalRecorder {
     }
 
     override fun getRecordDuration(): Int {
-        mixer.sounds.add(recorder.getEditableSound())
+        mixer.addSound(recorder.getEditableSound())
         var duration = mixer.duration()
         mixer.sounds.removeAt(mixer.sounds.lastIndex)
         return duration
     }
 
     override fun getLoopDuration(): Int {
-        mixer.sounds.add(recorder.getEditableSound())
+        mixer.addSound(recorder.getEditableSound())
         var duration = mixer.loopDuration()
         mixer.sounds.removeAt(mixer.sounds.lastIndex)
         return duration
@@ -96,11 +96,11 @@ class FinalRecorder : IFinalRecorder {
 
     override fun seekToEnd() {
         Log.d("AudioTest", "seekToEnd")
-        mixer.sounds.add(recorder.getEditableSound())
+        mixer.addSound(recorder.getEditableSound())
         var duration = mixer.duration()
-        mixer.seek(mixer.duration())
-        recorder.seek(mixer.duration())
         mixer.sounds.removeAt(mixer.sounds.lastIndex)
+        mixer.seek(duration)
+        recorder.seek(duration)
     }
 
     override fun seekTo(ms: Int) {
@@ -109,12 +109,22 @@ class FinalRecorder : IFinalRecorder {
     }
 
     override fun playStart() {
-        mixer.sounds.add(recorder.getEditableSound())
+        recorder.blocks.forEach{
+            Log.d("AudioTest", "- recorder: ${it.startIndex()} ${it.endIndex()}")
+        }
+        mixer.sounds.map{ it.blocks }.forEach{
+            it.forEach{
+                Log.d("AudioTest", "- mixer: ${it.startIndex()} ${it.endIndex()}")
+            }
+        }
+        mixer.addSound(recorder.getEditableSound())
         mixer.start()
     }
 
     override fun playStop() {
         mixer.stop()
+        recorder.seek(mixer.loopDuration())
+        mixer.seek(mixer.loopDuration())
         mixer.sounds.removeAt(mixer.sounds.lastIndex)
     }
 
