@@ -5,4 +5,5 @@ import android.widget.ImageView
 data class CommunitySongItem(var userNickName: String = "", var songName: String = "",
                              var likedNum: Int = 0, var downloadNum: Int = 0,
                              var trackInfo: String = "", var productionDate: String = "",
-                             var songId: String = "")
+                             var songId: String = "",
+                             var userLikedCheck : Boolean = false)

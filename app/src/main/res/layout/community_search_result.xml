@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="vertical" android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -41,22 +42,123 @@
             android:layout_marginEnd="20dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp">
-
+        <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal">
+            <TableRow>
+                <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textSize="24sp"
+                        android:background="@drawable/community_search_tag_background"
+                        android:textColor="#FFFFFF"
+                        android:text="비트"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"/>
+                <Button
+                        android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@drawable/community_search_tag_background"
+                    android:textColor="#FFFFFF"
+                    android:text="드럼"
+                    android:layout_margin="5dp"
+                        android:layout_weight="1"/>
+                <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textSize="24sp"
+                        android:background="@drawable/community_search_tag_background"
+                        android:textColor="#FFFFFF"
+                        android:text="피아노"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"/>
+            </TableRow>
+            <TableRow>
+                <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textSize="24sp"
+                        android:background="@drawable/community_search_tag_background"
+                        android:textColor="#FFFFFF"
+                        android:text="아카펠라"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"/>
+                <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textSize="24sp"
+                        android:background="@drawable/community_search_tag_background"
+                        android:textColor="#FFFFFF"
+                        android:text="바이올린"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"/>
+                <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textSize="24sp"
+                        android:background="@drawable/community_search_tag_background"
+                        android:textColor="#FFFFFF"
+                        android:text="타악기"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"/>
+            </TableRow>
+            <TableRow>
+                <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textSize="24sp"
+                        android:background="@drawable/community_search_tag_background"
+                        android:textColor="#FFFFFF"
+                        android:text="박수"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"/>
+                <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textSize="24sp"
+                        android:background="@drawable/community_search_tag_background"
+                        android:textColor="#FFFFFF"
+                        android:text="장구"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"/>
+                <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textSize="24sp"
+                        android:background="@drawable/community_search_tag_back2_for_size"
+                        android:textColor="#FFFFFF"
+                        android:text="TAG"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"/>
+            </TableRow>
+        </TableLayout>
         <ListView
                 android:layout_below="@id/searchSort"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:dividerHeight="10dp"
                 android:divider=  "@android:color/transparent"
-                android:id="@+id/community_search_result_tag_listview"/>
-
-            <ListView
-                    android:id="@+id/community_search_result_user_listview"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_below="@id/searchSort"
-                    android:divider="@android:color/transparent"
-                    android:dividerHeight="10dp" />
+                android:id="@+id/community_search_result_tag_listview"
+                android:visibility="gone"/>
+        <ListView
+                android:id="@+id/community_search_result_user_listview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/searchSort"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="10dp"
+                android:visibility="gone"/>
 
     </FrameLayout>
 </LinearLayout>

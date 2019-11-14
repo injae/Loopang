@@ -187,42 +187,53 @@
             android:background="#FFFFFF"
             android:id="@+id/trackinfoFrame">
 
-        <TextView
-                android:id="@+id/TrackInfoTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Track Info"
-                android:layout_centerHorizontal ="true"
-                android:gravity="center"
-                android:textColor="#7E7E7E"
-                android:background="#80DC5E7D"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp" />
-
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_below="@id/TrackInfoTextView"
-                android:background="#33DAADB8">
+                android:orientation="vertical">
+        <TextView
+                android:id="@+id/TrackInfoTextView"
+                android:layout_width="match_parent"
+                android:layout_height="33dp"
+                android:text="INFO"
+                android:layout_centerHorizontal ="true"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:textSize="20dp"
+                android:background="#80DC5E7D"
+                android:layout_marginTop="10dp" />
+
             <TextView
                     android:id="@+id/trackInfoDate"
-                    android:layout_width="300dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="2019.09.09"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
                     android:layout_gravity="center_horizontal"/>
-                <TextView
-                        android:textColor="#7E7E7E"
-                        android:id="@+id/trackInfoText"
-                        android:layout_width="300dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="20dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
-                        android:layout_gravity="center_horizontal"
-                        android:text="" />
-
+            <TextView
+                    android:textColor="#7E7E7E"
+                    android:id="@+id/trackInfoText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_gravity="center_horizontal"
+                    android:text="" />
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:textSize="15sp"
+                    android:textColor="#787878"
+                    android:text="TAG :  "
+                    android:gravity="center"
+                    android:background="#33DAADB8"
+                    android:id="@+id/layerTag"
+                    />
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>
