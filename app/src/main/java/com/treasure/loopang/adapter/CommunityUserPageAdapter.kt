@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.treasure.loopang.listitem.CommunitySongItem
+import org.w3c.dom.Text
 import java.util.ArrayList
 
 
@@ -23,8 +24,8 @@ class CommunityUserPageAdapter : BaseAdapter() {
         if (convertView == null) {
             view = LayoutInflater.from(context).inflate(com.treasure.loopang.R.layout.community_user_page_item, null)
             userPageViewHolder = ViewHolder()
-            userPageViewHolder.userNickNameTextView = view.findViewById(com.treasure.loopang.R.id.myPageUserNickname) as TextView
             userPageViewHolder.songNameTextView= view.findViewById(com.treasure.loopang.R.id.myPageSongName) as TextView
+            userPageViewHolder.productionDateTextView = view.findViewById(com.treasure.loopang.R.id.myPageProductionDate) as TextView
 
             view.tag =  userPageViewHolder
         }else{
@@ -32,7 +33,8 @@ class CommunityUserPageAdapter : BaseAdapter() {
             view = convertView
         }
 
-        userPageViewHolder.userNickNameTextView?.setText(listViewItemList.get(position).userNickName)
+       // userPageViewHolder.userNickNameTextView?.setText(listViewItemList.get(position).userNickName)
+        userPageViewHolder.productionDateTextView?.setText( listViewItemList.get(position).productionDate.substring(0,10))
         userPageViewHolder.songNameTextView?.setText(listViewItemList.get(position).songName)
 
         val listViewItem = listViewItemList[position]
@@ -62,6 +64,7 @@ class CommunityUserPageAdapter : BaseAdapter() {
 
     private  class ViewHolder{
         var userNickNameTextView : TextView? = null
+        var productionDateTextView : TextView? = null
         var songNameTextView :TextView? = null
     }
 }
