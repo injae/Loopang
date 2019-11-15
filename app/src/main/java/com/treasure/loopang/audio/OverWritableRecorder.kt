@@ -12,27 +12,24 @@ import java.util.concurrent.atomic.AtomicBoolean
 class OverWritableRecorder (var format: IFormat = Pcm16(),
                             var info: FormatInfo =format.info(),
                             var data: MutableList<Short> = mutableListOf(),
-                            var isRecording: AtomicBoolean = AtomicBoolean(false),
-                            var blocks: MutableList<SoundRange> = mutableListOf(),
-                            var currentBlockIndex: Int? = null,
-                            var playedRange: SoundRange = SoundRange(Sound()),
                             var isMute: AtomicBoolean  = AtomicBoolean(false),
-                            var isMakeBlock: Boolean = false,
+                            var isRecording:AtomicBoolean  = AtomicBoolean(false),
                             var limit: Int? = null
                             ): SoundFlow<OverWritableRecorder>() {
     lateinit var routine : Deferred<Unit>
+    var blocks: SoundBlocks = SoundBlocks(Sound())
 
 
     fun start() {
         Stabilizer.stabilizeAudio(info.inputAudio)
         info.inputAudio.startRecording()
         callStart(this)
-        if(playedRange.endIndex() >= data.size) {
-            var zeroBuf = ShortArray(playedRange.endIndex() -data.size, { 0 })
+        if(blocks.point() >= data.size) {
+            var zeroBuf = ShortArray(blocks.point() -data.size, { 0 })
             data.addAll(zeroBuf.toMutableList())
         }
         else {
-            data = data.filterIndexed{i, t -> i < playedRange.endIndex()}.toMutableList()
+            data = data.filterIndexed{i, t -> i < blocks.point()}.toMutableList()
         }
         startBlock()
         routine = async {
@@ -53,7 +50,7 @@ class OverWritableRecorder (var format: IFormat = Pcm16(),
                 limit?.let {
                     buffer.forEach { if(limit!! > data.size) { data.add(it); readCounter++ } else isRecording.set(false) } }
                  ?: buffer.forEach { data.add(it); readCounter++ }
-                playedRange.expand(readCounter)
+                blocks += readCounter
 
                 var currentSampleCount = data.chunked(info.sampleRate).count() - 1
                 if(sampleCounter < currentSampleCount) {
@@ -73,40 +70,14 @@ class OverWritableRecorder (var format: IFormat = Pcm16(),
     }
 
     fun startBlock() {
-        if(!isMute.get()){
-            if(!isMakeBlock) {
-                var currentBlock = playedRange.nextRange()
-                blocks = blocks.filter{ !it.removeOver(currentBlock) }.toMutableList()
-                for((index, block) in blocks.withIndex()) {
-                    if(blocks[index].overWrite(currentBlock)) { currentBlockIndex = index }
-                }
-                if(currentBlockIndex == null) {
-                    blocks.add(currentBlock)
-                    currentBlockIndex = blocks.lastIndex
-                }
-                //Log.d("AudioTest","recorder startblock begin: ${blocks[currentBlockIndex!!].startIndex()}")
-                //Log.d("AudioTest","recorder startblock end: ${blocks[currentBlockIndex!!].endIndex()}")
-                isMakeBlock=true
-            }
-        }
+        if(!isMute.get()){ blocks.record() }
     }
 
     fun endBlock() {
-        if(isMakeBlock) {
-            blocks[currentBlockIndex!!] = blocks[currentBlockIndex!!]
-                .subRange(playedRange.endIndex()-blocks[currentBlockIndex!!].startIndex())
-            //Log.d("AudioTest","recorder endblock: ${blocks[currentBlockIndex!!].endIndex()}")
-            currentBlockIndex = null
-            isMakeBlock=false
-            //Log.d("AudioTest","recorder played: ${playedRange.endIndex()}")
-        }
+        blocks.stop()
     }
 
-    fun seek(tenMs: Int) {
-        var index = tenMs*info.tenMsSampleRate
-        playedRange.remove(index)
-        Log.d("AudioTest","recorder seek index: ${playedRange.endIndex()}")
-    }
+    fun seek(tenMs: Int)=blocks.seek(tenMs*info.tenMsSampleRate)
 
     fun stop(limit:Int? = null){
         if(isRecording.get()) {
@@ -115,7 +86,7 @@ class OverWritableRecorder (var format: IFormat = Pcm16(),
             runBlocking { routine.await() }
             endBlock()
             Log.d("AudioTest", "recorder recorded ${data.size}")
-            Log.d("AudioTest", "recorder blocks:${blocks.size}")
+            Log.d("AudioTest", "recorder blocks:${blocks.size()}")
             this.limit = null
             callStop(this)
         }
@@ -128,15 +99,15 @@ class OverWritableRecorder (var format: IFormat = Pcm16(),
     }
 
     fun getBlock(): List<SoundRange> {
-        return blocks.toList()
+        return blocks.list.toList()
     }
 
     fun getEditableSound(): EditableSound {
         var voice = EditableSound(Sound(data.toMutableList()))
-        voice.isMute = isMute.get()
+        voice.isMute = isMute
         var range = SoundRange(voice.sound)
         range.expand(voice.sound.data.size)
-        voice.blocks.add(range)
+        voice.blocks.list.add(range)
         return voice
     }
 }
