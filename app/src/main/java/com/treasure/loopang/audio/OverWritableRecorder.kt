@@ -99,7 +99,7 @@ class OverWritableRecorder (var format: IFormat = Pcm16(),
     }
 
     fun getBlock(): List<SoundRange> {
-        return blocks.blocks.toList()
+        return blocks.list.toList()
     }
 
     fun getEditableSound(): EditableSound {
@@ -107,7 +107,7 @@ class OverWritableRecorder (var format: IFormat = Pcm16(),
         voice.isMute = isMute
         var range = SoundRange(voice.sound)
         range.expand(voice.sound.data.size)
-        voice.blocks.blocks.add(range)
+        voice.blocks.list.add(range)
         return voice
     }
 }

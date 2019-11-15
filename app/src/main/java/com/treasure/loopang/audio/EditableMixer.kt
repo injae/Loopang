@@ -18,7 +18,7 @@ class EditableSound: SoundFlow<EditableSound> {
         blocks = SoundBlocks(sound)
         effectorIndex = sound.addEffector {
             var start = blocks.point()
-            if(!(!blocks.isRecording.get() && isEnd.get())) blocks.location.expand(it.size)
+            if(!(!blocks.isRecording.get() && isEnd.get())) blocks += it.size
             var end = blocks.point()
             var curRange = blocks.location.makeFromIndex(start).expand(end-start)
             var retZero = false
@@ -123,6 +123,7 @@ class EditableMixer(var sounds: MutableList<EditableSound> = mutableListOf()) : 
     fun addSound(sound: EditableSound) {
         sound.onSuccess {
             sound.stop()
+            Log.d("AudioTest"," call Success: ${sound.blocks}")
         }
         sound.onStart{
         }
@@ -147,7 +148,7 @@ class EditableMixer(var sounds: MutableList<EditableSound> = mutableListOf()) : 
         isLooping.set(true)
         callStart(this)
         sounds.forEach{it.isEnd.set(false)}
-        GlobalScope.launch {
+        launch {
             sounds.forEach{ launch{ replay(it) }.start() }
             callSuccess(this@EditableMixer)
         }.start()
@@ -162,7 +163,7 @@ class EditableMixer(var sounds: MutableList<EditableSound> = mutableListOf()) : 
                             longIndex = index
                         }
                     }
-                Log.d("AudioTest","logest index")
+                Log.d("AudioTest","longest index")
                 while (isLooping.get()) {
                     if(sounds[longIndex].isEnd.get()) {
                         isLooping.set(false)
@@ -199,12 +200,12 @@ class EditableMixer(var sounds: MutableList<EditableSound> = mutableListOf()) : 
     fun duration(): Int {
         var duration = 0
         sounds.filter{ !it.blocks.isEmpty() }
-              .map{ it.blocks.duration() }
+              .map{ it.blocks.durationMs() }
               .forEach { if(duration < it) duration = it }
         return duration
     }
 
-    fun loopDuration()=sounds.last().blocks.duration()
+    fun loopDuration()=sounds.last().blocks.durationMs()
 
     fun stop(index: Int) { sounds[index].stop() }
 
