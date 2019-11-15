@@ -30,6 +30,7 @@ class CommunityActivity(var connector: Connector = Connector()) : AppCompatActiv
     val transaction = supportFragmentManager.beginTransaction()
     var isCategorySelected :Boolean = false
     var isTableBtnClicked : Boolean = false
+    var isButtonStateTag :Boolean = true
     private var currentPage: Int = 0
     private val pagerAdapter by lazy { CommunityPagerAdapter(supportFragmentManager) }
     private val mDecorView: View by lazy { window.decorView }
@@ -154,7 +155,12 @@ class CommunityActivity(var connector: Connector = Connector()) : AppCompatActiv
             communityFeedCategoryListView.visibility = View.VISIBLE
             isCategorySelected = false
         }
-        else if(isTrackFragOpen== false && isTableBtnClicked == true){ isTableBtnClicked = false }
+        else if(isTrackFragOpen== false && isTableBtnClicked == true && isButtonStateTag == true){
+            isTableBtnClicked = false
+            community_search_tag_table.visibility = View.VISIBLE
+            community_search_result_tag_listview.visibility = View.GONE
+            community_search_result_user_listview.visibility = View.GONE
+        }
         else {
              super.onBackPressed()
         }

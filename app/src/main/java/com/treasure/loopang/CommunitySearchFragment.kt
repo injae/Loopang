@@ -39,12 +39,9 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var isButtonStateTag = true
+
         var editResult: String = ""
         val CommunitySearchAdapter: CommunitySearchitemAdapter = CommunitySearchitemAdapter()
-        Log.d("ccccc","btnState:"+isButtonStateTag)
-
-
 
         communitySearchEditText.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
             if (event.action != KeyEvent.KEYCODE_ENTER) {
@@ -59,26 +56,24 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}//텍스트 바뀌는 중
             override fun afterTextChanged(edit: Editable) {//텍스트 바뀐 후
                 editResult = communitySearchEditText.getText().toString()
-                if (isButtonStateTag == true &&  (activity as CommunityActivity).isTableBtnClicked == false) {
+                if ((activity as CommunityActivity).isButtonStateTag == true &&  (activity as CommunityActivity).isTableBtnClicked == false) {
                     community_search_result_tag_listview.adapter = CommunitySearchAdapter
                     (activity as CommunityActivity).connector?.searchResult?.tagList?.forEach { CommunitySearchAdapter.addItem(it) }
-                } else if (isButtonStateTag == false) {
+                } else if ((activity as CommunityActivity).isButtonStateTag == false) {
                     community_search_result_user_listview.adapter = CommunitySearchAdapter
                     (activity as CommunityActivity).connector?.searchResult?.userList?.forEach { CommunitySearchAdapter.addItem(it) }
                 }
             }
         })
         communitySearchBtn.setOnClickListener {
-            Log.d("여기 들어옴?","ㅇㅇ")
             (activity as CommunityActivity).isTableBtnClicked = true
-            setVisibillity(isButtonStateTag,(activity as CommunityActivity).isTableBtnClicked)
+            setVisibillity((activity as CommunityActivity).isButtonStateTag,(activity as CommunityActivity).isTableBtnClicked)
             val ld = LoadingActivity(activity!!)
             GlobalScope.launch {
                 CoroutineScope(Dispatchers.Main).launch { ld?.show() }
                 val result = (activity as CommunityActivity).connector.process(ResultManager.SEARCH_REQUEST, null, null, editResult)
                 CoroutineScope(Dispatchers.Main).launch { ld?.dismiss() }
             }
-
         }
         xbutton.setOnClickListener { communitySearchEditText.setText("") }
 
@@ -89,8 +84,13 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
                 searchButton[i].setBackgroundColor(Color.WHITE)
                 searchButton[1 - i].setBackgroundColor(Color.argb(0, 0, 0, 0))
                 searchButton[1 - i].setTextColor(Color.WHITE)
-                if (searchButton[i] == SearchTagBtn) { isButtonStateTag = true }
-                else { isButtonStateTag = false }
+                if (searchButton[i] == SearchTagBtn) {
+                    (activity as CommunityActivity).isButtonStateTag = true
+                    setVisibillity((activity as CommunityActivity).isButtonStateTag,(activity as CommunityActivity).isTableBtnClicked)
+                } else {
+                    (activity as CommunityActivity).isButtonStateTag = false
+                    setVisibillity((activity as CommunityActivity).isButtonStateTag,(activity as CommunityActivity).isTableBtnClicked)
+                }
             }
         }
         val tableBtnList: List<Button> = listOf(btnClap, btnViolin, btnPiano, btnPercussionInstrument, btnJanggu, btnDrum, btnBeat, btnAcappella)
@@ -99,36 +99,10 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
                 communitySearchEditText.setText(btn.text.toString())
                 editResult = btn.text.toString()
                 Log.d("qqqqqq","버튼은"+btn.text +"클릭인증: "+(activity as CommunityActivity).isTableBtnClicked)
-                setVisibillity(isButtonStateTag,(activity as CommunityActivity).isTableBtnClicked)
+                setVisibillity((activity as CommunityActivity).isButtonStateTag,(activity as CommunityActivity).isTableBtnClicked)
             }
-        }
-        /*if (isButtonStateTag== true) {
-            if ( (activity as CommunityActivity).isTableBtnClicked == true) {
-                community_search_tag_table.visibility = View.GONE
-                community_search_result_tag_listview.visibility = View.VISIBLE
-            } else {//isTableClicked == false
-                community_search_tag_table.visibility = View.VISIBLE
-                community_search_result_tag_listview.visibility = View.GONE
-            }
-            community_search_result_user_listview.visibility = View.GONE
-        } else {
-            //(activity as CommunityActivity).isTableBtnClicked == false 여기서 얘를 건들면 안될 것 같ㅇ름 ㅇㅇㅇ
-            community_search_tag_table.visibility = View.GONE
-            community_search_result_tag_listview.visibility = View.GONE
-            community_search_result_user_listview.visibility = View.VISIBLE
         }
 
-        if ( (activity as CommunityActivity).isTableBtnClicked== false) {
-            val tableBtnList: List<Button> = listOf(btnClap, btnViolin, btnPiano, btnPercussionInstrument, btnJanggu, btnDrum, btnBeat, btnAcappella)
-            for (btn in tableBtnList) {
-                btn.setOnClickListener {
-                    communitySearchEditText.setText(btn.text.toString())
-                    editResult = btn.text.toString()
-                    Log.d("qqqqqq","버튼은"+btn.text +"클릭인증: "+(activity as CommunityActivity).isTableBtnClicked)
-                }
-            }
-        }
-*/
         community_search_result_user_listview.onItemClickListener = AdapterView.OnItemClickListener { parent, v, position, id ->
             val itt = parent.getItemAtPosition(position) as CommunitySongItem
             activity!!.TrackFrame.visibility = View.VISIBLE
@@ -145,17 +119,14 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
             community_search_tag_table.visibility = View.VISIBLE
             community_search_result_tag_listview.visibility = View.GONE
             community_search_result_user_listview.visibility = View.GONE
-            Log.d("ccccc","btn이 태그인가? : "+ isBtnStateTag +", TableBtnCliked?: "+isTableBtnClicked)
         }else if(isBtnStateTag == true && isTableBtnClicked == true) {
             community_search_tag_table.visibility = View.GONE
             community_search_result_tag_listview.visibility = View.VISIBLE
             community_search_result_user_listview.visibility = View.GONE
-            Log.d("ccccc","btn이 태그인가? : "+ isBtnStateTag +", TableBtnCliked?: "+isTableBtnClicked)
         }else if( isBtnStateTag == false){
             community_search_tag_table.visibility = View.GONE
             community_search_result_tag_listview.visibility = View.GONE
             community_search_result_user_listview.visibility = View.VISIBLE
-            Log.d("ccccc","btn이 태그인가? : "+ isBtnStateTag +", TableBtnCliked?: "+isTableBtnClicked)
         }
     }
 }
