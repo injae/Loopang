@@ -1,5 +1,7 @@
 package com.treasure.loopang.adapter
 
+import android.media.Image
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,7 +28,7 @@ class CommunityUserPageAdapter : BaseAdapter() {
             userPageViewHolder = ViewHolder()
             userPageViewHolder.songNameTextView= view.findViewById(com.treasure.loopang.R.id.myPageSongName) as TextView
             userPageViewHolder.productionDateTextView = view.findViewById(com.treasure.loopang.R.id.myPageProductionDate) as TextView
-
+            userPageViewHolder.btnForDelete = view.findViewById(com.treasure.loopang.R.id.BtnForDelete) as ImageButton
             view.tag =  userPageViewHolder
         }else{
             userPageViewHolder = convertView.tag as ViewHolder
@@ -39,6 +41,9 @@ class CommunityUserPageAdapter : BaseAdapter() {
 
         val listViewItem = listViewItemList[position]
 
+        userPageViewHolder.btnForDelete?.setOnClickListener {
+            Log.d("aaaaaaaaaaaaaaa","btn cliked"+position)
+        }
         return view
     }
 
@@ -50,7 +55,7 @@ class CommunityUserPageAdapter : BaseAdapter() {
         return listViewItemList[position]
     }
 
-    fun addItem(userNickName: String, songName: String,  likedNum : Int, downloadNum :Int,songId : String, productionDate : String, trackInfo : String) {
+    fun addItem(userNickName: String, songName: String,  likedNum : Int, downloadNum :Int,songId : String, productionDate : String) {
         val item = CommunitySongItem()
         item.userNickName= userNickName
         item.songName = songName
@@ -58,12 +63,11 @@ class CommunityUserPageAdapter : BaseAdapter() {
         item.likedNum = likedNum
         item.songId = songId
         item.productionDate =productionDate
-        item.trackInfo = trackInfo
         listViewItemList.add(item)
     }
 
     private  class ViewHolder{
-        var userNickNameTextView : TextView? = null
+        var btnForDelete : ImageButton? = null
         var productionDateTextView : TextView? = null
         var songNameTextView :TextView? = null
     }

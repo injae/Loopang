@@ -8,13 +8,13 @@
 
     <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="100dp"
             android:layout_alignParentTop="true"
             android:id="@+id/trackNameFrame"
             android:background="#FFFFFF">
         <ImageButton
                android:layout_gravity="center_vertical"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginStart="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -26,10 +26,10 @@
                 android:id="@+id/Track_trackName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Track Name"
+                android:text="LAYER NAME"
                 android:textColor="#969696"
                 android:textSize="18dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:layout_gravity="center"
                 />
     </FrameLayout>
@@ -82,7 +82,7 @@
                 android:id="@+id/heartView"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
-                app:srcCompat="@drawable/trackicon_heart"
+                app:srcCompat="@drawable/trackicon_heart_clicked"
                 android:layout_toRightOf="@id/playNumText"
                 android:layout_alignBottom ="@id/downloadNum"/>
 
@@ -113,27 +113,25 @@
                 android:background="#FFFFFF"
                 android:orientation="horizontal">
 
+            <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true">
             <ImageButton
                     android:id="@+id/heartButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="50dp"
-                    android:layout_weight="1"
                     android:background="@android:color/transparent"
-                    app:srcCompat="@drawable/trackicon_heart" />
+                    app:srcCompat="@drawable/trackicon_heart"
+                    android:layout_marginEnd="35dp"/>
 
             <ImageButton
                     android:id="@+id/downloadButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignBottom="@id/heartButton"
-                    android:layout_marginStart="25dp"
-                    android:layout_marginEnd="50dp"
-                    android:layout_toRightOf="@id/heartButton"
-                    android:layout_weight="1"
                     android:background="@android:color/transparent"
                     app:srcCompat="@drawable/trackicon_download" />
+            </LinearLayout>
         </RelativeLayout>
 
         <RelativeLayout
@@ -146,36 +144,33 @@
                 android:layout_marginStart="10dp"
                 android:background="#FFFFFF"
                 >
-            <FrameLayout
+            <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:id="@+id/TrackUserTextView"
-                    android:background="#80DC5E7D">
+                    android:orientation="vertical">
             <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_weight = "1"
-                    android:text="User"
+                    android:text="USER"
                     android:textSize="20dp"
                     android:textColor="#FFFFFF"
-                    android:gravity="center_horizontal"
-                    android:layout_centerHorizontal="true"
+                    android:gravity="center"
                     android:layout_gravity="center_horizontal"
+                    android:background="#80DC5E7D"
                     />
-            </FrameLayout>
-            <TextView
-                    android:layout_marginTop="7dp"
-                    android:id="@+id/Track_artistName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_below="@id/TrackUserTextView"
-                    android:text="Artist Name"
-                    android:textSize="20dp"
-                    android:textColor="#8B8B8B"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginStart="35dp"
-                    android:layout_marginEnd="35dp"/>
+                <TextView
+                        android:id="@+id/Track_artistName"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:layout_below="@id/TrackUserTextView"
+                        android:text="Artist Name"
+                        android:textSize="20dp"
+                        android:textColor="#8B8B8B"
+                        android:gravity="center"/>
+            </LinearLayout>
         </RelativeLayout>
     </LinearLayout>
     <RelativeLayout
@@ -201,7 +196,7 @@
                 android:textColor="@android:color/white"
                 android:textSize="20dp"
                 android:background="#80DC5E7D"
-                android:layout_marginTop="10dp" />
+                />
 
             <TextView
                     android:id="@+id/trackInfoDate"
@@ -209,8 +204,8 @@
                     android:layout_height="wrap_content"
                     android:text="2019.09.09"
                     android:layout_marginTop="10dp"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginEnd="15dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
                     android:layout_gravity="center_horizontal"/>
             <TextView
                     android:textColor="#7E7E7E"
@@ -220,20 +215,25 @@
                     android:layout_weight="1"
                     android:layout_marginBottom="10dp"
                     android:layout_marginTop="5dp"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginEnd="15dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
                     android:layout_gravity="center_horizontal"
                     android:text="" />
+            <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:background="#33DAADB8">
             <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="match_parent"
                     android:textSize="15sp"
                     android:textColor="#787878"
                     android:text="TAG :  "
-                    android:gravity="center"
-                    android:background="#33DAADB8"
-                    android:id="@+id/layerTag"
-                    />
+                    android:gravity="center_vertical"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:id="@+id/layerTag" />
+            </FrameLayout>
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>

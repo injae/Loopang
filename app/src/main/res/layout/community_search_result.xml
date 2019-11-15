@@ -13,16 +13,15 @@
             android:orientation="horizontal"
             android:id="@+id/searchSort">
 
-
         <Button
                 android:id="@+id/SearchTagBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="#FFFFFF"
                 android:text="Tag"
-                android:textSize="18dp"
                 android:textColor="#737373"
-                android:background="#FFFFFF"/>
+                android:textSize="18dp" />
 
         <Button
                 android:id="@+id/SearchUserBtn"
@@ -45,7 +44,9 @@
         <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal">
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/community_search_tag_table"
+                android:visibility="visible">
             <TableRow>
                 <Button
                         android:layout_width="match_parent"
@@ -56,17 +57,19 @@
                         android:textColor="#FFFFFF"
                         android:text="비트"
                         android:layout_margin="5dp"
-                        android:layout_weight="1"/>
+                        android:layout_weight="1"
+                        android:id="@+id/btnBeat"/>
                 <Button
                         android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textSize="24sp"
-                    android:background="@drawable/community_search_tag_background"
-                    android:textColor="#FFFFFF"
-                    android:text="드럼"
-                    android:layout_margin="5dp"
-                        android:layout_weight="1"/>
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textSize="24sp"
+                        android:background="@drawable/community_search_tag_background"
+                        android:textColor="#FFFFFF"
+                        android:text="드럼"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:id="@+id/btnDrum"/>
                 <Button
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -76,7 +79,8 @@
                         android:textColor="#FFFFFF"
                         android:text="피아노"
                         android:layout_margin="5dp"
-                        android:layout_weight="1"/>
+                        android:layout_weight="1"
+                        android:id="@+id/btnPiano"/>
             </TableRow>
             <TableRow>
                 <Button
@@ -88,7 +92,8 @@
                         android:textColor="#FFFFFF"
                         android:text="아카펠라"
                         android:layout_margin="5dp"
-                        android:layout_weight="1"/>
+                        android:layout_weight="1"
+                        android:id="@+id/btnAcappella"/>
                 <Button
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -98,7 +103,8 @@
                         android:textColor="#FFFFFF"
                         android:text="바이올린"
                         android:layout_margin="5dp"
-                        android:layout_weight="1"/>
+                        android:layout_weight="1"
+                        android:id="@+id/btnViolin"/>
                 <Button
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -108,7 +114,8 @@
                         android:textColor="#FFFFFF"
                         android:text="타악기"
                         android:layout_margin="5dp"
-                        android:layout_weight="1"/>
+                        android:layout_weight="1"
+                        android:id="@+id/btnPercussionInstrument"/>
             </TableRow>
             <TableRow>
                 <Button
@@ -120,7 +127,8 @@
                         android:textColor="#FFFFFF"
                         android:text="박수"
                         android:layout_margin="5dp"
-                        android:layout_weight="1"/>
+                        android:layout_weight="1"
+                        android:id="@+id/btnClap"/>
                 <Button
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -130,7 +138,8 @@
                         android:textColor="#FFFFFF"
                         android:text="장구"
                         android:layout_margin="5dp"
-                        android:layout_weight="1"/>
+                        android:layout_weight="1"
+                        android:id="@+id/btnJanggu"/>
                 <Button
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -140,11 +149,11 @@
                         android:textColor="#FFFFFF"
                         android:text="TAG"
                         android:layout_margin="5dp"
-                        android:layout_weight="1"/>
+                        android:layout_weight="1"
+                        android:clickable="false"/>
             </TableRow>
         </TableLayout>
         <ListView
-                android:layout_below="@id/searchSort"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:dividerHeight="10dp"
@@ -155,7 +164,6 @@
                 android:id="@+id/community_search_result_user_listview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/searchSort"
                 android:divider="@android:color/transparent"
                 android:dividerHeight="10dp"
                 android:visibility="gone"/>
