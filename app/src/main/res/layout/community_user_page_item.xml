@@ -32,4 +32,14 @@
             android:textColor="#8F8F8F"
             android:textSize="14sp"
             android:id="@+id/myPageProductionDate"/>
+    <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/userpage_item_right_button"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="5dp"
+            android:background="@android:color/transparent"
+            android:id="@+id/BtnForDelete"
+            />
 </RelativeLayout>

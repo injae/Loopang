@@ -34,9 +34,12 @@ class CommunityTrackFragment(var sound: Sound? = null, val downloadChecker: Down
         val songMasteruserNickName : String = (activity as CommunityActivity).itt.userNickName
         val presentuserNickname : String = com.treasure.loopang.communication.UserManager.getUser().name
         Track_trackName.setText((activity as CommunityActivity).itt.songName)
-        trackInfoDate.setText((activity as CommunityActivity).itt.productionDate)
+        trackInfoDate.setText((activity as CommunityActivity).itt.productionDate.substring(0,10))
         trackHeartClikedNum.setText((activity as CommunityActivity).itt.likedNum.toString())
+        playNumText.setText((activity as CommunityActivity).itt.downloadNum.toString())
+
         Track_artistName.setText(songMasteruserNickName)
+        layerTag.setText("TAG: "+ "")
 
         val musicID = (activity as CommunityActivity).itt.songId
         setSound(musicID)
@@ -51,19 +54,25 @@ class CommunityTrackFragment(var sound: Sound? = null, val downloadChecker: Down
                 }
             })
         }
-
+        //var likedNum = (activity as CommunityActivity).itt.likedNum
         heartButton.setOnClickListener {
             val connector = Connector()
             if(heartState == false) {
                 heartState = true
+                //likedNum +=1
+                (activity as CommunityActivity).itt.likedNum +=1
+                //itt의 likedNum 을 다시 가져가주기
                 GlobalScope.launch { connector.process(ResultManager.REQUEST_LIKE_UP, null, null, null, (activity as CommunityActivity).itt.songId) }
                 heartButton.setImageDrawable(getResources().getDrawable(R.drawable.trackicon_heart_clicked))
                 trackHeartClikedNum.setText((activity as CommunityActivity).itt.likedNum.toString())
             }
             else {
                 heartState = false
+                //likedNum -=1
+                (activity as CommunityActivity).itt.likedNum -=1
                 GlobalScope.launch { connector.process(ResultManager.REQUEST_LIKE_DOWN, null, null, null, (activity as CommunityActivity).itt.songId) }
                 heartButton.setImageDrawable(getResources().getDrawable(R.drawable.trackicon_heart))
+                //itt의 likedNum 을 다시 가져가주기
                 trackHeartClikedNum.setText((activity as CommunityActivity).itt.likedNum.toString())
             }
         }

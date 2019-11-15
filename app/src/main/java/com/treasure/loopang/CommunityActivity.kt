@@ -17,10 +17,10 @@ import com.treasure.loopang.communication.SearchResult
 import com.treasure.loopang.listitem.CommunitySongItem
 import kotlinx.android.synthetic.main.community_feed.*
 import android.content.Intent
+import android.widget.ListView
+import android.widget.TableLayout
 import androidx.core.app.NotificationCompat.getExtras
-
-
-
+import kotlinx.android.synthetic.main.community_search_result.*
 
 
 class CommunityActivity(var connector: Connector = Connector()) : AppCompatActivity() {
@@ -29,6 +29,7 @@ class CommunityActivity(var connector: Connector = Connector()) : AppCompatActiv
     var isTrackFragOpen : Boolean = false
     val transaction = supportFragmentManager.beginTransaction()
     var isCategorySelected :Boolean = false
+    var isTableBtnClicked : Boolean = false
     private var currentPage: Int = 0
     private val pagerAdapter by lazy { CommunityPagerAdapter(supportFragmentManager) }
     private val mDecorView: View by lazy { window.decorView }
@@ -153,6 +154,7 @@ class CommunityActivity(var connector: Connector = Connector()) : AppCompatActiv
             communityFeedCategoryListView.visibility = View.VISIBLE
             isCategorySelected = false
         }
+        else if(isTrackFragOpen== false && isTableBtnClicked == true){ isTableBtnClicked = false }
         else {
              super.onBackPressed()
         }
