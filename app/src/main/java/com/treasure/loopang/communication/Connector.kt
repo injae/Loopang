@@ -42,7 +42,7 @@ class Connector(private val DNS: String = "https://ec2-3-15-172-177.us-east-2.co
             ResultManager.AUTH -> { call = service.receiveTokens() }
             ResultManager.SIGN_UP -> { call = service.sendSignUpInfo(user!!.email, user.password, user.name) }
             ResultManager.LOGIN -> { call = service.sendLoginInfo(user!!.email, user.password) }
-            ResultManager.FILE_UPLOAD -> { call = service.sendFile(accessToken, fileInfo!!.name, fileInfo.explanation, fileInfo.tags!!, getMultiPartBody(fileInfo.name)) }
+            ResultManager.FILE_UPLOAD -> { call = service.sendFile(accessToken, fileName!!, fileInfo!!.explanation, fileInfo.tags!!, getMultiPartBody(fileInfo.name)) }
             ResultManager.FILE_DOWNLOAD -> { fileCall = service.receiveFile(accessToken, musicID!!) }
             ResultManager.INFO_REQUEST -> { infoCall = service.receiveUserInfo(accessToken) }
             ResultManager.FEED_REQUEST -> { feedCall = service.receiveFeed(accessToken) }
@@ -64,7 +64,7 @@ class Connector(private val DNS: String = "https://ec2-3-15-172-177.us-east-2.co
             else if(fileCall != null) { // 파일다운로드 일경우
                 val tempFile: File
                 if(fileName == null) tempFile = File(FileManager().looperCacheDir.path + '/' + makeSHA256(musicID!!))
-                else tempFile = File("${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)}/Loopang/${fileName}")
+                else tempFile = File("${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)}/Loopang/${fileName}.pcm")
 
                 file = fileCall.execute().body()?.bytes()
                 val fos = FileOutputStream(tempFile)

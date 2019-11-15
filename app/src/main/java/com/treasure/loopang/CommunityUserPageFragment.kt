@@ -16,6 +16,7 @@ import com.treasure.loopang.communication.UserManager
 import com.treasure.loopang.listitem.CommunitySongItem
 import kotlinx.android.synthetic.main.activity_community.*
 import kotlinx.android.synthetic.main.community_user_page.*
+import kotlinx.android.synthetic.main.community_user_page_item.*
 import kotlinx.android.synthetic.main.loop_item.*
 
 class CommunityUserPageFragment : androidx.fragment.app.Fragment() {
@@ -43,9 +44,8 @@ class CommunityUserPageFragment : androidx.fragment.app.Fragment() {
                     com.treasure.loopang.communication.UserManager.getUser().trackList[i].likes,
                     com.treasure.loopang.communication.UserManager.getUser().trackList[i].downloads,
                     com.treasure.loopang.communication.UserManager.getUser().trackList[i].id,
-                    com.treasure.loopang.communication.UserManager.getUser().trackList[i].updated_date,
-                    ""
-                )
+                    com.treasure.loopang.communication.UserManager.getUser().trackList[i].updated_date
+                )//trackInfo : String
             }
         }else {
             userPageLikedListView.adapter = userPageItemAdapter
@@ -56,8 +56,7 @@ class CommunityUserPageFragment : androidx.fragment.app.Fragment() {
                     com.treasure.loopang.communication.UserManager.getUser().likedList[i].likes,
                     com.treasure.loopang.communication.UserManager.getUser().likedList[i].downloads,
                     com.treasure.loopang.communication.UserManager.getUser().likedList[i].id,
-                    com.treasure.loopang.communication.UserManager.getUser().likedList[i].updated_date,
-                    ""
+                    com.treasure.loopang.communication.UserManager.getUser().likedList[i].updated_date
                 )
             }
         }
@@ -84,6 +83,7 @@ class CommunityUserPageFragment : androidx.fragment.app.Fragment() {
             val itt = parent.getItemAtPosition(position) as CommunitySongItem
             activity!!.TrackFrame.visibility = View.VISIBLE
             (activity as CommunityActivity).onFragmentChangedtoTrack(itt)
+            Log.d("bbbbbbbbbb","clicked"+itt.songName)
         }
         addTrackButton.setOnClickListener {
             val intent = Intent(activity, CommunityShareActivity::class.java)  //intent.putExtra()

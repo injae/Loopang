@@ -1,10 +1,13 @@
 package com.treasure.loopang.adapter
 
+import android.media.Image
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.treasure.loopang.listitem.CommunitySongItem
+import org.w3c.dom.Text
 import java.util.ArrayList
 
 
@@ -23,20 +26,24 @@ class CommunityUserPageAdapter : BaseAdapter() {
         if (convertView == null) {
             view = LayoutInflater.from(context).inflate(com.treasure.loopang.R.layout.community_user_page_item, null)
             userPageViewHolder = ViewHolder()
-            userPageViewHolder.userNickNameTextView = view.findViewById(com.treasure.loopang.R.id.myPageUserNickname) as TextView
             userPageViewHolder.songNameTextView= view.findViewById(com.treasure.loopang.R.id.myPageSongName) as TextView
-
+            userPageViewHolder.productionDateTextView = view.findViewById(com.treasure.loopang.R.id.myPageProductionDate) as TextView
+            userPageViewHolder.btnForDelete = view.findViewById(com.treasure.loopang.R.id.BtnForDelete) as ImageButton
             view.tag =  userPageViewHolder
         }else{
             userPageViewHolder = convertView.tag as ViewHolder
             view = convertView
         }
 
-        userPageViewHolder.userNickNameTextView?.setText(listViewItemList.get(position).userNickName)
+       // userPageViewHolder.userNickNameTextView?.setText(listViewItemList.get(position).userNickName)
+        userPageViewHolder.productionDateTextView?.setText( listViewItemList.get(position).productionDate.substring(0,10))
         userPageViewHolder.songNameTextView?.setText(listViewItemList.get(position).songName)
 
         val listViewItem = listViewItemList[position]
 
+        userPageViewHolder.btnForDelete?.setOnClickListener {
+            Log.d("aaaaaaaaaaaaaaa","btn cliked"+position)
+        }
         return view
     }
 
@@ -48,7 +55,7 @@ class CommunityUserPageAdapter : BaseAdapter() {
         return listViewItemList[position]
     }
 
-    fun addItem(userNickName: String, songName: String,  likedNum : Int, downloadNum :Int,songId : String, productionDate : String, trackInfo : String) {
+    fun addItem(userNickName: String, songName: String,  likedNum : Int, downloadNum :Int,songId : String, productionDate : String) {
         val item = CommunitySongItem()
         item.userNickName= userNickName
         item.songName = songName
@@ -56,12 +63,12 @@ class CommunityUserPageAdapter : BaseAdapter() {
         item.likedNum = likedNum
         item.songId = songId
         item.productionDate =productionDate
-        item.trackInfo = trackInfo
         listViewItemList.add(item)
     }
 
     private  class ViewHolder{
-        var userNickNameTextView : TextView? = null
+        var btnForDelete : ImageButton? = null
+        var productionDateTextView : TextView? = null
         var songNameTextView :TextView? = null
     }
 }
