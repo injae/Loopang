@@ -43,7 +43,6 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
         var editResult: String = ""
         val CommunitySearchAdapter: CommunitySearchitemAdapter = CommunitySearchitemAdapter()
 
-
         communitySearchEditText.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
             if (event.action != KeyEvent.KEYCODE_ENTER) {
                 editResult = communitySearchEditText.getText().toString()
