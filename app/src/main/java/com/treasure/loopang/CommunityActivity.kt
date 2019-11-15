@@ -154,7 +154,12 @@ class CommunityActivity(var connector: Connector = Connector()) : AppCompatActiv
             communityFeedCategoryListView.visibility = View.VISIBLE
             isCategorySelected = false
         }
-        else if(isTrackFragOpen== false && isTableBtnClicked == true){ isTableBtnClicked = false }
+        else if(isTrackFragOpen== false && isTableBtnClicked == true){
+            isTableBtnClicked = false
+            community_search_tag_table.visibility = View.VISIBLE
+            community_search_result_tag_listview.visibility = View.GONE
+            community_search_result_user_listview.visibility = View.GONE
+        }
         else {
              super.onBackPressed()
         }
