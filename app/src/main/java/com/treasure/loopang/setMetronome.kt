@@ -66,19 +66,26 @@ class setMetronome : androidx.fragment.app.Fragment() {
             NumOfClick++
             when(NumOfClick%7){
                 0 -> { btn_note.setImageResource(R.drawable.note_4)
-                    metronome.note.parent = 4}
+                    metronome.note.parent = 4
+                    noteTextView.text = "4분음표"}
                 1 -> {  btn_note.setImageResource(R.drawable.note_8)
-                    metronome.note.parent = 8 }
+                    metronome.note.parent = 8
+                    noteTextView.text = "8분음표"}
                 2 -> {  btn_note.setImageResource(R.drawable.note_16)
-                    metronome.note.parent = 16 }
+                    metronome.note.parent = 16
+                    noteTextView.text = "16분음표"}
                 3 -> {  btn_note.setImageResource(R.drawable.note_32)
-                    metronome.note.parent = 32 }
+                    metronome.note.parent = 32
+                    noteTextView.text = "32분음표"}
                 4 -> {  btn_note.setImageResource(R.drawable.note_64)
-                    metronome.note.parent = 64 }
+                    metronome.note.parent = 64
+                    noteTextView.text = "64분음표"}
                 5 -> { btn_note.setImageResource(R.drawable.note_128)
-                    metronome.note.parent = 128 }
+                    metronome.note.parent = 128
+                    noteTextView.text = "128분음표"}
                 6 -> {  btn_note.setImageResource(R.drawable.note_2)
-                    metronome.note.parent = 2 }
+                    metronome.note.parent = 2
+                    noteTextView.text = "2분음표"}
             }
         }
     }

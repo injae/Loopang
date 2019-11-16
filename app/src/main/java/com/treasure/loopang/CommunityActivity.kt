@@ -17,9 +17,11 @@ import com.treasure.loopang.communication.SearchResult
 import com.treasure.loopang.listitem.CommunitySongItem
 import kotlinx.android.synthetic.main.community_feed.*
 import android.content.Intent
+import android.view.KeyEvent
 import android.widget.ListView
 import android.widget.TableLayout
 import androidx.core.app.NotificationCompat.getExtras
+import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.community_search_result.*
 
 
@@ -153,6 +155,7 @@ class CommunityActivity(var connector: Connector = Connector()) : AppCompatActiv
         else if(isTrackFragOpen == false && isCategorySelected == true){
             communityFeedListView.visibility = View.GONE
             communityFeedCategoryListView.visibility = View.VISIBLE
+            CategotyTextView.visibility=View.INVISIBLE
             isCategorySelected = false
         }
         else if(isTrackFragOpen== false && isTableBtnClicked == true && isButtonStateTag == true){
