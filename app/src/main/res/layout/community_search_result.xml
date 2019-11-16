@@ -12,7 +12,6 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:id="@+id/searchSort">
-
         <Button
                 android:id="@+id/SearchTagBtn"
                 android:layout_width="wrap_content"
@@ -22,7 +21,6 @@
                 android:text="Tag"
                 android:textColor="#737373"
                 android:textSize="18dp" />
-
         <Button
                 android:id="@+id/SearchUserBtn"
                 android:layout_width="wrap_content"

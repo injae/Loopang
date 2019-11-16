@@ -58,6 +58,13 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
                 editResult = communitySearchEditText.getText().toString()
             }
         })
+        communitySearchEditText.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
+            //Enter key Action
+            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+               addItem(CommunitySearchAdapter)
+                true
+            } else false
+        })
 
         communitySearchBtn.setOnClickListener {
             (activity as CommunityActivity).isTableBtnClicked = true
@@ -68,16 +75,8 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
                 val result = (activity as CommunityActivity).connector.process(ResultManager.SEARCH_REQUEST, null, null, editResult)
                 CoroutineScope(Dispatchers.Main).launch { ld?.dismiss() }
             }
-            if ((activity as CommunityActivity).isButtonStateTag == true &&  (activity as CommunityActivity).isTableBtnClicked == false) {
-                community_search_result_tag_listview.adapter = CommunitySearchAdapter
-                //       (activity as CommunityActivity).connector?.searchResult?.tagList?.
-                Log.d("aaaaaaaddItem","tagList")
-                (activity as CommunityActivity).connector?.searchResult?.tagList?.forEach { CommunitySearchAdapter.addItem(it) }
-            } else if ((activity as CommunityActivity).isButtonStateTag == false) {
-                community_search_result_user_listview.adapter = CommunitySearchAdapter
-                Log.d("aaaaaaaddItem","userList")
-                (activity as CommunityActivity).connector?.searchResult?.userList?.forEach { CommunitySearchAdapter.addItem(it) }
-            }
+            addItem(CommunitySearchAdapter)
+
         }
         xbutton.setOnClickListener { communitySearchEditText.setText("") }
 
@@ -131,6 +130,18 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
             community_search_tag_table.visibility = View.GONE
             community_search_result_tag_listview.visibility = View.GONE
             community_search_result_user_listview.visibility = View.VISIBLE
+        }
+    }
+    fun addItem(CommunitySearchAdapter :CommunitySearchitemAdapter){
+        if ((activity as CommunityActivity).isButtonStateTag == true &&  (activity as CommunityActivity).isTableBtnClicked == false) {
+            community_search_result_tag_listview.adapter = CommunitySearchAdapter
+            //       (activity as CommunityActivity).connector?.searchResult?.tagList?.
+            Log.d("aaaaaaaddItem","tagList")
+            (activity as CommunityActivity).connector?.searchResult?.tagList?.forEach { CommunitySearchAdapter.addItem(it) }
+        } else if ((activity as CommunityActivity).isButtonStateTag == false) {
+            community_search_result_user_listview.adapter = CommunitySearchAdapter
+            Log.d("aaaaaaaddItem","userList")
+            (activity as CommunityActivity).connector?.searchResult?.userList?.forEach { CommunitySearchAdapter.addItem(it) }
         }
     }
 }
