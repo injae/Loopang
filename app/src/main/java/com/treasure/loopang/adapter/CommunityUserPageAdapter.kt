@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.treasure.loopang.R
 import com.treasure.loopang.listitem.CommunitySongItem
 import org.w3c.dom.Text
 import java.util.ArrayList
@@ -28,7 +29,7 @@ class CommunityUserPageAdapter : BaseAdapter() {
             userPageViewHolder = ViewHolder()
             userPageViewHolder.songNameTextView= view.findViewById(com.treasure.loopang.R.id.myPageSongName) as TextView
             userPageViewHolder.productionDateTextView = view.findViewById(com.treasure.loopang.R.id.myPageProductionDate) as TextView
-            userPageViewHolder.btnForDelete = view.findViewById(com.treasure.loopang.R.id.BtnForDelete) as ImageButton
+        //   userPageViewHolder.btnForDelete = view.findViewById(com.treasure.loopang.R.id.BtnForDelete) as ImageButton
             view.tag =  userPageViewHolder
         }else{
             userPageViewHolder = convertView.tag as ViewHolder
@@ -38,12 +39,13 @@ class CommunityUserPageAdapter : BaseAdapter() {
        // userPageViewHolder.userNickNameTextView?.setText(listViewItemList.get(position).userNickName)
         userPageViewHolder.productionDateTextView?.setText( listViewItemList.get(position).productionDate.substring(0,10))
         userPageViewHolder.songNameTextView?.setText(listViewItemList.get(position).songName)
+        //userPageViewHolder.btnForDelete?.setImageResource(R.drawable.userpage_item_right_button)
 
         val listViewItem = listViewItemList[position]
 
-        userPageViewHolder.btnForDelete?.setOnClickListener {
-            Log.d("aaaaaaaaaaaaaaa","btn cliked"+position)
-        }
+        //userPageViewHolder.btnForDelete?.setOnClickListener {
+      //      Log.d("aaaaaaaaaaaaaaa","btn cliked"+position)
+     //   }
         return view
     }
 
@@ -67,7 +69,7 @@ class CommunityUserPageAdapter : BaseAdapter() {
     }
 
     private  class ViewHolder{
-        var btnForDelete : ImageButton? = null
+     //   var btnForDelete : ImageButton? = null
         var productionDateTextView : TextView? = null
         var songNameTextView :TextView? = null
     }

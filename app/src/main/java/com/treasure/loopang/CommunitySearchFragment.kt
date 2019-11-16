@@ -56,15 +56,9 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}//텍스트 바뀌는 중
             override fun afterTextChanged(edit: Editable) {//텍스트 바뀐 후
                 editResult = communitySearchEditText.getText().toString()
-                if ((activity as CommunityActivity).isButtonStateTag == true &&  (activity as CommunityActivity).isTableBtnClicked == false) {
-                    community_search_result_tag_listview.adapter = CommunitySearchAdapter
-                    (activity as CommunityActivity).connector?.searchResult?.tagList?.forEach { CommunitySearchAdapter.addItem(it) }
-                } else if ((activity as CommunityActivity).isButtonStateTag == false) {
-                    community_search_result_user_listview.adapter = CommunitySearchAdapter
-                    (activity as CommunityActivity).connector?.searchResult?.userList?.forEach { CommunitySearchAdapter.addItem(it) }
-                }
             }
         })
+
         communitySearchBtn.setOnClickListener {
             (activity as CommunityActivity).isTableBtnClicked = true
             setVisibillity((activity as CommunityActivity).isButtonStateTag,(activity as CommunityActivity).isTableBtnClicked)
@@ -73,6 +67,16 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
                 CoroutineScope(Dispatchers.Main).launch { ld?.show() }
                 val result = (activity as CommunityActivity).connector.process(ResultManager.SEARCH_REQUEST, null, null, editResult)
                 CoroutineScope(Dispatchers.Main).launch { ld?.dismiss() }
+            }
+            if ((activity as CommunityActivity).isButtonStateTag == true &&  (activity as CommunityActivity).isTableBtnClicked == false) {
+                community_search_result_tag_listview.adapter = CommunitySearchAdapter
+                //       (activity as CommunityActivity).connector?.searchResult?.tagList?.
+                Log.d("aaaaaaaddItem","tagList")
+                (activity as CommunityActivity).connector?.searchResult?.tagList?.forEach { CommunitySearchAdapter.addItem(it) }
+            } else if ((activity as CommunityActivity).isButtonStateTag == false) {
+                community_search_result_user_listview.adapter = CommunitySearchAdapter
+                Log.d("aaaaaaaddItem","userList")
+                (activity as CommunityActivity).connector?.searchResult?.userList?.forEach { CommunitySearchAdapter.addItem(it) }
             }
         }
         xbutton.setOnClickListener { communitySearchEditText.setText("") }

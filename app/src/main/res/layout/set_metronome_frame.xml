@@ -21,7 +21,7 @@
             android:text="BPM"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="30dp"
             android:layout_gravity="right"
             android:layout_marginEnd="5dp"
             android:id="@+id/textView2"
@@ -29,7 +29,7 @@
             android:textColor="#ffffff"/>
     <LinearLayout
             android:background="@drawable/rounded"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:layout_width="match_parent"
             android:layout_height="79dp"
             android:layout_gravity="center"
@@ -81,7 +81,7 @@
             android:text="NOTE"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/textView3"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="30dp"
             android:layout_gravity="right"
             android:layout_marginEnd="5dp"
             android:textSize="24dp"
@@ -91,22 +91,31 @@
             android:layout_height="79dp"
             android:layout_gravity="center"
             android:background="@drawable/rounded"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:id="@+id/btn_note"
             android:src = "@drawable/note_4"
             android:textSize ="35dp"
             android:textColor="#ffffff"/>
     <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="4분음표"
+            android:gravity="left"
+            android:textColor="#ffffff"
+            android:textSize="17sp"
+            android:layout_marginStart="10dp"
+            android:id="@+id/noteTextView"/>
+    <TextView
             android:text="VOLUME"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/textView5"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="30dp"
             android:layout_gravity="right"
             android:layout_marginEnd="5dp"
             android:textSize="24dp"
             android:textColor="#ffffff"/>
     <FrameLayout
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:layout_gravity="center"
             android:layout_width="210dp"
             android:layout_height="25dp"
