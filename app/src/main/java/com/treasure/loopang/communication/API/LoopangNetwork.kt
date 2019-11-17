@@ -32,7 +32,7 @@ interface LoopangNetwork {
     @FormUrlEncoded
     @POST("/music-search")
     fun receiveSearch(@Field("token") token: String,
-                      @Field("target") target: String): Call<SearchResult>
+                      @Field("target") target: List<String>): Call<SearchResult>
 
     @GET("/auth")
     fun receiveTokens(): Call<Result>

@@ -72,7 +72,8 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
             val ld = LoadingActivity(activity!!)
             GlobalScope.launch {
                 CoroutineScope(Dispatchers.Main).launch { ld?.show() }
-                val result = (activity as CommunityActivity).connector.process(ResultManager.SEARCH_REQUEST, null, null, editResult)
+                val tempList = List<String>(1, {editResult}) // 이거는 지은이가 수정다하면 내가 하면됌
+                val result = (activity as CommunityActivity).connector.process(ResultManager.SEARCH_REQUEST, null, null, tempList)
                 CoroutineScope(Dispatchers.Main).launch { ld?.dismiss() }
             }
             addItem(CommunitySearchAdapter)
