@@ -46,95 +46,103 @@
                 android:id="@+id/community_search_tag_table"
                 android:visibility="visible">
             <TableRow>
-                <Button
+                <ToggleButton
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:textSize="24sp"
-                        android:background="@drawable/community_search_tag_background"
+                        android:background="@drawable/community_search_tag_selector"
                         android:textColor="#FFFFFF"
-                        android:text="비트"
+                        android:textOn="비트"
+                        android:textOff="비트"
                         android:layout_margin="5dp"
                         android:layout_weight="1"
                         android:id="@+id/btnBeat"/>
-                <Button
+                <ToggleButton
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:textSize="24sp"
-                        android:background="@drawable/community_search_tag_background"
+                        android:background="@drawable/community_search_tag_selector"
                         android:textColor="#FFFFFF"
-                        android:text="드럼"
+                        android:textOn="드럼"
+                        android:textOff="드럼"
                         android:layout_margin="5dp"
                         android:layout_weight="1"
                         android:id="@+id/btnDrum"/>
-                <Button
+                <ToggleButton
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:textSize="24sp"
-                        android:background="@drawable/community_search_tag_background"
+                        android:background="@drawable/community_search_tag_selector"
                         android:textColor="#FFFFFF"
-                        android:text="피아노"
+                        android:textOn="피아노"
+                        android:textOff="피아노"
                         android:layout_margin="5dp"
                         android:layout_weight="1"
                         android:id="@+id/btnPiano"/>
             </TableRow>
             <TableRow>
-                <Button
+                <ToggleButton
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:textSize="24sp"
-                        android:background="@drawable/community_search_tag_background"
+                        android:background="@drawable/community_search_tag_selector"
                         android:textColor="#FFFFFF"
-                        android:text="아카펠라"
+                        android:textOn="아카펠라"
+                        android:textOff="아카펠라"
                         android:layout_margin="5dp"
                         android:layout_weight="1"
                         android:id="@+id/btnAcappella"/>
-                <Button
+                <ToggleButton
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:textSize="24sp"
-                        android:background="@drawable/community_search_tag_background"
+                        android:background="@drawable/community_search_tag_selector"
                         android:textColor="#FFFFFF"
-                        android:text="바이올린"
+                        android:textOn="바이올린"
+                        android:textOff="바이올린"
                         android:layout_margin="5dp"
                         android:layout_weight="1"
                         android:id="@+id/btnViolin"/>
-                <Button
+                <ToggleButton
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:textSize="24sp"
-                        android:background="@drawable/community_search_tag_background"
+                        android:background="@drawable/community_search_tag_selector"
                         android:textColor="#FFFFFF"
-                        android:text="타악기"
+                        android:textOn="타악기"
+                        android:textOff="타악기"
                         android:layout_margin="5dp"
                         android:layout_weight="1"
                         android:id="@+id/btnPercussionInstrument"/>
             </TableRow>
             <TableRow>
-                <Button
+                <ToggleButton
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:textSize="24sp"
-                        android:background="@drawable/community_search_tag_background"
+                        android:background="@drawable/community_search_tag_selector"
                         android:textColor="#FFFFFF"
-                        android:text="박수"
+                        android:textOn="박수"
+                        android:textOff="박수"
                         android:layout_margin="5dp"
                         android:layout_weight="1"
                         android:id="@+id/btnClap"/>
-                <Button
+                <ToggleButton
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:textSize="24sp"
-                        android:background="@drawable/community_search_tag_background"
+                        android:background="@drawable/community_search_tag_selector"
                         android:textColor="#FFFFFF"
-                        android:text="장구"
+                        android:textOn="장구"
+                        android:textOff="장구"
                         android:layout_margin="5dp"
                         android:layout_weight="1"
                         android:id="@+id/btnJanggu"/>
