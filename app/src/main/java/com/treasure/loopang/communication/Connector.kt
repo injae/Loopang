@@ -31,7 +31,7 @@ class Connector(private val DNS: String = "https://ec2-3-15-172-177.us-east-2.co
                 private var service: LoopangNetwork = retrofit.create(LoopangNetwork::class.java),
                 private var file: ByteArray? = null, var feedResult: FeedResult? = null, var searchResult: SearchResult? = null) {
     // 없는거는 알아서 무시되는거 같으니깐 Result 클래스에 멤버 싹다 때려박고 그냥 그거 하나로 다하면 call 갯수 줄일수 있을듯
-    fun process(case: Int, user: User? = null, fileName: String? = null, searchData: String? = null, musicID: String? = null, fileInfo: MusicListClass? = null): Result{
+    fun process(case: Int, user: User? = null, fileName: String? = null, searchData: List<String>? = null, musicID: String? = null, fileInfo: MusicListClass? = null): Result{
         var call: Call<Result>? = null
         var fileCall: Call<ResponseBody>? = null
         var infoCall: Call<ForUserInfo>? = null
