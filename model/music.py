@@ -27,7 +27,7 @@ class Music(db.Model):
     def __init__(self, name, user_id, description):
         self.music_id = gen_id()
         self.name = name
-        self.user_id = user_id 
+        self.user_id = user_id
         self.downloads = 0
 
     def set_tags(self, tags):

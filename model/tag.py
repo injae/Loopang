@@ -24,7 +24,7 @@ class Tag(db.Model):
 class Tags(db.Model):
     __table_name__ = "tags"
     id = db.Column(db.Integer, primary_key=True)
-    tag_id = db.Column(db.String(36), db.ForeignKey('tag.tag_name'), nullable=False)
+    tag_id = db.Column(db.String(36), db.ForeignKey('tag.name'), nullable=False)
     tag = db.relationship("Tag", backref=db.backref("tags_list", lazy='dynamic', foreign_keys=[tag_id]))
     music_id = db.Column(db.String(36), db.ForeignKey('music.music_id'), nullable=False)
     music = db.relationship("Music", backref=db.backref("tags", lazy='dynamic', foreign_keys=[music_id]))
