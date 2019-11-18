@@ -31,5 +31,6 @@
             android:text="Artist Name"
             android:textColor="#8F8F8F"
             android:textSize="14sp"
-            android:id="@+id/myPageUserNickname"/>
+            android:id="@+id/myPageProductionDate"/>
+
 </RelativeLayout>

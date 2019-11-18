@@ -31,30 +31,26 @@ class CommunityFeedFragment : androidx.fragment.app.Fragment() {
         if((activity as CommunityActivity).isTrackFragOpen == false && (activity as CommunityActivity).isCategorySelected == false) {
             communityFeedListView.visibility = View.GONE
             communityFeedCategoryListView.visibility = View.VISIBLE
-            Log.d("aaaaaaaaaaaaaaaaaaaa","Category는"+(activity as CommunityActivity).isCategorySelected +"Track은"+(activity as CommunityActivity).isTrackFragOpen)
+            CategotyTextView.visibility=View.INVISIBLE
         }
-        else if((activity as CommunityActivity).isTrackFragOpen == false && (activity as CommunityActivity).isCategorySelected == true){
-            Log.d("bbbbbbbbbbbbbb","Category는"+(activity as CommunityActivity).isCategorySelected +"Track은"+(activity as CommunityActivity).isTrackFragOpen)
-        }
-
         val CategoryAdapter: CommunityFeedCategoryAdapter = CommunityFeedCategoryAdapter()
 
         communityFeedCategoryListView.adapter = CategoryAdapter
-
         CategoryAdapter.addItem("The Newest 5")
         CategoryAdapter.addItem("Liked Top 5")
         CategoryAdapter.addItem("Download Top 5")
-
 
         communityFeedCategoryListView.onItemClickListener = AdapterView.OnItemClickListener { parent, v, position, id ->
             val item = parent.getItemAtPosition(position) as CommunityFeedCategoryItem
             (activity as CommunityActivity).isCategorySelected = true
             communityFeedListView.visibility = View.VISIBLE
             communityFeedCategoryListView.visibility = View.GONE
+            CategotyTextView.visibility=View.VISIBLE
 
             val FeedAdapter : CommunityFeedItemAdapter = CommunityFeedItemAdapter()
             communityFeedListView.adapter = FeedAdapter
 
+            CategotyTextView.text=item.categoryName
             if(item.categoryName == "The Newest 5") { (activity as CommunityActivity).connector?.feedResult?.recent_musics?.forEach { FeedAdapter.addItem(it) } }
             else if(item.categoryName== "Liked Top 5") { (activity as CommunityActivity).connector?.feedResult?.likes_top?.forEach { FeedAdapter.addItem(it) } }
             else if(item.categoryName == "Download Top 5"){ (activity as CommunityActivity).connector?.feedResult?.download_top?.forEach { FeedAdapter.addItem(it) }}

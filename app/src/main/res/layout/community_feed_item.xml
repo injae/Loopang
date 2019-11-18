@@ -5,7 +5,6 @@
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:background="@drawable/community_list_background1">
-
         <TextView
                 android:layout_marginStart="20dp"
                 android:layout_width="wrap_content"
@@ -24,39 +23,38 @@
                 android:textSize="14sp"
                 android:id="@+id/FeedUserNickName"/>
 
+    <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true">
     <ImageView
-            android:id="@+id/playImageView"
-            android:layout_width="20.88dp"
-            android:layout_height="16.77dp"
-            app:srcCompat="@drawable/trackicon_playnum"
-            android:layout_toLeftOf="@id/playedNumTextView"
-            android:layout_centerVertical="true"
+            android:id="@+id/downloadImageView"
+            android:layout_width="17.88dp"
+            android:layout_height="14.77dp"
+            android:layout_gravity="center_vertical"
+            app:srcCompat="@drawable/trackicon_download"
             android:layout_marginEnd="5dp"/>
 
     <TextView
             android:id="@+id/playedNumTextView"
-            android:layout_width="30dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="10"
-            android:layout_toLeftOf="@id/heartImageView"
-            android:layout_centerVertical="true"
             android:layout_marginEnd="15dp" />
 
     <ImageView
             android:id="@+id/heartImageView"
             android:layout_width="17.88dp"
             android:layout_height="14.77dp"
+            android:layout_gravity="center_vertical"
             app:srcCompat="@drawable/trackicon_heart_clicked"
-            android:layout_toLeftOf="@id/heartNumTextView"
-            android:layout_centerVertical="true"
             android:layout_marginEnd="5dp" />
 
     <TextView
             android:id="@+id/heartNumTextView"
-            android:layout_width="30dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="10"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="20dp"/>
+            android:text="10" />
+    </LinearLayout>
 </RelativeLayout>

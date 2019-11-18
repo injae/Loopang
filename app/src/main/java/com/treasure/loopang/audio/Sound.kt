@@ -32,8 +32,8 @@ open class Sound (var data: MutableList<Short> = mutableListOf(),
                             it.chunked(info.outputBufferSize)
                                 .map { effect(it.toShortArray()) }
                                 .forEach {
-                                    if(!isMute.get()) info.outputAudio.write(it, 0, it.size)
                                     if(!isPlaying.get()) return@exit
+                                    if(!isMute.get()) info.outputAudio.write(it, 0, it.size)
                                 }
                         }
                 }

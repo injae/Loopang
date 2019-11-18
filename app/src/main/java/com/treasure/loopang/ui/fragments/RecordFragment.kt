@@ -12,10 +12,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ListView
+import android.widget.TextView
 import com.afollestad.materialdialogs.LayoutMode
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.customview.customView
+import com.afollestad.materialdialogs.input.input
 import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import com.afollestad.materialdialogs.list.listItems
 import com.treasure.loopang.R
@@ -41,8 +43,9 @@ class RecordFragment : Fragment(), IPageFragment {
     private val mLayerListAdapter : LayerListAdapter = LayerListAdapter()
     private val mTouchGestureListener = TouchGestureListener()
     val loopStation: LoopStation = LoopStation()
-    private val mProgressControl: ProgressControl = ProgressControl()
+    // private val mProgressControl: ProgressControl = ProgressControl()
     private var mSaveDialog: MaterialDialog? = null
+    private var mProjectTitle: String = ""
 
     init {
         mTouchGestureListener.apply{
@@ -96,9 +99,21 @@ class RecordFragment : Fragment(), IPageFragment {
             Log.d("Metronome test", "stop")
             (activity as Recording).setMetronomeFrag.metronome.cancle()
         }
+        btn_change_project_title.setOnClickListener {
+            showChangeProjectTitleDialog()
+        }
+        layer_list.setOnItemLongClickListener { _, _, position, _ ->
+            if(loopStation.isRecording()){
+                false
+            } else {
+                showChangeLayerLabelDialog(position)
+                true
+            }
+        }
+
         loop_seek_bar.isEnabled = false
-        mProgressControl.setView(loop_seek_bar)
-        mProgressControl.max = 100000
+        // mProgressControl.setView(loop_seek_bar)
+        // mProgressControl.max = 100000
     }
 
     override fun onDestroy() {
@@ -177,6 +192,7 @@ class RecordFragment : Fragment(), IPageFragment {
             cornerRadius(16f)
             cancelable(false)
             customView(R.layout.dialog_save_new, horizontalPadding = true)
+            this.edit_loop_title.setText(mProjectTitle, TextView.BufferType.EDITABLE)
 
             if(loopStation.hasSingleLayer()) {
                 this.check_split.visibility = View.GONE
@@ -301,6 +317,54 @@ class RecordFragment : Fragment(), IPageFragment {
         }
     }
 
+    private fun showChangeLayerLabelDialog(index: Int) {
+        if(loopStation.isRecording()) return
+
+        MaterialDialog(activity!!).show {
+            title(R.string.changelayerlabeldialog_title)
+            message(text="Original Label is ${loopStation.getLayerLabels()[index]}")
+            input(hint="New Layer Label", allowEmpty = false, maxLength = 15) { _, text ->
+                changeLayerLabel(index, text.toString())
+
+            }
+            cornerRadius(16f)
+            cancelable(false)
+            positiveButton(R.string.btn_ok)
+            negativeButton(R.string.btn_cancel)
+            lifecycleOwner(activity)
+        }
+    }
+
+    private fun showChangeProjectTitleDialog() {
+        if(loopStation.isRecording()) return
+
+        MaterialDialog(activity!!).show {
+            title(R.string.changeprojecttitledialog_title)
+            message(text="Please input text what it will be new title :)")
+            input(hint="New Project Title", allowEmpty = false, maxLength = 15) { _, text ->
+                changeProjectTitle(text.toString())
+            }
+            cornerRadius(16f)
+            cancelable(false)
+            positiveButton(R.string.btn_ok)
+            negativeButton(R.string.btn_cancel)
+            lifecycleOwner(activity)
+        }
+    }
+
+    private fun changeProjectTitle(text: String) {
+        mProjectTitle = text
+        this.loop_title_label.text = text
+    }
+
+    private fun changeLayerLabel(index: Int, text: String) {
+        if(!loopStation.changeLayerLabel(index, text, true)){
+            toast("LayerLabel is already exist!")
+            return
+        }
+        mLayerListAdapter.changeLayerLabel(index, text)
+    }
+
     private fun initLoopStation() {
         loopStation.setLoopStationEventListener(MyLoopStationEventListener())
         loopStation.setLoopStationMessageListener(MyLoopStationMessageListener())
@@ -363,7 +427,7 @@ class RecordFragment : Fragment(), IPageFragment {
             return true
         }
         override fun onFirstLayerSaved(sound: Sound, layerLabel: String, duration: Int) {
-            mProgressControl.duration = duration
+            // mProgressControl.duration = duration
         }
 
         override fun onLoopStart() {}
@@ -382,12 +446,12 @@ class RecordFragment : Fragment(), IPageFragment {
                     SystemClock.sleep(100)
                 }
             }*/
-            mProgressControl.setProgressUsingMs(position)
-            mProgressControl.updateTask()
+            // mProgressControl.setProgressUsingMs(position)
+            // mProgressControl.updateTask()
         }
 
         override fun onLoopStop() {
-            mProgressControl.progress = 0
+            // mProgressControl.progress = 0
         }
     }
 
