@@ -43,19 +43,11 @@ class FinalRecordActivity : AppCompatActivity() {
     private var backPressedTime: Long = 0
 
     private val wpt: WidthPerTime = WidthPerTime(width=50, ms=10)
-    // var recordDuration: Int = 0
-    // val recordCurrentPosition: Int = 0
     val finalRecorderUnit: Int = 10 // ms
 
-    /*val loopDuration: TimeWrapper = TimeWrapper()
-    val loopCurrentPosition: TimeWrapper = TimeWrapper()
-    val startTimeWrapper: TimeWrapper = TimeWrapper()*/
-    // val timeStringFormat
-
-    var overwriteFlag: Boolean = false
     var metronomeFlag: Boolean = false
-    var recordFlag: Boolean = false
-    var playFlag: Boolean = false
+   /* var recordFlag: Boolean = false
+    var playFlag: Boolean = false*/
     val blockLayerViewList: MutableList<BlockLayerView> = mutableListOf()
     val muteButtonList: MutableList<ToggleButton> = mutableListOf()
 
@@ -83,7 +75,6 @@ class FinalRecordActivity : AppCompatActivity() {
     var toEndButton: ImageButton? = null
     var recordButton: ToggleButton? = null
     var recordStopButton: ImageButton? = null
-    var overwriteButton: ToggleButton? = null
     var metronomeButton: ToggleButton? = null
     var openVCDButton: ImageButton? = null
 
@@ -100,8 +91,6 @@ class FinalRecordActivity : AppCompatActivity() {
     //dialog
     private val blockControlDialog: BlockControlDialog by lazy { BlockControlDialog(this, BCDListener()) }
     private val volumeControlDialog: VolumeControlDialog by lazy { VolumeControlDialog(this, VCDListener(),recorderConnector.soundList!!.map{it.data}) }
-    // val blockControlDialog: BlockControlDialog = BlockControlDialog()
-    // val saveDialog: FinalSaveDialog = FinalSaveDialog()
 
     private val finalRecorder : FinalRecorder = FinalRecorder()
     private var num = 0
@@ -151,7 +140,6 @@ class FinalRecordActivity : AppCompatActivity() {
                 btn.isChecked = !btn.isChecked
             } else {
                 if (btn.isChecked) {
-                    recordFlag = true
                     muteButtonList.forEachIndexed { index, toggle ->
                         if (toggle.isChecked){
                             blockLayerViewList[index].addBlock(start = finalRecorder.getRecordPosition(), duration = 0)
@@ -163,7 +151,6 @@ class FinalRecordActivity : AppCompatActivity() {
                     seekBarAnimator!!.start()
                     Thread(updateRecordRunnable).start()
                 } else {
-                    recordFlag = false
                     stopBlock()
                     Log.d("FRA, 녹음중", "녹음종료, stopBlock")
                     finalRecorder.recordStop()
@@ -189,14 +176,13 @@ class FinalRecordActivity : AppCompatActivity() {
                     if(finalRecorder.getRecordDuration() == 0) {
                         it.isChecked = !(it.isChecked)
                     } else {
-                        playFlag = true
+
                         //todo: 재생시 동작
                         finalRecorder.playStart()
                         seekBarAnimator!!.start()
                         Thread(updatePlayRunnaable).start()
                     }
                 } else {
-                    playFlag = false
                     //todo: 재생 정지시 동작
                     finalRecorder.playStop()
                     seekBarAnimator!!.cancel()
@@ -204,7 +190,6 @@ class FinalRecordActivity : AppCompatActivity() {
             }
         }
 
-        overwriteButton!!.setOnClickListener { overwriteFlag = (it as ToggleButton).isChecked }
         metronomeButton!!.setOnClickListener { metronomeFlag = (it as ToggleButton).isChecked}
 
         recordSeekBarLine!!.bringToFront()
@@ -246,7 +231,7 @@ class FinalRecordActivity : AppCompatActivity() {
         }
 
         toStartButton!!.setOnClickListener{
-            if(!recordFlag && !playFlag){
+            if(!finalRecorder.isRecording() && !finalRecorder.isPlaying()){
                 recordSeekBarButton!!.progress = 0
                 finalRecorder.seekToStart()
                 recordTimelineScrollView?.smoothScrollTo(0,0)
@@ -256,7 +241,7 @@ class FinalRecordActivity : AppCompatActivity() {
             }
         }
         toEndButton!!.setOnClickListener{
-            if(!recordFlag && !playFlag){
+            if(!finalRecorder.isRecording() && !finalRecorder.isPlaying()){
                 recordSeekBarButton!!.progress = finalRecorder.getRecordDuration()
                 recordTimelineScrollView?.smoothScrollTo((finalRecorder.getRecordDuration()*wpt.width/10 - (recordTimelineScrollView!!.width / 2f)).toInt(),0)
                 finalRecorder.seekToEnd()
@@ -314,11 +299,11 @@ class FinalRecordActivity : AppCompatActivity() {
                 .basicHeight(basicHeight)
                 .label(buttonText)
                 .onMuteEvent {
-                    blockLayerViewList[x].mute(true, recordFlag, finalRecorder.getRecordPosition())
+                    blockLayerViewList[x].mute(true, finalRecorder.isRecording(), finalRecorder.getRecordPosition())
                     finalRecorder.setMute(x, true)
                 }
                 .onUnMuteEvnet {
-                    blockLayerViewList[x].mute(false, recordFlag, finalRecorder.getRecordPosition())
+                    blockLayerViewList[x].mute(false, finalRecorder.isRecording(), finalRecorder.getRecordPosition())
                     finalRecorder.setMute(x, false)
                 }
                 .topMargin(10)
@@ -347,7 +332,6 @@ class FinalRecordActivity : AppCompatActivity() {
         toEndButton = btn_to_end
         recordButton = btn_record
         recordStopButton = btn_stop
-        overwriteButton = btn_overwrite
         metronomeButton = btn_metronome
         recordSeekBarButton = whole_progress_seekbar
         recordTimelineScrollView = record_timeline_panel_scroll
@@ -485,7 +469,7 @@ class FinalRecordActivity : AppCompatActivity() {
     //update view
     private val updateRecordRunnable: Runnable = Runnable {
 
-        while(recordFlag) {
+        while(finalRecorder.isRecording()) {
             if(checkToExpandSize()) {
                 expandRecordSeekMax()
                 expandLayerLinear()
@@ -493,14 +477,13 @@ class FinalRecordActivity : AppCompatActivity() {
             }
             // recordTimelineScrollView?.smoothScrollTo((finalRecorder.getRecordPosition()*wpt.width/10 - (recordTimelineScrollView!!.width / 2f)).toInt(),0)
 
-            Log.d("FRA, 녹음중", "recordFlag: $recordFlag, recordCurrentPosition.ms : ${finalRecorder.getRecordPosition()}")
+            Log.d("FRA, 녹음중", "recordFlag: ${finalRecorder.isRecording()}, recordCurrentPosition.ms : ${finalRecorder.getRecordPosition()}")
 
             SystemClock.sleep(50)
         }
     }
 
    private val updatePlayRunnaable: Runnable = Runnable {
-        // playFlag = finalRecorder.isPlaying()
         while(finalRecorder.isPlaying()) {
             // recordCurrentPosition = finalRecorder.getRecordPosition()
             //recordSeekBarButton!!.progress = finalRecorder.getRecordPosition()
@@ -509,24 +492,24 @@ class FinalRecordActivity : AppCompatActivity() {
            /* if(finalRecorder.getRecordPosition() >= finalRecorder.getRecordDuration()){
                 finalRecorder.playStop()
                 playFlag = false
-                runOnUiThread{
-                    seekBarAnimator!!.cancel()
-                    playButton!!.isChecked = !playButton!!.isChecked
-                }
                 break
             }*/
 
-            Log.d("FRA, 재생중", "playFlag: $playFlag, recordCurrentPosition.ms : ${finalRecorder.getRecordPosition()}")
+            Log.d("FRA, 재생중", "playFlag: ${finalRecorder.isRecording()}, recordCurrentPosition.ms : ${finalRecorder.getRecordPosition()}")
 
             SystemClock.sleep(50)
         }
+       runOnUiThread{
+           seekBarAnimator!!.cancel()
+           playButton!!.isChecked = !playButton!!.isChecked
+       }
     }
 
 
     //listener
     inner class BCDListener : BlockControlDialog.BlockControlListener {
         override fun onVolumeChanged(progress: Int, max: Int, layerId: Int, blockId: Int) {
-            if(recordFlag || playFlag) {
+            if(finalRecorder.isRecording() || finalRecorder.isPlaying()) {
                 Log.d("FRA, BlockControl", "BCDListener.onVolumeChanged(재생 혹은 녹음 중이어서 이벤트를 받지 않음.)")
             } else {
                 Log.d("FRA, BlockControl", "BCDListener.onVolumeChanged(progress: $progress, max: $max, layerId: $layerId, blockId: $blockId)")
@@ -535,7 +518,7 @@ class FinalRecordActivity : AppCompatActivity() {
         }
 
         override fun onEffectChanged(effect: EffectorPresets, layerId: Int, blockId: Int) {
-            if(recordFlag || playFlag) {
+            if(finalRecorder.isRecording() || finalRecorder.isPlaying()) {
                 Log.d("FRA, BlockControl", "BCDListener.onEffectChanged(재생 혹은 녹음 중이어서 이벤트를 받지 않음.)")
             } else {
                 Log.d("FRA, BlockControl", "BCDListener.onEffectChanged(effect: $effect.name, layerId: $layerId, blockId: $blockId)")
@@ -546,7 +529,7 @@ class FinalRecordActivity : AppCompatActivity() {
 
     inner class BCListener: BlockView.BlockControlListener {
         override fun onClickListener(layerId: Int, blockId: Int) {
-            if (recordFlag || playFlag) {
+            if (finalRecorder.isRecording() || finalRecorder.isPlaying()) {
                 Log.d("FRA, BlockControl", "BCListener.onClickListener(블록이 재생중 혹은 녹음 중이어서 이벤트를 받지 않습니다.)")
             } else {
                 showBlockControlDialog(layerId, blockId)
