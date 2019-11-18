@@ -3,7 +3,7 @@ services:
   db:
     container_name: postgres
     image: postgres:latest
-    #restart: always
+    restart: always
     env_file:
       - ./DockerENV.env
     volumes:
