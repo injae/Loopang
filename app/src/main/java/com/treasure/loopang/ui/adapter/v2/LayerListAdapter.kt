@@ -103,6 +103,11 @@ class LayerListAdapter : BaseAdapter() {
         )
     }
 
+    fun changeLayerLabel(position: Int, newLabel: String) {
+        mLayerItemList[position].layerLabel = newLabel
+        notifyDataSetChanged()
+    }
+
     companion object{
         fun makeLayerItemList(sounds: MutableList<MixerSound>,
                               layerLabelList: MutableList<String>): MutableList<LayerItem> {

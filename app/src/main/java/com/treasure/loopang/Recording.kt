@@ -25,6 +25,7 @@ import com.treasure.loopang.communication.UserManager
 import com.treasure.loopang.ui.fragments.RecordFragment
 import com.treasure.loopang.ui.fragments.LoopManageFragment
 import com.treasure.loopang.ui.recorderConnector
+import com.treasure.loopang.ui.toast
 
 import kotlin.system.exitProcess
 
@@ -129,10 +130,14 @@ class Recording : AppCompatActivity()
         pager.setOnTouchListener { _, _ -> false}
 
        btn_final_record.setOnClickListener {
-            Log.d("aaaaaaaaaaaaa","aaaaaaaaaaaaaaaa")
             Log.d("Recording, FRA", "final recording button click")
             val fragment = (pagerAdapter.getItem(0) as RecordFragment)
             val sounds = fragment.loopStation.getMixer().sounds.map { it._sound }
+            if(sounds.isEmpty()){
+                toast("Please make at least 1 Layer.")
+                return@setOnClickListener
+            }
+
             val intent = Intent(this, FinalRecordActivity::class.java)
 
             recorderConnector.soundList = sounds

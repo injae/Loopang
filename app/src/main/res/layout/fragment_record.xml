@@ -102,5 +102,6 @@
             android:layout_alignRight="@id/layer_list_frame"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="52dp" />
+            android:layout_marginBottom="52dp"
+            android:visibility="gone" />
 </RelativeLayout>

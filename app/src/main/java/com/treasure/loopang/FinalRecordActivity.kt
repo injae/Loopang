@@ -2,6 +2,7 @@ package com.treasure.loopang
 
 import android.animation.Animator
 import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
@@ -13,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.SystemClock
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.*
@@ -126,6 +128,7 @@ class FinalRecordActivity : AppCompatActivity() {
 
     private fun initModule() {}
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun initView(){
         if (seekBarAnimator == null) {
             seekBarAnimator = ValueAnimator.ofInt(0, 10)
@@ -203,6 +206,7 @@ class FinalRecordActivity : AppCompatActivity() {
 
         overwriteButton!!.setOnClickListener { overwriteFlag = (it as ToggleButton).isChecked }
         metronomeButton!!.setOnClickListener { metronomeFlag = (it as ToggleButton).isChecked}
+
         recordSeekBarLine!!.bringToFront()
         recordSeekBarButton!!.bringToFront()
         recordSeekBarButton!!.setOnSeekBarChangeListener( object: SeekBar.OnSeekBarChangeListener {
@@ -232,6 +236,15 @@ class FinalRecordActivity : AppCompatActivity() {
                 }
             }
         })
+        recordSeekBarButton!!.setOnTouchListener { v, event ->
+            when (event.action){
+                MotionEvent.ACTION_DOWN -> v.parent.requestDisallowInterceptTouchEvent(true)
+                MotionEvent.ACTION_UP -> v.parent.requestDisallowInterceptTouchEvent(false)
+            }
+            v.onTouchEvent(event)
+            true
+        }
+
         toStartButton!!.setOnClickListener{
             if(!recordFlag && !playFlag){
                 recordSeekBarButton!!.progress = 0
@@ -254,6 +267,7 @@ class FinalRecordActivity : AppCompatActivity() {
         }
         openVCDButton!!.setOnClickListener { showVolumeControlDialog() }
     }
+
 
     private fun initAfterInflation(){
         recordTimelineScrollView?.viewTreeObserver?.addOnGlobalLayoutListener (object: ViewTreeObserver.OnGlobalLayoutListener {
@@ -455,6 +469,11 @@ class FinalRecordActivity : AppCompatActivity() {
     }
 
     private fun getSounds() {
+        // 아무 레이어도 없을 때 리턴.
+        if(recorderConnector.soundList!!.isEmpty()) {
+            finish()
+        }
+
         finalRecorder.insertSounds(recorderConnector.soundList!!)
         buttonLabelList = listOf("Vocal") + recorderConnector.labelList!!
         num = recorderConnector.soundList!!.size + 1

@@ -43,7 +43,7 @@ class RecordFragment : Fragment(), IPageFragment {
     private val mLayerListAdapter : LayerListAdapter = LayerListAdapter()
     private val mTouchGestureListener = TouchGestureListener()
     val loopStation: LoopStation = LoopStation()
-    private val mProgressControl: ProgressControl = ProgressControl()
+    // private val mProgressControl: ProgressControl = ProgressControl()
     private var mSaveDialog: MaterialDialog? = null
     private var mProjectTitle: String = ""
 
@@ -112,8 +112,8 @@ class RecordFragment : Fragment(), IPageFragment {
         }
 
         loop_seek_bar.isEnabled = false
-        mProgressControl.setView(loop_seek_bar)
-        mProgressControl.max = 100000
+        // mProgressControl.setView(loop_seek_bar)
+        // mProgressControl.max = 100000
     }
 
     override fun onDestroy() {
@@ -325,7 +325,7 @@ class RecordFragment : Fragment(), IPageFragment {
             message(text="Original Label is ${loopStation.getLayerLabels()[index]}")
             input(hint="New Layer Label", allowEmpty = false, maxLength = 15) { _, text ->
                 changeLayerLabel(index, text.toString())
-                mLayerListAdapter.notifyDataSetChanged()
+
             }
             cornerRadius(16f)
             cancelable(false)
@@ -358,7 +358,11 @@ class RecordFragment : Fragment(), IPageFragment {
     }
 
     private fun changeLayerLabel(index: Int, text: String) {
-        loopStation.changeLayerLabel(index, text, true)
+        if(!loopStation.changeLayerLabel(index, text, true)){
+            toast("LayerLabel is already exist!")
+            return
+        }
+        mLayerListAdapter.changeLayerLabel(index, text)
     }
 
     private fun initLoopStation() {
@@ -423,7 +427,7 @@ class RecordFragment : Fragment(), IPageFragment {
             return true
         }
         override fun onFirstLayerSaved(sound: Sound, layerLabel: String, duration: Int) {
-            mProgressControl.duration = duration
+            // mProgressControl.duration = duration
         }
 
         override fun onLoopStart() {}
@@ -442,12 +446,12 @@ class RecordFragment : Fragment(), IPageFragment {
                     SystemClock.sleep(100)
                 }
             }*/
-            mProgressControl.setProgressUsingMs(position)
-            mProgressControl.updateTask()
+            // mProgressControl.setProgressUsingMs(position)
+            // mProgressControl.updateTask()
         }
 
         override fun onLoopStop() {
-            mProgressControl.progress = 0
+            // mProgressControl.progress = 0
         }
     }
 
