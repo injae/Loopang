@@ -250,12 +250,20 @@ class LoopStation {
 
     fun changeLayerLabel(position: Int,
                          layerLabel: String,
-                         messageFlag: Boolean = false) {
-        if(layerLabel == "") return
+                         messageFlag: Boolean = false): Boolean {
+        if(layerLabel == "") return false
+
+        var isSuccess = false
         val oldLayerLabel = mLayerLabelList[position]
+        if(layerLabel == oldLayerLabel) return isSuccess
+        else if(checkLayerLabelDuplication(layerLabel)) return isSuccess
+
+        isSuccess = true
         mLayerLabelList[position] = layerLabel
         mLoopStationEventListener?.onChangeLayerLabel(position, layerLabel, oldLayerLabel)
         if(messageFlag) mLoopStationMessageListener?.onChangeLayerLabel(position, layerLabel, oldLayerLabel)
+
+        return isSuccess
     }
 
     fun setTitle(title: String,

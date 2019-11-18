@@ -173,7 +173,8 @@
                     android:textColor="@android:color/white"
                     android:textOff="Overwrite"
                     android:textOn="Overwrite"
-                    android:textSize="8dp" />
+                    android:textSize="8dp"
+                    android:visibility="gone" />
 
             <ToggleButton
                     android:id="@+id/btn_metronome"
