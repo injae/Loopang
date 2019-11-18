@@ -24,6 +24,7 @@ import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import com.treasure.loopang.audio.EffectorPresets
 import com.treasure.loopang.audio.FinalRecorder
+import com.treasure.loopang.audio.Metronome
 import com.treasure.loopang.ui.dialogs.BlockControlDialog
 import com.treasure.loopang.ui.dialogs.VolumeControlDialog
 import com.treasure.loopang.ui.dpToPx
@@ -32,9 +33,12 @@ import com.treasure.loopang.ui.util.WidthPerTime
 import com.treasure.loopang.ui.view.*
 import kotlinx.android.synthetic.main.activity_final_record.*
 import kotlinx.android.synthetic.main.activity_final_record.btn_stop
+import kotlinx.android.synthetic.main.activity_final_record.metronome_view
 import kotlinx.android.synthetic.main.dialog_final_save.*
+import kotlinx.android.synthetic.main.fragment_record.*
 
 class FinalRecordActivity : AppCompatActivity() {
+    private val metronome : Metronome = Metronome()
     private var seekBarAnimator: ValueAnimator? = null
     private var seekBarAnimationListener = SeekBarAnimatorListener()
     private var tempProgress: Int = 0
@@ -115,7 +119,9 @@ class FinalRecordActivity : AppCompatActivity() {
         openVCDButton!!.bringToFront()
     }
 
-    private fun initModule() {}
+    private fun initModule() {
+        metronome.task = { metronome_view.tik() }
+    }
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initView(){
@@ -190,7 +196,15 @@ class FinalRecordActivity : AppCompatActivity() {
             }
         }
 
-        metronomeButton!!.setOnClickListener { metronomeFlag = (it as ToggleButton).isChecked}
+        metronomeButton!!.setOnClickListener {
+            metronomeFlag = (it as ToggleButton).isChecked
+            if(it.isChecked){
+                metronome.excute()
+            } else {
+                metronome.cancle()
+                metronome_view.clear()
+            }
+        }
 
         recordSeekBarLine!!.bringToFront()
         recordSeekBarButton!!.bringToFront()
@@ -461,6 +475,8 @@ class FinalRecordActivity : AppCompatActivity() {
         finalRecorder.insertSounds(recorderConnector.soundList!!)
         buttonLabelList = listOf("Vocal") + recorderConnector.labelList!!
         num = recorderConnector.soundList!!.size + 1
+        metronome.bpm = recorderConnector.bpm
+        metronome_view.bpm =  metronome.bpm.toInt()
         /*recorderConnector.soundList!!.forEach {
             WaveformBitmapMaker.
         }*/

@@ -32,15 +32,17 @@ class FinalRecorder : IFinalRecorder {
         if(index ==  -1) return
 
         val sound = mixer.sounds[index].sound.data
+        var newData: MutableList<Short>? = null
+
         if(effectFlagList[index] == effect) return
         else if(effectFlagList[index] == EffectorPresets.NONE){
-            // var newData = effector.presetControl(sound, effect)
+            newData = effector.presetControl(sound, effect)
         } else {
-            // newData = effector.presetControl(sound, EffectorPresets.NONE)
-            // newData = effector.presetControl(newData, effect)
+            newData = effector.presetControl(sound, EffectorPresets.NONE)
+            newData = effector.presetControl(newData, effect)
         }
         effectFlagList[index] = effect
-        // mixer.sounds[index].sound.data  = newData
+        mixer.sounds[index].sound.data  = newData
     }
 
     override fun getBlockList(layerId: Int): List<SoundRange> {
@@ -170,23 +172,21 @@ class FinalRecorder : IFinalRecorder {
 
         val index = layerId - 1
         val sound = mixer.sounds[index].sound.data
-        val editedVolume = volume.toFloat() / 100
 
         // 이펙터에 적용
-        // val newData = effector.volumeControl(sound, editedVolume)
+        val newData = effector.volumeControl(sound, volume)
 
         // 다시 믹서에 넣어줌
-        // mixer.sounds[index].sound.data  = newData
+        mixer.sounds[index].sound.data  = newData
     }
 
     override fun setVolumeToLoop(volume: Int) {
         val sounds = mixer.sounds
-        val editedVolume = volume.toFloat() / 100
 
         sounds.forEach {
             val sound = it.sound.data
-            // val newData = effector.volumeControl(sound, editedVolume)
-            // it.sound.data = newData
+            val newData = effector.volumeControl(sound, volume)
+            it.sound.data = newData
         }
     }
 }

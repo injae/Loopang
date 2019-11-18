@@ -20,6 +20,7 @@ class Note(var child: Int, var parent: Int) {
 }
 
 class Metronome( var task: MetronomeTask = {}){
+    private var executeFlag = false
 
     var note: Note = Note(1,4)
         set(value) {
@@ -29,8 +30,10 @@ class Metronome( var task: MetronomeTask = {}){
     var bpm: Long = 60
         set(value) {
             field = value
-            cancle()
-            excute()
+            if(executeFlag){
+                cancle()
+                excute()
+            }
         }
     private var timer: Handler = Handler()
     private var runnable = object: Runnable {
@@ -42,8 +45,12 @@ class Metronome( var task: MetronomeTask = {}){
     }
 
     fun excute() {
+        executeFlag = true
         timer.post(runnable)
     }
 
-    fun cancle() { timer.removeCallbacks(runnable) }
+    fun cancle() {
+        executeFlag =false
+        timer.removeCallbacks(runnable)
+    }
 }

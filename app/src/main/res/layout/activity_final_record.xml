@@ -163,6 +163,14 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
+            <com.treasure.loopang.ui.view.MetronomeView
+                    android:id="@+id/metronome_view"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1" />
+
             <ToggleButton
                     android:id="@+id/btn_overwrite"
                     android:layout_width="@dimen/fr_icon_width1"
