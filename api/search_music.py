@@ -17,9 +17,9 @@ class MusicSearch(Resource):
             (token, err) = Auth.decord_token(args['token'])
             if token is None: return err, 200
             user = token.get('sub')
-            logger().debug('[upload] user_name: %s', user)
-            logger().debug('[upload] parameter: %s', args['target'])
-            logger().debug('[upload] flag: %s', args['flag'])
+            logger().debug('[search] user_name: %s', user)
+            logger().debug('[search] parameter: %s', args['target'])
+            logger().debug('[search] flag: %s', args['flag'])
 
             flag = args['flag']
             result = []
