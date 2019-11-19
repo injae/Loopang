@@ -8,7 +8,7 @@ class Like(db.Model):
     user_id = db.Column(db.String(36), db.ForeignKey('user.public_id'), nullable=False)
     owner = db.relationship("User", backref=db.backref("user_likes", lazy='dynamic', foreign_keys=[user_id]))
     music_id = db.Column(db.String(36), db.ForeignKey('music.music_id'), nullable=False)
-    music = db.relationship("Music", backref=db.backref("music_likes", foreign_keys=[music_id]))
+    music = db.relationship("Music", backref=db.backref("music_likes", lazy='dynamic', foreign_keys=[music_id]))
 
     def __init__(self, user_id, music_id):
         self.user_id = user_id
@@ -27,8 +27,9 @@ class Like(db.Model):
     def on(self):
         is_find = Like.query.filter_by(user_id=self.user_id, music_id=self.music_id).first()
         if is_find is None:
-            self.music.likes += 1
             insert(self)
+            is_find = Like.query.filter_by(user_id=self.user_id, music_id=self.music_id).first()
+            is_find.music.likes += 1
             return True
         else:
             return False
