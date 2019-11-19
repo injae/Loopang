@@ -16,21 +16,22 @@ class FinalRecorder : IFinalRecorder {
     }
 
     override fun setEffectToBlock(layerId: Int, blockId: Int, effect: EffectorPresets) {
+        if(layerId == 0) return
+
         val index = layerId - 1
-
-        // 보컬 레코더는 적용안함.
-        if(index ==  -1) return
-
         val sound = mixer.sounds[index].sound.data
-        var newData: MutableList<Short>? = null
+        var newData: MutableList<Short>
 
         if(effectFlagList[index] == effect) return
-        else if(effectFlagList[index] == EffectorPresets.NONE){
+
+        if(effectFlagList[index] == EffectorPresets.NONE){
             newData = effector.presetControl(sound, effect)
         } else {
             newData = effector.presetControl(sound, EffectorPresets.NONE)
-            newData = effector.presetControl(newData, effect)
+            if(effect != EffectorPresets.NONE)
+                newData = effector.presetControl(newData, effect)
         }
+
         effectFlagList[index] = effect
         mixer.sounds[index].sound.data  = newData
     }
