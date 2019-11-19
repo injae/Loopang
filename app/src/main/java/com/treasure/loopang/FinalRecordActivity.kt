@@ -6,10 +6,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Point
-import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.SystemClock
@@ -24,6 +21,7 @@ import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import com.treasure.loopang.audio.EffectorPresets
 import com.treasure.loopang.audio.FinalRecorder
+import com.treasure.loopang.audio.Metronome
 import com.treasure.loopang.ui.dialogs.BlockControlDialog
 import com.treasure.loopang.ui.dialogs.VolumeControlDialog
 import com.treasure.loopang.ui.dpToPx
@@ -32,9 +30,11 @@ import com.treasure.loopang.ui.util.WidthPerTime
 import com.treasure.loopang.ui.view.*
 import kotlinx.android.synthetic.main.activity_final_record.*
 import kotlinx.android.synthetic.main.activity_final_record.btn_stop
+import kotlinx.android.synthetic.main.activity_final_record.metronome_view
 import kotlinx.android.synthetic.main.dialog_final_save.*
 
 class FinalRecordActivity : AppCompatActivity() {
+    private val metronome : Metronome = Metronome()
     private var seekBarAnimator: ValueAnimator? = null
     private var seekBarAnimationListener = SeekBarAnimatorListener()
     private var tempProgress: Int = 0
@@ -115,7 +115,9 @@ class FinalRecordActivity : AppCompatActivity() {
         openVCDButton!!.bringToFront()
     }
 
-    private fun initModule() {}
+    private fun initModule() {
+        metronome.task = { metronome_view.tik() }
+    }
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initView(){
@@ -140,6 +142,8 @@ class FinalRecordActivity : AppCompatActivity() {
                 btn.isChecked = !btn.isChecked
             } else {
                 if (btn.isChecked) {
+                    if(finalRecorder.isRecording()) return@setOnClickListener
+
                     muteButtonList.forEachIndexed { index, toggle ->
                         if (toggle.isChecked){
                             blockLayerViewList[index].addBlock(start = finalRecorder.getRecordPosition(), duration = 0)
@@ -173,15 +177,14 @@ class FinalRecordActivity : AppCompatActivity() {
                 (it as ToggleButton).isChecked = !(it.isChecked)
             } else {
                 if ((it as ToggleButton).isChecked) {
-                    if(finalRecorder.getRecordDuration() == 0) {
+                    if(finalRecorder.getRecordDuration() == 0 || finalRecorder.isPlaying()) {
                         it.isChecked = !(it.isChecked)
-                    } else {
-
-                        //todo: 재생시 동작
-                        finalRecorder.playStart()
-                        seekBarAnimator!!.start()
-                        Thread(updatePlayRunnaable).start()
+                        return@setOnClickListener
                     }
+                    finalRecorder.playStart()
+                    seekBarAnimator!!.start()
+                    Thread(updatePlayRunnaable).start()
+
                 } else {
                     //todo: 재생 정지시 동작
                     finalRecorder.playStop()
@@ -190,7 +193,15 @@ class FinalRecordActivity : AppCompatActivity() {
             }
         }
 
-        metronomeButton!!.setOnClickListener { metronomeFlag = (it as ToggleButton).isChecked}
+        metronomeButton!!.setOnClickListener {
+            metronomeFlag = (it as ToggleButton).isChecked
+            if(it.isChecked){
+                metronome.excute()
+            } else {
+                metronome.cancle()
+                metronome_view.clear()
+            }
+        }
 
         recordSeekBarLine!!.bringToFront()
         recordSeekBarButton!!.bringToFront()
@@ -205,7 +216,7 @@ class FinalRecordActivity : AppCompatActivity() {
                     }.applyTo(record_timeline_panel)
                 }
                 // time stamp 변경
-                timeStampTxt!!.text = String.format("%02d : %02d", ((progress.toFloat() / 1000) % 60).toInt(), ((progress.toFloat() / 1000*60) % 60).toInt() )
+                timeStampTxt!!.text = progress.toString() // String.format("%02d : %02d", ((progress.toFloat() / 1000) % 60).toInt(), ((progress.toFloat() / 1000*60) % 60).toInt() )
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -214,7 +225,7 @@ class FinalRecordActivity : AppCompatActivity() {
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 seekBar?.let{
-                    if(it.progress > finalRecorder.getRecordPosition()) {
+                    if(it.progress > finalRecorder.getRecordDuration()) {
                         it.progress = finalRecorder.getRecordPosition()
                     }
                     finalRecorder.seekTo(it.progress)
@@ -274,7 +285,7 @@ class FinalRecordActivity : AppCompatActivity() {
                 initLayerList(num)
 
                 //전체 시크바 MAX 초기화.
-                recordSeekBarButton?.max = (basicWidth / wpt.width) * wpt.ms
+                recordSeekBarButton?.max = ((basicWidth.toFloat() / wpt.width) * wpt.ms).toInt()
 
                 setupScrolling()
 
@@ -404,7 +415,7 @@ class FinalRecordActivity : AppCompatActivity() {
 
     private fun expandRecordSeekMax() {
         val prev = recordSeekBarButton!!.max
-        recordSeekBarButton!!.max = prev + ((basicWidth / wpt.width) * wpt.ms)
+        recordSeekBarButton!!.max = (prev + ((basicWidth.toFloat() / wpt.width) * wpt.ms)).toInt()
         Log.d("FRA, 타임라인컨트롤", "expandRecordSeekMax(prev: $prev, new max: ${recordSeekBarButton!!.max})")
     }
 
@@ -419,7 +430,8 @@ class FinalRecordActivity : AppCompatActivity() {
     }
 
     private fun showBlockControlDialog(layerId:Int, blockId: Int) {
-        blockControlDialog.show(layerId, blockId)
+        if(layerId == 0) return
+        blockControlDialog.show(layerId, blockId, 50, finalRecorder.getEffectFlag(layerId))
         Log.d("FRA, 블록컨트롤", "showBlockControlDialog(layerId: $layerId, blockId: $blockId)")
     }
 
@@ -461,6 +473,8 @@ class FinalRecordActivity : AppCompatActivity() {
         finalRecorder.insertSounds(recorderConnector.soundList!!)
         buttonLabelList = listOf("Vocal") + recorderConnector.labelList!!
         num = recorderConnector.soundList!!.size + 1
+        metronome.bpm = recorderConnector.bpm
+        metronome_view.bpm =  metronome.bpm.toInt()
         /*recorderConnector.soundList!!.forEach {
             WaveformBitmapMaker.
         }*/
@@ -553,15 +567,19 @@ class FinalRecordActivity : AppCompatActivity() {
 
     inner class SeekBarAnimatorListener: Animator.AnimatorListener {
         override fun onAnimationRepeat(animation: Animator?) {
-            tempProgress += 10
-            Log.d("animation", "onAnimationRepeat")
+            tempProgress += wpt.ms
         }
 
         override fun onAnimationEnd(animation: Animator?) {}
 
         override fun onAnimationCancel(animation: Animator?) {
-            recordSeekBarButton!!.progress = finalRecorder.getRecordPosition()
-            Log.d("animation", "onAnimationCancel")
+            val position = finalRecorder.getRecordPosition()
+            recordSeekBarButton!!.progress = position
+            if(finalRecorder.isPlaying() && !finalRecorder.isRecording()){
+                finalRecorder.seekTo(position)
+            }
+
+            Log.d("animation", "onAnimationCancel, position: $position")
         }
 
         override fun onAnimationStart(animation: Animator?) {

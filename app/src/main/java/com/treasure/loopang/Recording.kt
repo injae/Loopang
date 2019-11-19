@@ -133,6 +133,7 @@ class Recording : AppCompatActivity()
             Log.d("Recording, FRA", "final recording button click")
             val fragment = (pagerAdapter.getItem(0) as RecordFragment)
             val sounds = fragment.loopStation.getMixer().sounds.map { it._sound }
+            val metronomeBpm = this.setMetronomeFrag.metronome.bpm
             if(sounds.isEmpty()){
                 toast("Please make at least 1 Layer.")
                 return@setOnClickListener
@@ -142,6 +143,7 @@ class Recording : AppCompatActivity()
 
             recorderConnector.soundList = sounds
             recorderConnector.labelList = fragment.loopStation.getLayerLabels().toList()
+            recorderConnector.bpm = metronomeBpm
             startActivity(intent)
         }
     }

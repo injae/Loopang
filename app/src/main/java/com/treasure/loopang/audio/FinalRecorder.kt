@@ -8,37 +8,11 @@ class FinalRecorder : IFinalRecorder {
     var recorder = OverWritableRecorder()
     var effector = SoundEffector()
     var effectFlagList = mutableListOf<EffectorPresets>()
-    var count = 0
-    set(value) {
-        if(effectFlagList.size != 0)
-            effectFlagList.clear()
-        (0 until value).forEach {
-            effectFlagList.add(EffectorPresets.NONE)
-        }
-        field = value
-    }
-
 
     override fun getBlockList(): List<List<SoundRange>> {
         var buf = mutableListOf(recorder.getBlock())
         buf.addAll(mixer.sounds.map{ it.blocks.list })
         return buf
-    }
-
-    override fun onPlayStart() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onPlayStop() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onRecordStart() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onRecordStop() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun setEffectToBlock(layerId: Int, blockId: Int, effect: EffectorPresets) {
@@ -48,14 +22,17 @@ class FinalRecorder : IFinalRecorder {
         if(index ==  -1) return
 
         val sound = mixer.sounds[index].sound.data
+        var newData: MutableList<Short>? = null
+
         if(effectFlagList[index] == effect) return
         else if(effectFlagList[index] == EffectorPresets.NONE){
-            // effector.presetControl(sound, effect)
+            newData = effector.presetControl(sound, effect)
         } else {
-            // effector.presetControl(sound, EffectorPresets.NONE)
-            // effector.presetControl(sound, effect)
+            newData = effector.presetControl(sound, EffectorPresets.NONE)
+            newData = effector.presetControl(newData, effect)
         }
         effectFlagList[index] = effect
+        mixer.sounds[index].sound.data  = newData
     }
 
     override fun getBlockList(layerId: Int): List<SoundRange> {
@@ -64,6 +41,7 @@ class FinalRecorder : IFinalRecorder {
 
     override fun insertSounds(soundList: List<Sound>) {
         soundList.forEach { mixer.addSound(it) }
+        initEffectFlagList(soundList.size)
     }
 
     override fun getRecordDuration(): Int {
@@ -81,7 +59,7 @@ class FinalRecorder : IFinalRecorder {
     }
 
     override fun getRecordPosition(): Int {
-        return recorder.blocks.point()
+        return recorder.blocks.pointMs()
     }
 
     override fun getLoopPosition(): Int {
@@ -181,10 +159,39 @@ class FinalRecorder : IFinalRecorder {
     }
 
     override fun setVolumeToLayer(layerId: Int, volume: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if(layerId  ==  0) return // 보컬 레코더는 적용안함.
+
+        val index = layerId - 1
+        val sound = mixer.sounds[index].sound.data
+
+        // 이펙터에 적용
+        val newData = effector.volumeControl(sound, volume)
+
+        // 다시 믹서에 넣어줌
+        mixer.sounds[index].sound.data  = newData
     }
 
     override fun setVolumeToLoop(volume: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val sounds = mixer.sounds
+
+        sounds.forEach {
+            val sound = it.sound.data
+            val newData = effector.volumeControl(sound, volume)
+            it.sound.data = newData
+        }
+    }
+
+    private fun initEffectFlagList(num: Int) {
+        if(effectFlagList.size != 0)
+            effectFlagList.clear()
+        (0 until num).forEach {
+            effectFlagList.add(EffectorPresets.NONE)
+        }
+    }
+
+    fun getEffectFlag(layerId: Int): EffectorPresets {
+        if(layerId == 0) return EffectorPresets.NONE
+        val index = layerId - 1
+        return effectFlagList[index]
     }
 }
