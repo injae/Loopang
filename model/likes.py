@@ -8,8 +8,7 @@ class Like(db.Model):
     user_id = db.Column(db.String(36), db.ForeignKey('user.public_id'), nullable=False)
     owner = db.relationship("User", backref=db.backref("user_likes", lazy='dynamic', foreign_keys=[user_id]))
     music_id = db.Column(db.String(36), db.ForeignKey('music.music_id'), nullable=False)
-    #music = db.relationship("Music", backref=db.backref("music_likes", lazy='dynamic', foreign_keys=[music_id]))
-    music = db.relationship("Music", foreign_keys=[music_id])
+    music = db.relationship("Music", backref=db.backref("music_likes", foreign_keys=[music_id]))
 
     def __init__(self, user_id, music_id):
         self.user_id = user_id
