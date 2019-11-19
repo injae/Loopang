@@ -8,16 +8,6 @@ class FinalRecorder : IFinalRecorder {
     var recorder = OverWritableRecorder()
     var effector = SoundEffector()
     var effectFlagList = mutableListOf<EffectorPresets>()
-    var count = 0
-    set(value) {
-        if(effectFlagList.size != 0)
-            effectFlagList.clear()
-        (0 until value).forEach {
-            effectFlagList.add(EffectorPresets.NONE)
-        }
-        field = value
-    }
-
 
     override fun getBlockList(): List<List<SoundRange>> {
         var buf = mutableListOf(recorder.getBlock())
@@ -51,6 +41,7 @@ class FinalRecorder : IFinalRecorder {
 
     override fun insertSounds(soundList: List<Sound>) {
         soundList.forEach { mixer.addSound(it) }
+        initEffectFlagList(soundList.size)
     }
 
     override fun getRecordDuration(): Int {
@@ -68,7 +59,7 @@ class FinalRecorder : IFinalRecorder {
     }
 
     override fun getRecordPosition(): Int {
-        return recorder.blocks.point()
+        return recorder.blocks.pointMs()
     }
 
     override fun getLoopPosition(): Int {
@@ -188,5 +179,19 @@ class FinalRecorder : IFinalRecorder {
             val newData = effector.volumeControl(sound, volume)
             it.sound.data = newData
         }
+    }
+
+    private fun initEffectFlagList(num: Int) {
+        if(effectFlagList.size != 0)
+            effectFlagList.clear()
+        (0 until num).forEach {
+            effectFlagList.add(EffectorPresets.NONE)
+        }
+    }
+
+    fun getEffectFlag(layerId: Int): EffectorPresets {
+        if(layerId == 0) return EffectorPresets.NONE
+        val index = layerId - 1
+        return effectFlagList[index]
     }
 }
