@@ -10,7 +10,7 @@ import java.util.ArrayList
 
 
 class CommunityFeedItemAdapter : BaseAdapter(){
-    private var likeNum :Int? = null
+
     lateinit var likeList : MutableList<MusicListClass>
     private var listViewItemList = ArrayList<MusicListClass>()
     override fun getCount(): Int {
@@ -18,7 +18,8 @@ class CommunityFeedItemAdapter : BaseAdapter(){
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-
+        var isUserLiked:Boolean
+        var likeNum :Int
         var view : View
         val context = parent.context
         val feedViewHolder : ViewHolder
@@ -37,13 +38,18 @@ class CommunityFeedItemAdapter : BaseAdapter(){
             view = convertView
         }
         for(i in 0 .. likeList.size-1){
-            if(listViewItemList.get(position).id == likeList[i].id)
-                likeNum = likeList[i].likes
+            if(listViewItemList.get(position).id == likeList[i].id) {
+                feedViewHolder.likedNumTextView?.setText(likeList[i].likes.toString())
+                break
+            }
+            feedViewHolder.likedNumTextView?.setText(listViewItemList.get(position).likes.toString())
         }
         feedViewHolder.userNickNameTextView?.setText(listViewItemList.get(position).owner)
         feedViewHolder.songNameTextView?.setText(listViewItemList.get(position).name)
-        feedViewHolder.likedNumTextView?.setText(likeNum.toString())
         feedViewHolder.downloadNumTextView?.setText(listViewItemList.get(position).downloads.toString())
+
+
+
 
         val listViewItem = listViewItemList[position]
 
