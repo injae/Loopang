@@ -11,7 +11,7 @@ import java.util.ArrayList
 
 
 class CommunityShareAdapter : BaseAdapter() {
-    private var listViewItemList = ArrayList<LoopMusic>()
+    private var listViewItemList = ArrayList<CommunityShareItem>()
     override fun getCount(): Int {
         return listViewItemList.size
     }
@@ -34,9 +34,9 @@ class CommunityShareAdapter : BaseAdapter() {
             view = convertView
         }
 
-        ViewHolder.dateStringView?.setText(listViewItemList.get(position).date)
-        ViewHolder.loopTitleView?.setText(listViewItemList.get(position).name)
-        ViewHolder.fileTypeView?.setText(listViewItemList[position].type)
+        ViewHolder.dateStringView?.setText(listViewItemList.get(position).dateString)
+        ViewHolder.loopTitleView?.setText(listViewItemList.get(position).loopTitle)
+        ViewHolder.fileTypeView?.setText(listViewItemList[position].fileType)
 
         val listViewItem = listViewItemList[position]
         return view
@@ -62,17 +62,15 @@ class CommunityShareAdapter : BaseAdapter() {
     }
 */
     fun addItem(loopMusic: LoopMusic) {
-        /*val item = CommunityShareItem()
+        val item = CommunityShareItem()
         item.loopTitle = loopMusic.name
         item.dateString = loopMusic.date
         item.extension = loopMusic.type
         if(loopMusic.child != null) item.fileType = "Project"
         else item.fileType = "Layer"
         item.childItems = loopMusic.child
-        listViewItemList.add(item)*/
-        if(loopMusic.child != null) loopMusic.type="Project"
-        else loopMusic.type="Layer"
-        listViewItemList.add(loopMusic)
+        listViewItemList.add(item)
+
     }
 
     private  class ViewHolder{

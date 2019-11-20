@@ -9,7 +9,7 @@ import com.treasure.loopang.CommunityFeedFragment
 import com.treasure.loopang.CommunitySearchFragment
 import com.treasure.loopang.CommunityUserPageFragment
 
-class CommunityPagerAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAdapter(fragmentManager) {
+class CommunityPagerAdapter(fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager) {
     private val fragmentList: ArrayList<Fragment> = arrayListOf()
 
     init{
