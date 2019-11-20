@@ -30,7 +30,7 @@ class CommunityFeedFragment : androidx.fragment.app.Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Log.d("wwwwwwwwwwww","들어왔다.")
+       // Log.d("wwwwwwwwwwww","들어왔다.")
 
         if((activity as CommunityActivity).isTrackFragOpen == false && (activity as CommunityActivity).isCategorySelected == false) {
             communityFeedListView.visibility = View.GONE
