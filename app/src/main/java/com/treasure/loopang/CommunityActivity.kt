@@ -25,7 +25,7 @@ import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.community_search_result.*
 
 class CommunityActivity(var connector: Connector = Connector(), val likeList: MutableList<MusicListClass> = MutableList<MusicListClass>(0, { MusicListClass () })) : AppCompatActivity() {
-    var isTrackAdded : Boolean = false
+    var isTrackDataChanged : Boolean = false
     lateinit var itt : MusicListClass
     var isTrackFragOpen : Boolean = false
     val transaction = supportFragmentManager.beginTransaction()
@@ -33,6 +33,8 @@ class CommunityActivity(var connector: Connector = Connector(), val likeList: Mu
     var isTableBtnClicked : Boolean = false
     var isButtonStateTag :Boolean = true
     var sharingFinish : Boolean = false
+    var isLikedDataChanged : Boolean = true
+
     private var currentPage: Int = 0
     private val pagerAdapter by lazy { CommunityPagerAdapter(supportFragmentManager) }
     private val mDecorView: View by lazy { window.decorView }
@@ -55,9 +57,7 @@ class CommunityActivity(var connector: Connector = Connector(), val likeList: Mu
         likeList.add(layer)
     }*/
         likeList.addAll(com.treasure.loopang.communication.UserManager.getUser().likedList)
-        for(i in likeList) {
-            Log.d("qqqqqqqqqqqqqq", "" + i.name)
-        }
+
         btn_feed.setImageDrawable(getResources().getDrawable(R.drawable.community_feedbtn))
         btn_feed.setBackgroundColor(resources.getColor(R.color.shared_comunity_bottom_button))
         btn_userpage.setImageDrawable(getResources().getDrawable(R.drawable.community_userpagebtn_ver_gray))
@@ -73,6 +73,7 @@ class CommunityActivity(var connector: Connector = Connector(), val likeList: Mu
         val isSharingFinished = intent.extras.getString("finish")
         if(isSharingFinished == "true"){
             sharingFinish = true
+            isTrackDataChanged = true
             CommunityContainer.setCurrentItem(1)
         }
 

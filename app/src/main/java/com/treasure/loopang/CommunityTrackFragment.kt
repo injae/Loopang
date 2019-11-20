@@ -34,13 +34,16 @@ class CommunityTrackFragment(var sound: Sound? = null, val downloadChecker: Down
         TrackInfoTextView.isEnabled = false
         trackInfoText.setEnabled(false)
         var heartState : Boolean = false
-        for(layer in (com.treasure.loopang.communication.UserManager.getUser().likedList)){
+        heartButton.setImageDrawable(getResources().getDrawable(R.drawable.trackicon_heart))
+        for(layer in (activity as CommunityActivity).likeList){
+       // for(layer in (com.treasure.loopang.communication.UserManager.getUser().likedList)){
             if(layer.id == (activity as CommunityActivity).itt.id){
                 heartState = true
                 Log.d("hhhhhhhhhhh","heart in list")
                 heartButton.setImageDrawable(getResources().getDrawable(R.drawable.trackicon_heart_clicked))
                 break
             }else heartState = false
+
         }
 
         setHeart(heartState)
@@ -54,7 +57,6 @@ class CommunityTrackFragment(var sound: Sound? = null, val downloadChecker: Down
 
         Track_artistName.setText(songMasteruserNickName)
         var Tag = ""
-
         (activity as CommunityActivity).itt.tags
         for(tag in (activity as CommunityActivity).itt.tags!!){
             decodeUTF_8(tag)
@@ -62,7 +64,6 @@ class CommunityTrackFragment(var sound: Sound? = null, val downloadChecker: Down
             else Tag = Tag + ", " + tag
         }
         layerTag.setText("TAG: "+ Tag)
-        Log.d("ttttttttt","tag : "+Tag+"      "+ (activity as CommunityActivity).itt.tags)
 
         val musicID = (activity as CommunityActivity).itt.id
         setSound(musicID)
@@ -132,6 +133,7 @@ class CommunityTrackFragment(var sound: Sound? = null, val downloadChecker: Down
 
     private fun soundStop() { GlobalScope.launch { sound?.stop() } }
     fun setHeart(heartState:Boolean){
+        (activity as CommunityActivity).isLikedDataChanged = true
         Log.d("hhhhhhhhhhh","heart: " + heartState)
         val connector = Connector()
         if(heartState == false) {

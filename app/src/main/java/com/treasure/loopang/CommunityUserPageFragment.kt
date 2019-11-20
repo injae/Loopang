@@ -28,8 +28,7 @@ class CommunityUserPageFragment : androidx.fragment.app.Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         userNickname.setText(com.treasure.loopang.communication.UserManager.getUser().name)
-        userSharedTrackNumber.setText((com.treasure.loopang.communication.UserManager.getUser().trackList.size).toString())
-        likenumber.setText((activity as CommunityActivity).likeList.size.toString())
+        updateText()
 
         var isButtonStateTrack = true
         val userPageListView: ListView = userpageListView
@@ -42,6 +41,23 @@ class CommunityUserPageFragment : androidx.fragment.app.Fragment() {
             userPageListView.adapter = userPageItemAdapter
             addItem(userPageItemAdapter, com.treasure.loopang.communication.UserManager.getUser().trackList)// 초기화
         }
+        if((activity as CommunityActivity).isLikedDataChanged== true && isButtonStateTrack!= false){
+            //update Like List
+            userPageItemAdapter = CommunityUserPageAdapter()
+            userPageLikedListView.adapter = userPageItemAdapter
+            addItem(userPageItemAdapter,(activity as CommunityActivity).likeList)
+            (activity as CommunityActivity).isLikedDataChanged = false
+            updateText()
+        }
+        if((activity as CommunityActivity).isTrackDataChanged==true && isButtonStateTrack == true){
+            //update Shared Layer
+            userPageItemAdapter = CommunityUserPageAdapter()
+            userPageListView.adapter = userPageItemAdapter
+            addItem(userPageItemAdapter, com.treasure.loopang.communication.UserManager.getUser().trackList)
+            userPageItemAdapter.notifyDataSetChanged()
+            (activity as CommunityActivity).isTrackDataChanged = false
+            updateText()
+        }
         val userPageButton : List <Button> = listOf(userPageTrackBtn,userPageLikedBtn)
         for(i in 0.. userPageButton.size-1){
             userPageButton[i].setOnClickListener {
@@ -53,7 +69,7 @@ class CommunityUserPageFragment : androidx.fragment.app.Fragment() {
                         userPageItemAdapter = CommunityUserPageAdapter()
                         userPageListView.adapter = userPageItemAdapter
                         addItem(userPageItemAdapter, com.treasure.loopang.communication.UserManager.getUser().trackList)
-                        userPageItemAdapter.notifyDataSetChanged()
+                        //userPageItemAdapter.notifyDataSetChanged()
                         Log.d("aaaaaaaaaaaaaa","트랙 리스트 업데이트")
                     }
                 }else{
@@ -72,6 +88,7 @@ class CommunityUserPageFragment : androidx.fragment.app.Fragment() {
                         addItem(userPageItemAdapter,(activity as CommunityActivity).likeList)
                     }
                 }
+                updateText()
                 userPageButton[i].setTextColor(Color.argb(200,115,115,115))
                 userPageButton[i].setBackgroundColor(Color.WHITE)
                 userPageButton[1-i].setBackgroundColor(Color.argb(0,0,0,0))
@@ -97,5 +114,9 @@ class CommunityUserPageFragment : androidx.fragment.app.Fragment() {
         for (i in 0..list.size - 1) {
             userPageItemAdapter.addItem(list[i])
         }
+    }
+    fun updateText(){
+        likenumber.setText((activity as CommunityActivity).likeList.size.toString())
+        userSharedTrackNumber.setText((com.treasure.loopang.communication.UserManager.getUser().trackList.size).toString())
     }
 }
