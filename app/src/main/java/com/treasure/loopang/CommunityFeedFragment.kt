@@ -15,18 +15,22 @@ import android.widget.FrameLayout
 import androidx.fragment.app.FragmentActivity
 import com.treasure.loopang.adapter.CommunityFeedCategoryAdapter
 import com.treasure.loopang.communication.ASyncer
+import com.treasure.loopang.communication.MusicListClass
 import com.treasure.loopang.listitem.CommunityFeedCategoryItem
 import kotlinx.android.synthetic.main.activity_community.*
 import java.util.*
 import kotlin.collections.ArrayList
 
 class CommunityFeedFragment : androidx.fragment.app.Fragment() {
+    private var likeList : MutableList<MusicListClass> = MutableList<MusicListClass>(0, { MusicListClass () })
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(com.treasure.loopang.R.layout.community_feed,container,false);
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        Log.d("wwwwwwwwwwww","들어왔다.")
 
         if((activity as CommunityActivity).isTrackFragOpen == false && (activity as CommunityActivity).isCategorySelected == false) {
             communityFeedListView.visibility = View.GONE
@@ -51,13 +55,18 @@ class CommunityFeedFragment : androidx.fragment.app.Fragment() {
             communityFeedListView.adapter = FeedAdapter
 
             CategotyTextView.text=item.categoryName
-            if(item.categoryName == "The Newest 5") { (activity as CommunityActivity).connector?.feedResult?.recent_musics?.forEach { FeedAdapter.addItem(it) } }
-            else if(item.categoryName== "Liked Top 5") { (activity as CommunityActivity).connector?.feedResult?.likes_top?.forEach { FeedAdapter.addItem(it) } }
-            else if(item.categoryName == "Download Top 5"){ (activity as CommunityActivity).connector?.feedResult?.download_top?.forEach { FeedAdapter.addItem(it) }}
+            likeList.addAll((activity as CommunityActivity).likeList)
+            if(item.categoryName == "The Newest 5") {
+                (activity as CommunityActivity).connector?.feedResult?.recent_musics?.forEach { FeedAdapter.addItem(it,likeList) }
+            } else if(item.categoryName== "Liked Top 5") {
+                (activity as CommunityActivity).connector?.feedResult?.likes_top?.forEach { FeedAdapter.addItem(it,likeList) }
+            } else if(item.categoryName == "Download Top 5"){ (
+                    activity as CommunityActivity).connector?.feedResult?.download_top?.forEach { FeedAdapter.addItem(it,likeList) }
+            }
         }
 
         communityFeedListView.onItemClickListener = AdapterView.OnItemClickListener { parent, v, position, id ->
-            val itt = parent.getItemAtPosition(position) as CommunitySongItem
+            val itt = parent.getItemAtPosition(position) as MusicListClass
             activity!!.TrackFrame.visibility = View.VISIBLE
             (activity as CommunityActivity).onFragmentChangedtoTrack(itt)
         }

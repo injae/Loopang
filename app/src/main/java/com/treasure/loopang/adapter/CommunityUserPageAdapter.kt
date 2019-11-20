@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.treasure.loopang.R
+import com.treasure.loopang.communication.MusicListClass
 import com.treasure.loopang.listitem.CommunitySongItem
 import org.w3c.dom.Text
 import java.util.ArrayList
@@ -14,7 +15,7 @@ import java.util.ArrayList
 
 class CommunityUserPageAdapter : BaseAdapter() {
 
-    private var listViewItemList = ArrayList<CommunitySongItem>()
+    var listViewItemList = ArrayList<MusicListClass>()
     override fun getCount(): Int {
         return listViewItemList.size
     }
@@ -37,9 +38,8 @@ class CommunityUserPageAdapter : BaseAdapter() {
         }
 
        // userPageViewHolder.userNickNameTextView?.setText(listViewItemList.get(position).userNickName)
-        userPageViewHolder.productionDateTextView?.setText( listViewItemList.get(position).productionDate.substring(0,10))
-        userPageViewHolder.songNameTextView?.setText(listViewItemList.get(position).songName)
-        //userPageViewHolder.btnForDelete?.setImageResource(R.drawable.userpage_item_right_button)
+        userPageViewHolder.productionDateTextView?.setText(listViewItemList.get(position).updated_date.substring(0,10))
+        userPageViewHolder.songNameTextView?.setText(listViewItemList.get(position).name)
 
         val listViewItem = listViewItemList[position]
 
@@ -57,7 +57,7 @@ class CommunityUserPageAdapter : BaseAdapter() {
         return listViewItemList[position]
     }
 
-    fun addItem(userNickName: String, songName: String,  likedNum : Int, downloadNum :Int,songId : String, productionDate : String) {
+   /* fun addItem(userNickName: String, songName: String,  likedNum : Int, downloadNum :Int,songId : String, productionDate : String) {
         val item = CommunitySongItem()
         item.userNickName= userNickName
         item.songName = songName
@@ -67,7 +67,10 @@ class CommunityUserPageAdapter : BaseAdapter() {
         item.productionDate =productionDate
         listViewItemList.add(item)
     }
-
+*/
+   fun addItem(music: MusicListClass) {
+       listViewItemList.add(music)
+   }
     private  class ViewHolder{
      //   var btnForDelete : ImageButton? = null
         var productionDateTextView : TextView? = null

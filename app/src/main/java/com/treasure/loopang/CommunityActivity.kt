@@ -24,13 +24,12 @@ import androidx.core.app.NotificationCompat.getExtras
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.community_search_result.*
 
-
-class CommunityActivity(var connector: Connector = Connector()) : AppCompatActivity() {
-
-    lateinit var itt : CommunitySongItem
+class CommunityActivity(var connector: Connector = Connector(), val likeList: MutableList<MusicListClass> = MutableList<MusicListClass>(0, { MusicListClass () })) : AppCompatActivity() {
+    var isTrackAdded : Boolean = false
+    lateinit var itt : MusicListClass
     var isTrackFragOpen : Boolean = false
     val transaction = supportFragmentManager.beginTransaction()
-    var isCategorySelected :Boolean = false
+    var isCategorySelected : Boolean = false
     var isTableBtnClicked : Boolean = false
     var isButtonStateTag :Boolean = true
     private var currentPage: Int = 0
@@ -38,6 +37,7 @@ class CommunityActivity(var connector: Connector = Connector()) : AppCompatActiv
     private val mDecorView: View by lazy { window.decorView }
     private var mUiOption: Int = 0
 
+    private var SelectedPage : Int = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //Hide Bottom Soft Navigation Bar
@@ -50,7 +50,13 @@ class CommunityActivity(var connector: Connector = Connector()) : AppCompatActiv
 
         setContentView(R.layout.activity_community)
         window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-
+/*    for(layer in com.treasure.loopang.communication.UserManager.getUser().likedList){
+        likeList.add(layer)
+    }*/
+        likeList.addAll(com.treasure.loopang.communication.UserManager.getUser().likedList)
+        for(i in likeList) {
+            Log.d("qqqqqqqqqqqqqq", "" + i.name)
+        }
         btn_feed.setImageDrawable(getResources().getDrawable(R.drawable.community_feedbtn))
         btn_feed.setBackgroundColor(resources.getColor(R.color.shared_comunity_bottom_button))
         btn_userpage.setImageDrawable(getResources().getDrawable(R.drawable.community_userpagebtn_ver_gray))
@@ -70,10 +76,9 @@ class CommunityActivity(var connector: Connector = Connector()) : AppCompatActiv
         btn_userpage.setOnClickListener { CommunityContainer.setCurrentItem(1) }
         btn_community_search.setOnClickListener { CommunityContainer.setCurrentItem(2) }
     }
-    fun onFragmentChangedtoTrack(songitem : CommunitySongItem) {
+    fun onFragmentChangedtoTrack(songitem : MusicListClass) {
         itt = songitem
-
-        if(itt.songId!=null) {
+        if(itt.id!=null) {
             getSupportFragmentManager().beginTransaction()
                 .replace(R.id.TrackFrame, CommunityTrackFragment()).commit()
             isTrackFragOpen = true
@@ -109,9 +114,10 @@ class CommunityActivity(var connector: Connector = Connector()) : AppCompatActiv
         /* 선택된 페이지 알려줌 */
         override fun onPageSelected(p0: Int) {
             selectedPage = p0
+            SelectedPage = selectedPage
             if(prevPage != selectedPage)
                 onPageChanged()
-            Log.d("ViewPagerTest", "onPageSelected : $selectedPage")
+            Log.d("ViewPagerTest", "onPageSelected : $selectedPage"+"and "+SelectedPage)
         }
 
         /* 페이지(플래그먼트)가 바뀌었을 때 처리 */
@@ -152,20 +158,20 @@ class CommunityActivity(var connector: Connector = Connector()) : AppCompatActiv
             fragmentManager.popBackStack()
             isTrackFragOpen = false
         }
-        else if(isTrackFragOpen == false && isCategorySelected == true){
-            communityFeedListView.visibility = View.GONE
-            communityFeedCategoryListView.visibility = View.VISIBLE
-            CategotyTextView.visibility=View.INVISIBLE
+        else if(isTrackFragOpen == false && isCategorySelected == true && SelectedPage == 0 ){
             isCategorySelected = false
+            communityFeedCategoryListView.visibility = View.VISIBLE
+            communityFeedListView.visibility= View.GONE
+            Log.d("wwwwwwwwwwww","피드")
         }
-        else if(isTrackFragOpen== false && isTableBtnClicked == true && isButtonStateTag == true){
+        else if(isTrackFragOpen== false && isTableBtnClicked == true && isButtonStateTag == true && SelectedPage == 2){
             isTableBtnClicked = false
             community_search_tag_table.visibility = View.VISIBLE
             community_search_result_tag_listview.visibility = View.GONE
             community_search_result_user_listview.visibility = View.GONE
+            Log.d("wwwwwwwwwwww","서치")
         }
-        else {
-             super.onBackPressed()
-        }
+        else super.onBackPressed()
+
     }
 }
