@@ -37,7 +37,7 @@ def App():
     from api.search_music import MusicSearch
     api.add_resource(MusicSearch, '/music/search')
     from api.like import LikeMusic
-    api.add_resource(LikeMusic, '/like/request')
+    api.add_resource(LikeMusic, '/user/likes')
     from api.feed import Feed
     api.add_resource(Feed, '/info/feed')
 
