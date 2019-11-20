@@ -15,7 +15,7 @@ def insert(data):
 
 
 def remove(data):
-    db.session.remove(data)
+    db.session.delete(data)
     db.session.commit()
 
 
