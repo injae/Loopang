@@ -10,7 +10,9 @@ import java.util.ArrayList
 
 
 class CommunityFeedItemAdapter : BaseAdapter(){
-    private var listViewItemList = ArrayList<CommunitySongItem>()
+    private var likeNum :Int? = null
+    lateinit var likeList : MutableList<MusicListClass>
+    private var listViewItemList = ArrayList<MusicListClass>()
     override fun getCount(): Int {
         return listViewItemList.size
     }
@@ -34,10 +36,14 @@ class CommunityFeedItemAdapter : BaseAdapter(){
             feedViewHolder = convertView.tag as ViewHolder //viewHolder = convertView!!.getTag() as ViewHolder
             view = convertView
         }
-        feedViewHolder.userNickNameTextView?.setText(listViewItemList.get(position).userNickName)
-        feedViewHolder.songNameTextView?.setText(listViewItemList.get(position).songName)
-        feedViewHolder.likedNumTextView?.setText(listViewItemList.get(position).likedNum.toString())
-        feedViewHolder.downloadNumTextView?.setText(listViewItemList.get(position).downloadNum.toString())
+        for(i in 0 .. likeList.size-1){
+            if(listViewItemList.get(position).id == likeList[i].id)
+                likeNum = likeList[i].likes
+        }
+        feedViewHolder.userNickNameTextView?.setText(listViewItemList.get(position).owner)
+        feedViewHolder.songNameTextView?.setText(listViewItemList.get(position).name)
+        feedViewHolder.likedNumTextView?.setText(likeNum.toString())
+        feedViewHolder.downloadNumTextView?.setText(listViewItemList.get(position).downloads.toString())
 
         val listViewItem = listViewItemList[position]
 
@@ -52,28 +58,9 @@ class CommunityFeedItemAdapter : BaseAdapter(){
         return listViewItemList[position]
     }
 
-    fun addItem(userNickName: String, songName: String,  likedNum : Int, downloadNum :Int,songId : String, productionDate : String) {
-        val item = CommunitySongItem()
-        item.userNickName= userNickName
-        item.songName = songName
-        item.downloadNum = downloadNum
-        item.likedNum = likedNum
-        item.songId = songId
-        item.productionDate =productionDate
-     //   item.trackInfo = trackInfo   , trackInfo : String
-        listViewItemList.add(item)
-    }
-
-    fun addItem(music: MusicListClass) {
-        val item = CommunitySongItem()
-        item.userNickName = music.owner
-        item.songName = music.name
-        item.downloadNum = music.downloads
-        item.likedNum = music.likes
-        item.songId = music.id
-        item.productionDate =music.updated_date
-        //   item.trackInfo = trackInfo   , trackInfo : String
-        listViewItemList.add(item)
+    fun addItem(music: MusicListClass,likes : MutableList<MusicListClass>) {
+        likeList = likes
+        listViewItemList.add(music)
     }
 
     private  class ViewHolder{

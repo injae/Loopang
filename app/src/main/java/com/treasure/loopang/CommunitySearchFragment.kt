@@ -20,6 +20,7 @@ import android.view.KeyEvent.KEYCODE_ENTER
 import android.R
 import android.view.KeyEvent
 import android.widget.*
+import com.treasure.loopang.communication.MusicListClass
 import com.treasure.loopang.communication.ResultManager
 import kotlinx.android.synthetic.main.activity_shared_community.*
 import kotlinx.android.synthetic.main.community_user_page.*
@@ -39,11 +40,12 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val searchTagSet : MutableSet<String> = mutableSetOf()
-        val CommunitySearchAdapter: CommunitySearchitemAdapter = CommunitySearchitemAdapter()
+        var CommunitySearchAdapter: CommunitySearchitemAdapter
 
         communitySearchEditText.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
             if (event.action != KeyEvent.KEYCODE_ENTER) {
                 editResult = communitySearchEditText.getText().toString()
+                CommunitySearchAdapter = CommunitySearchitemAdapter()
                 addItem(CommunitySearchAdapter)
                 return@OnKeyListener true
             }
@@ -68,6 +70,7 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
                 val result = (activity as CommunityActivity).connector.process(ResultManager.SEARCH_REQUEST, null, null, tempList)
                 CoroutineScope(Dispatchers.Main).launch { ld?.dismiss() }
             }
+            CommunitySearchAdapter= CommunitySearchitemAdapter()
             addItem(CommunitySearchAdapter)
 
         }
@@ -94,7 +97,6 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
             btn.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
                     searchTagSet.add(btn.text.toString())
-                   // editResult = btn.text.toString()
                     setEditTextView(searchTagSet)
                 } else {
                     searchTagSet.remove(btn.text.toString())
@@ -105,12 +107,12 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
         }
 
         community_search_result_user_listview.onItemClickListener = AdapterView.OnItemClickListener { parent, v, position, id ->
-            val itt = parent.getItemAtPosition(position) as CommunitySongItem
+            val itt = parent.getItemAtPosition(position) as MusicListClass
             activity!!.TrackFrame.visibility = View.VISIBLE
             (activity as CommunityActivity).onFragmentChangedtoTrack(itt)
         }
         community_search_result_tag_listview.onItemClickListener = AdapterView.OnItemClickListener { parent, v, position, id ->
-            val itt = parent.getItemAtPosition(position) as CommunitySongItem
+            val itt = parent.getItemAtPosition(position) as MusicListClass
             activity!!.TrackFrame.visibility = View.VISIBLE
             (activity as CommunityActivity).onFragmentChangedtoTrack(itt)
         }
@@ -119,7 +121,7 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
         editResultForView=""
         for(tag in searchTagSet){
             if(editResultForView=="") editResultForView = tag
-            else editResultForView = editResultForView + "," + tag
+            else editResultForView = editResultForView + ", " + tag
         }
         communitySearchEditText.setText(editResultForView)
         Log.d("ttttttttttt",""+searchTagSet)
@@ -142,7 +144,6 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
     fun addItem(CommunitySearchAdapter :CommunitySearchitemAdapter){
         if ((activity as CommunityActivity).isButtonStateTag == true &&  (activity as CommunityActivity).isTableBtnClicked == false) {
             community_search_result_tag_listview.adapter = CommunitySearchAdapter
-            //       (activity as CommunityActivity).connector?.searchResult?.tagList?.
             Log.d("aaaaaaaddItem","tagList")
             (activity as CommunityActivity).connector?.searchResult?.tagList?.forEach { CommunitySearchAdapter.addItem(it) }
         } else if ((activity as CommunityActivity).isButtonStateTag == false) {

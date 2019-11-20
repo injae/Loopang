@@ -11,7 +11,7 @@ import java.util.ArrayList
 
 
 class CommunityShareAdapter : BaseAdapter() {
-    private var listViewItemList = ArrayList<CommunityShareItem>()
+    private var listViewItemList = ArrayList<LoopMusic>()
     override fun getCount(): Int {
         return listViewItemList.size
     }
@@ -34,9 +34,9 @@ class CommunityShareAdapter : BaseAdapter() {
             view = convertView
         }
 
-        ViewHolder.dateStringView?.setText(listViewItemList.get(position).dateString)
-        ViewHolder.loopTitleView?.setText(listViewItemList.get(position).loopTitle)
-        ViewHolder.fileTypeView?.setText(listViewItemList[position].fileType)
+        ViewHolder.dateStringView?.setText(listViewItemList.get(position).date)
+        ViewHolder.loopTitleView?.setText(listViewItemList.get(position).name)
+        ViewHolder.fileTypeView?.setText(listViewItemList[position].type)
 
         val listViewItem = listViewItemList[position]
         return view
@@ -49,7 +49,7 @@ class CommunityShareAdapter : BaseAdapter() {
     override fun getItem(position: Int): Any {
         return listViewItemList[position]
     }
-
+/*
     fun addItem(loopTitle : String , dateString : String ) {
         val item = CommunityShareItem()
         //, filePath : String,childItem : MutableList<LoopMusic>
@@ -60,16 +60,19 @@ class CommunityShareAdapter : BaseAdapter() {
 
         listViewItemList.add(item)
     }
-
+*/
     fun addItem(loopMusic: LoopMusic) {
-        val item = CommunityShareItem()
+        /*val item = CommunityShareItem()
         item.loopTitle = loopMusic.name
         item.dateString = loopMusic.date
         item.extension = loopMusic.type
         if(loopMusic.child != null) item.fileType = "Project"
         else item.fileType = "Layer"
         item.childItems = loopMusic.child
-        listViewItemList.add(item)
+        listViewItemList.add(item)*/
+        if(loopMusic.child != null) loopMusic.type="Project"
+        else loopMusic.type="Layer"
+        listViewItemList.add(loopMusic)
     }
 
     private  class ViewHolder{

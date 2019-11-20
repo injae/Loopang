@@ -1,6 +1,7 @@
 package com.treasure.loopang
 
 import android.os.Bundle
+import android.os.CpuUsageInfo
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -13,6 +14,7 @@ import com.treasure.loopang.audio.Sound
 import com.treasure.loopang.audio.convertBytesToShort
 import com.treasure.loopang.communication.Connector
 import com.treasure.loopang.communication.ResultManager
+import com.treasure.loopang.communication.decodeUTF_8
 import com.treasure.loopang.communication.makeSHA256
 import kotlinx.android.synthetic.main.activity_community.*
 import kotlinx.android.synthetic.main.community_track.*
@@ -26,62 +28,76 @@ class CommunityTrackFragment(var sound: Sound? = null, val downloadChecker: Down
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        (activity as CommunityActivity).isTrackFragOpen = true
         TrackInfoTextView.isEnabled = false
         trackInfoText.setEnabled(false)
 
-        var heartState = false
-        val songMasteruserNickName : String = (activity as CommunityActivity).itt.userNickName
+        var heartState : Boolean = false
+        for(layer in (com.treasure.loopang.communication.UserManager.getUser().likedList)){
+            if(layer.id == (activity as CommunityActivity).itt.id){
+                heartState = true
+                heartButton.setImageDrawable(getResources().getDrawable(R.drawable.trackicon_heart_clicked))
+                break
+            }else heartState = false
+        }
+
+        val songMasteruserNickName : String = (activity as CommunityActivity).itt.owner
         val presentuserNickname : String = com.treasure.loopang.communication.UserManager.getUser().name
-        Track_trackName.setText((activity as CommunityActivity).itt.songName)
-        trackInfoDate.setText((activity as CommunityActivity).itt.productionDate.substring(0,10))
-        trackHeartClikedNum.setText((activity as CommunityActivity).itt.likedNum.toString())
-        playNumText.setText((activity as CommunityActivity).itt.downloadNum.toString())
+        Track_trackName.setText((activity as CommunityActivity).itt.name)
+        trackInfoDate.setText((activity as CommunityActivity).itt.updated_date.substring(0,10))
+        trackInfoText.setText((activity as CommunityActivity).itt.explanation)
+        trackHeartClikedNum.setText((activity as CommunityActivity).itt.likes.toString())
+        playNumText.setText((activity as CommunityActivity).itt.downloads.toString())
 
         Track_artistName.setText(songMasteruserNickName)
-        layerTag.setText("TAG: "+ "")
+        var Tag = ""
 
-        val musicID = (activity as CommunityActivity).itt.songId
+        (activity as CommunityActivity).itt.tags
+        for(tag in (activity as CommunityActivity).itt.tags!!){
+            decodeUTF_8(tag)
+            if(Tag == "") Tag = tag
+            else Tag = Tag + ", " + tag
+        }
+        layerTag.setText("TAG: "+ Tag)
+        Log.d("ttttttttt","tag : "+Tag+"      "+ (activity as CommunityActivity).itt.tags)
+
+        val musicID = (activity as CommunityActivity).itt.id
         setSound(musicID)
 
-        if(songMasteruserNickName == presentuserNickname) {
-            trackInfoText.setEnabled(true); //사용자와 노래주인이 같으면 터치해서 info바꿀 수 있음
+       /* if(songMasteruserNickName == presentuserNickname) {
+            trackInfoText.setEnabled(true);
             trackInfoText.addTextChangedListener(object  : TextWatcher{
                 override fun afterTextChanged(edit: Editable) {}
                 override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                    // var TrackInfo : String? = null 로 아이템 널어주기 ㅇㅇ
                 }
             })
-        }
-        //var likedNum = (activity as CommunityActivity).itt.likedNum
+        }*/
+
         heartButton.setOnClickListener {
             val connector = Connector()
             if(heartState == false) {
                 heartState = true
-                //likedNum +=1
-                (activity as CommunityActivity).itt.likedNum +=1
-                //itt의 likedNum 을 다시 가져가주기
-                GlobalScope.launch { connector.process(ResultManager.REQUEST_LIKE_UP, null, null, null, (activity as CommunityActivity).itt.songId) }
+                (activity as CommunityActivity).itt.likes +=1
+                GlobalScope.launch { connector.process(ResultManager.REQUEST_LIKE_UP, null, null, null, (activity as CommunityActivity).itt.id) }
                 heartButton.setImageDrawable(getResources().getDrawable(R.drawable.trackicon_heart_clicked))
-                trackHeartClikedNum.setText((activity as CommunityActivity).itt.likedNum.toString())
-            }
-            else {
+                trackHeartClikedNum.setText((activity as CommunityActivity).itt.likes.toString())
+                (activity as CommunityActivity).likeList.add((activity as CommunityActivity).itt)
+            } else {
                 heartState = false
-                //likedNum -=1
-                (activity as CommunityActivity).itt.likedNum -=1
-                GlobalScope.launch { connector.process(ResultManager.REQUEST_LIKE_DOWN, null, null, null, (activity as CommunityActivity).itt.songId) }
+                (activity as CommunityActivity).itt.likes -=1
+                GlobalScope.launch { connector.process(ResultManager.REQUEST_LIKE_DOWN, null, null, null, (activity as CommunityActivity).itt.id) }
                 heartButton.setImageDrawable(getResources().getDrawable(R.drawable.trackicon_heart))
-                //itt의 likedNum 을 다시 가져가주기
-                trackHeartClikedNum.setText((activity as CommunityActivity).itt.likedNum.toString())
+                trackHeartClikedNum.setText((activity as CommunityActivity).itt.likes.toString())
+                (activity as CommunityActivity).likeList.remove((activity as CommunityActivity).itt)
             }
+
         }
 
         downloadButton.setOnClickListener {
-            //사용자의 recording item으로 song이 들어가게 하는 기능 추가
-            downloadChecker.download((activity as CommunityActivity).itt.songName, (activity as CommunityActivity).itt.songId, activity!!)
-            (activity as CommunityActivity).itt.downloadNum += 1
-            playNumText.setText((activity as CommunityActivity).itt.downloadNum.toString())
+            downloadChecker.download((activity as CommunityActivity).itt.name, (activity as CommunityActivity).itt.id, activity!!)
+            (activity as CommunityActivity).itt.downloads += 1
+            playNumText.setText((activity as CommunityActivity).itt.downloads.toString())
         }
 
         Track_btn_play.setOnClickListener {
@@ -89,19 +105,12 @@ class CommunityTrackFragment(var sound: Sound? = null, val downloadChecker: Down
                 if(sound != null) { soundPlay() }
                 else { downloadChecker.download(null, musicID, activity!!, this) }
                 Track_btn_play.setImageDrawable(getResources().getDrawable(R.drawable.trackicon_pause))
-                TrackBtnReplay.visibility = View.VISIBLE
                 statePlaying =true
-            }
-            else { //statePlaying == true
+            } else {
                 soundStop()
                 Track_btn_play.setImageDrawable(getResources().getDrawable(R.drawable.trackicon_play))
-                TrackBtnReplay.visibility = View.GONE
                 statePlaying = false
             }
-        }
-
-        TrackBtnReplay.setOnClickListener { // 이거 필요없으니 지우셈
-            Log.d("replay Btn" , "replay btn")
         }
 
         track_btn_back.setOnClickListener {   activity!!.TrackFrame.visibility = View.GONE
@@ -126,7 +135,6 @@ class CommunityTrackFragment(var sound: Sound? = null, val downloadChecker: Down
             CoroutineScope(Dispatchers.Main).launch {
                 if(statePlaying) {
                     Track_btn_play.setImageDrawable(getResources().getDrawable(R.drawable.trackicon_play))
-                    TrackBtnReplay.visibility = View.GONE
                     statePlaying = false
                 }
             }

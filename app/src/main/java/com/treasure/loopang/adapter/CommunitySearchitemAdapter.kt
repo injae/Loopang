@@ -12,7 +12,7 @@ import java.util.ArrayList
 class CommunitySearchitemAdapter : BaseAdapter() {
     var btnSortState : String = "Song"//test용으로 초기화
 
-    private var listViewItemList = ArrayList<CommunitySongItem>()
+    private var listViewItemList = ArrayList<MusicListClass>()
 
     override fun getCount(): Int {
         return listViewItemList.size
@@ -37,8 +37,8 @@ class CommunitySearchitemAdapter : BaseAdapter() {
             view = convertView
         }
 
-        SongItemViewHolder.userNickNameTextView?.setText(listViewItemList.get(position).userNickName)
-        SongItemViewHolder.songNameTextView?.setText(listViewItemList.get(position).songName)
+        SongItemViewHolder.userNickNameTextView?.setText(listViewItemList.get(position).owner)
+        SongItemViewHolder.songNameTextView?.setText(listViewItemList.get(position).name)
 
 
             val userNickNameTextView = view?.findViewById(com.treasure.loopang.R.id.SearchArtistName) as TextView
@@ -55,15 +55,7 @@ class CommunitySearchitemAdapter : BaseAdapter() {
         return listViewItemList[position]
     }
     fun addItem(music: MusicListClass) {
-        val item = CommunitySongItem()
-        item.userNickName = music.owner
-        item.songName = music.name
-        item.downloadNum = music.downloads
-        item.likedNum = music.likes
-        item.songId = music.id
-        item.productionDate =music.updated_date
-
-        listViewItemList.add(item)
+        listViewItemList.add(music)
     }
 
     private  class ViewHolder{
