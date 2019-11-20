@@ -29,6 +29,8 @@ class Upload(Resource):
             user_id = token.get('sub')
             logger().debug('[upload] owner: %s', user_id)
             logger().debug('[upload] file: %s', name)
+            logger().debug('[upload] desc: %s', name)
+            logger().debug('[upload] tags: %s', name)
 
             if file == "":
                 return request_message('fail', 'No File Found')
