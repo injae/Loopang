@@ -82,13 +82,11 @@ class CommunityUserPageFragment : androidx.fragment.app.Fragment() {
             val itt = parent.getItemAtPosition(position) as MusicListClass
             activity!!.TrackFrame.visibility = View.VISIBLE
             (activity as CommunityActivity).onFragmentChangedtoTrack(itt)
-            Log.d("tttttttttt","itt.tag: "+itt.tags)
         }
         userPageLikedListView.onItemClickListener = AdapterView.OnItemClickListener { parent, v, position, id ->
             val itt = parent.getItemAtPosition(position) as MusicListClass
             activity!!.TrackFrame.visibility = View.VISIBLE
             (activity as CommunityActivity).onFragmentChangedtoTrack(itt)
-            Log.d("tttttttttt","itt.tag: "+itt.tags)
         }
         addTrackButton.setOnClickListener {
             val intent = Intent(activity, CommunityShareActivity::class.java)
