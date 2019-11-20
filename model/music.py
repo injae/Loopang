@@ -59,9 +59,9 @@ class Music(db.Model):
     def public_data(self):
         return {'id': self.music_id, 'name': self.name, 'owner': self.owner.name 
                ,'updated_date': str(self.updated_date), 'downloads': self.downloads
-               ,'likes': self.music_likes.count(), 'explanation': self.description
+               ,'likes': self.likes, 'explanation': self.description
                ,'tags': self.tag_list()}
-
+               #,'likes': self.music_likes.count(), 'explanation': self.description
     @staticmethod
     def track_list(user_id):
         return list(map(lambda l: l.public_data(), Music.query.filter_by(user_id=user_id)))

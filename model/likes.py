@@ -21,10 +21,10 @@ class Like(db.Model):
     def off(self):
         is_find = Like.query.filter_by(user_id=self.user_id, music_id=self.music_id).first()
         if is_find is not None:
+            remove(is_find)
             music = Music.query.filter_by(music_id=self.music_id).one()
             music.likes -= 1
             update()
-            remove(is_find)
 
     def on(self):
         is_find = Like.query.filter_by(user_id=self.user_id, music_id=self.music_id).first()
