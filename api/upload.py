@@ -14,7 +14,7 @@ class Upload(Resource):
             parser.add_argument('token', type=str)
             parser.add_argument('name', type=str)
             parser.add_argument('explanation', type=str)
-            parser.add_argument('tags', type=list)
+            parser.add_argument('tags', type=list, location='json')
             parser.add_argument('file', type=werkzeug.datastructures.FileStorage, location='files')
             args = parser.parse_args()
             (token, err) = Auth.decord_token(args['token'])
