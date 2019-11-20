@@ -32,6 +32,7 @@ class CommunityActivity(var connector: Connector = Connector(), val likeList: Mu
     var isCategorySelected : Boolean = false
     var isTableBtnClicked : Boolean = false
     var isButtonStateTag :Boolean = true
+    var sharingFinish : Boolean = false
     private var currentPage: Int = 0
     private val pagerAdapter by lazy { CommunityPagerAdapter(supportFragmentManager) }
     private val mDecorView: View by lazy { window.decorView }
@@ -70,7 +71,10 @@ class CommunityActivity(var connector: Connector = Connector(), val likeList: Mu
 
         val shareActivityintent = intent
         val isSharingFinished = intent.extras.getString("finish")
-        if(isSharingFinished == "true") CommunityContainer.setCurrentItem(1)
+        if(isSharingFinished == "true"){
+            sharingFinish = true
+            CommunityContainer.setCurrentItem(1)
+        }
 
         btn_feed.setOnClickListener { CommunityContainer.setCurrentItem(0) }
         btn_userpage.setOnClickListener { CommunityContainer.setCurrentItem(1) }
@@ -162,16 +166,18 @@ class CommunityActivity(var connector: Connector = Connector(), val likeList: Mu
             isCategorySelected = false
             communityFeedCategoryListView.visibility = View.VISIBLE
             communityFeedListView.visibility= View.GONE
-            Log.d("wwwwwwwwwwww","피드")
         }
         else if(isTrackFragOpen== false && isTableBtnClicked == true && isButtonStateTag == true && SelectedPage == 2){
             isTableBtnClicked = false
             community_search_tag_table.visibility = View.VISIBLE
             community_search_result_tag_listview.visibility = View.GONE
             community_search_result_user_listview.visibility = View.GONE
-            Log.d("wwwwwwwwwwww","서치")
+        }
+        else if(sharingFinish ==true){
+            val intent = Intent(this, Recording::class.java)
+            startActivity(intent)
+            sharingFinish = false
         }
         else super.onBackPressed()
-
     }
 }

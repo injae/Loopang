@@ -23,24 +23,27 @@ import java.io.File
 
 class CommunityTrackFragment(var sound: Sound? = null, val downloadChecker: DownloadChecker = DownloadChecker(),
                              var statePlaying: Boolean = false): androidx.fragment.app.Fragment() {
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(com.treasure.loopang.R.layout.community_track,container,false);
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity as CommunityActivity).isTrackFragOpen = true
         TrackInfoTextView.isEnabled = false
         trackInfoText.setEnabled(false)
-
         var heartState : Boolean = false
         for(layer in (com.treasure.loopang.communication.UserManager.getUser().likedList)){
             if(layer.id == (activity as CommunityActivity).itt.id){
                 heartState = true
+                Log.d("hhhhhhhhhhh","heart in list")
                 heartButton.setImageDrawable(getResources().getDrawable(R.drawable.trackicon_heart_clicked))
                 break
             }else heartState = false
         }
 
+        setHeart(heartState)
         val songMasteruserNickName : String = (activity as CommunityActivity).itt.owner
         val presentuserNickname : String = com.treasure.loopang.communication.UserManager.getUser().name
         Track_trackName.setText((activity as CommunityActivity).itt.name)
@@ -75,23 +78,9 @@ class CommunityTrackFragment(var sound: Sound? = null, val downloadChecker: Down
         }*/
 
         heartButton.setOnClickListener {
-            val connector = Connector()
-            if(heartState == false) {
-                heartState = true
-                (activity as CommunityActivity).itt.likes +=1
-                GlobalScope.launch { connector.process(ResultManager.REQUEST_LIKE_UP, null, null, null, (activity as CommunityActivity).itt.id) }
-                heartButton.setImageDrawable(getResources().getDrawable(R.drawable.trackicon_heart_clicked))
-                trackHeartClikedNum.setText((activity as CommunityActivity).itt.likes.toString())
-                (activity as CommunityActivity).likeList.add((activity as CommunityActivity).itt)
-            } else {
-                heartState = false
-                (activity as CommunityActivity).itt.likes -=1
-                GlobalScope.launch { connector.process(ResultManager.REQUEST_LIKE_DOWN, null, null, null, (activity as CommunityActivity).itt.id) }
-                heartButton.setImageDrawable(getResources().getDrawable(R.drawable.trackicon_heart))
-                trackHeartClikedNum.setText((activity as CommunityActivity).itt.likes.toString())
-                (activity as CommunityActivity).likeList.remove((activity as CommunityActivity).itt)
-            }
-
+            setHeart(heartState)
+            if(heartState==true) heartState =false
+            else heartState = true
         }
 
         downloadButton.setOnClickListener {
@@ -142,4 +131,23 @@ class CommunityTrackFragment(var sound: Sound? = null, val downloadChecker: Down
     }
 
     private fun soundStop() { GlobalScope.launch { sound?.stop() } }
+    fun setHeart(heartState:Boolean){
+        Log.d("hhhhhhhhhhh","heart: " + heartState)
+        val connector = Connector()
+        if(heartState == false) {
+           // heartState = true
+            (activity as CommunityActivity).itt.likes +=1
+            GlobalScope.launch { connector.process(ResultManager.REQUEST_LIKE_UP, null, null, null, (activity as CommunityActivity).itt.id) }
+            heartButton.setImageDrawable(getResources().getDrawable(R.drawable.trackicon_heart_clicked))
+            trackHeartClikedNum.setText((activity as CommunityActivity).itt.likes.toString())
+            (activity as CommunityActivity).likeList.add((activity as CommunityActivity).itt)
+        } else {
+            //heartState = false
+            (activity as CommunityActivity).itt.likes -=1
+            GlobalScope.launch { connector.process(ResultManager.REQUEST_LIKE_DOWN, null, null, null, (activity as CommunityActivity).itt.id) }
+            heartButton.setImageDrawable(getResources().getDrawable(R.drawable.trackicon_heart))
+            trackHeartClikedNum.setText((activity as CommunityActivity).itt.likes.toString())
+            (activity as CommunityActivity).likeList.remove((activity as CommunityActivity).itt)
+        }
+    }
 }
