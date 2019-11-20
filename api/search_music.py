@@ -11,7 +11,7 @@ class MusicSearch(Resource):
         try:
             parser = reqparse.RequestParser()
             parser.add_argument('token',  type=str)
-            parser.add_argument('target', type=list, location='json')
+            parser.add_argument('target', type=str, action='append')
             parser.add_argument('flag',   type=int)
             args = parser.parse_args()
             (token, err) = Auth.decord_token(args['token'])
