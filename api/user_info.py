@@ -17,7 +17,7 @@ class UserInfo(Resource):
             (token, err) = Auth.decord_token(args['token'])
             if token is None: return err, 200
             user = User.search(token.get('sub'))
-            logger().debug('[upload] user_name: %s', user.name)
+            logger().debug('[user-info] user_name: %s', user.name)
             return {
                 'status': 'success',
                 'message': 'user-info',

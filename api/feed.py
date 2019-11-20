@@ -15,7 +15,7 @@ class Feed(Resource):
             (token, err) = Auth.decord_token(args['token'])
             if token is None: return err, 200
             user_id = token.get('sub')
-            logger().debug('[upload] user_name: %s', user_id)
+            logger().debug('[feed] user_name: %s', user_id)
             return {
                 "status": "success",
                 "message": "feed data",

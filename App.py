@@ -23,23 +23,23 @@ def App():
 
     api = Api(app)
     from api.signup import SignUp
-    api.add_resource(SignUp, '/sign-up')
+    api.add_resource(SignUp, '/auth/sign-up')
     from api.login import Login
-    api.add_resource(Login, '/login')
+    api.add_resource(Login, '/auth/login')
     from api.auth import Auth
-    api.add_resource(Auth, '/auth')
+    api.add_resource(Auth, '/auth/refresh')
     from api.upload import Upload
-    api.add_resource(Upload, '/upload')
+    api.add_resource(Upload, '/file/upload')
     from api.download import Download
-    api.add_resource(Download, '/download')
+    api.add_resource(Download, '/file/download')
     from api.user_info import UserInfo
-    api.add_resource(UserInfo, '/user-info')
+    api.add_resource(UserInfo, '/info/user')
     from api.search_music import MusicSearch
-    api.add_resource(MusicSearch, '/music-search')
+    api.add_resource(MusicSearch, '/music/search')
     from api.like import LikeMusic
-    api.add_resource(LikeMusic, '/request-like')
+    api.add_resource(LikeMusic, '/like/request')
     from api.feed import Feed
-    api.add_resource(Feed, '/feed')
+    api.add_resource(Feed, '/info/feed')
 
     return app
 
