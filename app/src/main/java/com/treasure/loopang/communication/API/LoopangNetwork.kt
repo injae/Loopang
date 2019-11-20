@@ -46,7 +46,8 @@ interface LoopangNetwork {
     @FormUrlEncoded
     @POST("/file/download")
     fun receiveFile(@Field("token") accessToken: String,
-                    @Field("music_id") music_id: String): Call<ResponseBody>
+                    @Field("music_id") music_id: String,
+                    @Field("preplay") preplay: Boolean): Call<ResponseBody>
 
     @FormUrlEncoded
     @POST("/user/likes")

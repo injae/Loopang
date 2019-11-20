@@ -38,12 +38,13 @@ class Connector(private val DNS: String = "https://ec2-3-15-172-177.us-east-2.co
         var feedCall: Call<FeedResult>? = null
         var searchCall: Call<SearchResult>? = null
         var result = Result()
+        val preplay = { targetName: String? -> if(targetName == null) true else false }
         when(case) {
             ResultManager.AUTH -> { call = service.receiveTokens() }
             ResultManager.SIGN_UP -> { call = service.sendSignUpInfo(user!!.email, user.password, user.name) }
             ResultManager.LOGIN -> { call = service.sendLoginInfo(user!!.email, user.password) }
             ResultManager.FILE_UPLOAD -> { call = service.sendFile(accessToken, fileName!!, fileInfo!!.explanation, fileInfo.tags!!, getMultiPartBody(fileInfo.name)) }
-            ResultManager.FILE_DOWNLOAD -> { fileCall = service.receiveFile(accessToken, musicID!!) }
+            ResultManager.FILE_DOWNLOAD -> { fileCall = service.receiveFile(accessToken, musicID!!, preplay(fileName)) }
             ResultManager.INFO_REQUEST -> { infoCall = service.receiveUserInfo(accessToken) }
             ResultManager.FEED_REQUEST -> { feedCall = service.receiveFeed(accessToken) }
             ResultManager.SEARCH_REQUEST -> { searchCall = service.receiveSearch(accessToken, searchData!!) }

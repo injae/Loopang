@@ -15,6 +15,8 @@ fun makeSHA256(target: String): String {
 fun encodeBase64(target: String) = Base64.encodeToString(target.toByteArray(), Base64.DEFAULT)
 fun decodeBase64(target: String) = String(Base64.decode(target.toByteArray(), Base64.DEFAULT))
 
+fun decodeUTF_8(target: String) = String(target.toByteArray(), Charsets.UTF_8)
+
 fun encodeYuni(target: String): String {
     var encodedTarget = ""
     for(chr in encodeBase64(encodeBase64(encodeBase64(target)))) {
