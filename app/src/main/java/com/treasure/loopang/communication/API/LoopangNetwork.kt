@@ -11,45 +11,45 @@ import retrofit2.http.*
 
 interface LoopangNetwork {
     @FormUrlEncoded
-    @POST("/sign-up")
+    @POST("/auth/sign-up")
     fun sendSignUpInfo(@Field("email") email: String,
                        @Field("password") password: String,
                        @Field("name") name: String): Call<Result>
 
     @FormUrlEncoded
-    @POST("/login")
+    @POST("/auth/login")
     fun sendLoginInfo(@Field("email") email: String,
                       @Field("password") password: String): Call<Result>
 
     @FormUrlEncoded
-    @POST("/user-info")
+    @POST("/info/user")
     fun receiveUserInfo(@Field("token") accessToken: String): Call<ForUserInfo>
 
     @FormUrlEncoded
-    @POST("/feed")
+    @POST("/info/feed")
     fun receiveFeed(@Field("token") token: String): Call<FeedResult>
 
     @FormUrlEncoded
-    @POST("/music-search")
+    @POST("/music/search")
     fun receiveSearch(@Field("token") token: String,
                       @Field("target") target: List<String>): Call<SearchResult>
 
-    @GET("/auth")
+    @GET("/auth/refresh")
     fun receiveTokens(): Call<Result>
 
     @Multipart
-    @POST("/upload")
+    @POST("/file/upload")
     fun sendFile(@Part("token") accessToken: String,
                  @Part("name") fileName: String, @Part("explanation") explanation: String,
                  @Part("tags") tags: List<String>, @Part file: MultipartBody.Part): Call<Result>
 
     @FormUrlEncoded
-    @POST("/download")
+    @POST("/file/download")
     fun receiveFile(@Field("token") accessToken: String,
                     @Field("music_id") music_id: String): Call<ResponseBody>
 
     @FormUrlEncoded
-    @POST("/request-like")
+    @POST("/user/likes")
     fun requestLike(@Field("token") token: String,
                     @Field("music_id") music_id: String,
                     @Field("like") like: Boolean): Call<Result>
