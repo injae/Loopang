@@ -12,7 +12,7 @@ import com.treasure.loopang.listitem.CommunityShareItem
 import kotlinx.android.synthetic.main.activity_community_share.*
 
 class CommunityShareActivity(val connector: Connector = Connector(), var parent_name: String = "") : AppCompatActivity() {
-    var isShareing : Boolean = false
+    var isSharinginFrag : Boolean = false
     var isProjectClicked: Boolean =false
     private var mUiOption: Int = 0
     private val mDecorView: View by lazy { window.decorView }
@@ -29,7 +29,6 @@ class CommunityShareActivity(val connector: Connector = Connector(), var parent_
         mDecorView.systemUiVisibility = mUiOption
 
         window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-
         val fm = FileManager()
 
         val ShareAdapter = CommunityShareAdapter()
@@ -59,15 +58,17 @@ class CommunityShareActivity(val connector: Connector = Connector(), var parent_
         }
     }
     override fun onBackPressed() {
-        if(isShareing ==  true){
+        if(isSharinginFrag ==  true){
             shareContainer.visibility = View.GONE
-            isShareing= false
+            communityShareListView.visibility=View.VISIBLE
+            shareProjectClikedLayer.visibility = View.GONE
+            isSharinginFrag= false
         }
-        else if(isShareing== false && isProjectClicked == true){
+        else if(isSharinginFrag== false && isProjectClicked == true){
             communityShareListView.visibility=View.VISIBLE
             shareProjectClikedLayer.visibility = View.GONE
         }
-        super.onBackPressed()
+        else super.onBackPressed()
     }
     fun openShareFrag(item :CommunityShareItem){
         layerItem = item

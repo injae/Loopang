@@ -25,8 +25,13 @@ class CommunityShareFragment : androidx.fragment.app.Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as CommunityShareActivity).isShareing = true
+        (activity as CommunityShareActivity).isSharinginFrag = true
         var post = ""
+
+        share_layer_title.setText((activity as CommunityShareActivity).layerItem.loopTitle)
+        share_typeTextView.setText((activity as CommunityShareActivity).layerItem.fileType)
+        share_layerDate.setText((activity as CommunityShareActivity).layerItem.dateString)
+
         writePostAboutLayer.setEnabled(true)
         writePostAboutLayer.addTextChangedListener(object  : TextWatcher {
             override fun afterTextChanged(edit: Editable) {}
@@ -46,21 +51,26 @@ class CommunityShareFragment : androidx.fragment.app.Fragment() {
         }
         shareButton.setOnClickListener {
             val at = (activity as CommunityShareActivity)
-            if(at.layerItem.extension == "pcm") {
-                val ld = LoadingActivity(activity!!)
-                GlobalScope.launch {
-                    CoroutineScope(Dispatchers.Main).launch { ld.show() }
-                    at.connector.process(ResultManager.FILE_UPLOAD, null, at.layerItem.loopTitle, null, null, makeUploadInfo(post, at))
-                    CoroutineScope(Dispatchers.Main).launch { ld.dismiss() }
+            if((activity as CommunityShareActivity).userTagSet.isEmpty()){
+                toast("TAG를 선택해주세요.")
+            }else{
+                if(at.layerItem.extension == "pcm") {
+                    val ld = LoadingActivity(activity!!)
+                    GlobalScope.launch {
+                        CoroutineScope(Dispatchers.Main).launch { ld.show() }
+                        at.connector.process(ResultManager.FILE_UPLOAD, null, at.layerItem.loopTitle, null, null, makeUploadInfo(post, at))
+                        CoroutineScope(Dispatchers.Main).launch { ld.dismiss() }
+                    }
+                    val intent = Intent(activity, CommunityActivity::class.java)
+                    intent.putExtra("finish","true")
+                    intent.putExtra("from", "CommunityShareFragment")
+                    startActivity(intent)
                 }
-                val intent = Intent(activity, CommunityActivity::class.java)
-                intent.putExtra("finish","true")
-                intent.putExtra("from", "CommunityShareFragment")
-                startActivity(intent)
+                else {
+                    toast("레이어만 업로드 할 수 있습니다.")
+                }
             }
-            else {
-                toast("레이어만 업로드 할 수 있습니다.")
-            }
+
         }
     }
 

@@ -59,6 +59,7 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
                 editResult = communitySearchEditText.getText().toString()
             }
         })
+        setVisibillity((activity as CommunityActivity).isButtonStateTag,(activity as CommunityActivity).isTableBtnClicked)
 
         communitySearchBtn.setOnClickListener {
             (activity as CommunityActivity).isTableBtnClicked = true

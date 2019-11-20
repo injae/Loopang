@@ -75,7 +75,7 @@
                         android:textStyle="bold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/layer_title"
+                        android:id="@+id/share_layer_title"
                         android:textSize="16sp"
                         android:fontFamily="@font/roboto_medium"
                         />
@@ -84,7 +84,7 @@
                         android:textColor="#ffffff"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/typeTextView"
+                        android:id="@+id/share_typeTextView"
                         android:fontFamily="@font/roboto_light" android:textSize="12sp"
                         />
                 <TextView
@@ -92,7 +92,7 @@
                         android:textColor="#ffffff"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/layerDate"
+                        android:id="@+id/share_layerDate"
                         android:textSize="12sp"
                         android:fontFamily="@font/roboto"/>
             </LinearLayout>
