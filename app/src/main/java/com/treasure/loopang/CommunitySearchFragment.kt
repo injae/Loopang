@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.treasure.loopang.listitem.CommunitySongItem
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -16,36 +15,32 @@ import kotlinx.android.synthetic.main.community_search.communitySearchBtn
 import kotlinx.android.synthetic.main.community_search.communitySearchEditText
 import kotlinx.android.synthetic.main.community_search.xbutton
 import kotlinx.android.synthetic.main.community_search_result.*
-import kotlin.math.log
 import android.view.KeyEvent.KEYCODE_ENTER
-import android.R
-import android.view.KeyEvent
 import android.widget.*
 import com.treasure.loopang.communication.MusicListClass
 import com.treasure.loopang.communication.ResultManager
-import kotlinx.android.synthetic.main.activity_shared_community.*
-import kotlinx.android.synthetic.main.community_user_page.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 
-class CommunitySearchFragment : androidx.fragment.app.Fragment() {
+class CommunitySearchFragment(var selection: Int = 2) : androidx.fragment.app.Fragment() {
     private var editResultForView : String = ""
     private var editResult: String = ""
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(com.treasure.loopang.R.layout.community_search,container,false);
+        return inflater.inflate(com.treasure.loopang.R.layout.community_search,container,false)
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (activity as CommunityActivity).ButtonState = "Tag"
 
         val searchTagSet : MutableSet<String> = mutableSetOf()
         var CommunitySearchAdapter: CommunitySearchitemAdapter
 
         setVisibillity()
         communitySearchEditText.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
-            if (event.action != KeyEvent.KEYCODE_ENTER) {
+            if (event.action != KEYCODE_ENTER) {
                 (activity as CommunityActivity).isSearchBtnClicked = true
                 setVisibillity()
                 editResult = communitySearchEditText.getText().toString()
@@ -66,14 +61,17 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
 
         communitySearchBtn.setOnClickListener {
             Log.d("pppppppppppp","btn click!")
+            val tempList: List<String> = when(selection) {
+                2 -> { searchTagSet.toList() }
+                else -> { List(1, {editResult}) }
+            }
             (activity as CommunityActivity).isSearchBtnClicked = true
             setVisibillity()
             val ld = LoadingActivity(activity!!)
             GlobalScope.launch {
-                CoroutineScope(Dispatchers.Main).launch { ld?.show() }
-                val tempList = List<String>(1, {editResult}) // 이거는 지은이가 수정다하면 내가 하면됌
-                val result = (activity as CommunityActivity).connector.process(ResultManager.SEARCH_REQUEST, null, null, tempList)
-                CoroutineScope(Dispatchers.Main).launch { ld?.dismiss() }
+                CoroutineScope(Dispatchers.Main).launch { ld.show() }
+                (activity as CommunityActivity).connector.process(ResultManager.SEARCH_REQUEST, null, null, tempList, null, null, selection)
+                CoroutineScope(Dispatchers.Main).launch { ld.dismiss() }
             }
             Log.d("pppppppppppp","addItem 해야 함 ㅇㅇ")
             CommunitySearchAdapter= CommunitySearchitemAdapter() //어댑터 새로 붙혀주고 add item하므로 굉장히 잘 나와야함
@@ -82,6 +80,7 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
         xbutton.setOnClickListener { communitySearchEditText.setText("") }
 
         SearchTagBtn.setOnClickListener {
+            selection = 2
             SearchTagBtn.setTextColor(Color.argb(200, 115, 115, 115))
             SearchTagBtn.setBackgroundColor(Color.WHITE)
             SearchLayerBtn.setBackgroundColor(Color.argb(26, 0, 0, 0))
@@ -92,6 +91,7 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
             setVisibillity()
         }
         SearchLayerBtn.setOnClickListener {
+            selection = 1
             SearchLayerBtn.setTextColor(Color.argb(200, 115, 115, 115))
             SearchLayerBtn.setBackgroundColor(Color.WHITE)
             SearchUserBtn.setBackgroundColor(Color.argb(26, 0, 0, 0))
@@ -102,6 +102,7 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
             setVisibillity()
         }
         SearchUserBtn.setOnClickListener {
+            selection = 3
             SearchUserBtn.setTextColor(Color.argb(200, 115, 115, 115))
             SearchUserBtn.setBackgroundColor(Color.WHITE)
             SearchLayerBtn.setBackgroundColor(Color.argb(26, 0, 0, 0))
@@ -154,14 +155,15 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
         if ((activity as CommunityActivity).ButtonState == "Tag") {
             community_search_result_listview.adapter = CommunitySearchAdapter
             Log.d("pppppppppppp","add Item Tag List")
-            (activity as CommunityActivity).connector?.searchResult?.tagList?.forEach { CommunitySearchAdapter.addItem(it) }
+            (activity as CommunityActivity).connector.searchResult?.results?.forEach { CommunitySearchAdapter.addItem(it) }
         } else if((activity as CommunityActivity).ButtonState == "User"){
             community_search_result_listview.adapter = CommunitySearchAdapter
             Log.d("pppppppppppp","add Item User List")
-            (activity as CommunityActivity).connector?.searchResult?.userList?.forEach { CommunitySearchAdapter.addItem(it) }
+            (activity as CommunityActivity).connector.searchResult?.results?.forEach { CommunitySearchAdapter.addItem(it) }
         }else if((activity as CommunityActivity).ButtonState == "Layer"){
             community_search_result_listview.adapter = CommunitySearchAdapter
             Log.d("pppppppppppp","add Item Layer List")
+            (activity as CommunityActivity).connector.searchResult?.results?.forEach { CommunitySearchAdapter.addItem(it) }
         }
     }
 }
