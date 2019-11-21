@@ -30,7 +30,7 @@ class CommunityActivity(var connector: Connector = Connector(), val likeList: Mu
     var isTrackFragOpen : Boolean = false
     val transaction = supportFragmentManager.beginTransaction()
     var isCategorySelected : Boolean = false
-    var isTableBtnClicked : Boolean = false
+    var isSearchBtnClicked : Boolean = false
     var isButtonStateTag :Boolean = true
     var sharingFinish : Boolean = false
     var isLikedDataChanged : Boolean = true
@@ -168,8 +168,9 @@ class CommunityActivity(var connector: Connector = Connector(), val likeList: Mu
             communityFeedCategoryListView.visibility = View.VISIBLE
             communityFeedListView.visibility= View.GONE
         }
-        else if(isTrackFragOpen== false && isTableBtnClicked == true && isButtonStateTag == true && SelectedPage == 2){
-            isTableBtnClicked = false
+        else if(isTrackFragOpen== false && isSearchBtnClicked  == true && isButtonStateTag == true && SelectedPage == 2){
+            isSearchBtnClicked  = false
+            Log.d("pppppppppppp","ButtonTag? "+isButtonStateTag + ", SearchBtnClick?" +isSearchBtnClicked)
             community_search_tag_table.visibility = View.VISIBLE
             community_search_result_tag_listview.visibility = View.GONE
             community_search_result_user_listview.visibility = View.GONE

@@ -41,8 +41,6 @@ class CommunityUserPageAdapter : BaseAdapter() {
         userPageViewHolder.productionDateTextView?.setText(listViewItemList.get(position).updated_date.substring(0,10))
         userPageViewHolder.songNameTextView?.setText(listViewItemList.get(position).name)
 
-        val listViewItem = listViewItemList[position]
-
         //userPageViewHolder.btnForDelete?.setOnClickListener {
       //      Log.d("aaaaaaaaaaaaaaa","btn cliked"+position)
      //   }

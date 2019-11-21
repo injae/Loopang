@@ -20,11 +20,10 @@ class CommunitySearchitemAdapter : BaseAdapter() {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
 
-        var view = convertView
+        var view : View
         val context = parent.context
         val SongItemViewHolder : ViewHolder
 
-        var btnSortState: String? = null
 
         if (convertView == null) {
             view = LayoutInflater.from(context).inflate(com.treasure.loopang.R.layout.community_search_item, null)
@@ -40,12 +39,7 @@ class CommunitySearchitemAdapter : BaseAdapter() {
         SongItemViewHolder.userNickNameTextView?.setText(listViewItemList.get(position).owner)
         SongItemViewHolder.songNameTextView?.setText(listViewItemList.get(position).name)
 
-
-            val userNickNameTextView = view?.findViewById(com.treasure.loopang.R.id.SearchArtistName) as TextView
-            val songNameTextView = view?.findViewById(com.treasure.loopang.R.id.SearchSongName) as TextView
-        val listViewItem = listViewItemList[position]
-
-        return view!!
+        return view
     }
 
     override fun getItemId(position: Int): Long {
@@ -55,6 +49,7 @@ class CommunitySearchitemAdapter : BaseAdapter() {
         return listViewItemList[position]
     }
     fun addItem(music: MusicListClass) {
+        Log.d("pppppppppppp","add"+music.name +": "+ music.tags)
         listViewItemList.add(music)
     }
 
