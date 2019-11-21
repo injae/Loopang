@@ -1,7 +1,6 @@
 package com.treasure.loopang
 
 import android.graphics.Color
-import android.os.Build.VERSION_CODES.P
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -13,15 +12,8 @@ import com.treasure.loopang.adapter.CommunityPagerAdapter
 import com.treasure.loopang.communication.Connector
 import com.treasure.loopang.communication.FeedResult
 import com.treasure.loopang.communication.MusicListClass
-import com.treasure.loopang.communication.SearchResult
-import com.treasure.loopang.listitem.CommunitySongItem
 import kotlinx.android.synthetic.main.community_feed.*
 import android.content.Intent
-import android.view.KeyEvent
-import android.widget.ListView
-import android.widget.TableLayout
-import androidx.core.app.NotificationCompat.getExtras
-import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.community_search_result.*
 
 class CommunityActivity(var connector: Connector = Connector(), val likeList: MutableList<MusicListClass> = MutableList<MusicListClass>(0, { MusicListClass () })) : AppCompatActivity() {
@@ -31,7 +23,7 @@ class CommunityActivity(var connector: Connector = Connector(), val likeList: Mu
     val transaction = supportFragmentManager.beginTransaction()
     var isCategorySelected : Boolean = false
     var isSearchBtnClicked : Boolean = false
-    var isButtonStateTag :Boolean = true
+    var ButtonState = ""
     var sharingFinish : Boolean = false
     var isLikedDataChanged : Boolean = true
 
@@ -168,12 +160,11 @@ class CommunityActivity(var connector: Connector = Connector(), val likeList: Mu
             communityFeedCategoryListView.visibility = View.VISIBLE
             communityFeedListView.visibility= View.GONE
         }
-        else if(isTrackFragOpen== false && isSearchBtnClicked  == true && isButtonStateTag == true && SelectedPage == 2){
+        else if(isTrackFragOpen== false && isSearchBtnClicked  == true && ButtonState == "Tag" && SelectedPage == 2){
             isSearchBtnClicked  = false
-            Log.d("pppppppppppp","ButtonTag? "+isButtonStateTag + ", SearchBtnClick?" +isSearchBtnClicked)
+            Log.d("pppppppppppp","Button:  "+ButtonState + ", SearchBtnClick?" +isSearchBtnClicked)
             community_search_tag_table.visibility = View.VISIBLE
-            community_search_result_tag_listview.visibility = View.GONE
-            community_search_result_user_listview.visibility = View.GONE
+            community_search_result_listview.visibility = View.GONE
         }
         else if(sharingFinish ==true){
             val intent = Intent(this, Recording::class.java)

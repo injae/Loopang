@@ -10,8 +10,6 @@ import com.treasure.loopang.listitem.CommunitySongItem
 import java.util.ArrayList
 
 class CommunitySearchitemAdapter : BaseAdapter() {
-    var btnSortState : String = "Song"//test용으로 초기화
-
     private var listViewItemList = ArrayList<MusicListClass>()
 
     override fun getCount(): Int {
@@ -23,7 +21,6 @@ class CommunitySearchitemAdapter : BaseAdapter() {
         var view : View
         val context = parent.context
         val SongItemViewHolder : ViewHolder
-
 
         if (convertView == null) {
             view = LayoutInflater.from(context).inflate(com.treasure.loopang.R.layout.community_search_item, null)

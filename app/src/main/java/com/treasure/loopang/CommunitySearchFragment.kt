@@ -81,18 +81,35 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
         }
         xbutton.setOnClickListener { communitySearchEditText.setText("") }
 
-        val filterBtnList: List<Button> = listOf(SearchTagBtn, SearchUserBtn)
-        for (i in 0..filterBtnList.size - 1) {
-            filterBtnList[i].setOnClickListener {
-                filterBtnList[i].setTextColor(Color.argb(200, 115, 115, 115))
-                filterBtnList[i].setBackgroundColor(Color.WHITE)
-                filterBtnList[1 - i].setBackgroundColor(Color.argb(0, 0, 0, 0))
-                filterBtnList[1 - i].setTextColor(Color.WHITE)
-                if (filterBtnList[i] == SearchTagBtn) (activity as CommunityActivity).isButtonStateTag = true
-                else (activity as CommunityActivity).isButtonStateTag = false
-                setVisibillity()
-                Log.d("pppppppppppp","btn State Tag? : "+(activity as CommunityActivity).isButtonStateTag)
-            }
+        SearchTagBtn.setOnClickListener {
+            SearchTagBtn.setTextColor(Color.argb(200, 115, 115, 115))
+            SearchTagBtn.setBackgroundColor(Color.WHITE)
+            SearchLayerBtn.setBackgroundColor(Color.argb(26, 0, 0, 0))
+            SearchLayerBtn.setTextColor(Color.WHITE)
+            SearchUserBtn.setBackgroundColor(Color.argb(26, 0, 0, 0))
+            SearchUserBtn.setTextColor(Color.WHITE)
+            (activity as CommunityActivity).ButtonState = "Tag"
+            setVisibillity()
+        }
+        SearchLayerBtn.setOnClickListener {
+            SearchLayerBtn.setTextColor(Color.argb(200, 115, 115, 115))
+            SearchLayerBtn.setBackgroundColor(Color.WHITE)
+            SearchUserBtn.setBackgroundColor(Color.argb(26, 0, 0, 0))
+            SearchUserBtn.setTextColor(Color.WHITE)
+            SearchTagBtn.setBackgroundColor(Color.argb(26, 0, 0, 0))
+            SearchTagBtn.setTextColor(Color.WHITE)
+            (activity as CommunityActivity).ButtonState = "Layer"
+            setVisibillity()
+        }
+        SearchUserBtn.setOnClickListener {
+            SearchUserBtn.setTextColor(Color.argb(200, 115, 115, 115))
+            SearchUserBtn.setBackgroundColor(Color.WHITE)
+            SearchLayerBtn.setBackgroundColor(Color.argb(26, 0, 0, 0))
+            SearchLayerBtn.setTextColor(Color.WHITE)
+            SearchTagBtn.setBackgroundColor(Color.argb(26, 0, 0, 0))
+            SearchTagBtn.setTextColor(Color.WHITE)
+            (activity as CommunityActivity).ButtonState = "User"
+            setVisibillity()
         }
 
         val tableBtnList: List<ToggleButton> = listOf(btnClap, btnViolin, btnPiano, btnPercussionInstrument, btnJanggu, btnDrum, btnBeat, btnAcappella)
@@ -107,12 +124,7 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
                 }
             }
         }
-        community_search_result_user_listview.onItemClickListener = AdapterView.OnItemClickListener { parent, v, position, id ->
-            val itt = parent.getItemAtPosition(position) as MusicListClass
-            activity!!.TrackFrame.visibility = View.VISIBLE
-            (activity as CommunityActivity).onFragmentChangedtoTrack(itt)
-        }
-        community_search_result_tag_listview.onItemClickListener = AdapterView.OnItemClickListener { parent, v, position, id ->
+        community_search_result_listview.onItemClickListener = AdapterView.OnItemClickListener { parent, v, position, id ->
             val itt = parent.getItemAtPosition(position) as MusicListClass
             activity!!.TrackFrame.visibility = View.VISIBLE
             (activity as CommunityActivity).onFragmentChangedtoTrack(itt)
@@ -128,33 +140,28 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
         Log.d("pppppppppppp",""+searchTagSet)
     }
     fun setVisibillity(){
-        if((activity as CommunityActivity).isButtonStateTag){
-            community_search_result_user_listview.visibility = View.GONE
-            if((activity as CommunityActivity).isSearchBtnClicked ){
-                Log.d("pppppppppppp","ButtonTag? "+(activity as CommunityActivity).isButtonStateTag + ", SearchBtnClick?" +(activity as CommunityActivity).isSearchBtnClicked)
-                community_search_tag_table.visibility = View.GONE
-                community_search_result_tag_listview.visibility = View.VISIBLE
-            }else{
-                Log.d("pppppppppppp","ButtonTag? "+(activity as CommunityActivity).isButtonStateTag + ", SearchBtnClick?" +(activity as CommunityActivity).isSearchBtnClicked)
-                community_search_tag_table.visibility = View.VISIBLE
-                community_search_result_tag_listview.visibility = View.GONE
-            }
+        if((activity as CommunityActivity).ButtonState == "Tag"&&(activity as CommunityActivity).isSearchBtnClicked== false){
+            community_search_tag_table.visibility = View.VISIBLE
+            community_search_result_listview.visibility = View.GONE
+            Log.d("pppppppppppp","button: "+(activity as CommunityActivity).ButtonState+ "SearchBtnClick? :"+(activity as CommunityActivity).isSearchBtnClicked )
         } else{
-            Log.d("pppppppppppp","ButtonTag? "+(activity as CommunityActivity).isButtonStateTag + ", SearchBtnClick?" +(activity as CommunityActivity).isSearchBtnClicked)
             community_search_tag_table.visibility = View.GONE
-            community_search_result_tag_listview.visibility = View.GONE
-            community_search_result_user_listview.visibility = View.VISIBLE
+            community_search_result_listview.visibility = View.VISIBLE
+            Log.d("pppppppppppp","button: "+(activity as CommunityActivity).ButtonState+ "SearchBtnClick? :"+(activity as CommunityActivity).isSearchBtnClicked )
         }
     }
     fun addItem(CommunitySearchAdapter :CommunitySearchitemAdapter){
-        if ((activity as CommunityActivity).isButtonStateTag == true) {
-            community_search_result_tag_listview.adapter = CommunitySearchAdapter
+        if ((activity as CommunityActivity).ButtonState == "Tag") {
+            community_search_result_listview.adapter = CommunitySearchAdapter
             Log.d("pppppppppppp","add Item Tag List")
             (activity as CommunityActivity).connector?.searchResult?.tagList?.forEach { CommunitySearchAdapter.addItem(it) }
-        } else{
-            community_search_result_user_listview.adapter = CommunitySearchAdapter
+        } else if((activity as CommunityActivity).ButtonState == "User"){
+            community_search_result_listview.adapter = CommunitySearchAdapter
             Log.d("pppppppppppp","add Item User List")
             (activity as CommunityActivity).connector?.searchResult?.userList?.forEach { CommunitySearchAdapter.addItem(it) }
+        }else if((activity as CommunityActivity).ButtonState == "Layer"){
+            community_search_result_listview.adapter = CommunitySearchAdapter
+            Log.d("pppppppppppp","add Item Layer List")
         }
     }
 }
