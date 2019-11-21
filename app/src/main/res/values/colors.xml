@@ -24,7 +24,8 @@
     <color name="block_color1">#F0C3FF</color>
     <color name="block_color2">#D7FFC3</color>
     <color name="block_color3">#B2DF96</color>
-    <color name="block_color4">#FFC3C3</color>
+    <color name="block_color4">#FFC3C3</color>1
     <color name="record_progress_line_color">#C4C4C4</color>
     <color name="blockLayerViewBackground">#8B8585</color>
+    <color name="search_btn_color">#1A000000</color>
 </resources>

@@ -39,13 +39,13 @@ class CommunityUserPageFragment : androidx.fragment.app.Fragment() {
 
         if(isButtonStateTrack) {
             userPageListView.adapter = userPageItemAdapter
-            addItem(userPageItemAdapter, com.treasure.loopang.communication.UserManager.getUser().trackList)// 초기화
+            addItem(userPageItemAdapter, com.treasure.loopang.communication.UserManager.getUser().trackList,isButtonStateTrack)// 초기화
         }
         if((activity as CommunityActivity).isLikedDataChanged== true && isButtonStateTrack!= false){
             //update Like List
             userPageItemAdapter = CommunityUserPageAdapter()
             userPageLikedListView.adapter = userPageItemAdapter
-            addItem(userPageItemAdapter,(activity as CommunityActivity).likeList)
+            addItem(userPageItemAdapter,(activity as CommunityActivity).likeList,isButtonStateTrack)
             (activity as CommunityActivity).isLikedDataChanged = false
             updateText()
         }
@@ -53,7 +53,7 @@ class CommunityUserPageFragment : androidx.fragment.app.Fragment() {
             //update Shared Layer
             userPageItemAdapter = CommunityUserPageAdapter()
             userPageListView.adapter = userPageItemAdapter
-            addItem(userPageItemAdapter, com.treasure.loopang.communication.UserManager.getUser().trackList)
+            addItem(userPageItemAdapter, com.treasure.loopang.communication.UserManager.getUser().trackList,isButtonStateTrack)
             userPageItemAdapter.notifyDataSetChanged()
             (activity as CommunityActivity).isTrackDataChanged = false
             updateText()
@@ -68,7 +68,7 @@ class CommunityUserPageFragment : androidx.fragment.app.Fragment() {
                     if (userPageListView.adapter != null) {
                         userPageItemAdapter = CommunityUserPageAdapter()
                         userPageListView.adapter = userPageItemAdapter
-                        addItem(userPageItemAdapter, com.treasure.loopang.communication.UserManager.getUser().trackList)
+                        addItem(userPageItemAdapter, com.treasure.loopang.communication.UserManager.getUser().trackList,isButtonStateTrack)
                         //userPageItemAdapter.notifyDataSetChanged()
                         Log.d("aaaaaaaaaaaaaa","트랙 리스트 업데이트")
                     }
@@ -79,13 +79,13 @@ class CommunityUserPageFragment : androidx.fragment.app.Fragment() {
                     if(userPageLikedListView.adapter == null){
                         userPageItemAdapter = CommunityUserPageAdapter()
                         userPageLikedListView.adapter = userPageItemAdapter
-                        addItem(userPageItemAdapter,com.treasure.loopang.communication.UserManager.getUser().likedList)//초기화 2
+                        addItem(userPageItemAdapter,com.treasure.loopang.communication.UserManager.getUser().likedList,isButtonStateTrack)//초기화 2
                         Log.d("aaaaaaaaaaaaaa","라이크 초기화 하러 옴 likedlist.size = ${com.treasure.loopang.communication.UserManager.getUser().likedList.size}")
                     }else{
                         Log.d("aaaaaaaaaaaaaa","라이크 리스트 업데이트")
                         userPageItemAdapter = CommunityUserPageAdapter()
                         userPageLikedListView.adapter = userPageItemAdapter
-                        addItem(userPageItemAdapter,(activity as CommunityActivity).likeList)
+                        addItem(userPageItemAdapter,(activity as CommunityActivity).likeList,isButtonStateTrack)
                     }
                 }
                 updateText()
@@ -110,9 +110,9 @@ class CommunityUserPageFragment : androidx.fragment.app.Fragment() {
             startActivity(intent)
         }
     }
-    fun addItem(userPageItemAdapter:CommunityUserPageAdapter, list : List<MusicListClass>){
+    fun addItem(userPageItemAdapter:CommunityUserPageAdapter, list : List<MusicListClass>,isButtonStateTrack :Boolean){
         for (i in 0..list.size - 1) {
-            userPageItemAdapter.addItem(list[i])
+            userPageItemAdapter.addItem(list[i],isButtonStateTrack)
         }
     }
     fun updateText(){
