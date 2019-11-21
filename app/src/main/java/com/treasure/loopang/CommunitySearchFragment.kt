@@ -1,3 +1,4 @@
+
 package com.treasure.loopang
 
 import android.graphics.Color
@@ -42,10 +43,13 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
         val searchTagSet : MutableSet<String> = mutableSetOf()
         var CommunitySearchAdapter: CommunitySearchitemAdapter
 
+        setVisibillity()
         communitySearchEditText.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
             if (event.action != KeyEvent.KEYCODE_ENTER) {
+                (activity as CommunityActivity).isSearchBtnClicked = true
+                setVisibillity()
                 editResult = communitySearchEditText.getText().toString()
-                CommunitySearchAdapter = CommunitySearchitemAdapter()
+                CommunitySearchAdapter= CommunitySearchitemAdapter() //어댑터 새로 붙혀주고 add item하므로 굉장히 잘 나와야함
                 addItem(CommunitySearchAdapter)
                 return@OnKeyListener true
             }
@@ -59,11 +63,11 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
                 editResult = communitySearchEditText.getText().toString()
             }
         })
-        setVisibillity((activity as CommunityActivity).isButtonStateTag,(activity as CommunityActivity).isTableBtnClicked)
 
         communitySearchBtn.setOnClickListener {
-            (activity as CommunityActivity).isTableBtnClicked = true
-            setVisibillity((activity as CommunityActivity).isButtonStateTag,(activity as CommunityActivity).isTableBtnClicked)
+            Log.d("pppppppppppp","btn click!")
+            (activity as CommunityActivity).isSearchBtnClicked = true
+            setVisibillity()
             val ld = LoadingActivity(activity!!)
             GlobalScope.launch {
                 CoroutineScope(Dispatchers.Main).launch { ld?.show() }
@@ -71,28 +75,26 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
                 val result = (activity as CommunityActivity).connector.process(ResultManager.SEARCH_REQUEST, null, null, tempList)
                 CoroutineScope(Dispatchers.Main).launch { ld?.dismiss() }
             }
-            CommunitySearchAdapter= CommunitySearchitemAdapter()
+            Log.d("pppppppppppp","addItem 해야 함 ㅇㅇ")
+            CommunitySearchAdapter= CommunitySearchitemAdapter() //어댑터 새로 붙혀주고 add item하므로 굉장히 잘 나와야함
             addItem(CommunitySearchAdapter)
-
         }
         xbutton.setOnClickListener { communitySearchEditText.setText("") }
 
-        val searchButton: List<Button> = listOf(SearchTagBtn, SearchUserBtn)
-        for (i in 0..searchButton.size - 1) {
-            searchButton[i].setOnClickListener {
-                searchButton[i].setTextColor(Color.argb(200, 115, 115, 115))
-                searchButton[i].setBackgroundColor(Color.WHITE)
-                searchButton[1 - i].setBackgroundColor(Color.argb(0, 0, 0, 0))
-                searchButton[1 - i].setTextColor(Color.WHITE)
-                if (searchButton[i] == SearchTagBtn) {
-                    (activity as CommunityActivity).isButtonStateTag = true
-                    setVisibillity((activity as CommunityActivity).isButtonStateTag,(activity as CommunityActivity).isTableBtnClicked)
-                } else {
-                    (activity as CommunityActivity).isButtonStateTag = false
-                    setVisibillity((activity as CommunityActivity).isButtonStateTag,(activity as CommunityActivity).isTableBtnClicked)
-                }
+        val filterBtnList: List<Button> = listOf(SearchTagBtn, SearchUserBtn)
+        for (i in 0..filterBtnList.size - 1) {
+            filterBtnList[i].setOnClickListener {
+                filterBtnList[i].setTextColor(Color.argb(200, 115, 115, 115))
+                filterBtnList[i].setBackgroundColor(Color.WHITE)
+                filterBtnList[1 - i].setBackgroundColor(Color.argb(0, 0, 0, 0))
+                filterBtnList[1 - i].setTextColor(Color.WHITE)
+                if (filterBtnList[i] == SearchTagBtn) (activity as CommunityActivity).isButtonStateTag = true
+                else (activity as CommunityActivity).isButtonStateTag = false
+                setVisibillity()
+                Log.d("pppppppppppp","btn State Tag? : "+(activity as CommunityActivity).isButtonStateTag)
             }
         }
+
         val tableBtnList: List<ToggleButton> = listOf(btnClap, btnViolin, btnPiano, btnPercussionInstrument, btnJanggu, btnDrum, btnBeat, btnAcappella)
         for (btn in tableBtnList) {
             btn.setOnCheckedChangeListener { _, isChecked ->
@@ -103,10 +105,8 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
                     searchTagSet.remove(btn.text.toString())
                     setEditTextView(searchTagSet)
                 }
-
             }
         }
-
         community_search_result_user_listview.onItemClickListener = AdapterView.OnItemClickListener { parent, v, position, id ->
             val itt = parent.getItemAtPosition(position) as MusicListClass
             activity!!.TrackFrame.visibility = View.VISIBLE
@@ -125,31 +125,35 @@ class CommunitySearchFragment : androidx.fragment.app.Fragment() {
             else editResultForView = editResultForView + ", " + tag
         }
         communitySearchEditText.setText(editResultForView)
-        Log.d("ttttttttttt",""+searchTagSet)
+        Log.d("pppppppppppp",""+searchTagSet)
     }
-    fun setVisibillity(isBtnStateTag : Boolean, isTableBtnClicked :Boolean){
-        if(isBtnStateTag== true && isTableBtnClicked == false){
-            community_search_tag_table.visibility = View.VISIBLE
-            community_search_result_tag_listview.visibility = View.GONE
+    fun setVisibillity(){
+        if((activity as CommunityActivity).isButtonStateTag){
             community_search_result_user_listview.visibility = View.GONE
-        }else if(isBtnStateTag == true && isTableBtnClicked == true) {
-            community_search_tag_table.visibility = View.GONE
-            community_search_result_tag_listview.visibility = View.VISIBLE
-            community_search_result_user_listview.visibility = View.GONE
-        }else if( isBtnStateTag == false){
+            if((activity as CommunityActivity).isSearchBtnClicked ){
+                Log.d("pppppppppppp","ButtonTag? "+(activity as CommunityActivity).isButtonStateTag + ", SearchBtnClick?" +(activity as CommunityActivity).isSearchBtnClicked)
+                community_search_tag_table.visibility = View.GONE
+                community_search_result_tag_listview.visibility = View.VISIBLE
+            }else{
+                Log.d("pppppppppppp","ButtonTag? "+(activity as CommunityActivity).isButtonStateTag + ", SearchBtnClick?" +(activity as CommunityActivity).isSearchBtnClicked)
+                community_search_tag_table.visibility = View.VISIBLE
+                community_search_result_tag_listview.visibility = View.GONE
+            }
+        } else{
+            Log.d("pppppppppppp","ButtonTag? "+(activity as CommunityActivity).isButtonStateTag + ", SearchBtnClick?" +(activity as CommunityActivity).isSearchBtnClicked)
             community_search_tag_table.visibility = View.GONE
             community_search_result_tag_listview.visibility = View.GONE
             community_search_result_user_listview.visibility = View.VISIBLE
         }
     }
     fun addItem(CommunitySearchAdapter :CommunitySearchitemAdapter){
-        if ((activity as CommunityActivity).isButtonStateTag == true &&  (activity as CommunityActivity).isTableBtnClicked == false) {
+        if ((activity as CommunityActivity).isButtonStateTag == true) {
             community_search_result_tag_listview.adapter = CommunitySearchAdapter
-            Log.d("aaaaaaaddItem","tagList")
+            Log.d("pppppppppppp","add Item Tag List")
             (activity as CommunityActivity).connector?.searchResult?.tagList?.forEach { CommunitySearchAdapter.addItem(it) }
-        } else if ((activity as CommunityActivity).isButtonStateTag == false) {
+        } else{
             community_search_result_user_listview.adapter = CommunitySearchAdapter
-            Log.d("aaaaaaaddItem","userList")
+            Log.d("pppppppppppp","add Item User List")
             (activity as CommunityActivity).connector?.searchResult?.userList?.forEach { CommunitySearchAdapter.addItem(it) }
         }
     }

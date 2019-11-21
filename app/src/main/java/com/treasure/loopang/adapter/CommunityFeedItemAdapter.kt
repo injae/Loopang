@@ -48,11 +48,6 @@ class CommunityFeedItemAdapter : BaseAdapter(){
         feedViewHolder.songNameTextView?.setText(listViewItemList.get(position).name)
         feedViewHolder.downloadNumTextView?.setText(listViewItemList.get(position).downloads.toString())
 
-
-
-
-        val listViewItem = listViewItemList[position]
-
         return view
     }
 
