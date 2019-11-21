@@ -23,7 +23,7 @@ class CommunityActivity(var connector: Connector = Connector(), val likeList: Mu
     val transaction = supportFragmentManager.beginTransaction()
     var isCategorySelected : Boolean = false
     var isSearchBtnClicked : Boolean = false
-    var ButtonState = ""
+    var ButtonState = "Tag"
     var sharingFinish : Boolean = false
     var isLikedDataChanged : Boolean = true
 
