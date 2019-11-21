@@ -16,7 +16,8 @@ import kotlinx.android.synthetic.main.community_feed.*
 import android.content.Intent
 import kotlinx.android.synthetic.main.community_search_result.*
 
-class CommunityActivity(var connector: Connector = Connector(), val likeList: MutableList<MusicListClass> = MutableList<MusicListClass>(0, { MusicListClass () })) : AppCompatActivity() {
+class CommunityActivity(var connector: Connector = Connector(), val likeList: MutableList<MusicListClass> = MutableList<MusicListClass>(0, { MusicListClass () }),
+                        val sharedList: MutableList<MusicListClass> = MutableList<MusicListClass>(0, { MusicListClass () })) : AppCompatActivity() {
     var isTrackDataChanged : Boolean = false
     lateinit var itt : MusicListClass
     var isTrackFragOpen : Boolean = false
@@ -49,6 +50,7 @@ class CommunityActivity(var connector: Connector = Connector(), val likeList: Mu
         likeList.add(layer)
     }*/
         likeList.addAll(com.treasure.loopang.communication.UserManager.getUser().likedList)
+        sharedList.addAll(com.treasure.loopang.communication.UserManager.getUser().trackList)
 
         btn_feed.setImageDrawable(getResources().getDrawable(R.drawable.community_feedbtn))
         btn_feed.setBackgroundColor(resources.getColor(R.color.shared_comunity_bottom_button))
@@ -66,6 +68,8 @@ class CommunityActivity(var connector: Connector = Connector(), val likeList: Mu
         if(isSharingFinished == "true"){
             sharingFinish = true
             isTrackDataChanged = true
+            for(item in sharedList){ sharedList.remove(item) }
+            sharedList.addAll(com.treasure.loopang.communication.UserManager.getUser().trackList)
             CommunityContainer.setCurrentItem(1)
         }
 
@@ -159,6 +163,7 @@ class CommunityActivity(var connector: Connector = Connector(), val likeList: Mu
             isCategorySelected = false
             communityFeedCategoryListView.visibility = View.VISIBLE
             communityFeedListView.visibility= View.GONE
+            CategotyTextView.visibility=View.INVISIBLE
         }
         else if(isTrackFragOpen== false && isSearchBtnClicked  == true && ButtonState == "Tag" && SelectedPage == 2){
             isSearchBtnClicked  = false

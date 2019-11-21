@@ -18,8 +18,17 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.io.UnsupportedEncodingException
+import android.content.DialogInterface
+import android.view.KeyEvent
+import android.view.KeyEvent.KEYCODE_ENTER
+
+
+
+
 
 class CommunityShareFragment : androidx.fragment.app.Fragment() {
+    private var enterNum : Int =0
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(com.treasure.loopang.R.layout.community_share_fragment,container,false);
     }
@@ -27,7 +36,7 @@ class CommunityShareFragment : androidx.fragment.app.Fragment() {
         super.onViewCreated(view, savedInstanceState)
         (activity as CommunityShareActivity).isSharinginFrag = true
         var post = ""
-
+        enterNum = 0
         share_layer_title.setText((activity as CommunityShareActivity).layerItem.loopTitle)
         share_typeTextView.setText((activity as CommunityShareActivity).layerItem.fileType)
         share_layerDate.setText((activity as CommunityShareActivity).layerItem.dateString)
@@ -36,7 +45,18 @@ class CommunityShareFragment : androidx.fragment.app.Fragment() {
         writePostAboutLayer.addTextChangedListener(object  : TextWatcher {
             override fun afterTextChanged(edit: Editable) {}
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) { post = writePostAboutLayer.text.toString() } })
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                Log.d("rrrrrrrrrrrrrr","byte = " + writePostAboutLayer.text.toString().toByteArray().size)
+                if (writePostAboutLayer.text.toString().toByteArray().size < 100) {
+                    post = writePostAboutLayer.text.toString()
+                }else{
+                    toast("글자 수 제한")
+                    writePostAboutLayer.setText(post)
+                }
+
+            }
+        })
+
         val tagButtonList : List<ToggleButton> = listOf(tagBeat,tagAcappella,tagClap,tagDrum,tagJanggu,tagPercussionInstrument,tagPiano,tagViolin)
         for(tagButton in tagButtonList){
             tagButton.setOnClickListener {

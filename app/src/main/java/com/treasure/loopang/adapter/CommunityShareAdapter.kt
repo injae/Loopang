@@ -61,13 +61,16 @@ class CommunityShareAdapter : BaseAdapter() {
         listViewItemList.add(item)
     }
 */
-    fun addItem(loopMusic: LoopMusic) {
+    fun addItem(loopMusic: LoopMusic,dateString :String) {
         val item = CommunityShareItem()
         item.loopTitle = loopMusic.name
         item.dateString = loopMusic.date
         item.extension = loopMusic.type
         if(loopMusic.child != null) item.fileType = "Project"
-        else item.fileType = "Layer"
+        else {
+            item.fileType = "Layer"
+            item.dateString = dateString
+        }
         item.childItems = loopMusic.child
         listViewItemList.add(item)
 
