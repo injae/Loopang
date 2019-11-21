@@ -23,4 +23,4 @@ data class FeedResult(var status: String = "", var message: String = "",
                       var recent_musics: List<MusicListClass>) : Serializable
 
 data class SearchResult(var status: String = "", var message: String = "",
-                        var tagList: List<MusicListClass>, var userList: List<MusicListClass>) : Serializable
+                        var results: List<MusicListClass>) : Serializable
