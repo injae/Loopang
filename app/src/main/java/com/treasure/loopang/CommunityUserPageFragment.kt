@@ -16,6 +16,7 @@ import com.treasure.loopang.communication.MusicListClass
 import com.treasure.loopang.communication.UserManager
 import com.treasure.loopang.listitem.CommunitySongItem
 import kotlinx.android.synthetic.main.activity_community.*
+import kotlinx.android.synthetic.main.community_search_result.*
 import kotlinx.android.synthetic.main.community_user_page.*
 import kotlinx.android.synthetic.main.community_user_page_item.*
 import kotlinx.android.synthetic.main.loop_item.*
@@ -53,7 +54,8 @@ class CommunityUserPageFragment : androidx.fragment.app.Fragment() {
             //update Shared Layer
             userPageItemAdapter = CommunityUserPageAdapter()
             userPageListView.adapter = userPageItemAdapter
-            addItem(userPageItemAdapter, com.treasure.loopang.communication.UserManager.getUser().trackList,isButtonStateTrack)
+            addItem(userPageItemAdapter,(activity as CommunityActivity).sharedList,isButtonStateTrack)
+            //addItem(userPageItemAdapter, com.treasure.loopang.communication.UserManager.getUser().trackList,isButtonStateTrack)
             userPageItemAdapter.notifyDataSetChanged()
             (activity as CommunityActivity).isTrackDataChanged = false
             updateText()
@@ -68,8 +70,7 @@ class CommunityUserPageFragment : androidx.fragment.app.Fragment() {
                     if (userPageListView.adapter != null) {
                         userPageItemAdapter = CommunityUserPageAdapter()
                         userPageListView.adapter = userPageItemAdapter
-                        addItem(userPageItemAdapter, com.treasure.loopang.communication.UserManager.getUser().trackList,isButtonStateTrack)
-                        //userPageItemAdapter.notifyDataSetChanged()
+                        addItem(userPageItemAdapter,(activity as CommunityActivity).sharedList,isButtonStateTrack)
                         Log.d("aaaaaaaaaaaaaa","트랙 리스트 업데이트")
                     }
                 }else{
@@ -91,8 +92,10 @@ class CommunityUserPageFragment : androidx.fragment.app.Fragment() {
                 updateText()
                 userPageButton[i].setTextColor(Color.argb(200,115,115,115))
                 userPageButton[i].setBackgroundColor(Color.WHITE)
-                userPageButton[1-i].setBackgroundColor(Color.argb(0,0,0,0))
+                userPageButton[1-i].setBackgroundColor(Color.argb(26, 0, 0, 0))
                 userPageButton[1-i].setTextColor(Color.WHITE)
+                //userPageButton[1-i].setBackgroundColor(Color.argb(0,0,0,0))
+               // userPageButton[1-i].setTextColor(Color.WHITE)
             }
         }
         userPageListView.onItemClickListener = AdapterView.OnItemClickListener { parent, v, position, id ->

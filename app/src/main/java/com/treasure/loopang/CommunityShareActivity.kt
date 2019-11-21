@@ -36,7 +36,7 @@ class CommunityShareActivity(val connector: Connector = Connector(), var parent_
         communityShareListView.visibility=View.VISIBLE
         shareProjectClikedLayer.visibility = View.GONE
 
-        if(fm.soundList().size != 0) fm.soundList().forEach { ShareAdapter.addItem(it) }
+        if(fm.soundList().size != 0) fm.soundList().forEach { ShareAdapter.addItem(it,it.date) }
 
         //mytList<String>list에 item 추가
         communityShareListView.onItemClickListener = AdapterView.OnItemClickListener { parent, v, position, id ->
@@ -45,7 +45,7 @@ class CommunityShareActivity(val connector: Connector = Connector(), var parent_
                 parent_name = item.loopTitle
                 val ShareAdapter2 = CommunityShareAdapter()
                 shareProjectClikedLayer.adapter = ShareAdapter2
-                for(layer in item.childItems!!){ ShareAdapter2.addItem(layer) } // 프로젝트니깐 프로젝트의 레이어 보여주기 프로젝트의 레이어는 item.childItems 임
+                for(layer in item.childItems!!){ ShareAdapter2.addItem(layer,item.dateString) } // 프로젝트니깐 프로젝트의 레이어 보여주기 프로젝트의 레이어는 item.childItems 임
                 communityShareListView.visibility=View.GONE
                 shareProjectClikedLayer.visibility = View.VISIBLE
                 isProjectClicked =true
@@ -67,6 +67,7 @@ class CommunityShareActivity(val connector: Connector = Connector(), var parent_
         else if(isSharinginFrag== false && isProjectClicked == true){
             communityShareListView.visibility=View.VISIBLE
             shareProjectClikedLayer.visibility = View.GONE
+            isProjectClicked = false
         }
         else super.onBackPressed()
     }

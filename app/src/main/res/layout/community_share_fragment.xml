@@ -128,7 +128,7 @@
             android:layout_gravity=""
             android:id="@+id/writePostAboutLayer"
             android:hint=" 게시글 작성"
-            android:text=""/>
+            android:text="" />
     </FrameLayout>
     <FrameLayout
             android:layout_width="match_parent"
