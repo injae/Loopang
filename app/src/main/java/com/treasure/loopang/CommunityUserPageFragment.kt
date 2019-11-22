@@ -7,14 +7,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.Button
-import android.widget.FrameLayout
-import android.widget.ListView
+import android.widget.*
 import com.treasure.loopang.adapter.CommunityUserPageAdapter
+import com.treasure.loopang.audio.FileManager
 import com.treasure.loopang.communication.MusicListClass
 import com.treasure.loopang.communication.UserManager
 import com.treasure.loopang.listitem.CommunitySongItem
+import com.treasure.loopang.ui.toast
 import kotlinx.android.synthetic.main.activity_community.*
 import kotlinx.android.synthetic.main.community_search_result.*
 import kotlinx.android.synthetic.main.community_user_page.*
@@ -109,8 +108,13 @@ class CommunityUserPageFragment : androidx.fragment.app.Fragment() {
             (activity as CommunityActivity).onFragmentChangedtoTrack(itt)
         }
         addTrackButton.setOnClickListener {
-            val intent = Intent(activity, CommunityShareActivity::class.java)
-            startActivity(intent)
+            val fm = FileManager()
+            if(fm.soundList().size == 0){ //projectManager 에
+              toast("파일이 없습니다.")
+            }else{
+                val intent = Intent(activity, CommunityShareActivity::class.java)
+                startActivity(intent)
+            }
         }
     }
     fun addItem(userPageItemAdapter:CommunityUserPageAdapter, list : List<MusicListClass>,isButtonStateTrack :Boolean){
