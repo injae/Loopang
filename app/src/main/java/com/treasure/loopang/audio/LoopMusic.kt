@@ -51,6 +51,10 @@ class LoopMusic( var name: String = ""
             }
         }
 
+        fun isPCM(): Boolean {
+            return this.type == "pcm"
+        }
+
     companion object{
         fun searchLoopMusic(path: String) : LoopMusic? {
             val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
