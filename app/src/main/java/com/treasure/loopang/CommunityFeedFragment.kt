@@ -20,6 +20,7 @@ import com.treasure.loopang.listitem.CommunityFeedCategoryItem
 import kotlinx.android.synthetic.main.activity_community.*
 import java.util.*
 import kotlin.collections.ArrayList
+import android.widget.Toast
 
 class CommunityFeedFragment : androidx.fragment.app.Fragment() {
     private var likeList : MutableList<MusicListClass> = MutableList<MusicListClass>(0, { MusicListClass () })
@@ -27,10 +28,9 @@ class CommunityFeedFragment : androidx.fragment.app.Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(com.treasure.loopang.R.layout.community_feed,container,false);
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-       // Log.d("wwwwwwwwwwww","들어왔다.")
 
         if((activity as CommunityActivity).isTrackFragOpen == false && (activity as CommunityActivity).isCategorySelected == false) {
             communityFeedListView.visibility = View.GONE
@@ -57,11 +57,11 @@ class CommunityFeedFragment : androidx.fragment.app.Fragment() {
             CategotyTextView.text=item.categoryName
             likeList.addAll((activity as CommunityActivity).likeList)
             if(item.categoryName == "The Newest 5") {
-                (activity as CommunityActivity).connector?.feedResult?.recent_musics?.forEach { FeedAdapter.addItem(it,likeList) }
+                (activity as CommunityActivity).connector?.feedResult?.recent_musics?.forEach { FeedAdapter.addItem(it) }
             } else if(item.categoryName== "Liked Top 5") {
-                (activity as CommunityActivity).connector?.feedResult?.likes_top?.forEach { FeedAdapter.addItem(it,likeList) }
+                (activity as CommunityActivity).connector?.feedResult?.likes_top?.forEach { FeedAdapter.addItem(it) }
             } else if(item.categoryName == "Download Top 5"){ (
-                    activity as CommunityActivity).connector?.feedResult?.download_top?.forEach { FeedAdapter.addItem(it,likeList) }
+                    activity as CommunityActivity).connector?.feedResult?.download_top?.forEach { FeedAdapter.addItem(it) }
             }
         }
 

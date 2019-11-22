@@ -37,13 +37,14 @@ class CommunityFeedItemAdapter : BaseAdapter(){
             feedViewHolder = convertView.tag as ViewHolder //viewHolder = convertView!!.getTag() as ViewHolder
             view = convertView
         }
-        for(i in 0 .. likeList.size-1){
+        /*for(i in 0 .. likeList.size-1){
             if(listViewItemList.get(position).id == likeList[i].id) {
                 feedViewHolder.likedNumTextView?.setText(likeList[i].likes.toString())
                 break
             }
             feedViewHolder.likedNumTextView?.setText(listViewItemList.get(position).likes.toString())
-        }
+        }*/
+        feedViewHolder.likedNumTextView?.setText(listViewItemList.get(position).likes.toString())
         feedViewHolder.userNickNameTextView?.setText(listViewItemList.get(position).owner)
         feedViewHolder.songNameTextView?.setText(listViewItemList.get(position).name)
         feedViewHolder.downloadNumTextView?.setText(listViewItemList.get(position).downloads.toString())
@@ -59,8 +60,7 @@ class CommunityFeedItemAdapter : BaseAdapter(){
         return listViewItemList[position]
     }
 
-    fun addItem(music: MusicListClass,likes : MutableList<MusicListClass>) {
-        likeList = likes
+    fun addItem(music: MusicListClass) {
         listViewItemList.add(music)
     }
 

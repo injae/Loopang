@@ -46,7 +46,7 @@ class CommunitySearchitemAdapter : BaseAdapter() {
         return listViewItemList[position]
     }
     fun addItem(music: MusicListClass) {
-        Log.d("pppppppppppp","add"+music.name +": "+ music.tags)
+        Log.d("RRRRRRRRRAdapter","additem "+music.name )
         listViewItemList.add(music)
     }
 
