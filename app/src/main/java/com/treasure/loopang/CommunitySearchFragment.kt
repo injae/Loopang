@@ -9,27 +9,28 @@ import android.view.ViewGroup
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.KeyEvent
 import com.treasure.loopang.adapter.CommunitySearchitemAdapter
 import kotlinx.android.synthetic.main.activity_community.*
 import kotlinx.android.synthetic.main.community_search.communitySearchBtn
 import kotlinx.android.synthetic.main.community_search.communitySearchEditText
 import kotlinx.android.synthetic.main.community_search.xbutton
 import kotlinx.android.synthetic.main.community_search_result.*
-import android.view.KeyEvent.KEYCODE_ENTER
 import android.widget.*
 import com.treasure.loopang.communication.MusicListClass
 import com.treasure.loopang.communication.ResultManager
-import kotlinx.android.synthetic.main.activity_shared_community.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-
+import com.treasure.loopang.ui.toast
 
 class CommunitySearchFragment(var selection: Int = 2) : androidx.fragment.app.Fragment() {
     private var editResultForView : String = ""
     private var editResult: String = ""
     val searchTagSet : MutableSet<String> = mutableSetOf()
+    private lateinit var CommunitySearchAdapter: CommunitySearchitemAdapter
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(com.treasure.loopang.R.layout.community_search,container,false)
     }
@@ -38,20 +39,24 @@ class CommunitySearchFragment(var selection: Int = 2) : androidx.fragment.app.Fr
         (activity as CommunityActivity).ButtonState = "Tag"
         val tableBtnList: List<ToggleButton> = listOf(btnClap, btnViolin, btnPiano, btnPercussionInstrument, btnJanggu, btnDrum, btnBeat, btnAcappella)
 
-
-        var CommunitySearchAdapter: CommunitySearchitemAdapter
-
         setVisibillity()
-        communitySearchEditText.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
-            if (event.action != KEYCODE_ENTER) {
-                (activity as CommunityActivity).isSearchBtnClicked = true
-                setVisibillity()
-                editResult = communitySearchEditText.getText().toString()
-                CommunitySearchAdapter= CommunitySearchitemAdapter() //어댑터 새로 붙혀주고 add item하므로 굉장히 잘 나와야함
-                addItem(CommunitySearchAdapter)
-                return@OnKeyListener true
+        communitySearchEditText.setOnKeyListener(object : View.OnKeyListener {
+            override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
+                if((event?.action == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    if(editResult == "") toast("검색어를 입력하세요.")
+                    else{
+                        Log.d("RRRRRRRRR휴대폰 내장 버튼"," 클릭")
+                        (activity as CommunityActivity).isSearchBtnClicked = true
+                        ccc()
+                        CommunitySearchAdapter= CommunitySearchitemAdapter()
+                        community_search_result_listview.adapter = CommunitySearchAdapter //어댑터 새로 붙혀주고 add item하므로 굉장히 잘 나와야함
+                        addItem(CommunitySearchAdapter)
+                        setVisibillity()
+                        return true
+                    }
+                }
+                return false
             }
-            false
         })
 
         communitySearchEditText.addTextChangedListener(object : TextWatcher {
@@ -63,64 +68,33 @@ class CommunitySearchFragment(var selection: Int = 2) : androidx.fragment.app.Fr
         })
 
         communitySearchBtn.setOnClickListener {
-            Log.d("pppppppppppp","btn click!")
-            val tempList: List<String> = when(selection) {
-                2 -> { searchTagSet.toList() }
-                else -> { List(1, {editResult}) }
+            if(editResult == "") toast("검색어를 입력하세요.")
+            else {
+                Log.d("RRRRRRRRR휴대폰화면버튼", " 클릭")
+                ccc()
+                CommunitySearchAdapter = CommunitySearchitemAdapter()
+                community_search_result_listview.adapter = CommunitySearchAdapter //어댑터 새로 붙혀주고 add item하므로 굉장히 잘 나와야함
+                addItem(CommunitySearchAdapter)
+                setVisibillity()
             }
-            (activity as CommunityActivity).isSearchBtnClicked = true
-            setVisibillity()
-            val ld = LoadingActivity(activity!!)
-            GlobalScope.launch {
-                CoroutineScope(Dispatchers.Main).launch { ld.show() }
-                (activity as CommunityActivity).connector.process(ResultManager.SEARCH_REQUEST, null, null, tempList, null, null, selection)
-                CoroutineScope(Dispatchers.Main).launch { ld.dismiss() }
-            }
-            Log.d("pppppppppppp","addItem 해야 함 ㅇㅇ")
-            CommunitySearchAdapter= CommunitySearchitemAdapter() //어댑터 새로 붙혀주고 add item하므로 굉장히 잘 나와야함
-            addItem(CommunitySearchAdapter)
         }
-        xbutton.setOnClickListener { communitySearchEditText.setText("") }
+        xbutton.setOnClickListener { communitySearchEditText.setText("")
+            CommunitySearchAdapter= CommunitySearchitemAdapter()
+            community_search_result_listview.adapter = CommunitySearchAdapter
+        }
 
         SearchTagBtn.setOnClickListener {
             selection = 2
-            SearchTagBtn.setTextColor(Color.argb(200, 115, 115, 115))
-            SearchTagBtn.setBackgroundColor(Color.WHITE)
-            SearchLayerBtn.setBackgroundColor(Color.argb(26, 0, 0, 0))
-            SearchLayerBtn.setTextColor(Color.WHITE)
-            SearchUserBtn.setBackgroundColor(Color.argb(26, 0, 0, 0))
-            SearchUserBtn.setTextColor(Color.WHITE)
-            communitySearchEditText.setText("")
-            (activity as CommunityActivity).isSearchBtnClicked= false
-            (activity as CommunityActivity).ButtonState = "Tag"
             tagManager(tableBtnList,(activity as CommunityActivity).ButtonState)
-            setVisibillity()
+            buttonSetting(SearchTagBtn,SearchLayerBtn,SearchUserBtn,"Tag")
         }
         SearchLayerBtn.setOnClickListener {
             selection = 1
-            SearchLayerBtn.setTextColor(Color.argb(200, 115, 115, 115))
-            SearchLayerBtn.setBackgroundColor(Color.WHITE)
-            SearchUserBtn.setBackgroundColor(Color.argb(26, 0, 0, 0))
-            SearchUserBtn.setTextColor(Color.WHITE)
-            SearchTagBtn.setBackgroundColor(Color.argb(26, 0, 0, 0))
-            SearchTagBtn.setTextColor(Color.WHITE)
-            communitySearchEditText.setText("")
-            (activity as CommunityActivity).isSearchBtnClicked= false
-            (activity as CommunityActivity).ButtonState = "Layer"
-            setVisibillity()
+            buttonSetting(SearchLayerBtn,SearchTagBtn,SearchUserBtn,"Layer")
         }
         SearchUserBtn.setOnClickListener {
             selection = 3
-            SearchUserBtn.setTextColor(Color.argb(200, 115, 115, 115))
-            SearchUserBtn.setBackgroundColor(Color.WHITE)
-            SearchLayerBtn.setBackgroundColor(Color.argb(26, 0, 0, 0))
-            SearchLayerBtn.setTextColor(Color.WHITE)
-            SearchTagBtn.setBackgroundColor(Color.argb(26, 0, 0, 0))
-            SearchTagBtn.setTextColor(Color.WHITE)
-            communitySearchEditText.setText("")
-            (activity as CommunityActivity).isSearchBtnClicked= false
-            (activity as CommunityActivity).ButtonState = "User"
-            setVisibillity()
+            buttonSetting(SearchUserBtn,SearchTagBtn,SearchLayerBtn,"User")
         }
         tagManager(tableBtnList,(activity as CommunityActivity).ButtonState)
         community_search_result_listview.onItemClickListener = AdapterView.OnItemClickListener { parent, v, position, id ->
@@ -136,30 +110,26 @@ class CommunitySearchFragment(var selection: Int = 2) : androidx.fragment.app.Fr
             else editResultForView = editResultForView + ", " + tag
         }
         communitySearchEditText.setText(editResultForView)
-        Log.d("pppppppppppp",""+searchTagSet)
     }
     fun setVisibillity(){
         if((activity as CommunityActivity).ButtonState == "Tag"&&(activity as CommunityActivity).isSearchBtnClicked== false){
             community_search_tag_table.visibility = View.VISIBLE
             community_search_result_listview.visibility = View.GONE
-            Log.d("pppppppppppp","button: "+(activity as CommunityActivity).ButtonState+ "SearchBtnClick? :"+(activity as CommunityActivity).isSearchBtnClicked )
         } else{
             community_search_tag_table.visibility = View.GONE
             community_search_result_listview.visibility = View.VISIBLE
-            Log.d("pppppppppppp","button: "+(activity as CommunityActivity).ButtonState+ "SearchBtnClick? :"+(activity as CommunityActivity).isSearchBtnClicked )
         }
     }
     fun addItem(CommunitySearchAdapter :CommunitySearchitemAdapter){
-        Log.d("pppppppppppp","add: "+(activity as CommunityActivity).ButtonState)
+        Log.d("RRRRRRRRR"," additem")
+        Log.d("RRRRRRRRR","item : " + (activity as CommunityActivity).connector.searchResult?.results)
         (activity as CommunityActivity).connector.searchResult?.results?.forEach { CommunitySearchAdapter.addItem(it) }
     }
     fun tagManager(tableBtnList:List<ToggleButton>,ButtonState:String){
         for (btn in tableBtnList) {
             if(ButtonState == "Tag"){
-                if(btn.isChecked == true) {
+                if(btn.isChecked == true)
                     btn.toggle()
-                    Log.d("pppppppppppp","toggle!")
-                }
             }
             btn.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
@@ -171,5 +141,36 @@ class CommunitySearchFragment(var selection: Int = 2) : androidx.fragment.app.Fr
                 }
             }
         }
+    }
+    fun ccc(){
+        // editResult = communitySearchEditText.getText().toString()
+        (activity as CommunityActivity).isSearchBtnClicked = true
+        val tempList: List<String> = when(selection) {
+            2 -> { searchTagSet.toList() }
+            else -> { List(1, {editResult}) }
+        }
+        Log.d("RRRRRRRRR","editResult : "+ editResult)
+        Log.d("RRRRRRRRR","List : " + tempList)
+        val ld = LoadingActivity(activity!!)
+        GlobalScope.launch {
+            CoroutineScope(Dispatchers.Main).launch { ld.show() }
+            (activity as CommunityActivity).connector.process(ResultManager.SEARCH_REQUEST, null, null, tempList, null, null, selection)
+            CoroutineScope(Dispatchers.Main).launch { ld.dismiss() }
+        }
+        Log.d("RRRRRRRRR","connector: " )
+    }
+    fun buttonSetting(SelectedBtn : Button,unSelected1 : Button , unSelected2: Button,ButtonState: String){
+        SelectedBtn.setTextColor(Color.argb(200, 115, 115, 115))
+        SelectedBtn.setBackgroundColor(Color.WHITE)
+        unSelected1.setBackgroundColor(Color.argb(26, 0, 0, 0))
+        unSelected1.setTextColor(Color.WHITE)
+        unSelected2.setBackgroundColor(Color.argb(26, 0, 0, 0))
+        unSelected2.setTextColor(Color.WHITE)
+        communitySearchEditText.setText("")
+        (activity as CommunityActivity).isSearchBtnClicked= false
+        (activity as CommunityActivity).ButtonState = ButtonState
+        CommunitySearchAdapter= CommunitySearchitemAdapter()
+        community_search_result_listview.adapter = CommunitySearchAdapter
+        setVisibillity()
     }
 }
