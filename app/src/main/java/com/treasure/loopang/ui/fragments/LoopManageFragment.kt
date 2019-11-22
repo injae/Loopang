@@ -18,12 +18,11 @@ import com.afollestad.materialdialogs.callbacks.onDismiss
 import com.afollestad.materialdialogs.callbacks.onShow
 import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.list.listItems
-import com.treasure.loopang.CommunityShareActivity
 import com.treasure.loopang.LoadingActivity
 import com.treasure.loopang.R
 import com.treasure.loopang.audio.FileManager
 import com.treasure.loopang.audio.LoopMusic
-import com.treasure.loopang.communication.ResultManager
+import com.treasure.loopang.audio.Sound
 import com.treasure.loopang.ui.interfaces.IPageFragment
 import com.treasure.loopang.ui.adapter.v2.LoopListAdapter
 import com.treasure.loopang.ui.stringForTime
@@ -198,22 +197,38 @@ class LoopManageFragment : androidx.fragment.app.Fragment()
     }
 
     private fun showPreviewPlayDialog(loopMusic: LoopMusic) {
-        val projectTitle = loopMusic.name
-        var isPlaying = false
-        var mpCanceled = false
-        var previousIsPlaying = false
-        val mp = MediaPlayer()
-        val updateTask = { dialog: MaterialDialog ->
-            while(isPlaying){
-                dialog.seekBar.progress = (1000 * mp.currentPosition / mp.duration)
-            }
+        val dialog = if(loopMusic.isPCM()){
+            getDialogForPCM(loopMusic)
+        } else {
+            getDialogForElse(loopMusic)
         }
-        MaterialDialog(activity!!, BottomSheet(LayoutMode.WRAP_CONTENT)).show {
+        dialog.show()
+    }
+
+    private fun getDialogForElse(loopMusic: LoopMusic): MaterialDialog {
+        return MaterialDialog(activity!!, BottomSheet(LayoutMode.WRAP_CONTENT)).apply{
+            val projectTitle = loopMusic.name
+            var isPlaying = false
+            var mpCanceled = false
+            var previousIsPlaying = false
+            val mp = MediaPlayer()
+            val updateTask = {
+                dialog: MaterialDialog ->
+                while(isPlaying){
+                    dialog.seekBar.progress = (1000 * mp.currentPosition / mp.duration)
+                }
+            }
+
             customView(R.layout.manage_preview_dialog)
             cornerRadius(16f)
 
             /* start content setting */
             txt_title.text = projectTitle
+
+            btn_playback.isClickable = false
+            btn_stop.isClickable = false
+            btn_pause.isClickable = false
+            btn_repeat.isClickable = false
 
             /* button setting*/
             btn_add.setOnClickListener {
@@ -232,7 +247,7 @@ class LoopManageFragment : androidx.fragment.app.Fragment()
                 btn_playback.visibility = View.GONE
                 btn_pause.visibility = View.VISIBLE
                 isPlaying = true
-                CoroutineScope(Dispatchers.Default).launch { updateTask(this@show) }
+                CoroutineScope(Dispatchers.Default).launch { updateTask(this@apply) }
                 mp.start()
             }
             btn_pause.setOnClickListener {
@@ -272,6 +287,7 @@ class LoopManageFragment : androidx.fragment.app.Fragment()
                     mp.seekTo((mp.duration * seekBar!!.progress) / 1000)
                 }
             })
+
             onDismiss {
                 try {
                     isPlaying = false
@@ -281,40 +297,97 @@ class LoopManageFragment : androidx.fragment.app.Fragment()
                     mpCanceled = true
                 }
             }
-            btn_playback.isClickable = false
-            btn_stop.isClickable = false
-            btn_pause.isClickable = false
-            btn_repeat.isClickable = false
-        }.onShow {
-            mp.apply{
-                setDataSource(loopMusic.path)
-                setOnPreparedListener{mp ->
-                    if (mpCanceled) {
-                        mp.release()
-                        mpCanceled = false
-                    } else {
-                        /* button setting */
-                        it.btn_playback.isClickable = true
-                        it.btn_stop.isClickable = true
-                        it.btn_pause.isClickable = true
-                        it.btn_repeat.isClickable = true
-                        it.txt_whole_time.text = stringForTime(mp.duration)
+
+            onShow {
+                mp.apply{
+                    setDataSource(loopMusic.path)
+                    setOnPreparedListener{mp ->
+                        if (mpCanceled) {
+                            mp.release()
+                            mpCanceled = false
+                        } else {
+                            /* button setting */
+                            it.btn_playback.isClickable = true
+                            it.btn_stop.isClickable = true
+                            it.btn_pause.isClickable = true
+                            it.btn_repeat.isClickable = true
+                            it.txt_whole_time.text = stringForTime(mp.duration)
+                        }
                     }
-                }
-                setOnCompletionListener {mp ->
-                    /* button switching */
-                    it.btn_playback.visibility = View.VISIBLE
-                    it.btn_pause.visibility = View.GONE
-                    isPlaying = false
-                }
-                setOnSeekCompleteListener {mp ->
-                    if(isPlaying){
-                        it.seekBar.progress = (1000 * mp.currentPosition / mp.duration)
-                        async { updateTask(it) }
-                        mp.start()
+                    setOnCompletionListener {mp ->
+                        /* button switching */
+                        it.btn_playback.visibility = View.VISIBLE
+                        it.btn_pause.visibility = View.GONE
+                        isPlaying = false
                     }
-                }
-            }.prepareAsync()
+                    setOnSeekCompleteListener {mp ->
+                        if(isPlaying){
+                            it.seekBar.progress = (1000 * mp.currentPosition / mp.duration)
+                            async { updateTask(it) }
+                            mp.start()
+                        }
+                    }
+                }.prepareAsync()
+            }
+        }
+    }
+
+    private fun getDialogForPCM(loopMusic: LoopMusic): MaterialDialog {
+        return MaterialDialog(activity!!, BottomSheet(LayoutMode.WRAP_CONTENT)).apply {
+            val projectTitle = loopMusic.name
+            var isPlaying = false
+            val sound: Sound = Sound().apply { load (loopMusic.path) }
+
+            customView(R.layout.manage_preview_dialog)
+            cornerRadius(16f)
+
+            /* start content setting */
+            txt_title.text = projectTitle
+            txt_whole_time.visibility = View.GONE
+            txt_current_time.visibility = View.GONE
+            seekBar.visibility = View.GONE
+            btn_repeat.visibility = View.GONE
+            btn_stop.visibility = View.GONE
+
+            /* button setting*/
+            btn_add.setOnClickListener {
+                this.dismiss()
+                showMoreDialog(loopMusic)
+            }
+            btn_info.setOnClickListener {
+                showDetailInfoDialog(loopMusic)
+            }
+            btn_drop.setOnClickListener {
+                this.dismiss()
+                if (loopMusic.child == null) { deleteSound(loopMusic) }
+                else { deleteProject(loopMusic) }
+            }
+
+            btn_playback.setOnClickListener {
+                if(isPlaying) return@setOnClickListener
+                btn_playback.visibility = View.GONE
+                btn_pause.visibility = View.VISIBLE
+                isPlaying = true
+                sound.play()
+            }
+            btn_pause.setOnClickListener {
+                if(!isPlaying) return@setOnClickListener
+                btn_playback.visibility = View.VISIBLE
+                btn_pause.visibility = View.GONE
+                isPlaying = false
+                sound.stop()
+            }
+
+            sound.onStop {
+                isPlaying = false
+                btn_playback.visibility = View.VISIBLE
+                btn_pause.visibility = View.GONE
+            }
+
+            onDismiss {
+                isPlaying = false
+                sound.stop()
+            }
         }
     }
 
