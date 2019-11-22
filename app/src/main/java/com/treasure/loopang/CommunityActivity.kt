@@ -14,6 +14,7 @@ import com.treasure.loopang.communication.FeedResult
 import com.treasure.loopang.communication.MusicListClass
 import kotlinx.android.synthetic.main.community_feed.*
 import android.content.Intent
+import android.widget.Button
 import kotlinx.android.synthetic.main.community_search_result.*
 
 class CommunityActivity(var connector: Connector = Connector(), val likeList: MutableList<MusicListClass> = MutableList<MusicListClass>(0, { MusicListClass () }),
@@ -177,5 +178,10 @@ class CommunityActivity(var connector: Connector = Connector(), val likeList: Mu
             sharingFinish = false
         }
         else super.onBackPressed()
+    }
+    fun btnSetting(selectedBtn : Button, none1 :Button,none2:Button){
+        btn_feed.setBackgroundColor(resources.getColor(R.color.shared_comunity_bottom_button))
+        btn_userpage.setBackgroundColor(Color.WHITE)
+        btn_community_search.setBackgroundColor(Color.WHITE)
     }
 }
