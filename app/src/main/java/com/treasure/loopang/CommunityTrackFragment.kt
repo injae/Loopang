@@ -87,6 +87,10 @@ class CommunityTrackFragment(var sound: Sound? = null, val downloadChecker: Down
                 heartButton.setImageDrawable(getResources().getDrawable(R.drawable.trackicon_heart))
                 trackHeartClikedNum.setText((activity as CommunityActivity).itt.likes.toString())
                 (activity as CommunityActivity).likeList.remove((activity as CommunityActivity).itt)
+                Log.d("sssssssssSize",""+(activity as CommunityActivity).likeList.size )
+                    for(i in 0.. (activity as CommunityActivity).likeList.size-1){
+                        Log.d("sssssssssName"," " + (activity as CommunityActivity).likeList[i].name )
+                    }
             } else {
                 heartState = true
                 (activity as CommunityActivity).itt.likes +=1
@@ -94,6 +98,10 @@ class CommunityTrackFragment(var sound: Sound? = null, val downloadChecker: Down
                 heartButton.setImageDrawable(getResources().getDrawable(R.drawable.trackicon_heart_clicked))
                 trackHeartClikedNum.setText((activity as CommunityActivity).itt.likes.toString())
                 (activity as CommunityActivity).likeList.add((activity as CommunityActivity).itt)
+                Log.d("sssssssssSize",""+(activity as CommunityActivity).likeList.size )
+                for(i in 0.. (activity as CommunityActivity).likeList.size-1){
+                    Log.d("sssssssssName"," " + (activity as CommunityActivity).likeList[i].name )
+                }
             }
         }
 
