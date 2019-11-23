@@ -144,8 +144,6 @@ class CommunityActivity(var connector: Connector = Connector(), val likeList: Mu
                 btn_community_search.setImageDrawable(getResources().getDrawable(R.drawable.icon_search))
                 btnSetting(btn_userpage,btn_community_search,btn_feed)
                // (supportFragmentManager.findFragmentByTag("fragmentTag") as CommunityUserPageFragment).update()
-
-                Log.d("ssssssssssss","userFragment")
             }
             else if( currentPage == 2){ //SearchFrag
                 btn_feed.setImageDrawable(getResources().getDrawable(R.drawable.community_feedbtn_ver_gray))
@@ -173,7 +171,6 @@ class CommunityActivity(var connector: Connector = Connector(), val likeList: Mu
         }
         else if(isTrackFragOpen== false && isSearchBtnClicked  == true && ButtonState == "Tag" && SelectedPage == 2){
             isSearchBtnClicked  = false
-            Log.d("pppppppppppp","Button:  "+ButtonState + ", SearchBtnClick?" +isSearchBtnClicked)
             community_search_tag_table.visibility = View.VISIBLE
             community_search_result_listview.visibility = View.GONE
         }
@@ -185,8 +182,8 @@ class CommunityActivity(var connector: Connector = Connector(), val likeList: Mu
         else super.onBackPressed()
     }
     fun btnSetting(selectedBtn : ImageButton, none1 :ImageButton, none2:ImageButton){
-        btn_feed.setBackgroundColor(resources.getColor(R.color.shared_comunity_bottom_button))
-        btn_userpage.setBackgroundColor(Color.WHITE)
-        btn_community_search.setBackgroundColor(Color.WHITE)
+        selectedBtn.setBackgroundColor(resources.getColor(R.color.shared_comunity_bottom_button))
+        none1.setBackgroundColor(Color.WHITE)
+        none2.setBackgroundColor(Color.WHITE)
     }
 }
