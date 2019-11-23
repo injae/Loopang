@@ -17,6 +17,10 @@ class CommunityPagerAdapter(fragmentManager: FragmentManager) : FragmentPagerAda
         fragmentList.add(CommunityUserPageFragment())
         fragmentList.add(CommunitySearchFragment())
     }
+    /*
+    fun addItem(fragmemt:Fragment){
+        fragmentList.add(fragmemt)
+    }*/
     override fun getCount(): Int = fragmentList.size
 
     override fun getItem(p0: Int): Fragment? {

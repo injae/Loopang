@@ -15,6 +15,9 @@ import com.treasure.loopang.communication.MusicListClass
 import kotlinx.android.synthetic.main.community_feed.*
 import android.content.Intent
 import android.widget.Button
+import android.widget.ImageButton
+import androidx.fragment.app.Fragment
+import kotlinx.android.synthetic.main.activity_community.view.*
 import kotlinx.android.synthetic.main.community_search_result.*
 
 class CommunityActivity(var connector: Connector = Connector(), val likeList: MutableList<MusicListClass> = MutableList<MusicListClass>(0, { MusicListClass () }),
@@ -47,9 +50,7 @@ class CommunityActivity(var connector: Connector = Connector(), val likeList: Mu
 
         setContentView(R.layout.activity_community)
         window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-/*    for(layer in com.treasure.loopang.communication.UserManager.getUser().likedList){
-        likeList.add(layer)
-    }*/
+
         likeList.addAll(com.treasure.loopang.communication.UserManager.getUser().likedList)
         sharedList.addAll(com.treasure.loopang.communication.UserManager.getUser().trackList)
 
@@ -59,7 +60,12 @@ class CommunityActivity(var connector: Connector = Connector(), val likeList: Mu
         btn_userpage.setBackgroundColor(Color.WHITE)
         btn_community_search.setImageDrawable(getResources().getDrawable(R.drawable.icon_search))
         btn_community_search.setBackgroundColor(Color.WHITE)
-
+       /* val feedFragment = CommunityFeedFragment()
+        val userFragment = CommunityUserPageFragment()
+        val searchFragment = CommunitySearchFragment()
+        val fragmentList : List<Fragment> = listOf(feedFragment,userFragment ,searchFragment)
+         fragmentList.forEach { pagerAdapter.addItem(it) }
+        */
         CommunityContainer.adapter = pagerAdapter
         CommunityContainer.addOnPageChangeListener(PageChangeListener())
         CommunityContainer.setOnTouchListener { _, _ -> false}
@@ -128,27 +134,26 @@ class CommunityActivity(var connector: Connector = Connector(), val likeList: Mu
             this@CommunityActivity.currentPage = selectedPage
             if(currentPage == 0){ // feedFrag
                 btn_feed.setImageDrawable(getResources().getDrawable(R.drawable.community_feedbtn))
-                btn_feed.setBackgroundColor(resources.getColor(R.color.shared_comunity_bottom_button))
                 btn_userpage.setImageDrawable(getResources().getDrawable(R.drawable.community_userpagebtn_ver_gray))
-                btn_userpage.setBackgroundColor(Color.WHITE)
                 btn_community_search.setImageDrawable(getResources().getDrawable(R.drawable.icon_search))
-                btn_community_search.setBackgroundColor(Color.WHITE)
+                btnSetting(btn_feed,btn_userpage,btn_community_search)
             }
             else if(currentPage == 1){ // UserFrag
                 btn_feed.setImageDrawable(getResources().getDrawable(R.drawable.community_feedbtn_ver_gray))
-                btn_feed.setBackgroundColor(Color.WHITE)
                 btn_userpage.setImageDrawable(getResources().getDrawable(R.drawable.community_userpagebtn))
-                btn_userpage.setBackgroundColor(resources.getColor(R.color.shared_comunity_bottom_button))
                 btn_community_search.setImageDrawable(getResources().getDrawable(R.drawable.icon_search))
-                btn_community_search.setBackgroundColor(Color.WHITE)
+                btnSetting(btn_userpage,btn_community_search,btn_feed)
+               // (supportFragmentManager.findFragmentByTag("fragmentTag") as CommunityUserPageFragment).update()
+
+                Log.d("ssssssssssss","userFragment")
             }
             else if( currentPage == 2){ //SearchFrag
                 btn_feed.setImageDrawable(getResources().getDrawable(R.drawable.community_feedbtn_ver_gray))
-                btn_feed.setBackgroundColor(Color.WHITE)
                 btn_userpage.setImageDrawable(getResources().getDrawable(R.drawable.community_userpagebtn_ver_gray))
-                btn_userpage.setBackgroundColor(Color.WHITE)
                 btn_community_search.setImageDrawable(getResources().getDrawable(R.drawable.icon_search_white))
-                btn_community_search.setBackgroundColor(resources.getColor(R.color.shared_comunity_bottom_button))
+                btnSetting(btn_community_search, btn_feed,btn_userpage)
+
+
             }
         }
     }
@@ -179,7 +184,7 @@ class CommunityActivity(var connector: Connector = Connector(), val likeList: Mu
         }
         else super.onBackPressed()
     }
-    fun btnSetting(selectedBtn : Button, none1 :Button,none2:Button){
+    fun btnSetting(selectedBtn : ImageButton, none1 :ImageButton, none2:ImageButton){
         btn_feed.setBackgroundColor(resources.getColor(R.color.shared_comunity_bottom_button))
         btn_userpage.setBackgroundColor(Color.WHITE)
         btn_community_search.setBackgroundColor(Color.WHITE)
