@@ -46,7 +46,6 @@ class CommunityShareFragment : androidx.fragment.app.Fragment() {
             override fun afterTextChanged(edit: Editable) {}
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                Log.d("rrrrrrrrrrrrrr","byte = " + writePostAboutLayer.text.toString().toByteArray().size)
                 if (writePostAboutLayer.text.toString().toByteArray().size < 100) {
                     post = writePostAboutLayer.text.toString()
                 }else{

@@ -45,7 +45,6 @@ class CommunitySearchFragment(var selection: Int = 2) : androidx.fragment.app.Fr
                 if((event?.action == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
                     if(editResult == "") toast("검색어를 입력하세요.")
                     else{
-                        Log.d("RRRRRRRRR휴대폰 내장 버튼"," 클릭")
                         (activity as CommunityActivity).isSearchBtnClicked = true
                         ccc()
                         return true
@@ -65,11 +64,7 @@ class CommunitySearchFragment(var selection: Int = 2) : androidx.fragment.app.Fr
 
         communitySearchBtn.setOnClickListener {
             if(editResult == "") toast("검색어를 입력하세요.")
-            else {
-                Log.d("RRRRRRRRR휴대폰화면버튼", " 클릭")
-                ccc()
-
-            }
+            else ccc()
         }
         xbutton.setOnClickListener { communitySearchEditText.setText("")
             CommunitySearchAdapter= CommunitySearchitemAdapter()
@@ -114,7 +109,6 @@ class CommunitySearchFragment(var selection: Int = 2) : androidx.fragment.app.Fr
         }
     }
     fun addItem(CommunitySearchAdapter :CommunitySearchitemAdapter){
-        Log.d("RRRRRRRRR"," additem")
         Log.d("RRRRRRRRR","item : " + (activity as CommunityActivity).connector.searchResult?.results)
         (activity as CommunityActivity).connector.searchResult?.results?.forEach { CommunitySearchAdapter.addItem(it) }
     }

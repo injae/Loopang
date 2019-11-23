@@ -32,11 +32,9 @@ class settingItemNoticeFragment :androidx.fragment.app.Fragment(){
         noticelistview.onItemClickListener = AdapterView.OnItemClickListener { parent, v, position, id ->
             // get item
             val item = parent.getItemAtPosition(position) as settingItemNoticeListItem
-
             val title = item.noticeTitle
             val date = item.date
             val Content = item.noticeContent
-            // TODO : use item data.
         }
     }
 

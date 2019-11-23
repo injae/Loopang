@@ -39,12 +39,10 @@ class CommunityTrackFragment(var sound: Sound? = null, val downloadChecker: Down
        // for(layer in (com.treasure.loopang.communication.UserManager.getUser().likedList)){
             if(layer.id == (activity as CommunityActivity).itt.id){
                 heartState = true
-                Log.d("hhhhhhhhhhh","heart in list")
                 heartButton.setImageDrawable(getResources().getDrawable(R.drawable.trackicon_heart_clicked))
                 break
             }else {
                 heartState = false
-                Log.d("hhhhhhhhhhh","heart isnt in list, item's heart state is "+ heartState)
                 heartButton.setImageDrawable(getResources().getDrawable(R.drawable.trackicon_heart))
             }
         }
