@@ -48,10 +48,6 @@ class CommunitySearchFragment(var selection: Int = 2) : androidx.fragment.app.Fr
                         Log.d("RRRRRRRRR휴대폰 내장 버튼"," 클릭")
                         (activity as CommunityActivity).isSearchBtnClicked = true
                         ccc()
-                        CommunitySearchAdapter= CommunitySearchitemAdapter()
-                        community_search_result_listview.adapter = CommunitySearchAdapter //어댑터 새로 붙혀주고 add item하므로 굉장히 잘 나와야함
-                        addItem(CommunitySearchAdapter)
-                        setVisibillity()
                         return true
                     }
                 }
@@ -72,10 +68,7 @@ class CommunitySearchFragment(var selection: Int = 2) : androidx.fragment.app.Fr
             else {
                 Log.d("RRRRRRRRR휴대폰화면버튼", " 클릭")
                 ccc()
-                CommunitySearchAdapter = CommunitySearchitemAdapter()
-                community_search_result_listview.adapter = CommunitySearchAdapter //어댑터 새로 붙혀주고 add item하므로 굉장히 잘 나와야함
-                addItem(CommunitySearchAdapter)
-                setVisibillity()
+
             }
         }
         xbutton.setOnClickListener { communitySearchEditText.setText("")
@@ -155,7 +148,13 @@ class CommunitySearchFragment(var selection: Int = 2) : androidx.fragment.app.Fr
         GlobalScope.launch {
             CoroutineScope(Dispatchers.Main).launch { ld.show() }
             (activity as CommunityActivity).connector.process(ResultManager.SEARCH_REQUEST, null, null, tempList, null, null, selection)
-            CoroutineScope(Dispatchers.Main).launch { ld.dismiss() }
+            CoroutineScope(Dispatchers.Main).launch {
+                ld.dismiss()
+                CommunitySearchAdapter = CommunitySearchitemAdapter()
+                community_search_result_listview.adapter = CommunitySearchAdapter //어댑터 새로 붙혀주고 add item하므로 굉장히 잘 나와야함
+                addItem(CommunitySearchAdapter)
+                setVisibillity()
+            }
         }
         Log.d("RRRRRRRRR","connector: " )
     }
