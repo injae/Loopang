@@ -118,7 +118,6 @@ class CommunityTrackFragment(var sound: Sound? = null, val downloadChecker: Down
 
         track_btn_back.setOnClickListener {   activity!!.TrackFrame.visibility = View.GONE
             val fragmentManager = activity!!.supportFragmentManager
-            fragmentManager.beginTransaction().remove(this).commit()
             fragmentManager.popBackStack()
             (activity as CommunityActivity).isTrackFragOpen = false
         }
@@ -145,4 +144,11 @@ class CommunityTrackFragment(var sound: Sound? = null, val downloadChecker: Down
     }
 
     private fun soundStop() { GlobalScope.launch { sound?.stop() } }
+
+    override fun onDestroy() {
+        Log.d("자동갱신테스트", "destroy track fragment")
+        val userFragment = (activity as CommunityActivity).pagerAdapter.getItem(1) as CommunityUserPageFragment
+        userFragment.update()
+        super.onDestroy()
+    }
 }

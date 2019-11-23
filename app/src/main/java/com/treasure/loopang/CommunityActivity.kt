@@ -33,7 +33,7 @@ class CommunityActivity(var connector: Connector = Connector(), val likeList: Mu
     var isLikedDataChanged : Boolean = true
 
     private var currentPage: Int = 0
-    private val pagerAdapter by lazy { CommunityPagerAdapter(supportFragmentManager) }
+    val pagerAdapter by lazy { CommunityPagerAdapter(supportFragmentManager) }
     private val mDecorView: View by lazy { window.decorView }
     private var mUiOption: Int = 0
 
@@ -87,8 +87,10 @@ class CommunityActivity(var connector: Connector = Connector(), val likeList: Mu
     fun onFragmentChangedtoTrack(songitem : MusicListClass) {
         itt = songitem
         if(itt.id!=null) {
-            getSupportFragmentManager().beginTransaction()
-                .replace(R.id.TrackFrame, CommunityTrackFragment()).commit()
+            val ft = getSupportFragmentManager().beginTransaction()
+            ft.replace(R.id.TrackFrame, CommunityTrackFragment())
+            ft.addToBackStack(null)
+            ft.commit()
             isTrackFragOpen = true
         }
     }
@@ -159,7 +161,6 @@ class CommunityActivity(var connector: Connector = Connector(), val likeList: Mu
         if (isTrackFragOpen == true) {
             TrackFrame.visibility = View.GONE
             val fragmentManager = supportFragmentManager
-            fragmentManager.beginTransaction().remove(CommunityTrackFragment()).commit()
             fragmentManager.popBackStack()
             isTrackFragOpen = false
         }
