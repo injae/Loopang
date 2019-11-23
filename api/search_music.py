@@ -24,7 +24,10 @@ class MusicSearch(Resource):
             flag = args['flag']
             result = []
             targets = []
-            targets.extend(args['target'])
+            if type(args['target']) == list():
+                targets.extend(args['target'])
+            else:
+                targets.append(args['target'])
             for target in targets:
                 if flag == 1:   # music name
                     result.extend(make_data(Music.query.filter(Music.name.startswith(target)).all()))
