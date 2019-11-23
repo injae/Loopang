@@ -23,8 +23,8 @@ import kotlin.collections.ArrayList
 import android.widget.Toast
 
 class CommunityFeedFragment : androidx.fragment.app.Fragment() {
-    private var likeList : MutableList<MusicListClass> = MutableList<MusicListClass>(0, { MusicListClass () })
 
+    lateinit var FeedAdapter : CommunityFeedItemAdapter
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(com.treasure.loopang.R.layout.community_feed,container,false);
     }
@@ -50,25 +50,30 @@ class CommunityFeedFragment : androidx.fragment.app.Fragment() {
             communityFeedListView.visibility = View.VISIBLE
             communityFeedCategoryListView.visibility = View.GONE
             CategotyTextView.visibility=View.VISIBLE
-
-            val FeedAdapter : CommunityFeedItemAdapter = CommunityFeedItemAdapter()
-            communityFeedListView.adapter = FeedAdapter
-
+            updateFeed(item)
             CategotyTextView.text=item.categoryName
-            likeList.addAll((activity as CommunityActivity).likeList)
-            if(item.categoryName == "The Newest 5") {
-                (activity as CommunityActivity).connector?.feedResult?.recent_musics?.forEach { FeedAdapter.addItem(it) }
-            } else if(item.categoryName== "Liked Top 5") {
-                (activity as CommunityActivity).connector?.feedResult?.likes_top?.forEach { FeedAdapter.addItem(it) }
-            } else if(item.categoryName == "Download Top 5"){ (
-                    activity as CommunityActivity).connector?.feedResult?.download_top?.forEach { FeedAdapter.addItem(it) }
-            }
         }
 
         communityFeedListView.onItemClickListener = AdapterView.OnItemClickListener { parent, v, position, id ->
             val itt = parent.getItemAtPosition(position) as MusicListClass
             activity!!.TrackFrame.visibility = View.VISIBLE
             (activity as CommunityActivity).onFragmentChangedtoTrack(itt)
+        }
+    }
+    fun feedAddItem(item : CommunityFeedCategoryItem){
+        if(item.categoryName == "The Newest 5") {
+            (activity as CommunityActivity).connector?.feedResult?.recent_musics?.forEach { FeedAdapter.addItem(it) }
+        } else if(item.categoryName== "Liked Top 5") {
+            (activity as CommunityActivity).connector?.feedResult?.likes_top?.forEach { FeedAdapter.addItem(it) }
+        } else if(item.categoryName == "Download Top 5"){ (
+                activity as CommunityActivity).connector?.feedResult?.download_top?.forEach { FeedAdapter.addItem(it) }
+        }
+    }
+    fun updateFeed(item: CommunityFeedCategoryItem){
+        if((activity as CommunityActivity).isCategorySelected == true){
+            val FeedAdapter : CommunityFeedItemAdapter = CommunityFeedItemAdapter()
+            communityFeedListView.adapter = FeedAdapter
+            feedAddItem(item)
         }
     }
 }

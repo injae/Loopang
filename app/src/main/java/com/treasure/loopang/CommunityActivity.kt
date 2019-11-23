@@ -51,8 +51,8 @@ class CommunityActivity(var connector: Connector = Connector(), val likeList: Mu
         setContentView(R.layout.activity_community)
         window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
 
-        likeList.addAll(com.treasure.loopang.communication.UserManager.getUser().likedList)
-        sharedList.addAll(com.treasure.loopang.communication.UserManager.getUser().trackList)
+        likeList.addAll(com.treasure.loopang.communication.UserManager.getUser().likedList) //초기화
+        sharedList.addAll(com.treasure.loopang.communication.UserManager.getUser().trackList) //초기화
 
         btn_feed.setImageDrawable(getResources().getDrawable(R.drawable.community_feedbtn))
         btn_feed.setBackgroundColor(resources.getColor(R.color.shared_comunity_bottom_button))
@@ -152,8 +152,6 @@ class CommunityActivity(var connector: Connector = Connector(), val likeList: Mu
                 btn_userpage.setImageDrawable(getResources().getDrawable(R.drawable.community_userpagebtn_ver_gray))
                 btn_community_search.setImageDrawable(getResources().getDrawable(R.drawable.icon_search_white))
                 btnSetting(btn_community_search, btn_feed,btn_userpage)
-
-
             }
         }
     }
