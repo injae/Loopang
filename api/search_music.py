@@ -24,9 +24,11 @@ class MusicSearch(Resource):
             flag = args['flag']
             result = []
             targets = []
-            if type(args['target']) == list():
+            if isinstance(args['target'], list):
+                logger().debug('[search music] is list : %s',type(args['target']))
                 targets.extend(args['target'])
             else:
+                logger().debug('[search music] not list: %s', type(args['target']))
                 targets.append(args['target'])
             for target in targets:
                 if flag == 1:   # music name
