@@ -1,4 +1,5 @@
 from flask_restful import Resource, reqparse
+from sqlalchemy.orm import raiseload
 from model.music import Music
 from model.tag import Tag
 from api.auth import Auth
@@ -36,7 +37,7 @@ class MusicSearch(Resource):
                     result.extend(make_data(Music.query.filter(Music.name.startswith(target)).all()))
                 elif flag == 2:  # tag
                     logger().debug('[search music] flag 2 in')
-                    tag = Tag.query.filter_by(name=target).subquery().first()
+                    tag = Tag.query.options(raiseload(Tag.tags_list)).filter_by(name=target).first()
                     if tag is not None:
                         result.extend(make_data(tag.music_list()))
                         logger().debug('[search music] flag 2-2 in')
