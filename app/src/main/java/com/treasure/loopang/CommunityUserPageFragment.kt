@@ -26,7 +26,7 @@ class CommunityUserPageFragment : androidx.fragment.app.Fragment() {
     }
 
     fun update(){
-        if((activity as CommunityActivity).isLikedDataChanged== true && isButtonStateTrack!= false){
+        if((activity as CommunityActivity).isLikedDataChanged== true && isButtonStateTrack == false){
             //update Like List
             userPageItemAdapter = CommunityUserPageAdapter()
             userpageLikedListView.adapter = userPageItemAdapter
