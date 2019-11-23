@@ -32,12 +32,16 @@ class MusicSearch(Resource):
                 targets.append(args['target'])
             for target in targets:
                 if flag == 1:   # music name
+                    logger().debug('[search music] flag 1 in')
                     result.extend(make_data(Music.query.filter(Music.name.startswith(target)).all()))
                 elif flag == 2:  # tag
+                    logger().debug('[search music] flag 2 in')
                     tag = Tag.query.filter_by(name=target).first()
                     if tag is not None:
+                        logger().debug('[search music] flag 2-2 in')
                         result.extend(make_data(tag.music_list()))
                 elif flag == 3:  # user name
+                    logger().debug('[search music] flag 2 in')
                     result.extend(make_data(Music.query.filter(Music.owner.startswith(target)).all()))
                 else:
                     request_message('error', 'wrong flag {}'.format(flag))
