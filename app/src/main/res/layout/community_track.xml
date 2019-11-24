@@ -54,7 +54,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="10dp" />
         <TextView
-                android:id="@+id/playNumText"
+                android:id="@+id/downloadNumText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
@@ -68,7 +68,7 @@
                 android:layout_width="15dp"
                 android:layout_height="15dp"
                 app:srcCompat="@drawable/trackicon_heart_clicked"
-                android:layout_toRightOf="@id/playNumText"
+                android:layout_toRightOf="@id/downloadNumText"
                 android:layout_alignBottom ="@id/downloadNum"/>
         <TextView
                 android:id="@+id/trackHeartClikedNum"
