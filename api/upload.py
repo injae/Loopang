@@ -35,7 +35,7 @@ class Upload(Resource):
             if file == "":
                 return request_message('fail', 'No File Found')
             else:
-                music = Music(music_name=name, user_id=user_id, description=desc)
+                music = Music(name=name, user_id=user_id, description=desc)
                 if music.save_music(file):
                     insert(music)
                     music.set_tags(tags)
