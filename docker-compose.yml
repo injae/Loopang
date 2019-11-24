@@ -25,7 +25,6 @@ services:
     volumes:
       - ./:/app
       - ./music:/app/music/
-      - ./migrations:/app/migrations/
     depends_on:
       - db
     links:
