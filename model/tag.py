@@ -3,12 +3,13 @@ from sqlalchemy.orm import joinedload
 
 class Tag(db.Model):
     __table_name__ = "tag"
-    name   = db.Column(db.String(36), primary_key=True)
+    name = db.Column(db.String(36), primary_key=True)
 
     def __init__(self, name):
         self.name = name
 
     def music_list(self):
+
         list(map(lambda l: l.music, self.tags))
 
     @staticmethod
