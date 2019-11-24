@@ -1,4 +1,5 @@
 from model.database import db, gen_id, insert
+from sqlalchemy.orm import joinedload
 
 class Tag(db.Model):
     __table_name__ = "tag"
@@ -8,7 +9,7 @@ class Tag(db.Model):
         self.name = name
 
     def music_list(self):
-        list(map(lambda l: l.music, self.tags_list))
+        list(map(lambda l: l.music, Tags.query.options(joinedload(Tags.music)).filter_by(tag_id=self.name).all()))
 
     @staticmethod
     def generate(name):

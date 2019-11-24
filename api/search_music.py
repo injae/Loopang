@@ -34,16 +34,12 @@ class MusicSearch(Resource):
             for target in targets:
                 #target = target.encode('utf-8')
                 if flag == 1:   # music name
-                    logger().debug('[search music] flag 1 in')
                     result.extend(make_data(Music.query.filter(Music.name.startswith(target)).all()))
                 elif flag == 2:  # tag
-                    logger().debug('[search music] flag 2 in')
                     tag = Tag.query.options(raiseload('*')).filter_by(name=target).first()
                     if tag is not None:
                         result.extend(make_data(tag.music_list()))
-                        logger().debug('[search music] flag 2-2 in')
                 elif flag == 3:  # user name
-                    logger().debug('[search music] flag 3 in')
                     result.extend(make_data(Music.query.filter(Music.owner.startswith(target)).all()))
                 else:
                     request_message('error', 'wrong flag {}'.format(flag))
