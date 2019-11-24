@@ -32,6 +32,7 @@ class MusicSearch(Resource):
                 logger().debug('[search music] not list: %s', type(args['target']))
                 targets.append(args['target'])
             for target in targets:
+                target = target.encord('utf-8')
                 if flag == 1:   # music name
                     logger().debug('[search music] flag 1 in')
                     result.extend(make_data(Music.query.filter(Music.name.startswith(target)).all()))
