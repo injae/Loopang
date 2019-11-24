@@ -2,6 +2,7 @@ from flask_restful import Resource, reqparse
 from sqlalchemy.orm import joinedload
 from model.music import Music
 from model.tag import Tag
+from model.User import User
 from api.auth import Auth
 from tools.request_message import request_message, make_data
 from App import logger
@@ -40,7 +41,7 @@ class MusicSearch(Resource):
                     if tag is not None:
                         result.extend(make_data(tag.music_list()))
                 elif flag == 3:  # user name
-                    result.extend(make_data(Music.query.options(joinedload(Music.owner)).filter(Music.owner.name.startswith(target)).all()))
+                    result.extend(make_data(Music.query.join(Music.owner, aliased=True).filter_by(name.startswith(target)).all()))
                 else:
                     request_message('error', 'wrong flag {}'.format(flag))
             return {

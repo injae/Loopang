@@ -35,13 +35,13 @@ class Upload(Resource):
             if file == "":
                 return request_message('fail', 'No File Found')
             else:
-                music = Music(name=name, user_id=user_id, description=desc)
+                music = Music(music_name=name, user_id=user_id, description=desc)
                 if music.save_music(file):
                     insert(music)
                     music.set_tags(tags)
-                    return request_message('success', 'Uploaded ' + music.name)
+                    return request_message('success', 'Uploaded ' + music.music_name)
                 else:
-                    return request_message('fail', 'Is Existed file: ' + music.name)
+                    return request_message('fail', 'Is Existed file: ' + music.music_name)
         except Exception as e:
             logger().error(str(e))
             return request_message('error', str(e))
