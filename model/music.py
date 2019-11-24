@@ -6,7 +6,7 @@ from datetime import datetime
 from pathlib import Path
 import os
 
-MUSIC_FOLDER = os.path.expandvars('$HOME/music')
+MUSIC_FOLDER = os.path.expandvars('/app/music')
 
 
 class Music(db.Model):

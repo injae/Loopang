@@ -7,7 +7,7 @@ services:
     env_file:
       - ./DockerENV.env
     volumes:
-      - /var/lib/postgresql/data:/var/lib/postgresql/data
+      - ./docker/data:/var/lib/postgresql/data
     ports:
       - 5432:5432
       
@@ -24,7 +24,8 @@ services:
       - "5000:5000"
     volumes:
       - ./:/app
-      - $HOME/music:/music/
+      - ./music:/app/music/
+      - ./migrations:/app/migrations/
     depends_on:
       - db
     links:
