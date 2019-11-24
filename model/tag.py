@@ -25,9 +25,9 @@ class Tags(db.Model):
     __table_name__ = "tags"
     id = db.Column(db.Integer, primary_key=True)
     tag_id = db.Column(db.String(36), db.ForeignKey('tag.name'), nullable=False)
-    tag = db.relationship("Tag", backref=db.backref("tags_list", lazy='raise', foreign_keys=[tag_id]))
+    tag = db.relationship("Tag", backref=db.backref("tags_list", lazy='dynamic', foreign_keys=[tag_id]))
     music_id = db.Column(db.String(36), db.ForeignKey('music.music_id'), nullable=False)
-    music = db.relationship("Music", backref=db.backref("tags", lazy='raise', foreign_keys=[music_id]))
+    music = db.relationship("Music", backref=db.backref("tags", lazy='dynamic', foreign_keys=[music_id]))
 
     def __init__(self, tag_id, music_id):
         Tag.generate(tag_id)
