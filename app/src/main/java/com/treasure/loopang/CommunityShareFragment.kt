@@ -30,7 +30,7 @@ import android.view.KeyEvent.KEYCODE_ENTER
 class CommunityShareFragment : androidx.fragment.app.Fragment() {
     private var enterNum : Int =0
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(com.treasure.loopang.R.layout.community_share_fragment,container,false);
+        return inflater.inflate(R.layout.community_share_fragment,container,false)
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -78,6 +78,7 @@ class CommunityShareFragment : androidx.fragment.app.Fragment() {
                     GlobalScope.launch {
                         CoroutineScope(Dispatchers.Main).launch { ld.show() }
                         at.connector.process(ResultManager.FILE_UPLOAD, null, at.layerItem.loopTitle, null, null, makeUploadInfo(post, at))
+                        at.connector.process(ResultManager.INFO_REQUEST)
                         CoroutineScope(Dispatchers.Main).launch { ld.dismiss() }
                     }
                     val intent = Intent(activity, CommunityActivity::class.java)
