@@ -21,8 +21,11 @@ import kotlinx.android.synthetic.main.activity_community.view.*
 import kotlinx.android.synthetic.main.community_search_result.*
 
 class CommunityActivity(var connector: Connector = Connector(), val likeList: MutableList<MusicListClass> = MutableList<MusicListClass>(0, { MusicListClass () }),
-                        val sharedList: MutableList<MusicListClass> = MutableList<MusicListClass>(0, { MusicListClass () })) : AppCompatActivity() {
-    var isTrackDataChanged : Boolean = false
+                        val sharedList: MutableList<MusicListClass> = MutableList<MusicListClass>(0, { MusicListClass () }),
+                        val feedNewestList : MutableList<MusicListClass> = MutableList<MusicListClass>(0, { MusicListClass () }),
+                        val feedLikeList : MutableList<MusicListClass> = MutableList<MusicListClass>(0, { MusicListClass () }),
+                        val feedDownloadList : MutableList<MusicListClass> = MutableList<MusicListClass>(0, { MusicListClass () })) : AppCompatActivity() {
+
     lateinit var itt : MusicListClass
     var isTrackFragOpen : Boolean = false
     val transaction = supportFragmentManager.beginTransaction()
@@ -31,6 +34,10 @@ class CommunityActivity(var connector: Connector = Connector(), val likeList: Mu
     var ButtonState = "Tag"
     var sharingFinish : Boolean = false
     var isLikedDataChanged : Boolean = true
+    var isTrackDataChanged : Boolean = false
+    var isDownloadDataChanged:Boolean = false
+    var musicId : String? =null
+    var musicLikesNum : Int? = null
 
     private var currentPage: Int = 0
     val pagerAdapter by lazy { CommunityPagerAdapter(supportFragmentManager) }
@@ -53,6 +60,17 @@ class CommunityActivity(var connector: Connector = Connector(), val likeList: Mu
 
         likeList.addAll(com.treasure.loopang.communication.UserManager.getUser().likedList) //초기화
         sharedList.addAll(com.treasure.loopang.communication.UserManager.getUser().trackList) //초기화
+        feedNewestList.addAll(connector.feedResult!!.recent_musics)
+        feedLikeList.addAll(connector.feedResult!!.likes_top)
+        feedDownloadList.addAll(connector.feedResult!!.download_top)
+
+        for(item in connector.feedResult!!.download_top ){
+            Log.d("sssssssssdown/기능" ,item.name +" : "+item.id)
+        }
+        for(item in feedDownloadList){
+            Log.d("sssssssssdown/UI " ,item.name)
+        }
+
 
         btn_feed.setImageDrawable(getResources().getDrawable(R.drawable.community_feedbtn))
         btn_feed.setBackgroundColor(resources.getColor(R.color.shared_comunity_bottom_button))
@@ -60,12 +78,7 @@ class CommunityActivity(var connector: Connector = Connector(), val likeList: Mu
         btn_userpage.setBackgroundColor(Color.WHITE)
         btn_community_search.setImageDrawable(getResources().getDrawable(R.drawable.icon_search))
         btn_community_search.setBackgroundColor(Color.WHITE)
-       /* val feedFragment = CommunityFeedFragment()
-        val userFragment = CommunityUserPageFragment()
-        val searchFragment = CommunitySearchFragment()
-        val fragmentList : List<Fragment> = listOf(feedFragment,userFragment ,searchFragment)
-         fragmentList.forEach { pagerAdapter.addItem(it) }
-        */
+
         CommunityContainer.adapter = pagerAdapter
         CommunityContainer.addOnPageChangeListener(PageChangeListener())
         CommunityContainer.setOnTouchListener { _, _ -> false}
@@ -75,8 +88,15 @@ class CommunityActivity(var connector: Connector = Connector(), val likeList: Mu
         if(isSharingFinished == "true"){
             sharingFinish = true
             isTrackDataChanged = true
-            for(item in sharedList){ sharedList.remove(item) }
+
+            //여기부터
+            sharedList.clear()
             sharedList.addAll(com.treasure.loopang.communication.UserManager.getUser().trackList)
+            //여기까지 sharedList갱신임 ㅇㅇ
+            //여기부터
+            feedNewestList.clear()
+            feedNewestList.addAll(connector.feedResult!!.recent_musics)
+            //여기까지는 feedNewestList갱신
             CommunityContainer.setCurrentItem(1)
         }
 
