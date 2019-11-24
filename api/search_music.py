@@ -41,7 +41,7 @@ class MusicSearch(Resource):
                     if tag is not None:
                         result.extend(make_data(tag.music_list()))
                 elif flag == 3:  # user name
-                    result.extend(make_data(Music.query.join(Music.owner, aliased=True).filter(Music.owner.name.startswith(target)).all()))
+                    result.extend(make_data(Music.query.join(Music.owner, aliased=True).filter(Music.owner.property.mapper.class_.name.startswith(target)).all()))
                 else:
                     request_message('error', 'wrong flag {}'.format(flag))
             return {
