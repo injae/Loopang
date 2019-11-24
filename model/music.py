@@ -12,7 +12,7 @@ MUSIC_FOLDER = os.path.expandvars('/app/music')
 class Music(db.Model):
     __table_name__ = 'music'
     music_id = db.Column(db.String(36), primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
+    music_name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(100), nullable=False)
     user_id = db.Column(db.String(36), db.ForeignKey('user.public_id'), nullable=False)
     owner = db.relationship("User", backref=db.backref("musics", lazy='dynamic', foreign_keys=[user_id]))
@@ -26,7 +26,7 @@ class Music(db.Model):
 
     def __init__(self, name, user_id, description):
         self.music_id = gen_id()
-        self.name = name
+        self.music_name = name
         self.description = description
         self.user_id = user_id
 
@@ -57,7 +57,7 @@ class Music(db.Model):
         return list(map(lambda l: "{}".format(l.tag.name), self.tags))
 
     def public_data(self):
-        return {'id': self.music_id, 'name': self.name, 'owner': self.owner.name 
+        return {'id': self.music_id, 'name': self.music_name, 'owner': self.owner.name 
                ,'updated_date': str(self.updated_date), 'downloads': self.downloads
                ,'likes': self.likes, 'explanation': self.description
                ,'tags': self.tag_list()}
@@ -67,4 +67,4 @@ class Music(db.Model):
 
     @staticmethod
     def search(name):
-        return list(map(lambda l: l.public_data(), Music.query.filter_by(name=name)))
+        return list(map(lambda l: l.public_data(), Music.query.filter_by(music_name=name)))

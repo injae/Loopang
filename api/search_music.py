@@ -34,7 +34,7 @@ class MusicSearch(Resource):
             for target in targets:
                 #target = target.encode('utf-8')
                 if flag == 1:   # music name
-                    result.extend(make_data(Music.query.filter(Music.name.startswith(target)).all()))
+                    result.extend(make_data(Music.query.filter(Music.music_name.startswith(target)).all()))
                 elif flag == 2:  # tag
                     tag = Tag.query.options(joinedload(Tag.tags_list)).filter_by(name=target).first()
                     if tag is not None:
