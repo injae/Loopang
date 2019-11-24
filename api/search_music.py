@@ -1,5 +1,5 @@
 from flask_restful import Resource, reqparse
-from sqlalchemy.orm import raiseload
+from sqlalchemy.orm import contains_eager
 from model.music import Music
 from model.tag import Tag
 from api.auth import Auth
@@ -26,7 +26,7 @@ class MusicSearch(Resource):
             result = []
             targets = []
             if isinstance(args['target'], list):
-                logger().debug('[search music] is list : %s',type(args['target']))
+                logger().debug('[search music] is list : %s', type(args['target']))
                 targets.extend(args['target'])
             else:
                 logger().debug('[search music] not list: %s', type(args['target']))
@@ -36,11 +36,11 @@ class MusicSearch(Resource):
                 if flag == 1:   # music name
                     result.extend(make_data(Music.query.filter(Music.name.startswith(target)).all()))
                 elif flag == 2:  # tag
-                    tag = Tag.query.options(raiseload('*')).filter_by(name=target).first()
+                    tag = Tag.query.options(contains_eager(Tag.tags)).filter_by(name=target).first()
                     if tag is not None:
                         result.extend(make_data(tag.music_list()))
                 elif flag == 3:  # user name
-                    result.extend(make_data(Music.query.filter(Music.owner.startswith(target)).all()))
+                    result.extend(make_data(Music.query.options(contains_eager(Music.owner)).filter(Music.owner.startswith(target)).all()))
                 else:
                     request_message('error', 'wrong flag {}'.format(flag))
             return {

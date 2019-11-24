@@ -9,7 +9,7 @@ class Tag(db.Model):
         self.name = name
 
     def music_list(self):
-        list(map(lambda l: l.music, Tags.query.options(joinedload(Tags.music)).filter_by(tag_id=self.name).all()))
+        list(map(lambda l: l.music, self.tags))
 
     @staticmethod
     def generate(name):
