@@ -14,7 +14,7 @@ class Tag(db.Model):
     @staticmethod
     def generate(name):
         is_existed = Tag.query.filter_by(name=name).first()
-        if is_existed is not None :
+        if is_existed is not None:
             return is_existed
         else:
             new_tag = Tag(name)
