@@ -9,8 +9,7 @@ class Tag(db.Model):
         self.name = name
 
     def music_list(self):
-
-        list(map(lambda l: l.music, self.tags))
+        list(map(lambda l: l.music, self.tags_list))
 
     @staticmethod
     def generate(name):
