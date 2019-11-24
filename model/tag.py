@@ -1,6 +1,7 @@
 from model.database import db, gen_id, insert
 from sqlalchemy.orm import joinedload
 
+
 class Tag(db.Model):
     __table_name__ = "tag"
     name = db.Column(db.String(36), primary_key=True)
