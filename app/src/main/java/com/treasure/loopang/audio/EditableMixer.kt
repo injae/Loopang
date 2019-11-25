@@ -149,7 +149,11 @@ class EditableMixer(var sounds: MutableList<EditableSound> = mutableListOf()) : 
         callStart(this)
         sounds.forEach{it.isEnd.set(false)}
         launch {
-            sounds.forEach{ launch{ replay(it) }.start() }
+            sounds.map{
+                var thread = launch{ replay(it) }
+                thread.start()
+                thread
+            }.forEach{ it.join() }
             callSuccess(this@EditableMixer)
         }.start()
         if(!makeBlocks.get()) {
@@ -167,6 +171,7 @@ class EditableMixer(var sounds: MutableList<EditableSound> = mutableListOf()) : 
                 while (isLooping.get()) {
                     if(sounds[longIndex].isEnd.get()) {
                         isLooping.set(false)
+                        //seek(sounds[longIndex].blocks.durationMs())
                         Log.d("AudioTest","play Stoped")
                     }
                 }

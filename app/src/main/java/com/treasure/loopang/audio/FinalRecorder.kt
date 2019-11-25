@@ -64,7 +64,7 @@ class FinalRecorder : IFinalRecorder {
     }
 
     override fun getLoopPosition(): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return mixer.sounds[0].blocks.playedIndex / mixer.sounds[0].sound.info.tenMsSampleRate
     }
 
     override fun seekToStart() {
