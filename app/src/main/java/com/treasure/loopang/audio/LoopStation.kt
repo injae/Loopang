@@ -15,7 +15,7 @@ class LoopStation {
     private val mDurationCalculator: DurationCalculator = DurationCalculator()
     private var linkedVisualizer: RealtimeVisualizerView? = null
     private val mMixer: Mixer = Mixer()
-    private val mRecorder: Recorder = Recorder()
+    private var mRecorder: Recorder? = null
     private val mMetronome: Metronome = Metronome()
 
     private val mFileManager = FileManager()
@@ -71,8 +71,11 @@ class LoopStation {
         this.linkedVisualizer = visualizer
     }
 
-    private fun initRecorder(){
-        mRecorder.apply{
+    fun initRecorder(){
+        if(mRecorder == null) {
+            mRecorder = Recorder()
+        }
+        mRecorder!!.apply{
             onSuccess {
                 mHandler.post{ hideVisualizer() }
                 addLayer(it.getSound())
@@ -92,6 +95,12 @@ class LoopStation {
                 it
             }
         }
+    }
+
+    fun releaseRecorder() {
+        if (mRecorder == null) return
+        mRecorder!!.release()
+        mRecorder = null
     }
 
     private fun initMixer(){
@@ -121,8 +130,8 @@ class LoopStation {
                     return
                 }
 
-                mMixer.sounds.isNotEmpty() -> mRecorder.start(mMixer.sounds[0].data.size)
-                else -> mRecorder.start()
+                mMixer.sounds.isNotEmpty() -> mRecorder!!.start(mMixer.sounds[0].data.size)
+                else -> mRecorder!!.start()
             }
             showVisualizer()
             mLoopStationEventListener?.onRecordStart()
@@ -135,7 +144,7 @@ class LoopStation {
             if(messageFlag) mLoopStationMessageListener?.onDuplicateRecordStopError()
             return
         }
-        mRecorder.stop()
+        mRecorder!!.stop()
         mLoopStationEventListener?.onRecordStop()
         if(messageFlag) mLoopStationMessageListener?.onRecordStop()
     }
@@ -355,7 +364,7 @@ class LoopStation {
         return true
     }
 
-    fun isRecording(): Boolean = mRecorder.isRecording.get()
+    fun isRecording(): Boolean = mRecorder!!.isRecording.get()
     fun isLooping(): Boolean = mMixer.isLooping.get()
     fun isFirstRecord(): Boolean = firstRecordFlag
     fun isEmpty(): Boolean = mMixer.sounds.isEmpty()
@@ -432,7 +441,7 @@ class LoopStation {
     }
 
     fun getMixer() : Mixer = mMixer
-    fun getRecorder(): Recorder = mRecorder
+    fun getRecorder(): Recorder = mRecorder!!
     fun getSounds() : MutableList<MixerSound> = mMixer.sounds
     fun getLayerLabels() : MutableList<String> = mLayerLabelList
     fun hasSingleLayer(): Boolean = (mMixer.sounds.size == 1)
