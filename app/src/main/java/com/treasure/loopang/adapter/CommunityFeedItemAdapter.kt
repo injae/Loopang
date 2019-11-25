@@ -11,7 +11,6 @@ import java.util.ArrayList
 
 class CommunityFeedItemAdapter : BaseAdapter(){
 
-    lateinit var likeList : MutableList<MusicListClass>
     private var listViewItemList = ArrayList<MusicListClass>()
     override fun getCount(): Int {
         return listViewItemList.size

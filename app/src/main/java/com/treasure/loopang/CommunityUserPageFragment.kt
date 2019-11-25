@@ -27,8 +27,6 @@ class CommunityUserPageFragment : androidx.fragment.app.Fragment() {
 
     fun update(){
         if((activity as CommunityActivity).isLikedDataChanged== true){
-            //update Like List
-            Log.d("sssssssss",""+ (activity as CommunityActivity).likeList.size)
             addItem(userpageLikedListView,(activity as CommunityActivity).likeList,isButtonStateTrack)
             for(item in (activity as CommunityActivity).sharedList){
                 if(item.id == (activity as CommunityActivity).musicId){
@@ -36,16 +34,10 @@ class CommunityUserPageFragment : androidx.fragment.app.Fragment() {
                 }
             }
             updateText()
-            Log.d("sssssssss","update Like List")
-            (activity as CommunityActivity).isLikedDataChanged = false
         }
         if((activity as CommunityActivity).isTrackDataChanged==true){
-            //update Shared Layer
             addItem(userpageListView,(activity as CommunityActivity).sharedList,isButtonStateTrack)
-            (activity as CommunityActivity).isTrackDataChanged = false
             updateText()
-            Log.d("sssssssss",""+ (activity as CommunityActivity).sharedList)
-            Log.d("sssssssss","update Track List")
         }
 
     }
@@ -60,7 +52,15 @@ class CommunityUserPageFragment : androidx.fragment.app.Fragment() {
         addItem(userpageListView, com.treasure.loopang.communication.UserManager.getUser().trackList,isButtonStateTrack)
         addItem(userpageLikedListView,com.treasure.loopang.communication.UserManager.getUser().likedList,isButtonStateTrack)// 초기화
 
-
+        if(com.treasure.loopang.communication.UserManager.getUser().trackList.size != 0) update()
+        if((activity as CommunityActivity).sharingFinish == true){
+            Log.d("hhhh SHare갱신","갱신!!!")
+            (activity as CommunityActivity).sharedList.clear()
+            (activity as CommunityActivity).sharedList.addAll(com.treasure.loopang.communication.UserManager.getUser().trackList)
+            for(item in (activity as CommunityActivity).sharedList){
+                Log.d("hhhh SHare","공유한 것: "+ item.name +" 공유한 사람: "+item.owner)
+            }
+        }
         val userPageButton : List <Button> = listOf(userPageTrackBtn,userPageLikedBtn)
         for(i in 0.. userPageButton.size-1){
             userPageButton[i].setOnClickListener {
@@ -96,7 +96,7 @@ class CommunityUserPageFragment : androidx.fragment.app.Fragment() {
               toast("파일이 없습니다.")
             }else{
                 val intent = Intent(activity, CommunityShareActivity::class.java)
-                startActivity(intent)
+                startActivityForResult(intent,500)
             }
         }
     }
