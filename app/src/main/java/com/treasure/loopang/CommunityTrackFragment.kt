@@ -85,23 +85,13 @@ class CommunityTrackFragment(var sound: Sound? = null, val downloadChecker: Down
             val connector = Connector()
             if(heartState == true) {
                 heartState = false
+                (activity as CommunityActivity).likeList.remove((activity as CommunityActivity).itt)
                 (activity as CommunityActivity).itt.likes -=1
                 (activity as CommunityActivity).musicLikesNum = (activity as CommunityActivity).itt.likes
                 GlobalScope.launch { connector.process(ResultManager.REQUEST_LIKE_DOWN, null, null, null, (activity as CommunityActivity).itt.id) }
                 heartButton.setImageDrawable(getResources().getDrawable(R.drawable.trackicon_heart))
                 trackHeartClikedNum.setText((activity as CommunityActivity).itt.likes.toString())
-
-               for(item in (activity as CommunityActivity).likeList) {
-                  // Log.d("sssssssss비교", "likeItem id: " + item.id + " itt id: " + (activity as CommunityActivity).itt.id)
-                   if (item.id == (activity as CommunityActivity).itt.id) {
-                       (activity as CommunityActivity).likeList.remove((activity as CommunityActivity).itt)
-                       // Log.d("sssssssss삭제","삭제 했어!")
-                   }
-               }
-                Log.d("sssssssssSize 채워진상태 > 빔",""+(activity as CommunityActivity).likeList.size )
-                    for(i in 0.. (activity as CommunityActivity).likeList.size-1){
-                        Log.d("sssssssssName 채워진상태 > 빔"," " + (activity as CommunityActivity).likeList[i].name + " " +(activity as CommunityActivity).likeList[i].likes )
-                    }
+                (activity as CommunityActivity).likeList.remove((activity as CommunityActivity).itt)
             } else {
                 heartState = true
                 (activity as CommunityActivity).itt.likes +=1
@@ -110,10 +100,6 @@ class CommunityTrackFragment(var sound: Sound? = null, val downloadChecker: Down
                 heartButton.setImageDrawable(getResources().getDrawable(R.drawable.trackicon_heart_clicked))
                 trackHeartClikedNum.setText((activity as CommunityActivity).itt.likes.toString())
                 (activity as CommunityActivity).likeList.add((activity as CommunityActivity).itt)
-                Log.d("sssssssssSize: 빈상태>채워짐",""+(activity as CommunityActivity).likeList.size )
-                for(i in 0.. (activity as CommunityActivity).likeList.size-1){
-                    Log.d("sssssssssName 빈상태>채워짐"," " + (activity as CommunityActivity).likeList[i].name + " " +(activity as CommunityActivity).likeList[i].likes )
-                }
             }
         }
 
@@ -122,6 +108,7 @@ class CommunityTrackFragment(var sound: Sound? = null, val downloadChecker: Down
             downloadChecker.download((activity as CommunityActivity).itt.name, (activity as CommunityActivity).itt.id, activity!!)
             (activity as CommunityActivity).itt.downloads += 1
             downloadNumText.setText((activity as CommunityActivity).itt.downloads.toString())
+            (activity as CommunityActivity).musicDownloadNum = (activity as CommunityActivity).itt.downloads
         }
 
         Track_btn_play.setOnClickListener {
@@ -167,18 +154,43 @@ class CommunityTrackFragment(var sound: Sound? = null, val downloadChecker: Down
     private fun soundStop() { GlobalScope.launch { sound?.stop() } }
 
     override fun onDestroy() {
+        var k : Int = 0
+        var tmp : MusicListClass
         Log.d("자동갱신테스트", "destroy track fragment")
         if((activity as CommunityActivity).isLikedDataChanged == true) {
+
             (activity as CommunityActivity).feedLikeList.clear()
             (activity as CommunityActivity).feedLikeList.addAll((activity as CommunityActivity).connector.feedResult!!.likes_top)
+
+            for(item in (activity as CommunityActivity).connector.feedResult!!.likes_top){
+                Log.d("llll/Like기능" ,item.name +" : "+item.likes)
+            }
+            for(item in (activity as CommunityActivity).feedLikeList){
+                Log.d("llll/LikeUI " ,item.name +" : "+item.likes)
+            }
+            //정렬
+            /*for(i in 4.. 0) {
+                tmp = (activity as CommunityActivity).feedLikeList[i]
+                k = i + 1
+                while (k <= 5 && (activity as CommunityActivity).feedLikeList[k].likes > tmp.likes) {
+                    (activity as CommunityActivity).feedLikeList[k - 1] = (activity as CommunityActivity).feedLikeList[k]
+                    k += 1
+                }
+                (activity a
+                s CommunityActivity).feedLikeList[k - 1] = tmp
+            }*/
         }
         if((activity as CommunityActivity).isDownloadDataChanged == true){
             (activity as CommunityActivity).feedDownloadList.clear()
             (activity as CommunityActivity).feedDownloadList.addAll((activity as CommunityActivity).connector.feedResult!!.download_top)
+            for(item in (activity as CommunityActivity).connector.feedResult!!.download_top ){
+                Log.d("hhhhh/Down기능" ,item.name +" : "+item.downloads)
+            }
+            for(item in (activity as CommunityActivity).feedDownloadList){
+                Log.d("hhhhh/DownUI " ,item.name +" : "+item.downloads )
+            }
             //정렬
-            var k : Int = 0
-            var tmp : MusicListClass
-            for(i in 4.. 0) {
+            /*for(i in 4.. 0) {
                 tmp = (activity as CommunityActivity).feedDownloadList[i]
                 k = i + 1
                 while (k <= 5 && (activity as CommunityActivity).feedDownloadList[k].downloads > tmp.downloads) {
@@ -186,16 +198,12 @@ class CommunityTrackFragment(var sound: Sound? = null, val downloadChecker: Down
                     k += 1
                 }
                 (activity as CommunityActivity).feedDownloadList[k - 1] = tmp
-            }
-
+            }*/
             for(item in (activity as CommunityActivity).feedDownloadList) {
                 Log.d("sssssssssdownload", "item : " + item.name +" download: "+item.downloads)
             }
         }
-        val userFragment = (activity as CommunityActivity).pagerAdapter.getItem(1) as CommunityUserPageFragment
-        userFragment.update()
-        val feedFragment = (activity as CommunityActivity).pagerAdapter.getItem(0) as CommunityFeedFragment
-        feedFragment.update()
+        (activity as CommunityActivity).updateFragment()
         super.onDestroy()
     }
 }

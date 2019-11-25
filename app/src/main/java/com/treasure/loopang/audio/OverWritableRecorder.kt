@@ -1,5 +1,6 @@
 package com.treasure.loopang.audio
 
+import android.media.AudioRecord
 import android.util.Log
 import com.treasure.loopang.audio.format.FormatInfo
 import com.treasure.loopang.audio.format.IFormat
@@ -37,7 +38,9 @@ class OverWritableRecorder (var format: IFormat = Pcm16(),
             var buffer = ShortArray(info.inputBufferSize)
             var sampleCounter: Int = 0
             while(isRecording.get()) {
-                info.inputAudio.read(buffer,0, buffer.size)
+                var read = info.inputAudio.read(buffer, 0, buffer.size, AudioRecord.READ_BLOCKING)
+                Log.d("AudioTest", "recorder read: ${read}")
+
                 if(isMute.get()) {
                     buffer = ShortArray(buffer.size, { 0 })
                     endBlock()
@@ -51,6 +54,7 @@ class OverWritableRecorder (var format: IFormat = Pcm16(),
                     buffer.forEach { if(limit!! > data.size) { data.add(it); readCounter++ } else isRecording.set(false) } }
                  ?: buffer.forEach { data.add(it); readCounter++ }
                 blocks += readCounter
+                Log.d("AudioTest", "recorder record: ${data.size}")
 
                 var currentSampleCount = data.chunked(info.sampleRate).count() - 1
                 if(sampleCounter < currentSampleCount) {
@@ -83,6 +87,7 @@ class OverWritableRecorder (var format: IFormat = Pcm16(),
         if(isRecording.get()) {
             if(limit != null) { this.limit = limit } else { isRecording.set(false) }
             info.inputAudio.stop()
+            Log.d("AudioTest", "recorder recording stop ${data.size}")
             runBlocking { routine.await() }
             endBlock()
             Log.d("AudioTest", "recorder recorded ${data.size}")
@@ -90,6 +95,10 @@ class OverWritableRecorder (var format: IFormat = Pcm16(),
             this.limit = null
             callStop(this)
         }
+    }
+
+    fun release() {
+        info.inputAudio.release()
     }
 
     fun getSound(): Sound {

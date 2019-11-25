@@ -573,11 +573,15 @@ class FinalRecordActivity : AppCompatActivity() {
         override fun onAnimationEnd(animation: Animator?) {}
 
         override fun onAnimationCancel(animation: Animator?) {
-            val position = finalRecorder.getRecordPosition()
+            var position = 0
+            
+            if(finalRecorder.isRecording()) {
+                position = finalRecorder.getRecordPosition()
+            } else if(finalRecorder.isPlaying()){
+                position = finalRecorder.getLoopPosition()
+            } else return
+            
             recordSeekBarButton!!.progress = position
-            if(finalRecorder.isPlaying() && !finalRecorder.isRecording()){
-                finalRecorder.seekTo(position)
-            }
 
             Log.d("animation", "onAnimationCancel, position: $position")
         }

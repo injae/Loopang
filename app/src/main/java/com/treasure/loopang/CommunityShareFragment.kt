@@ -23,10 +23,6 @@ import android.content.DialogInterface
 import android.view.KeyEvent
 import android.view.KeyEvent.KEYCODE_ENTER
 
-
-
-
-
 class CommunityShareFragment : androidx.fragment.app.Fragment() {
     private var enterNum : Int =0
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -79,12 +75,10 @@ class CommunityShareFragment : androidx.fragment.app.Fragment() {
                         CoroutineScope(Dispatchers.Main).launch { ld.show() }
                         at.connector.process(ResultManager.FILE_UPLOAD, null, at.layerItem.loopTitle, null, null, makeUploadInfo(post, at))
                         at.connector.process(ResultManager.INFO_REQUEST)
-                        CoroutineScope(Dispatchers.Main).launch { ld.dismiss() }
-                    }
-                    val intent = Intent(activity, CommunityActivity::class.java)
-                    intent.putExtra("finish","true")
-                    intent.putExtra("from", "CommunityShareFragment")
-                    startActivity(intent)
+                        CoroutineScope(Dispatchers.Main).launch {
+                            ld.dismiss()
+                            (activity as CommunityShareActivity).shareFinish()
+                        }}
                 }
                 else {
                     toast("레이어만 업로드 할 수 있습니다.")
