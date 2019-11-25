@@ -1,6 +1,8 @@
 package com.treasure.loopang
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.AdapterView
@@ -75,5 +77,13 @@ class CommunityShareActivity(val connector: Connector = Connector(), var parent_
         layerItem = item
         shareContainer.visibility=View.VISIBLE
         getSupportFragmentManager().beginTransaction().replace(R.id.shareContainer, CommunityShareFragment()).commit()
+    }
+    fun shareFinish(){
+        setResult(500)
+        finish()
+    }
+    override fun onDestroy() {
+        Log.d("llllDestroy","destroy")
+        super.onDestroy()
     }
 }

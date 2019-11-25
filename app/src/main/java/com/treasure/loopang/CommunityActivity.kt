@@ -14,6 +14,7 @@ import com.treasure.loopang.communication.FeedResult
 import com.treasure.loopang.communication.MusicListClass
 import kotlinx.android.synthetic.main.community_feed.*
 import android.content.Intent
+import android.provider.SyncStateContract.Helpers.update
 import android.widget.Button
 import android.widget.ImageButton
 import androidx.fragment.app.Fragment
@@ -38,7 +39,7 @@ class CommunityActivity(var connector: Connector = Connector(), val likeList: Mu
     var isDownloadDataChanged:Boolean = false
     var musicId : String? =null
     var musicLikesNum : Int? = null
-
+    var musicDownloadNum : Int? =null
     private var currentPage: Int = 0
     val pagerAdapter by lazy { CommunityPagerAdapter(supportFragmentManager) }
     private val mDecorView: View by lazy { window.decorView }
@@ -49,7 +50,7 @@ class CommunityActivity(var connector: Connector = Connector(), val likeList: Mu
         super.onCreate(savedInstanceState)
         //Hide Bottom Soft Navigation Bar
         if(intent.getStringExtra("from") == "Asyncer") connector.feedResult = intent.getSerializableExtra("feedResult") as FeedResult
-
+    Log.d("hhhhCOMMUNITYOPEN" ,"true")
         mUiOption = mDecorView.systemUiVisibility
         mUiOption = mUiOption or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
         mUiOption = mUiOption or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
@@ -60,16 +61,10 @@ class CommunityActivity(var connector: Connector = Connector(), val likeList: Mu
 
         likeList.addAll(com.treasure.loopang.communication.UserManager.getUser().likedList) //초기화
         sharedList.addAll(com.treasure.loopang.communication.UserManager.getUser().trackList) //초기화
-        feedNewestList.addAll(connector.feedResult!!.recent_musics)
-        feedLikeList.addAll(connector.feedResult!!.likes_top)
-        feedDownloadList.addAll(connector.feedResult!!.download_top)
 
-        for(item in connector.feedResult!!.download_top ){
-            Log.d("sssssssssdown/기능" ,item.name +" : "+item.id)
-        }
-        for(item in feedDownloadList){
-            Log.d("sssssssssdown/UI " ,item.name)
-        }
+        if(feedNewestList.size == 0 && connector.feedResult?.recent_musics?.size != 0)feedNewestList.addAll(connector.feedResult!!.recent_musics)
+        if(feedLikeList.size == 0 && connector.feedResult?.likes_top?.size!=0) feedLikeList.addAll(connector.feedResult!!.likes_top)
+        if(feedDownloadList.size == 0 && connector.feedResult?.download_top?.size != 0) feedDownloadList.addAll(connector.feedResult!!.download_top)
 
 
         btn_feed.setImageDrawable(getResources().getDrawable(R.drawable.community_feedbtn))
@@ -82,23 +77,6 @@ class CommunityActivity(var connector: Connector = Connector(), val likeList: Mu
         CommunityContainer.adapter = pagerAdapter
         CommunityContainer.addOnPageChangeListener(PageChangeListener())
         CommunityContainer.setOnTouchListener { _, _ -> false}
-
-        val shareActivityintent = intent
-        val isSharingFinished = intent.extras.getString("finish")
-        if(isSharingFinished == "true"){
-            sharingFinish = true
-            isTrackDataChanged = true
-
-            //여기부터
-            sharedList.clear()
-            sharedList.addAll(com.treasure.loopang.communication.UserManager.getUser().trackList)
-            //여기까지 sharedList갱신임 ㅇㅇ
-            //여기부터
-            feedNewestList.clear()
-            feedNewestList.addAll(connector.feedResult!!.recent_musics)
-            //여기까지는 feedNewestList갱신
-            CommunityContainer.setCurrentItem(1)
-        }
 
         btn_feed.setOnClickListener { CommunityContainer.setCurrentItem(0) }
         btn_userpage.setOnClickListener { CommunityContainer.setCurrentItem(1) }
@@ -204,5 +182,34 @@ class CommunityActivity(var connector: Connector = Connector(), val likeList: Mu
         selectedBtn.setBackgroundColor(resources.getColor(R.color.shared_comunity_bottom_button))
         none1.setBackgroundColor(Color.WHITE)
         none2.setBackgroundColor(Color.WHITE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        sharingFinish = true
+        isTrackDataChanged = true
+        Log.d("llll/종료", "끝남 ㅇㅇ")
+        sharedList.clear()
+        sharedList.addAll(com.treasure.loopang.communication.UserManager.getUser().trackList)
+
+        feedNewestList.clear()
+        feedNewestList.addAll(connector.feedResult!!.recent_musics)
+
+        for (item in connector.feedResult!!.recent_musics) {
+            Log.d("llll/feedNew기능", "name : " + item.name + "날짜: " +item.updated_date)
+        }
+        for (item in feedNewestList) {
+            Log.d("llll/feedNewUI", "name : " + item.name + "날짜: " +item.updated_date)
+        }
+
+        CommunityContainer.setCurrentItem(1)
+        updateFragment()
+    }
+    fun updateFragment(){
+        val userFragment = pagerAdapter.getItem(1) as CommunityUserPageFragment
+        userFragment.update()
+        val feedFragment = pagerAdapter.getItem(0) as CommunityFeedFragment
+        feedFragment.update()
     }
 }
