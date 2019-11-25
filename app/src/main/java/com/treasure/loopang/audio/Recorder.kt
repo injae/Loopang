@@ -55,6 +55,11 @@ class Recorder(var format: IFormat  = Pcm16(),
         return getSound()
     }
 
+    fun release() {
+        info.inputAudio.release()
+    }
+
+
     fun getSound(): Sound {
         var export = Sound(data)
         data = mutableListOf()
