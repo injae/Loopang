@@ -573,7 +573,7 @@ class FinalRecordActivity : AppCompatActivity() {
         override fun onAnimationEnd(animation: Animator?) {}
 
         override fun onAnimationCancel(animation: Animator?) {
-            var position
+            var position = 0
             
             if(finalRecorder.isRecording()) {
                 position = finalRecorder.getRecordPosition()
