@@ -140,11 +140,12 @@ class Recording : AppCompatActivity()
             }
 
             val intent = Intent(this, FinalRecordActivity::class.java)
+           (pagerAdapter.getItem(0) as RecordFragment).loopStation.releaseRecorder()
 
             recorderConnector.soundList = sounds
             recorderConnector.labelList = fragment.loopStation.getLayerLabels().toList()
             recorderConnector.bpm = metronomeBpm
-            startActivity(intent)
+            startActivityForResult(intent,0)
         }
     }
 
@@ -192,6 +193,15 @@ class Recording : AppCompatActivity()
 
             backPressedTime = tempTime
             Toast.makeText(this, "One More pressed, Turn OFF", Toast.LENGTH_SHORT).show()
+        }
+
+
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == 0) {
+            (pagerAdapter.getItem(0) as RecordFragment).loopStation.initRecorder()
         }
     }
 
