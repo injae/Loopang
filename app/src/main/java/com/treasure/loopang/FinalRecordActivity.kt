@@ -226,7 +226,7 @@ class FinalRecordActivity : AppCompatActivity() {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 seekBar?.let{
                     if(it.progress > finalRecorder.getRecordDuration()) {
-                        it.progress = finalRecorder.getRecordPosition()
+                        it.progress = finalRecorder.getRecordDuration()
                     }
                     finalRecorder.seekTo(it.progress)
                 }
