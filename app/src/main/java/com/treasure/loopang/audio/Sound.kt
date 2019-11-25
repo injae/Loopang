@@ -29,11 +29,18 @@ open class Sound (var data: MutableList<Short> = mutableListOf(),
                     playData.chunked(info.sampleRate)
                         .map { timeEffect(it.toShortArray()).toList() }
                         .forEach {
-                            it.chunked(info.outputBufferSize)
+                            it.chunked(info.inputBufferSize)
                                 .map { effect(it.toShortArray()) }
                                 .forEach {
                                     if(!isPlaying.get()) return@exit
-                                    if(!isMute.get()) info.outputAudio.write(it, 0, it.size)
+                                    if(!isMute.get()) {
+                                        var count = 0
+                                        while(count < it.size) {
+                                            var written = info.outputAudio.write(it, count, it.size)
+                                            if(written <= 0) break
+                                            count += written
+                                        }
+                                    }
                                 }
                         }
                 }
@@ -51,6 +58,7 @@ open class Sound (var data: MutableList<Short> = mutableListOf(),
             //audioTrack.release()
         }
     }
+
 
     fun save(path: String) {
         val format = formatFactory(path)
