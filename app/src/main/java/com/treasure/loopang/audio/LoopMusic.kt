@@ -52,7 +52,7 @@ class LoopMusic( var name: String = ""
         }
 
         fun isPCM(): Boolean {
-            return this.type == "pcm"
+            return (this.type == "pcm" && this.child == null)
         }
 
     companion object{
