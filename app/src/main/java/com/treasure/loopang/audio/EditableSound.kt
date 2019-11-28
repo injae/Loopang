@@ -117,24 +117,19 @@ class EditableSound:
         if(!isMute.get()) sound.stop()
     }
 
-    fun makeSound(): Sound {
+    fun addGenerator(): Sound {
         var maxLength = blocks.duration()
         blocks.seek(0)
         var export = Sound()
         sound.isMute.set(true)
-        var save_effector = sound.addEffector {
-            blocks.location.expand(it.size)
-            var diff = blocks.point() - maxLength
-            if(diff > 0)  {
-                for((index, _) in it.withIndex()) { if(index > it.size - diff) it[index] = 0 }
-                sound.stop()
-            }
-            sound.data.addAll(it.toMutableList())
+        sound.addEffector {
+            export.data.addAll(it.toMutableList())
             it
         }
-        while(sound.isPlaying.get()) { sound.play() }
-        sound.removeEffector(save_effector)
-        blocks.seek(maxLength)
         return export
+    }
+
+    fun removeGenerator() {
+        sound.removeEffector(sound.effectorList.size-1)
     }
 }
