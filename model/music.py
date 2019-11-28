@@ -29,6 +29,7 @@ class Music(db.Model):
         self.music_name = name
         self.description = description
         self.user_id = user_id
+        self.updated_data = datetime.utcnow()
 
     def set_tags(self, tags):
         for tag in tags:

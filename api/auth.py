@@ -34,11 +34,13 @@ class Auth(Resource):
 
     @staticmethod
     def encord_refresh_token(pub_id: str):
-        return Auth.encord_token(pub_id, datetime.timedelta(hours=2))
+        return Auth.encord_token(pub_id, datetime.timedelta(hours=12)) # 한이음 버전 패치
+        #return Auth.encord_token(pub_id, datetime.timedelta(hours=2)) 
 
     @staticmethod
     def encord_access_token(pub_id: str):
-        return Auth.encord_token(pub_id, datetime.timedelta(minutes=10))
+        return Auth.encord_token(pub_id, datetime.timedelta(hours=12)) # 한이음 버전 패치
+        #return Auth.encord_token(pub_id, datetime.timedelta(minutes=10))
 
     @staticmethod
     def decord_token(token):
