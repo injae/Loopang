@@ -128,10 +128,9 @@ class FinalRecorder : IFinalRecorder {
     }
 
     override fun export(title: String, soundFormat: String): Boolean {
+        mixer.sounds.add(recorder.getEditableSound())
         mixer.save(title+soundFormat)
-        var voice = EditableSound(recorder.getSound())
-        voice.blocks.list.add(SoundRange(voice.sound, 0, voice.sound.data.size))
-        mixer.sounds.add(voice)
+        mixer.sounds.removeAt(mixer.sounds.lastIndex)
         return true
     }
 

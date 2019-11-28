@@ -118,11 +118,14 @@ class EditableMixer(var sounds: MutableList<EditableSound> = mutableListOf()) : 
     fun stop(index: Int) { sounds[index].stop() }
 
     fun mixSounds(): MutableList<Short> {
-        var musics = sounds.map{ async { it.makeSound() } }
-                           .map{ runBlocking {  it.await() } }
-        return musics.map { it.data }
-                     .fold(MutableList<Short>(musics[0].data.size) {0}) { acc, it ->
-                         acc.zip(it){ a, b -> (a + b).toShort() }.toMutableList() }
+        return sounds.map{ async { Pair(it, it.addGenerator()) } }
+                           .map{ runBlocking {
+                               var i = it.await()
+                               i.first.removeGenerator()
+                               i.second }
+                           }.map { it.data }
+                            .fold(MutableList<Short>(sounds[sounds.lastIndex].sound.data.size) {0}) {
+                                  acc, it -> acc.zip(it){ a, b -> (a + b).toShort() }.toMutableList() }
     }
 
     fun save(path: String) {
