@@ -96,6 +96,15 @@ class FinalRecorder : IFinalRecorder {
             }
         }
         mixer.addSound(recorder.getEditableSound())
+        mixer.onStop {
+            mixer.sounds.removeAt(mixer.sounds.lastIndex)
+            mixer.sounds.map{ it.blocks.list }.forEach{
+                it.forEach{
+                    Log.d("AudioTest", "- mixer: ${it.startIndex()} ${it.endIndex()}")
+                }
+            }
+            mixer.onStop{ }
+        }
         mixer.start()
     }
 
@@ -103,7 +112,6 @@ class FinalRecorder : IFinalRecorder {
         mixer.stop()
         recorder.seek(mixer.loopDuration())
         mixer.seek(mixer.loopDuration())
-        mixer.sounds.removeAt(mixer.sounds.lastIndex)
     }
 
     override fun recordStart() {
