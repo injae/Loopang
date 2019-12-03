@@ -452,7 +452,7 @@ class FinalRecordActivity : AppCompatActivity() {
                 val title = this.edit_music_title.text.toString()
                 val soundFormat: String  = this.spinner_sound_format_type.selectedItem.toString()
 
-                finalRecorder.export(title, soundFormat)
+                finalRecorder.export(title, soundFormat.toLowerCase())
                 it.dismiss()
             }
             negativeButton(R.string.btn_cancel) {

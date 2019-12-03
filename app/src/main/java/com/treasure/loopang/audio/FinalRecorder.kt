@@ -8,6 +8,7 @@ class FinalRecorder : IFinalRecorder {
     var recorder = OverWritableRecorder()
     var effector = SoundEffector()
     var effectFlagList = mutableListOf<EffectorPresets>()
+    val soundDir = FileManager().looperSoundDir.absolutePath
 
     override fun getBlockList(): List<List<SoundRange>> {
         var buf = mutableListOf(recorder.getBlock())
@@ -128,7 +129,7 @@ class FinalRecorder : IFinalRecorder {
     }
 
     override fun export(title: String, soundFormat: String): Boolean {
-        mixer.save(title+soundFormat)
+        mixer.save("$soundDir/$title.$soundFormat")
         var voice = EditableSound(recorder.getSound())
         voice.blocks.list.add(SoundRange(voice.sound, 0, voice.sound.data.size))
         mixer.sounds.add(voice)
