@@ -45,7 +45,7 @@ class EditableMixer(var sounds: MutableList<EditableSound> = mutableListOf()) : 
     }
 
 
-    fun start() {
+    fun start(wait:Boolean=false ) {
         isLooping.set(true)
         callStart(this)
         sounds.forEach{it.isEnd.set(false)}
@@ -60,7 +60,7 @@ class EditableMixer(var sounds: MutableList<EditableSound> = mutableListOf()) : 
             callSuccess(this@EditableMixer)
         }.start()
         if(!makeBlocks.get()) {
-            launch {
+             var job= launch {
                 var longIndex = 0
                 sounds.mapIndexed{index, _ -> index }
                     .filter{ !sounds[it].blocks.isEmpty() }
@@ -70,15 +70,16 @@ class EditableMixer(var sounds: MutableList<EditableSound> = mutableListOf()) : 
                             longIndex = index
                         }
                     }
-                Log.d("AudioTest","longest index")
                 while (isLooping.get()) {
                     if(sounds[longIndex].isEnd.get()) {
                         isLooping.set(false)
-                        //seek(sounds[longIndex].blocks.durationMs())
                         Log.d("AudioTest","play Stoped")
+                        callStop(this@EditableMixer)
                     }
                 }
-            }.start()
+            }
+            job.start()
+            if(wait) runBlocking { job.join() }
         }
     }
 
@@ -118,14 +119,16 @@ class EditableMixer(var sounds: MutableList<EditableSound> = mutableListOf()) : 
     fun stop(index: Int) { sounds[index].stop() }
 
     fun mixSounds(): MutableList<Short> {
-        return sounds.map{ async { Pair(it, it.addGenerator()) } }
-                           .map{ runBlocking {
-                               var i = it.await()
-                               i.first.removeGenerator()
-                               i.second }
-                           }.map { it.data }
-                            .fold(MutableList<Short>(sounds[sounds.lastIndex].sound.data.size) {0}) {
-                                  acc, it -> acc.zip(it){ a, b -> (a + b).toShort() }.toMutableList() }
+        var buffer = sounds.map{ Pair(it, it.addGenerator()) }
+        start(true)
+        var mixed = buffer.map{
+            while(!it.first.isEnd.get()) {}
+            //it.first.removeGenerator()
+            it.second  }.map { it.data }
+                         .fold(MutableList<Short>(sounds[sounds.lastIndex].sound.data.size) {0}) {
+                                    acc, it -> acc.zip(it){ a, b -> (a + b).toShort() }.toMutableList() }
+        buffer.forEach{ it.first.removeGenerator() }
+        return mixed
     }
 
     fun save(path: String) {
