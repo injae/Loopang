@@ -24,7 +24,7 @@ class Download(Resource):
             is_preplay = args['preplay']
             _file = Music.query.filter_by(music_id=args['music_id']).first()
             logger().debug('[download] music id: %s', _file.music_id)
-            logger().debug('[download] file name: %s', _file.name)
+            logger().debug('[download] file name: %s', _file.music_name)
             logger().debug('[download] is preplay: %s', is_preplay)
             if _file is not None:
                 if(os.path.exists(_file.path())):
